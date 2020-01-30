@@ -1,0 +1,6 @@
+#!/bin/sh
+
+make
+
+install -Dm755 "bin/mbpfan" "/usr/bin/mbpfan"
+install -Dm644 "mbpfan.conf" "/etc/mbpfan.conf"
