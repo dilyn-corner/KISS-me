@@ -1,1 +1,2 @@
 git+https://github.com/p2rkw/xf86-input-mtrack
+files/50-mtrack.conf
