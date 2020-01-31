@@ -6,3 +6,4 @@
 make
 
 make DESTDIR="$1" install
+install -D 50-mtrack.conf "$1/etc/X11/xorg.conf.d/50-mtrack.conf"
