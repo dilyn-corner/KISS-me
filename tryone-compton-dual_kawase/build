@@ -2,9 +2,6 @@
 
 export NO_DBUS=1
 
-# Remove docs
-sed -i '/MANPAGES/d' Makefile
-
 make
 
 make DESTDIR="$1" install
