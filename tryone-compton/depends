@@ -1,13 +1,13 @@
-libX11 make
-libXcomposite make
-libxdamage make
-libxfixes make
-libXext make
-libxrender make
-libXrandr make
-libXinerama make
-pkg-config make 
-xorg-proto make
-x11-utils
+pkgconf make 
+xorgproto make
+libdrm make
+libX11
+libXcomposite
+libXdamage
+libXext
+libXfixes
+libXinerama
+libXrender
+libXrandr
 pcre
 libconfig
