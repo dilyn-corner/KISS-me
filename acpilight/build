@@ -1,5 +1,8 @@
 #/bin/sh -e 
 
+# Busybox 'install' compliance :\
+sed -i 's/-vCDt/-vDt/' Makefile
+
 make
 
 make DESTDIR="$1" install

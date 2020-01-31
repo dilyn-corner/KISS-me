@@ -1,3 +1,0 @@
-We need to remove the -C option from install to satisfy the isanity of Busybox. 
-
-Probably just a quick sed command I don't feel like writing. 
