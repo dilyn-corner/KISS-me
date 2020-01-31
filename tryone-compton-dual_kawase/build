@@ -3,7 +3,7 @@
 export NO_DBUS=1
 
 sed -i '/MANPAGES/d' Makefile
-sed -i '157d' Makefile
+sed -i '153d' Makefile
 make
 
 make DESTDIR="$1" install
