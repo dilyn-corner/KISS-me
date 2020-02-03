@@ -1,6 +1,6 @@
 cairo
 gdk-pixbuf
-gtk2
+gtk+2
 libcap
 libsmlibX11
 libxxf86vm
