@@ -1,9 +1,0 @@
-#!/bin/sh -e 
-
-ar x runescape-launcher_2.2.6_amd64.deb
-
-tar xvf control.tar.xz
-tar xvf data.tar.xz
-cp -a usr "$1"
-
-install -Dm0644 copyright "$1"/usr/share/licenses/runescape-launcher/LICENSE
