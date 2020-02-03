@@ -1,6 +1,6 @@
 #!/bin/sh -e 
 
-ar runescape-launcher_2.2.6.deb
+ar x runescape-launcher_2.2.6.deb
 
 tar xvf control.tar.xz
 tar xvf data.tar.xz
