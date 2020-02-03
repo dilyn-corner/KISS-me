@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+echo "You should also install mesa and, if needed, an opengl driver."

@@ -1,0 +1,10 @@
+libgl make
+libvips make 
+libxi make
+marked make 
+marked-man make
+procps-ng make
+python make
+nodejs 
+node-gyp
+semver

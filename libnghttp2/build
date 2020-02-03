@@ -1,0 +1,16 @@
+#!/bin/sh -e 
+
+autoreconf -i
+
+./configure \
+        --prefix=/usr \
+        --disable-examples \
+        --disable-python-bindings \
+        --enable-lib-only 
+
+make
+
+cd lib
+
+make DESTDIR="$1" install
+install -Dm644 ../COPYING "$1/usr/share/licenses/libnghttp2/COPYING"
