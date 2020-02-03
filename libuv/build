@@ -1,0 +1,14 @@
+#!/bin/sh -e 
+
+./autogen.sh
+
+./configure --prefix=/usr
+
+make
+
+make DESTDIR="$1" install
+
+install -Dm644 LICENSE "$1"/usr/share/licenses/libuv/LICENSE
+install -Dm644 AUTHORS "$1"/usr/share/doc/libuv/AUTHORS
+install -Dm644 README.md "$1"/usr/share/doc/libuv/README.md
+install -Dm644 ChangeLog "$1"/usr/share/doc/libuv/ChangeLog
