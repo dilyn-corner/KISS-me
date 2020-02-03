@@ -8,4 +8,3 @@
 make
 
 make DESTDIR="$1" install
-install -Dm644 "$1/LICENSE" "$1/usr/share/licenses/c-ares/LICENSE"
