@@ -2,7 +2,7 @@ c-ares
 icu
 libnghttp2
 libuv
-libressll
+libressl
 zlib
 procps-ng make
 python make
