@@ -1,9 +1,0 @@
-cairo
-gdk-pixbuf
-gtk+2
-libcap
-libsmlibX11
-libxxf86vm
-libressl
-pango 
-sdl2
