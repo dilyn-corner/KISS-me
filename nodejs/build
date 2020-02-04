@@ -1,16 +1,8 @@
 #!/bin/sh -e 
 
-./configure \
-        --prefix=/usr \
-        --with-intl=system-icu \
-        --shared-openssl \
-        --shared-zlib \
-        --shared-libuv \
-        --experimental-http-parser \
-        --shared-cares \
-        --shared-nghttp2
-
-make 
+make V= \
+        DESTCPU="x64" \
+        ARCH="x64" \
+        VARIATION="musl"
 
 make DESTDIR="$1" install
-install -Dm644 LICENSE "$1"/usr/share/licenses/nodejs/LICENSE
