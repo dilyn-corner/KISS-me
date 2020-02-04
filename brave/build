@@ -2,7 +2,7 @@
 
 # Because why not require EOL programs
 mkdir -p bin
-ln -sf /usr/bin/python2 /bin/python
+ln -sf /usr/bin/python2 bin/python
 ln -sf /usr/bin/python2-config bin/python-config
 export PATH="$1/bin:${PATH}"
 
