@@ -7,7 +7,7 @@ CXX='ccache g++'
 
 python ./configure \
         --prefix=/usr \
-        --dest-cpu=x64
+        --dest-cpu=x64 \
         --with-intl=system-icu \
 #        --shared-openssl \
         --shared-zlib \
