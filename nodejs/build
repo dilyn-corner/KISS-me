@@ -1,18 +1,26 @@
 #!/bin/sh -e 
 
-./configure \
-        --prefix=/usr \
-        --with-intl=system-icu \
-        --shared-openssl \
-        --shared-zlib \
-        --shared-libuv \
-        --experimental-http-parser \
-        --shared-cares \
-        --shared-nghttp2
+export 'CC=ccache gcc'
+CC='ccache gcc'
+export 'CXX=ccache g++'
+CXX='ccache g++'
 
-make V= \
-        DESTCPU="x64" \
-        ARCH="x64" \
-        VARIATION="musl"
+python ./configure \
+        --prefix=/usr \
+        --dest-cpu=x64
+        --download=all --with-intl=full-icu
+#        --with-intl=system-icu \
+#        --shared-openssl \
+#        --shared-zlib \
+#        --shared-libuv \
+#        --experimental-http-parser \
+#        --shared-cares \
+#        --shared-nghttp2
+
+make \
+        DESTCPU=x64 \
+        ARCH=x64 \
+        VARIATION=musl
+        DISTTYPE=release
 
 make DESTDIR="$1" install
