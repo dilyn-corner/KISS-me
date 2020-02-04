@@ -10,11 +10,11 @@ python ./configure \
         --dest-cpu=x64 \
         --with-intl=system-icu \
 #        --shared-openssl \
-        --shared-zlib \
-        --shared-libuv \
+#        --shared-zlib \
+#        --shared-libuv \
 #        --experimental-http-parser \
-        --shared-cares \
-        --shared-nghttp2
+#        --shared-cares \
+#        --shared-nghttp2
 
 make \
         DESTCPU=x64 \
