@@ -3,7 +3,7 @@
 ./configure \
         --prefix=/usr \
         --with-intl=system-icu \
-        --shared-libressl \
+        --shared-openssl \
         --shared-zlib \
         --shared-libuv \
         --experimental-http-parser \
