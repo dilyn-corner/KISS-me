@@ -1,8 +1,6 @@
 c-ares
-icu
 libnghttp2
 libuv
-libressl
 zlib
 procps-ng make
 python make
