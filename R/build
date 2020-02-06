@@ -5,4 +5,4 @@
         --r_arch=x86_64
 make
 
-make install-strip
+make install
