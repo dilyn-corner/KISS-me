@@ -1,0 +1,8 @@
+./configure \ 
+        --prefix=/usr \
+        --with-readline=no \
+        --enable-jit \
+        --r_arch=x86_64
+make
+
+make install-strip
