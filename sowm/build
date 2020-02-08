@@ -1,6 +1,6 @@
 #!/bin/sh -e 
 
-patch -p1 < sowm-rounded-corners-1.2.patch
+git apply --check sowm-rounded-corners-1.2.patch
 
 make
 
