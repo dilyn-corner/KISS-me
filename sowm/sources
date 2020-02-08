@@ -1,1 +1,2 @@
 git+https://github.com/dilyn-corner/sowm
+patches/sowm-rounded-corners-1.2.patch
