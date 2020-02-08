@@ -2,9 +2,10 @@
 
 ./configure \ 
         --prefix=/usr \
+        --libdir=/usr/lib \
         --with-readline=no \
-        --enable-jit \
-        --r_arch=x86_64
+        --enable-jit
+
 make
 
 make install
