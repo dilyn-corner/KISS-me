@@ -1,5 +1,7 @@
 #!/bin/sh -e 
 
+patch -p1 < sowm-rounded-corners-1.2.patch
+
 make
 
 make DESTDIR="$1" install

@@ -1,0 +1,12 @@
+It's probably the case that we'll need more dependencies:
+
+cfitsio
+fftwimagemagick
+libexif
+libimagequant
+libwebp
+libxml2openexr
+orc
+pango
+
+But we'll see. 

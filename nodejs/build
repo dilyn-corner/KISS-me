@@ -1,21 +1,21 @@
 #!/bin/sh -e 
 
+echo "Ccache was a requirement for me to be able to build this. You might want to declare the following if this build fails:
 export 'CC=ccache gcc'
 CC='ccache gcc'
 export 'CXX=ccache g++'
-CXX='ccache g++'
+CXX='ccache g++' "
 
 python ./configure \
         --prefix=/usr \
         --dest-cpu=x64 \
         --enable-static
-#        --with-intl=system-icu \
-#        --shared-openssl \
-#        --shared-zlib \
-#        --shared-libuv \
-#        --experimental-http-parser \
-#        --shared-cares \
-#        --shared-nghttp2
+        --with-intl=system-icu \
+        --shared-zlib \
+        --shared-libuv \
+        --experimental-http-parser \
+        --shared-cares \
+        --shared-nghttp2
 
 make \
         DESTCPU=x64 \
