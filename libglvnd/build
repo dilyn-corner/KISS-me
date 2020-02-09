@@ -1,8 +1,0 @@
-#!/bin/sh -e 
-
-arch-meson build -D gles1=false
-
-ninja -C build 
-
-DESTDIR="$1" ninja -C build install
-install -Dm644 LICENSE "$1"/usr/share/licenses/libglvnd/LICENSE
