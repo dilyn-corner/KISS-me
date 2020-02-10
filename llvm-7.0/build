@@ -3,6 +3,9 @@
 if [[ ! -d /usr/lib/ccache ]]; then
         $GCC_COMPILER=/usr/bin/gcc
         $GXX_COMPILER=/usr/bin/g++
+else
+        $GCC_COMPILER=/usr/lib/ccache/bin/gcc
+        $GXX_COMPILER=/usr/lib/ccache/bin/g++
 fi
 
 mkdir -pv build
