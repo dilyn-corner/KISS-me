@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+if [[ ! -d /usr/lib/ccache ]]; then
+        $GCC_COMPILER=/usr/bin/gcc
+        $GXX_COMPILER=/usr/bin/g++
+fi
+
+mkdir -pv build
+cd build
+
+cmake -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
+        -DLLVM_CONFIG=${HOME}/.local/bin/llvm-config \
+        -DLLVM_TARGETS_TO_BUILD=X86 \
+        -DCMAKE_C_COMPILER=$GCC_COMPILER \
+        -DCMAKE_CXX_COMPILER=$GXX_COMPILER \
+        ..
+
+make
+
+make DESTDIR="$1" install
