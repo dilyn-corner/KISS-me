@@ -8,7 +8,6 @@ cmake -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
         -DLLVM_TARGETS_TO_BUILD=X86 \
         -DCMAKE_C_COMPILER=gcc \
         -DCMAKE_CXX_COMPILER=g++ \
-        -j1 \
         ..
 
 make
