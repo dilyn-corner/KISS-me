@@ -1,10 +1,12 @@
 #!/bin/sh -e 
 
+export CC="clang"
+export CXX="clang++"
+export F77="f18"
+
 ./configure \ 
         --prefix=/usr \
-        --libdir=/usr/lib \
-        --with-readline=no \
-        --enable-jit
+        --with-readline=no
 
 make
 
