@@ -1,11 +1,7 @@
 #!/bin/sh -e 
 
-./configure \ 
-        --prefix=/usr \
-        --build=x86_64 \
-        --host=x86_64 \
-        --with-readline=no
+./configure --prefix=/usr --with-readline=no
 
 make
 
-make install
+make DESTDIR="$1" install

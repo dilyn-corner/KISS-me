@@ -1,12 +1,17 @@
-# zlib
-# bzip2
-# pcre
-# curl
-# xz
-# pango
-# libXmu
-# libX11
-# libXt
-# libjpeg-turbo
-# libpng
-# tiff
+bzip2
+curl
+iculibICE
+libSM
+libX11
+libXau
+libXextlibXmu
+libXt
+libjpeg-turbo
+libpng
+libressllibwebp
+libxcb
+pcre
+tiff
+util-linux
+xz
+zlib
