@@ -1,11 +1,8 @@
 #!/bin/sh -e 
 
-export CC="clang"
-export CXX="clang++"
-export F77="f18"
-
 ./configure \ 
         --prefix=/usr \
+        --build=x86_64 \
         --with-readline=no
 
 make
