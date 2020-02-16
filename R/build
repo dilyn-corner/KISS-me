@@ -3,6 +3,7 @@
 ./configure \ 
         --prefix=/usr \
         --build=x86_64 \
+        --host=x86_64 \
         --with-readline=no
 
 make
