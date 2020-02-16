@@ -7,4 +7,3 @@ sed -i '153d' Makefile
 make
 
 make DESTDIR="$1" install
-install -Dm 755 compton.conf "$1/etc/compton.conf"

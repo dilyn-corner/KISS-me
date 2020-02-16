@@ -1,6 +1,6 @@
 #/bin/sh -e 
 
-# Busybox 'install' compliance :\
+# Compatibility with Busybox install
 sed -i 's/-vCDt/-vDt/' Makefile
 
 make
