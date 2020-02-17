@@ -1,3 +1,0 @@
-#!/bin/sh -e 
-
-echo "A sample 50-mtrack.conf is included in /usr/share/X11/xorg.conf.d"
