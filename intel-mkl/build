@@ -12,4 +12,5 @@ cp opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/*.so "
 cp -r opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/include "$1/opt/intel/mkl/include"
 install -Dm644 opt/intel/compilers_and_libraries_2020.0.166/licensing/mkl/en/license.txt "$1/usr/share/licenses/intel-mkl/LICENSE"
 
+cd .. 
 install -D intel-mkl.sh "$1/etc/profile.d/intel-mkl.sh"
