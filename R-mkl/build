@@ -1,0 +1,16 @@
+#!/bin/sh -e 
+
+source /etc/profile.d/intel-mkl.sh
+
+export CFLAGS="-DMKL_ILP64 -m64 -I${MKLROOT}/include $CFLAGS"
+export CXXFLAGS="-DMKL_ILP64 -m64 -I${MKLROOT}/include $CXXFLAGS"
+export FFLAGS="$CFLAGS"
+export FCFLAGS="$CFLAGS"
+
+MKL="${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_gf_ilp64.a ${MKLROOT}/lib/libmkl_gnu_thread.a ${MKLROOT}/lib/libmkl_core.a -lgomp -lpthread -lm -ldl"
+
+./configure --prefix=/usr --with-readline=no --with-blas="$MKL" --with-lapack
+
+make
+
+make DESTDIR="$1" install
