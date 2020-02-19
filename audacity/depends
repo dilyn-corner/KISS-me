@@ -1,0 +1,5 @@
+wxWidgets 
+gtk+2
+cmake make
+python2 make
+alsa-lib
