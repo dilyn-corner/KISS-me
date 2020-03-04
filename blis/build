@@ -1,0 +1,10 @@
+#!/bin/sh -e 
+
+./configure \
+    --prefix=/usr \
+    -t openmp \
+    --disable-shared \
+    auto
+
+make
+make DESTDIR="$1" install
