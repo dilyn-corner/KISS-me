@@ -1,1 +1,2 @@
-git+https://github.com/dilyn-corner/sowm
+git+https://github.com/dylanaraps/sowm#round
+patches/keybinds.diff
