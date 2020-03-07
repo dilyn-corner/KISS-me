@@ -1,9 +1,8 @@
-#!/bin/sh -e 
+#!/bin/bash -e 
 
 ./configure \
     --prefix=/usr \
     -t openmp \
-    --disable-shared \
     auto
 
 make
