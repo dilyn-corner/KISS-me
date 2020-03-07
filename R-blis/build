@@ -1,9 +1,16 @@
 #!/bin/sh -e 
 
+export CFLAGS="-I/usr/include/blis -fopenmp $CFLAGS"
+export CXXFLAGS="$CFLAGS"
+export FFLAGS="$CFLAGS"
+export FCFLAGS="$CFLAGS"
+
 ./configure \
     --prefix=/usr \
-    --with-blas=blis 
+    --enable-memory-profiling \
+    --enable-R-shlib \
+    --with-blas="/usr/lib/libblis.so /usr/lib/libblis.so.3" \
+    --with-lapack
 
 make
-
 make DESTDIR="$1" install
