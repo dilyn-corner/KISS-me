@@ -1,1 +1,2 @@
-git+https://github.com/dilyn-corner/st
+http://dl.suckless.org/st/st-0.8.2.tar.gz
+patches/alpha-font-scrollback-xresources.diff

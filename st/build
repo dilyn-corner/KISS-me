@@ -1,5 +1,6 @@
 #!/bin/sh -e 
 
-make
+patch -p1 < alpha-font-scrollback-xresources.diff
 
+make
 make DESTDIR="$1" install
