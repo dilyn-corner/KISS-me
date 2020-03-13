@@ -1,0 +1,27 @@
+#!/bin/sh -e 
+
+kernver=5.5.8
+modulesdir="$1/usr/lib/modules/$kernver"
+
+mv config .config
+
+make
+make INSTALL_MOD_PATH="$1/usr" modules_install
+
+# Remove links to source files
+rm -rf "$modulesdir/build"
+rm -rf "$modulesdir/source"
+
+# Install actual source files
+mkdir -p "$modulesdir/build"
+cp -r * "$modulesdir/build"
+
+# Install kernel
+install -Dm644 arch/x86/boot/bzImage "$1/boot/vmlinuz"
+install -Dm644 System.map "$1/boot/System.map"
+
+# Remove broken symlinks
+find -L "$modulesdir/build" -type l -delete
+
+# Remove loose objects
+find "$modulesdir/build" -type f -name '*.o' -delete
