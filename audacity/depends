@@ -1,5 +1,13 @@
 wxWidgets 
-gtk+2
 cmake make
 python2 make
 alsa-lib
+automake make
+autoconf make
+ffmpeg
+libsndfile
+libmad
+libogg
+libvorbis
+flac
+lame
