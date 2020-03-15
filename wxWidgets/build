@@ -2,7 +2,10 @@
 
 ./configure \
     --prefix=/usr \
-    --with-gtk
+    --with-gtk=2 \
+    --disable-unicode \
+    --disable-shared \
+    --disable-precomp-headers
 
 make
 
