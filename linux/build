@@ -1,27 +1,49 @@
 #!/bin/sh -e 
 
-kernver=5.5.8
+# Set useful variables
+kernver=5.5.9
 modulesdir="$1/usr/lib/modules/$kernver"
 
-mv config .config
+scripts/setlocalversion --save-scmversion
 
-make
+# Use included config
+cp config .config
+make olddefconfig
+
+# Define the release, build the kernel & modules
+make kernelrelease > version
+
+make bzImage modules
 make INSTALL_MOD_PATH="$1/usr" modules_install
 
-# Remove links to source files
+# Ensure extra modules can be built
+install -Dt "$modulesdir" -m644 version
+
+# Remove links to source files; they won't exist after this
 rm -rf "$modulesdir/build"
 rm -rf "$modulesdir/source"
 
-# Install actual source files
-mkdir -p "$modulesdir/build"
-cp -r * "$modulesdir/build"
+# The relevant build files to ensure modules can be made?
+install -Dt "$modulesdir/build" -m644 Makefile .config Module.symvers System.map vmlinux
+install -Dt "$modulesdir/build/kernel" -m644 kernel/Makefile
+install -Dt "$modulesdir/build/arch/x86" -m644 arch/x86/Makefile
+mkdir "$modulesdir/build/scripts"
+cp -a scripts/* "$modulesdir/build/scripts"
+install -Dt "$modulesdir/include/config" -m644 include/config/auto.conf
+
+# Fix permissions, just in case somebody screwed up zipping
+chmod -Rc u=rwX,go=rX "$1"
+
+# Remove /useless/ {architectures, docs, et al.}
+echo "Removing extraneous architectures"
+rm arch/Kconfig
+find arch/* ! -name 'x86' -type d -maxdepth 0 -exec rm -rf {} +
+rm -rf "$1/Documentation"
+echo "Removing broken symlinks"
+find -L "$modulesdir/build" -type l -delete
+echo "Removing loose objects"
+find "$1" -type f -name '*.o' -delete
 
 # Install kernel
 install -Dm644 arch/x86/boot/bzImage "$1/boot/vmlinuz"
 install -Dm644 System.map "$1/boot/System.map"
-
-# Remove broken symlinks
-find -L "$modulesdir/build" -type l -delete
-
-# Remove loose objects
-find "$modulesdir/build" -type f -name '*.o' -delete
