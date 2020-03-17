@@ -1,6 +1,7 @@
 blis
 bzip2
 curl
+# fortran compiler
 icu
 libXmu
 libXt

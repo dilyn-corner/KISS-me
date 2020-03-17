@@ -4,8 +4,8 @@ curl
 icu
 libjpeg-turbo
 libpng
-libtiff
 libXmu
 libXt
 pango
 pcre
+tiff
