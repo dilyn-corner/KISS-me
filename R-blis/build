@@ -1,9 +1,9 @@
 #!/bin/sh -e 
 
 export CFLAGS="-I/usr/include/blis -fopenmp $CFLAGS"
-export CXXFLAGS="$CFLAGS"
-export FFLAGS="$CFLAGS"
-export FCFLAGS="$CFLAGS"
+export CXXFLAGS="-I/usr/include/blis -fopenmp $CXXFLAGS"
+export FFLAGS="$-I/usr/include/blis -fopenmp $FFLAGS"
+export FCFLAGS="$-I/usr/include/blis -fopenmp $FCFLAGS"
 
 ./configure \
     --prefix=/usr \
