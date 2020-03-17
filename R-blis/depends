@@ -1,44 +1,11 @@
-# Specifically, a gcc which includes fortran
-gcc
-# Adequate tar would be nice
-#libarchive
-bzip2
-
-# Required in this version for BLAS support
 blis
-
-
-# Optional, useful things.
-# Locales/collation
+bzip2
+curl
 icu
-
-# Minimum for viewing graphs and other xorg features
-libX11
-libXt
 libXmu
-fontconfig
-fribidi
-libXext
-ncurses
-
-# Scrollback support et al
-readline
-#gettext #(for translations; builtin)
-
-# Alegedly essential, but builds fine without it (wide character support)
-#libiconv
-
-# Aslo 'required'
-pcre
-
-# Downloading packages
-#curl
-
-# For graphics. 
-cairo
-pango
+libXt
 libjpeg-turbo
 libpng
+pcre
+readline
 tiff
-
-# Doc creation depends are omitted entirely.

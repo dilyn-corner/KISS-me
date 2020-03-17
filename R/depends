@@ -1,17 +1,11 @@
 bzip2
 curl
-iculibICE
-libSM
-libX11
-libXau
-libXextlibXmu
-libXt
+# fortran compiler
+icu
 libjpeg-turbo
 libpng
-libressllibwebp
-libxcb
+libtiff
+libXmu
+libXt
+pango
 pcre
-tiff
-util-linux
-xz
-zlib
