@@ -1,3 +1,5 @@
+# Specifically, a gcc which includes fortran
+gcc
 # Adequate tar would be nice
 #libarchive
 bzip2
