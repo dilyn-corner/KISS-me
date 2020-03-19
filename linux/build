@@ -13,11 +13,11 @@ make olddefconfig
 # Define the release, build the kernel & modules
 make kernelrelease > version
 
-make bzImage modules
+make
 make INSTALL_MOD_PATH="$1/usr" modules_install
 
 # Ensure extra modules can be built
-install -Dt "$modulesdir" -m644 version
+install -Dt "$modulesdir" -m644 version modules.builtin modules.builtin.modinfo modules.order
 
 # Remove links to source files; they won't exist after this
 rm -rf "$modulesdir/build"
@@ -25,25 +25,27 @@ rm -rf "$modulesdir/source"
 
 # The relevant build files to ensure modules can be made?
 install -Dt "$modulesdir/build" -m644 Makefile .config Module.symvers System.map vmlinux
-install -Dt "$modulesdir/build/kernel" -m644 kernel/Makefile
-install -Dt "$modulesdir/build/arch/x86" -m644 arch/x86/Makefile
 mkdir "$modulesdir/build/scripts"
 cp -a scripts/* "$modulesdir/build/scripts"
-install -Dt "$modulesdir/include/config" -m644 include/config/auto.conf
+install -Dt "$modulesdir/build/kernel" -m644 kernel/Makefile
+install -Dt "$modulesdir/build/arch/x86" -m644 arch/x86/Makefile
+install -Dt "$modulesdir/build/include/config" -m644 include/config/auto.conf
+#install -Dt "$modulesdir/build/include/generated/autoconf.h" -m644 include/generated/autoconf.h
+cp -a * "$modulesdir/build"
+ln -sv "$modulesdir/build" "$modulesdir/source"
 
 # Fix permissions, just in case somebody screwed up zipping
 chmod -Rc u=rwX,go=rX "$1"
 
 # Remove /useless/ {architectures, docs, et al.}
 echo "Removing extraneous architectures"
-rm arch/Kconfig
 find arch/* ! -name 'x86' -type d -maxdepth 0 -exec rm -rf {} +
-rm -rf "$1/Documentation"
+rm -rf "Documentation"
 echo "Removing broken symlinks"
 find -L "$modulesdir/build" -type l -delete
 echo "Removing loose objects"
 find "$1" -type f -name '*.o' -delete
 
 # Install kernel
-install -Dm644 arch/x86/boot/bzImage "$1/boot/vmlinuz"
-install -Dm644 System.map "$1/boot/System.map"
+mkdir "$1/boot"
+make INSTALL_PATH="$1/boot" install
