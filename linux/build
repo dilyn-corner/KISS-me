@@ -1,51 +1,80 @@
 #!/bin/sh -e 
 
-# Set useful variables
-kernver=5.5.9
-modulesdir="$1/usr/lib/modules/$kernver"
-
+# Set the version
+echo "Setting version..."
 scripts/setlocalversion --save-scmversion
 
-# Use included config
+# Use included config # 2014 Macbook Pro 11,1
+echo "Using bundled config..."
 cp config .config
 make olddefconfig
 
 # Define the release, build the kernel & modules
 make kernelrelease > version
 
+# Set useful variables
+kernver="$(<version)"
+modulesdir="$1/usr/lib/modules/$kernver"
+builddir="$modulesdir/build"
+
+# Build kernel et al
+echo "Building kernel et al..."
 make
+
+# Install modules
+echo "Installing modules..."
 make INSTALL_MOD_PATH="$1/usr" modules_install
 
-# Ensure extra modules can be built
-install -Dt "$modulesdir" -m644 version modules.builtin modules.builtin.modinfo modules.order
-
 # Remove links to source files; they won't exist after this
+echo "Removing links to sources..."
 rm -rf "$modulesdir/build"
 rm -rf "$modulesdir/source"
-
-# The relevant build files to ensure modules can be made?
-install -Dt "$modulesdir/build" -m644 Makefile .config Module.symvers System.map vmlinux
-mkdir "$modulesdir/build/scripts"
-cp -a scripts/* "$modulesdir/build/scripts"
-install -Dt "$modulesdir/build/kernel" -m644 kernel/Makefile
-install -Dt "$modulesdir/build/arch/x86" -m644 arch/x86/Makefile
-install -Dt "$modulesdir/build/include/config" -m644 include/config/auto.conf
-#install -Dt "$modulesdir/build/include/generated/autoconf.h" -m644 include/generated/autoconf.h
-cp -a * "$modulesdir/build"
-ln -sv "$modulesdir/build" "$modulesdir/source"
 
 # Fix permissions, just in case somebody screwed up zipping
 chmod -Rc u=rwX,go=rX "$1"
 
+# Install important build files
+echo "Installing a flurry of important files..."
+install -Dt "$modulesdir" -m644 modules.builtin modules.builtin.modinfo modules.order
+install -Dt "$builddir" -m644 version Makefile .config Module.symvers System.map vmlinux
+cp -a scripts "$builddir/scripts"
+install -Dt "$builddir/include/generated/autoconf.h" -m644 include/generated/autoconf.h
+
+# Install headers, modules
+echo "Installing headers..."
+cp -a include "$modulesdir"
+mkdir -p "$builddir/arch/x86"
+cp -a arch/* "$builddir/arch"
+install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
+
+# Ensure we have kernel identifying information
+echo "Installing more important files..."
+install -Dt "$builddir/kernel" -m644 kernel/Makefile
+
+# Kconfig files are necessary for building modules
+echo "Installing one final important file..."
+find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+
 # Remove /useless/ {architectures, docs, et al.}
-echo "Removing extraneous architectures"
-find arch/* ! -name 'x86' -type d -maxdepth 0 -exec rm -rf {} +
+#echo "Removing extraneous architectures"
+#find "$builddir/arch/*" ! -name 'x86' -type d -maxdepth 0 -exec rm -rf {} +
+echo "Removing documentation"
 rm -rf "Documentation"
 echo "Removing broken symlinks"
 find -L "$modulesdir/build" -type l -delete
 echo "Removing loose objects"
 find "$1" -type f -name '*.o' -delete
 
+# People might expect to find our kernel here
+echo "Laying a trap..."
+mkdir -p "$1/usr/src"
+ln -s "$1" "$1/usr/src/linux"
+
+# Fix permissions again for good measure
+chmod -Rc u=rwX,go=rX "$1"
+
 # Install kernel
+echo "Installing kernel..."
 mkdir "$1/boot"
 make INSTALL_PATH="$1/boot" install
