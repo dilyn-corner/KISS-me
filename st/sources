@@ -1,2 +1,2 @@
 http://dl.suckless.org/st/st-0.8.2.tar.gz
-patches/alpha-font-scrollback-xresources.diff
+patches/alpha-font-scrollback-xresources.patch
