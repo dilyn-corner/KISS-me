@@ -1,7 +1,9 @@
 #!/bin/sh -e 
 
+# Include blis library for blas
+# -D__MUSL__ required for packages like Rcpp
 export CFLAGS="-I/usr/include/blis -fopenmp $CFLAGS"
-export CXXFLAGS="-I/usr/include/blis -fopenmp $CXXFLAGS"
+export CXXFLAGS="-I/usr/include/blis -fopenmp $CXXFLAGS -D__MUSL__"
 export FFLAGS="-I/usr/include/blis -fopenmp $FFLAGS"
 export FCFLAGS="-I/usr/include/blis -fopenmp $FCFLAGS"
 
