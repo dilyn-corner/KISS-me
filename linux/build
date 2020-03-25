@@ -6,14 +6,15 @@ cp config .config
 make olddefconfig
 make kernelrelease > version
 
-# Make that bad boy!
-echo "Making linux-$(<version)"
-make
-
 # Useful variables
-kernver="$(<version)"
+kernver="cat version"
 modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
+
+# Make that bad boy!
+echo "Making linux-"cat version""
+make
+
 
 echo "Installing modules..."
 make INSTALL_MOD_PATH="$1/usr" modules_install
