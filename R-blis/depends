@@ -1,7 +1,7 @@
 blis
 bzip2
 curl
-# fortran compiler
+# fortran compiler; this repository includes gfortran
 icu
 libXmu
 libXt

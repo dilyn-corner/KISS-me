@@ -1,6 +1,6 @@
 bzip2
 curl
-# fortran compiler
+# fortran compiler; this repository includes gfortran
 icu
 libjpeg-turbo
 libpng
