@@ -1,6 +1,6 @@
-#!/bin/sh -e 
+#!/bin/sh -e
 
-patch -p1 < keybinds.diff
+patch -p1 < keybinds.patch
 
 make
-make DESTDIR="$1" PREFIX=/usr install
+make DESTDIR="$1" install
