@@ -1,2 +1,2 @@
 git+https://github.com/dylanaraps/sowm
-patches/keybinds.diff
+patches/keybinds.patch
