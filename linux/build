@@ -7,7 +7,7 @@ make olddefconfig
 make kernelrelease > version
 
 # Useful variables
-kernver="cat version"
+kernver="$(cat version)"
 modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
 
