@@ -6,7 +6,7 @@
   */
 -static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 -static int borderpx = 2;
-+static char *font = "Iosevka Nerd Font Mono:pixelsize=18:antialias=true:autohint=true";
++static char *font = "Iosevka Term Nerd Font Complete Mono:pixelsize=18:antialias=true:autohint=true";
 +static int borderpx = 20;
  
  /*
