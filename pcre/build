@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --enable-utf8 \
+    --enable-unicode-properties \
+    --enable-jit \
+    --disable-cpp
+
+make
+make DESTDIR="$1" install
