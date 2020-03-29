@@ -1,12 +1,7 @@
 blis
-bzip2
-curl
 # fortran compiler; this repository includes gfortran
-icu
-libXmu
+libX11
 libXt
-libjpeg-turbo
-libpng
 pcre
 readline
-tiff
+xz

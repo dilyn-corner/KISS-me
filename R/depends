@@ -1,11 +1,6 @@
-bzip2
-curl
 # fortran compiler; this repository includes gfortran
-icu
-libjpeg-turbo
-libpng
-libXmu
 libXt
-pango
+libX11
 pcre
-tiff
+readline
+xz
