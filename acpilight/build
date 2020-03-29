@@ -4,5 +4,4 @@
 sed -i 's/-vCDt/-vDt/' Makefile
 
 make
-
 make DESTDIR="$1" install
