@@ -11,10 +11,18 @@ kernver="$(cat version)"
 modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
 
+# Patches
+for patch in *.patch; do
+    patch -p1 < $patch
+done
+
+# Microcode
+export KISS_PID=test
+install -Dt "/home/dilyn/.cache/kiss/build-test/usr/lib/firmware/intel-ucode" -m644 06-45-01
+
 # Make that bad boy!
 echo "Making linux-"$kernver""
 make
-
 
 echo "Installing modules..."
 make INSTALL_MOD_PATH="$1/usr" modules_install
@@ -46,10 +54,7 @@ find "$builddir" -type f -name "*.o" -delete
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
-ln -sv "/usr/lib/modules/$kernver/build" "$1/usr/src/linux"
-
-echo "Last clean..."
-chmod -Rc u=rwX,go=rX "$1"
+ln -sv "$builddir" "$1/usr/src/linux"
 
 echo "Installing kernel..."
 mkdir -p "$1/boot"
