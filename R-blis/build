@@ -8,8 +8,9 @@ export FCFLAGS="-I/usr/include/blis -fopenmp $FCFLAGS"
 
 ./configure \
     --prefix=/usr \
-    --enable-memory-profiling \
+    --disable-nls \
     --enable-R-shlib \
+    --without-recommended-packages \
     --with-blas="/usr/lib/libblis.so /usr/lib/libblis.so.3" \
     --with-lapack
 
