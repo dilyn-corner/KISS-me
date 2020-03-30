@@ -1,5 +1,6 @@
 #!/bin/sh -e
 
-make
+patch -p1 < wl-kmod-018_kernel_5_6_fixes.patch
 
-install -Dm644 wl.ko "$1/lib/modules/$(uname -r)/kernel/drivers/net/wireless/wl.ko"
+make
+make DESTDIR="$1" install
