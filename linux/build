@@ -8,7 +8,7 @@ make kernelrelease > version
 
 # Useful variables
 kernver="$(cat version)"
-modulesdir="$1/usr/lib/modules/$kernver"
+modulesdir="$1/usr/lib/modules/$kernver-KISS"
 builddir="$modulesdir/build"
 
 # Patches
@@ -18,7 +18,7 @@ done
 
 # Microcode
 export KISS_PID=test
-install -Dt "/home/dilyn/.cache/kiss/build-test/usr/lib/firmware/intel-ucode" -m644 06-45-01
+install -Dt "/home/dilyn/.cache/kiss/build-test/usr/lib/firmware/intel-ucode" -m755 06-45-01
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
