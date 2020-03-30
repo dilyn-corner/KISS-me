@@ -1,5 +1,4 @@
 blis
-# fortran compiler; this repository includes gfortran
 libX11
 libXt
 pcre
