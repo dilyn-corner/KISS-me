@@ -17,8 +17,7 @@ for patch in *.patch; do
 done
 
 # Microcode
-export KISS_PID=test
-install -Dt "/home/dilyn/.cache/kiss/build-test/usr/lib/firmware/intel-ucode" -m755 06-45-01
+install -Dt "$1/usr/lib/firmware/intel-ucode" -m755 06-45-01
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
