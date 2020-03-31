@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+patch -p1 < wrapper-for-basename.patch
+
+make
+make DESTDIR="$1" install
