@@ -1,6 +1,10 @@
 #!/bin/sh
 
-echo "This (wl) module is incompatible with ssb, bcma, b43, brcmsmac. 
-Make sure that you (1) potentially reinstall this package, and (2) run
-'depmod -A' and then 'modprobe wl' to ensure that the module is properly
-loaded and installed after each kernel update." 
+cat << EOF 
+This module is incompatible with ssb, bcma, b43, brcmsmac, etc. 
+Make sure that you potentially reinstall this package (post-kernel update), and run
+# depmod \$(uname -r) 
+# modprobe wl 
+to ensure that the module is properly
+loaded and installed after each kernel update. 
+EOF
