@@ -1,5 +1,10 @@
 #!/bin/sh -e
 
+# Patches
+for patch in *.patch; do
+    patch -p1 < $patch
+done
+
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
@@ -8,16 +13,11 @@ make kernelrelease > version
 
 # Useful variables
 kernver="$(cat version)"
-modulesdir="$1/usr/lib/modules/$kernver-KISS"
+modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
 
-# Patches
-for patch in *.patch; do
-    patch -p1 < $patch
-done
-
-# Microcode
-install -Dt "$1/usr/lib/firmware/intel-ucode" -m755 06-45-01
+## Microcode
+#install -Dt "$firmwaredir/intel-ucode" -m755 06-45-01
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
