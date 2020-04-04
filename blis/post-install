@@ -1,8 +1,10 @@
 #!/bin/sh -e 
 
-echo "To enable multithreading, it is suggested to use environment variables:"
+cat << EOF
+To enable multithreading, it is suggested to use environment variables:
 
-echo "export GOMP_CPU_AFFINITY="..." # optional step when using GNU libgomp"
-echo "export BLIS_NUM_THREADS=\$(threads)"
+export GOMP_CPU_AFFINITY="..." # optional step when using GNU libgomp
+export BLIS_NUM_THREADS=\$(threads) 
 
-echo "For other possibilia, see the documentation on Github."
+For other possibilia, see the documentation on Github.
+EOF
