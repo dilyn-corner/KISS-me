@@ -3,7 +3,7 @@ My self-managed package repository for [KISS](https://k1ss.org).
 
 This repository is for:
 1) Staging things prior to submitting them to [Community](https://github.com/kisslinux/community),
-2) for things I know will never be accepted into Community,
+2) for things I know will [never be accepted into Community](https://k1ss.org/guidestones),
 3) for forks.
 
 All commits signed with my own GPG key.
