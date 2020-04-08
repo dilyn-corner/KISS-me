@@ -1,5 +1,6 @@
 #!/bin/sh -e
 
+cp config.def.h config.h
 patch -p1 < keybinds.patch
 
 make
