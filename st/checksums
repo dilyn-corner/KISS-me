@@ -1,2 +1,6 @@
-aeb74e10aa11ed364e1bcc635a81a523119093e63befd2f231f8b0705b15bf35  st-0.8.2.tar.gz
-701bd63cac0b0f7df8ae10828b1544caeeea96546f4d5ae9ac5e8bbc0e5da263  alpha-font-scrollback-xresources.patch
+git  git+https://git.suckless.org/st
+51860a1fc88168d938b907c7492ae2c2c23924ea25fcce378b31638bbb254c1f  01-font-and-padding.patch
+c4fc022d4fb9759d9f55d323c70d0a88d7d3724c4228ad67c8885d811791f317  02-scrollback.patch
+af106dbe37d6f443a1c0d154dca429397fdc52a800caf56216681ad4a6db7ce0  03-alpha.patch
+ecc7cbe7581955107def16c3dbc9d212b7c8b1b1a6c9fc2d4db5d3d994e477b9  04-ligatures.patch
+539f631e23154805f9f70e5832c779368dd80d3943181c61d6e7c1a9dbf59df6  05-xresources.patch

@@ -1,2 +1,6 @@
-http://dl.suckless.org/st/st-0.8.2.tar.gz
-patches/alpha-font-scrollback-xresources.patch
+git+https://git.suckless.org/st
+patches/01-font-and-padding.patch
+patches/02-scrollback.patch
+patches/03-alpha.patch
+patches/04-ligatures.patch
+patches/05-xresources.patch
