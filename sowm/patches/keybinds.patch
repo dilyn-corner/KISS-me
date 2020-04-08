@@ -1,6 +1,6 @@
---- a/config.def.h
-+++ b/config.def.h
-@@ -7,12 +7,7 @@
+--- a/config.h
++++ b/config.h
+@@ -6,12 +6,7 @@
  const char* menu[]    = {"dmenu_run",      0};
  const char* term[]    = {"st",             0};
  const char* scrot[]   = {"scr",            0};
@@ -14,7 +14,7 @@
  
  static struct key keys[] = {
      {MOD,      XK_q,   win_kill,   {0}},
-@@ -22,16 +17,10 @@
+@@ -21,16 +16,10 @@
      {Mod1Mask,           XK_Tab, win_next,   {0}},
      {Mod1Mask|ShiftMask, XK_Tab, win_prev,   {0}},
  
