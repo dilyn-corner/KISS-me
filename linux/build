@@ -16,9 +16,6 @@ kernver="$(cat version)"
 modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
 
-## Microcode
-#install -Dt "$firmwaredir/intel-ucode" -m755 06-45-01
-
 # Make that bad boy!
 echo "Making linux-"$kernver""
 make
