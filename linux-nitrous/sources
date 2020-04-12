@@ -1,0 +1,4 @@
+git+https://gitlab.com/xdevs23/linux-nitrous
+patches/0105-ksm-wakeups.patch
+patches/0113-kernel-time-reduce-ntp-wakeups.patch
+files/config
