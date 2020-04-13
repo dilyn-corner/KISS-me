@@ -1,4 +1,4 @@
-git  git+https://gitlab.com/xdevs23/linux-nitrous
+c1d5e80bb64d1b56c73bdf70fcfaa8d4b8f6f2c66efb2f95e7563ea5b5f728bb  linux-nitrous-v5.6.3-1.tar.gz
 c618405c1cba7b3bef93681c6910860c5718579736459e9d632034575862b94b  0105-ksm-wakeups.patch
 c3512e1d000952fa189284a69195bc4f7b7ae91cb35bd55c639378ac4f666ca1  0113-kernel-time-reduce-ntp-wakeups.patch
-c1e204f41a2ed0c21fb3ec8370316c5068fd9e4f232f37754c47cf3768a257cc  config
+dc38b58c733e69b4e1dd25550452f711ec90debba12451e64852ee2a23943a6d  config
