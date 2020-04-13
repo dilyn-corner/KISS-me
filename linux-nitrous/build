@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+# Perhaps we try clang on for size
+rm -f .clang
+
 # Patches
 for patch in *.patch; do
     patch -p1 < $patch
@@ -8,8 +11,8 @@ done
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
-make olddefconfig
-make kernelrelease > version
+make HOSTCC=clang CC=clang olddefconfig
+make HOSTCC=clang CC=clang kernelrelease > version
 
 # Useful variables
 kernver="$(cat version)"
@@ -18,10 +21,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
-make
+make HOSTCC=clang CC=clang
 
 echo "Installing modules..."
-make INSTALL_MOD_PATH="$1/usr" modules_install
+make HOSTCC=clang CC=clang INSTALL_MOD_PATH="$1/usr" modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
