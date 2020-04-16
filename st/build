@@ -3,6 +3,7 @@
 for patch in *.patch; do 
     patch -p1 < $patch
 done
+#patch -p1 < 01-font-and-padding.patch
 
 make
 make PREFIX=/usr DESTDIR="$1" install

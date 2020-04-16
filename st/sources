@@ -3,4 +3,3 @@ patches/01-font-and-padding.patch
 patches/02-scrollback.patch
 patches/03-alpha.patch
 patches/04-ligatures.patch
-patches/05-xresources.patch
