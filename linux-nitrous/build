@@ -53,7 +53,8 @@ find "$builddir" -type f -name "*.o" -delete
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
-ln -sv "$builddir" "$1/usr/src/linux"
+ln -sv "/usr/lib/modules/$kernver/build" "$1/usr/src/linux"
+install -Dm755 Documentation/Kconfig "$builddir/Documentation/Kconfig"
 
 echo "Installing kernel..."
 mkdir -p "$1/boot"
