@@ -1,0 +1,7 @@
+libconfig
+libev
+meson make
+pixman
+uthash make
+xcb-util-image
+xcb-util-renderutil
