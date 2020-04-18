@@ -3,11 +3,6 @@
 # Perhaps we try clang on for size
 rm -f .clang
 
-# Patches
-for patch in *.patch; do
-    patch -p1 < $patch
-done
-
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
@@ -59,3 +54,5 @@ install -Dm755 Documentation/Kconfig "$builddir/Documentation/Kconfig"
 echo "Installing kernel..."
 mkdir -p "$1/boot"
 make INSTALL_PATH="$1/boot" install
+mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-new"
+mv "$1/boot/System.map" "$1/boot/System.map-new"
