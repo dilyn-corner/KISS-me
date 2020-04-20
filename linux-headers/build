@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+# Perhaps we try clang on for size
+rm -f .clang
+
+# Set the kernel up for success!
+scripts/setlocalversion --save-scmversion
+cp config .config
+make HOSTCC=clang CC=clang olddefconfig
+make HOSTCC=clang CC=clang kernelrelease > version
+
+# Useful variables
+kernver="$(cat version)"
+modulesdir="$1/usr/lib/modules/$kernver"
+builddir="$modulesdir/build"
+
+make HOSTCC=clang CC=clang headers_install INSTALL_HDR_PATH="$1/usr"
