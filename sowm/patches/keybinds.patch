@@ -1,6 +1,10 @@
 --- a/config.def.h
 +++ b/config.def.h
-@@ -6,12 +6,7 @@
+@@ -3,15 +3,10 @@
+ 
+ #define MOD Mod4Mask
+ 
++const char* web[]     = {"falkon",         0};
  const char* menu[]    = {"dmenu_run",      0};
  const char* term[]    = {"st",             0};
  const char* scrot[]   = {"scr",            0};
@@ -10,13 +14,14 @@
 -const char* volup[]   = {"amixer", "sset", "Master", "5%+",         0};
 -const char* volmute[] = {"amixer", "sset", "Master", "toggle",      0};
 -const char* colors[]  = {"bud", "/home/goldie/Pictures/Wallpapers", 0};
-+const char* web[]     = {"falkon",         0};
  
  static struct key keys[] = {
      {MOD,      XK_q,   win_kill,   {0}},
-@@ -22,15 +17,9 @@
+@@ -21,16 +16,10 @@
+     {Mod1Mask,           XK_Tab, win_next,   {0}},
      {Mod1Mask|ShiftMask, XK_Tab, win_prev,   {0}},
  
++    {MOD, XK_w,      run, {.com = web}},
      {MOD, XK_d,      run, {.com = menu}},
 -    {MOD, XK_w,      run, {.com = colors}},
      {MOD, XK_p,      run, {.com = scrot}},
@@ -27,7 +32,6 @@
 -    {0,   XF86XK_AudioMute,         run, {.com = volmute}},
 -    {0,   XF86XK_MonBrightnessUp,   run, {.com = briup}},
 -    {0,   XF86XK_MonBrightnessDown, run, {.com = bridown}},
-+    {MOD, XK_w,      run, {.com = web}},
  
      {MOD,           XK_1, ws_go,     {.i = 1}},
      {MOD|ShiftMask, XK_1, win_to_ws, {.i = 1}},
