@@ -1,1 +1,5 @@
-git+https://github.com/dilyn-corner/dmenu
+git+https://git.suckless.org/dmenu
+patches/center.patch
+patches/xresources.patch
+patches/lineheight.patch
+patches/border.patch

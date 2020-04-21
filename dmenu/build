@@ -1,4 +1,8 @@
 #!/bin/sh -e
 
+for patch in *.patch; do
+    patch -p1 < $patch
+done
+
 make
 make DESTDIR="$1" PREFIX=/usr install

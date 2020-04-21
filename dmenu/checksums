@@ -1,1 +1,5 @@
-git  git+https://github.com/dilyn-corner/dmenu
+git  git+https://git.suckless.org/dmenu
+4fe3802dc2d73193b5ea0cd1c5813f61300fa1abb294a4dc3e178d006a60f274  center.patch
+45dbb037c3fff5ff511767d154be58b17d5c9319755c1fae88464d6c9c31b047  xresources.patch
+a9c726060a62cb733594e45e46665c526674e04da41554c5e380b7b18f352823  lineheight.patch
+64ab8efa20f7038180cbef33de853a79f7fbc47ee8bd790d7f8d2d1c5bed19ad  border.patch

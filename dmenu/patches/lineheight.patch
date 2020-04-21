@@ -1,0 +1,120 @@
+--- a/config.def.h
++++ b/config.def.h
+@@ -17,6 +17,7 @@
+ };
+ /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+ static unsigned int lines      = 0;
++static unsigned int lineheight = 0;     /* -h option; minimum height of a menu line */
+ 
+ /*
+  * Characters not considered part of a word while deleting words
+--- a/dmenu.1
++++ b/dmenu.1
+@@ -1,57 +1,7 @@
+-.TH DMENU 1 dmenu\-VERSION
+-.SH NAME
+-dmenu \- dynamic menu
+-.SH SYNOPSIS
+-.B dmenu
+-.RB [ \-bfiv ]
+-.RB [ \-l
+-.IR lines ]
+-.RB [ \-m
+-.IR monitor ]
+-.RB [ \-p
+-.IR prompt ]
+-.RB [ \-fn
+-.IR font ]
+-.RB [ \-nb
+-.IR color ]
+-.RB [ \-nf
+-.IR color ]
+-.RB [ \-sb
+-.IR color ]
+-.RB [ \-sf
+-.IR color ]
+-.RB [ \-w
+-.IR windowid ]
+-.P
+-.BR dmenu_run " ..."
+-.SH DESCRIPTION
+-.B dmenu
+-is a dynamic menu for X, which reads a list of newline\-separated items from
+-stdin.  When the user selects an item and presses Return, their choice is printed
+-to stdout and dmenu terminates.  Entering text will narrow the items to those
+-matching the tokens in the input.
+-.P
+-.B dmenu_run
+-is a script used by
+-.IR dwm (1)
+-which lists programs in the user's $PATH and runs the result in their $SHELL.
+-.SH OPTIONS
+-.TP
+-.B \-b
+-dmenu appears at the bottom of the screen.
+-.TP
+-.B \-c
+-dmenu appears centered on the screen.
+-.TP
+-.B \-f
+-dmenu grabs the keyboard before reading stdin if not reading from a tty. This
+-is faster, but will lock up X until stdin reaches end\-of\-file.
+-.TP
+-.B \-i
+-dmenu matches menu items case insensitively.
+-.TP
+-.BI \-l " lines"
+ dmenu lists items vertically, with the given number of lines.
++.TP
++.BI \-h " height"
++dmenu uses a menu line of at least 'height' pixels tall, but no less than 8.
+ .TP
+ .BI \-m " monitor"
+ dmenu is displayed on the monitor number supplied. Monitor numbers are starting
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -141,7 +141,7 @@
+ {
+ 	unsigned int curpos;
+ 	struct item *item;
+-	int x = 0, y = 0, w;
++	int x = 0, y = 0, fh = drw->fonts->h, w;
+ 
+ 	drw_setscheme(drw, scheme[SchemeNorm]);
+ 	drw_rect(drw, 0, 0, mw, mh, 1, 1);
+@@ -158,7 +158,7 @@
+ 	curpos = TEXTW(text) - TEXTW(&text[cursor]);
+ 	if ((curpos += lrpad / 2 - 1) < w) {
+ 		drw_setscheme(drw, scheme[SchemeNorm]);
+-		drw_rect(drw, x + curpos, 2, 2, bh - 4, 1, 0);
++		drw_rect(drw, x + curpos, 2 + (bh-fh)/2, 2, fh - 4, 1, 0);
+ 	}
+ 
+ 	if (lines > 0) {
+@@ -624,6 +624,7 @@
+ 
+ 	/* calculate menu geometry */
+ 	bh = drw->fonts->h + 2;
++    bh = MAX(bh,lineheight);    /* make a menu line AT LEAST 'lineheight' tall */
+ 	lines = MAX(lines, 0);
+ 	mh = (lines + 1) * bh;
+ 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
+@@ -719,6 +720,7 @@
+ usage(void)
+ {
+ 	fputs("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
++          "             [-h height]\n"
+ 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]\n", stderr);
+ 	exit(1);
+ }
+@@ -789,6 +791,10 @@
+ 			prompt = argv[++i];
+ 		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
+ 			fonts[0] = argv[++i];
++        else if (!strcmp(argv[i], "-h")) { /* minimum height of one menu line */ 
++            lineheight = atoi(argv[++i]);
++            lineheight = MAX(lineheight,8); /* reasonable default in case of value too small/negative */
++        }
+ 		else if (!strcmp(argv[i], "-nb"))  /* normal background color */
+ 			colors[SchemeNorm][ColBg] = argv[++i];
+ 		else if (!strcmp(argv[i], "-nf"))  /* normal foreground color */
