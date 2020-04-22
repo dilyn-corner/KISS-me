@@ -54,5 +54,5 @@ install -Dm755 Documentation/Kconfig "$builddir/Documentation/Kconfig"
 echo "Installing kernel..."
 mkdir -p "$1/boot"
 make INSTALL_PATH="$1/boot" install
-mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-new"
-mv "$1/boot/System.map" "$1/boot/System.map-new"
+mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-$kernver"
+mv "$1/boot/System.map" "$1/boot/System.map-$kernver"
