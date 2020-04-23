@@ -1,3 +1,4 @@
 clang make
 libelf
 libressl
+lz4
