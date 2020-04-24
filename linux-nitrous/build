@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+patch -p1 < no-perl.patch
+
 # Perhaps we try clang on for size
 rm -f .clang
 
@@ -56,5 +58,3 @@ mkdir -p "$1/boot"
 make INSTALL_PATH="$1/boot" install
 mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-$kernver"
 mv "$1/boot/System.map" "$1/boot/System.map-$kernver"
-
-bootloader $kernver
