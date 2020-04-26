@@ -8,8 +8,16 @@ rm -f .clang
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
-make HOSTCC=clang CC=clang olddefconfig
-make HOSTCC=clang CC=clang kernelrelease > version
+
+make \
+    olddefconfig \
+    HOSTCC=clang \
+    CC=clang 
+
+make \
+    kernelrelease > version \
+    HOSTCC=clang \
+    CC=clang \
 
 # Useful variables
 kernver="$(cat version)"
@@ -18,10 +26,16 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
-make HOSTCC=clang CC=clang
+make \
+    HOSTCC=clang \
+    CC=clang
 
 echo "Installing modules..."
-make HOSTCC=clang CC=clang INSTALL_MOD_PATH="$1/usr" modules_install
+make \
+    modules_install \
+    INSTALL_MOD_PATH="$1/usr" \
+    HOSTCC=clang \
+    CC=clang 
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -45,16 +59,18 @@ find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
 
 echo "Removing cruft..."
 rm -r "$builddir/Documentation"
-find -L "$builddir" -type l -delete
-find "$builddir" -type f -name "*.o" -delete
+find -L "$builddir" -type l             -exec rm -rf {} +
+find    "$builddir" -type f -name "*.o" -exec rm -rf {} +
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$kernver/build" "$1/usr/src/linux"
-install -Dm755 Documentation/Kconfig "$builddir/Documentation/Kconfig"
 
 echo "Installing kernel..."
-mkdir -p "$1/boot"
-make INSTALL_PATH="$1/boot" install
+
+make \
+    INSTALL_PATH="$1/boot" \
+    install
+
 mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-$kernver"
 mv "$1/boot/System.map" "$1/boot/System.map-$kernver"
