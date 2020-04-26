@@ -1,6 +1,6 @@
 blis
 libX11
 libXt
-pcre
+pcre2
 readline
 xz

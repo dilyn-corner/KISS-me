@@ -11,6 +11,7 @@ export FCFLAGS="-I/usr/include/blis -fopenmp $FCFLAGS"
     --disable-nls \
     --enable-R-shlib \
     --without-recommended-packages \
+    --with-pcre1 \
     --with-blas="/usr/lib/libblis.so /usr/lib/libblis.so.3" \
     --with-lapack
 
