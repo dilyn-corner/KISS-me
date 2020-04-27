@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-# Remove rsync dependency
-patch -p1 < rsyncless.patch
-
 # Perhaps we try clang on for size
 rm -f .clang
 
@@ -15,8 +12,11 @@ make \
     HOSTCC=clang \
     CC=clang
 
-make \
-    headers_install \
-    INSTALL_HDR_PATH="$1" \
-    HOSTCC=clang \
-    CC=clang
+make HOSTCC=clang CC=clang headers
+
+# rsync is required for headers_install.
+# So we'll install them ourself. 
+
+find usr/include -name \*.h -type f | while read -r file; do
+    install -Dm644 "$file" "$1/$file" 
+done
