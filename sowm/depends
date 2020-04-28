@@ -1,1 +1,4 @@
-/var/db/kiss/repo/xorg/./sowm/depends
+libX11
+libXau
+libxcb
+light
