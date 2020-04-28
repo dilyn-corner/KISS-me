@@ -1,7 +1,0 @@
-#/bin/sh -e 
-
-# Compatibility with Busybox install
-sed -i 's/-vCDt/-vDt/' Makefile
-
-make
-make DESTDIR="$1" install
