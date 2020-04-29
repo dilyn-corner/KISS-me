@@ -18,8 +18,8 @@
 +hb.o: st.h
  
  $(OBJ): config.h config.mk
- 
---- a/config.mk
+
+--- /aconfig.mk
 +++ b/config.mk
 @@ -15,10 +15,12 @@
  # includes and libs
@@ -27,15 +27,16 @@
         `$(PKG_CONFIG) --cflags fontconfig` \
 -       `$(PKG_CONFIG) --cflags freetype2`
 +       `$(PKG_CONFIG) --cflags freetype2` \
-+       `$(PKG_CONFIG) --cflags harfbuzz`
- LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft -lXrender \
++	    `$(PKG_CONFIG) --cflags harfbuzz`
+ LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft \
         `$(PKG_CONFIG) --libs fontconfig` \
 -       `$(PKG_CONFIG) --libs freetype2`
 +       `$(PKG_CONFIG) --libs freetype2` \
-+       `$(PKG_CONFIG) --libs harfbuzz`
++	    `$(PKG_CONFIG) --libs harfbuzz`
  
  # flags
  STCPPFLAGS = -DVERSION=\"$(VERSION)\" -D_XOPEN_SOURCE=600
+
 --- /dev/null
 +++ b/hb.c
 @@ -0,0 +1,128 @@
@@ -179,27 +180,26 @@
 +
 --- a/st.c
 +++ b/st.c
-@@ -2659,9 +2659,17 @@
+@@ -2673,8 +2673,17 @@
  		cx--;
  
  	drawregion(0, 0, term.col, term.row);
--	if (term.scr == 0)
--		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
--				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
+-	xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
+-			term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
 +    if (term.scr == 0) {
-+		/* Draw current line to format ligatures properly. */
-+		xdrawline(term.line[term.c.y], 0, term.c.y, term.col);
++        /* Draw current line to format ligatures properly */
++        xdrawline(term.line[term.c.y], 0, term.c.y, term.col);
 +
-+	 	xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
-+ 				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
++        xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
++                term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
 +
-+		/* If cursor was on a transformed glyph, we need to redraw the previous line */
-+	if (term.ocy != term.c.y && (term.line[term.ocy][term.ocx].mode & ATTR_LIGA))
-+			xdrawline(term.line[term.ocy], 0, term.ocy, term.col);
-+  }
- 	term.ocx = cx, term.ocy = term.c.y;
++        /* If cursor was ona  transformed glyph, we need to redraw the previous line */
++        if (term.ocy != term.c.y && (term.line[term.ocy][term.ocx].mode & ATTR_LIGA))
++            xdrawline(term.line[term.ocy], 0, term.ocy, term.col);
++    }
+ 	term.ocx = cx;
+ 	term.ocy = term.c.y;
  	xfinishdraw();
- 	xximspot(term.ocx, term.ocy);
 --- a/st.h
 +++ b/st.h
 @@ -11,8 +11,9 @@
