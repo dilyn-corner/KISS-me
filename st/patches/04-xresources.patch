@@ -51,8 +51,9 @@
  #include <X11/XKBlib.h>
 +#include <X11/Xresource.h>
  
- static char *argv0;
+ char *argv0;
  #include "arg.h"
+
 @@ -47,6 +48,19 @@
  	signed char appcursor; /* application cursor */
  } Key;
