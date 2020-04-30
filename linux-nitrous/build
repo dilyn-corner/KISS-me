@@ -12,12 +12,12 @@ cp config .config
 make \
     olddefconfig \
     HOSTCC=clang \
-    CC=clang 
+    CC=clang
 
 make \
     kernelrelease > version \
     HOSTCC=clang \
-    CC=clang \
+    CC=clang
 
 # Useful variables
 kernver="$(cat version)"
@@ -35,12 +35,10 @@ make \
     modules_install \
     INSTALL_MOD_PATH="$1/usr" \
     HOSTCC=clang \
-    CC=clang 
+    CC=clang
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
-
-chmod -Rc u=rwX,go=rX "$1"
 
 echo "Copying files to build external modules..."
 install -Dt "$builddir"                 -m644 .config Makefile Module.symvers System.map version vmlinux
@@ -57,6 +55,8 @@ cp -a arch/x86/include "$builddir/arch/x86/include"
 
 find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
 
+chmod -Rc u=rwX,go=rX "$1"
+
 echo "Removing cruft..."
 rm -r "$builddir/Documentation"
 find -L "$builddir" -type l             -exec rm -rf {} +
@@ -68,9 +68,5 @@ ln -sv "/usr/lib/modules/$kernver/build" "$1/usr/src/linux"
 
 echo "Installing kernel..."
 
-make \
-    INSTALL_PATH="$1/boot" \
-    install
-
-mv "$1/boot/vmlinuz"    "$1/boot/vmlinuz-$kernver"
-mv "$1/boot/System.map" "$1/boot/System.map-$kernver"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz-$kernver"
+install -Dm644 "System.map"            "$1/boot/System.map-$kernver"
