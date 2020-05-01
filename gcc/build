@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-patch -p1 < invalid_tls_model.patch
-
 # Make sure gmp is built with generic options.
 cp gcc/gmp/configfsf.guess gcc/gmp/config.guess
 cp gcc/gmp/configfsf.sub   gcc/gmp/config.sub
@@ -39,10 +37,10 @@ export libat_cv_have_ifunc=no
     --enable-threads \
     --enable-tls \
     --enable-languages=c,c++,fortran \
-    --build=x86_64-pc-linux-musl \
-    --disable-bootstrap
+    --build=x86_64-pc-linux-musl
+#    --disable-bootstrap
 
-make
+make profiledbootstrap
 make DESTDIR="$1" install
 
 # Save 35MB.
