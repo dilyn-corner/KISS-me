@@ -1,5 +1,5 @@
 git+https://git.suckless.org/dmenu
-patches/center.patch
-patches/xresources.patch
-patches/lineheight.patch
-patches/border.patch
+patches/01-border.patch
+patches/02-lineheight.patch
+patches/03-center.patch
+patches/04-xresources.patch

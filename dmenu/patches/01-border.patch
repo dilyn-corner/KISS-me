@@ -1,15 +1,15 @@
 --- a/config.def.h
 +++ b/config.def.h
-@@ -24,3 +24,6 @@
+@@ -21,3 +21,6 @@
   * for example: " /?\"&[]"
   */
  static const char worddelimiters[] = " ";
 +
 +/* Size of the window border */
-+static const unsigned int border_width = 5;
++static const unsigned int border_with = 3;
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -689,9 +689,10 @@
+@@ -659,9 +659,10 @@
  	swa.override_redirect = True;
  	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
  	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
