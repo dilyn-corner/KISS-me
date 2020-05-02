@@ -1,13 +1,13 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.6.6 Kernel Configuration
+# Linux/x86 5.6.8 Kernel Configuration
 #
 
 #
-# Compiler: gcc (GCC) 9.3.0
+# Compiler: gcc (GCC) 10.0.1 20200426 (experimental)
 #
 CONFIG_CC_IS_GCC=y
-CONFIG_GCC_VERSION=90300
+CONFIG_GCC_VERSION=100001
 CONFIG_CLANG_VERSION=0
 CONFIG_CC_CAN_LINK=y
 CONFIG_CC_HAS_ASM_GOTO=y
@@ -193,7 +193,7 @@ CONFIG_PERF_EVENTS=y
 # CONFIG_DEBUG_PERF_USE_VMALLOC is not set
 # end of Kernel Performance Events And Counters
 
-# CONFIG_VM_EVENT_COUNTERS is not set
+CONFIG_VM_EVENT_COUNTERS=y
 # CONFIG_SLUB_DEBUG is not set
 # CONFIG_COMPAT_BRK is not set
 # CONFIG_SLAB is not set
