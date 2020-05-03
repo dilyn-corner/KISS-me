@@ -2,5 +2,6 @@ blis
 libX11
 libXt
 pcre2
+perl make
 readline
 xz
