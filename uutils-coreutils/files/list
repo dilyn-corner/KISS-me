@@ -21,6 +21,7 @@ ln
 md5sum
 mkdir
 mktemp
+mv
 nl
 paste
 printenv

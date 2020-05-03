@@ -4,10 +4,8 @@ echo "## STILL IN TESTING ##"
 sleep 10
 
 cargo build --release
-install -Dm755 target/release/uutils "$1/usr/bin/uutils"
-
-mv target/release/uutils ./uutils
+cargo install --root="$1/usr/bin"
 
 while read util; do
-    ln -sv uutils "$1/usr/bin/$util"
+    ln -sv "$1/usr/bin/uutils" "$1/usr/bin/$util"
 done < list
