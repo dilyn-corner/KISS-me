@@ -4,8 +4,10 @@ echo "## STILL IN TESTING ##"
 sleep 10
 
 cargo build --release
-cargo install --root="$1/usr/bin"
+cargo install --root="$1/usr"
 
-while read util; do
-    ln -sv "$1/usr/bin/uutils" "$1/usr/bin/$util"
-done < list
+cd "$1/usr/bin"
+
+./uutils --help | tail -n 74 | while read -r util; do
+    ln -sv uutils "$util"
+done
