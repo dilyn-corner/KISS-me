@@ -11,3 +11,6 @@ cd "$1/usr/bin"
 ./uutils --help | tail -n 74 | while read -r util; do
     ln -sv uutils "$util"
 done
+
+# uutils cp is not fully implemented and fails to work with kiss a
+unlink cp
