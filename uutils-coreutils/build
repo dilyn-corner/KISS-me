@@ -6,11 +6,9 @@ sleep 10
 cargo build --release
 cargo install --root="$1/usr"
 
-cd "$1/usr/bin"
-
-./uutils --help | tail -n 74 | while read -r util; do
-    ln -sv uutils "$util"
+"$1/usr/bin/uutils" --help | tail -n 74 | while read -r util; do
+    ln -sv uutils "$1/usr/bin/$util"
 done
 
 # uutils cp is not fully implemented and fails to work with kiss a
-unlink cp
+unlink "$1/usr/bin/cp"
