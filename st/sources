@@ -2,5 +2,4 @@ https://dl.suckless.org/st/st-0.8.3.tar.gz
 patches/01-scrollback.patch
 patches/02-ligatures.patch
 patches/03-alpha.patch
-patches/04-xresources.patch
-patches/05-font-and-padding.patch
+patches/04-font-and-padding.patch
