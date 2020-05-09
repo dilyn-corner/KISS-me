@@ -37,7 +37,7 @@ meson \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --localstatedir=/var \
-    --buildtype=release \
+    -Dbuildtype=release \
     -Dplatforms=x11,drm \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
