@@ -1,5 +1,7 @@
 #!/bin/sh -e 
 
+sed -i 's/perl -pe/sed -e/g' configure
+
 ./configure \
     --prefix=/usr \
     -t openmp \
