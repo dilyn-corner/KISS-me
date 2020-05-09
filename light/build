@@ -1,7 +1,8 @@
 #!/bin/sh -e
 
-./autogen.sh
+export CFLAGS="$CFLAGS -fcommon"
 
+autoreconf -sfi
 ./configure \
     --prefix=/usr
 
