@@ -16,6 +16,9 @@ export libat_cv_have_ifunc=no
 
 ../gcc/configure \
     --prefix=/usr \
+    --libexecdir=/usr/lib \
+    --mandir=/usr/share/man \
+    --infodir=/usr/share/info \
     --disable-multilib \
     --disable-symvers \
     --disable-libmpx \
@@ -25,11 +28,7 @@ export libat_cv_have_ifunc=no
     --disable-fixed-point \
     --disable-libstdcxx-pch \
     --disable-nls \
-    --without-included-gettext \
     --enable-checking=release \
-    --mandir=/usr/share/man \
-    --infodir=/usr/share/info \
-    --with-system-zlib \
     --enable-__cxa_atexit \
     --enable-default-pie \
     --enable-default-ssp \
@@ -37,16 +36,17 @@ export libat_cv_have_ifunc=no
     --enable-threads \
     --enable-tls \
     --enable-languages=c,c++,fortran \
+    --without-included-gettext \
+    --with-system-zlib \
     --build=x86_64-pc-linux-musl
-#    --disable-bootstrap
 
 make profiledbootstrap
 make DESTDIR="$1" install
 
 # Save 35MB.
-find "$1" -name libgtkpeer.a  -delete
-find "$1" -name libgjsmalsa.a -delete
-find "$1" -name libgij.a      -delete
+find "$1" -name libgtkpeer.a  -exec rm -f {} +
+find "$1" -name libgjsmalsa.a -exec rm -f {} +
+find "$1" -name libgij.a      -exec rm -f {} +
 
 # Some legacy programs will expect cc
 ln -s gcc "$1/usr/bin/cc"
@@ -58,7 +58,6 @@ install -Dm755 ../c99 "$1/usr/bin/c99"
 {
     mkdir -p "$1/usr/lib/bfd-plugins"
 
-    ln -s /usr/libexec/gcc/x86_64-pc-linux-musl/9.2.0/liblto_plugin.so \
+    ln -s /usr/lib/gcc/x86_64-pc-linux-musl/10.1.0/liblto_plugin.so \
           "$1/usr/lib/bfd-plugins/liblto_plugin.so"
 }
-
