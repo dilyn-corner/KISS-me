@@ -3,6 +3,7 @@
 export CFLAGS="$CFLAGS -fcommon"
 
 autoreconf -sfi
+
 ./configure \
     --prefix=/usr
 
