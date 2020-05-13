@@ -3,21 +3,21 @@
 patch -p1 < no-perl.patch
 
 # Perhaps we try clang on for size
-rm -f .clang
+#rm -f .clang
 
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
 
 make \
-    olddefconfig \
-    HOSTCC=clang \
-    CC=clang
+    olddefconfig
+#    HOSTCC=clang \
+#    CC=clang
 
 make \
-    kernelrelease > version \
-    HOSTCC=clang \
-    CC=clang
+    kernelrelease > version
+#    HOSTCC=clang \
+#    CC=clang
 
 # Useful variables
 kernver="$(cat version)"
@@ -26,16 +26,16 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
-make \
-    HOSTCC=clang \
-    CC=clang
+make
+#    HOSTCC=clang \
+#    CC=clang
 
 echo "Installing modules..."
 make \
     modules_install \
-    INSTALL_MOD_PATH="$1/usr" \
-    HOSTCC=clang \
-    CC=clang
+    INSTALL_MOD_PATH="$1/usr"
+#    HOSTCC=clang \
+#    CC=clang
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
