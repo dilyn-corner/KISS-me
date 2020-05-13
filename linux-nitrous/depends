@@ -1,5 +1,4 @@
 bison make
-clang make
 libelf
 libressl
 lz4
