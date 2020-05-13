@@ -8,11 +8,11 @@ scripts/setlocalversion --save-scmversion
 cp config .config
 
 make \
-    olddefconfig \
-    HOSTCC=clang \
-    CC=clang
+    olddefconfig
+#    HOSTCC=clang \
+#    CC=clang
 
-make HOSTCC=clang CC=clang headers
+make headers
 
 # rsync is required for headers_install.
 # So we'll install them ourself. 
