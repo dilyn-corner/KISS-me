@@ -9,10 +9,11 @@ cp config .config
 
 make \
     olddefconfig
-#    HOSTCC=clang \
-#    CC=clang
 
-make headers
+make \
+    headers \
+    CC=clang \
+    HOSTCC=clang
 
 # rsync is required for headers_install.
 # So we'll install them ourself. 

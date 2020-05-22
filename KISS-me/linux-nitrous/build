@@ -3,21 +3,15 @@
 patch -p1 < no-perl.patch
 
 # Perhaps we try clang on for size
-#rm -f .clang
+rm -f .clang
+# one day we can use these
+mkvars="CC=clang HOSTCC=clang NM=llvm-nm AR=llvm-ar HOSTLD=ld.lld OBJCOPY=llvm-objcopy STRIP=llvm-strip"
 
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
-
-make \
-    olddefconfig
-#    HOSTCC=clang \
-#    CC=clang
-
-make \
-    kernelrelease > version
-#    HOSTCC=clang \
-#    CC=clang
+make olddefconfig
+make kernelrelease > version
 
 # Useful variables
 kernver="$(cat version)"
@@ -26,16 +20,16 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-"$kernver""
-make
-#    HOSTCC=clang \
-#    CC=clang
+make \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Installing modules..."
 make \
     modules_install \
-    INSTALL_MOD_PATH="$1/usr"
-#    HOSTCC=clang \
-#    CC=clang
+    INSTALL_MOD_PATH="$1/usr" \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -59,8 +53,8 @@ chmod -Rc u=rwX,go=rX "$1"
 
 echo "Removing cruft..."
 rm -r "$builddir/Documentation"
-find -L "$builddir" -type l             -exec rm -rf {} +
-find    "$builddir" -type f -name "*.o" -exec rm -rf {} +
+find -L "$builddir" -type l             -exec rm -rf {} \;
+find    "$builddir" -type f -name "*.o" -exec rm -rf {} \;
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
