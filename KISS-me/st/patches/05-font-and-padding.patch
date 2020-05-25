@@ -7,7 +7,18 @@
 -static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 -static int borderpx = 2;
 +static char *font = "Iosevka:pixelsize=18:antialias=true:autohint=true";
-+static int borderpx = 30;
++static int borderpx = 40;
  
  /*
   * What program is execed by st depends of these precedence rules:
+@@ -140,8 +140,8 @@
+  * Default columns and rows numbers
+  */
+ 
+-static unsigned int cols = 80;
+-static unsigned int rows = 24;
++static unsigned int cols = 95;
++static unsigned int rows = 25;
+ 
+ /*
+  * Default colour and shape of the mouse cursor
