@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+for patch in *.patch; do 
+    patch -p1 < $patch
+done
+
+autoreconf -sfi
+
+install -Dm644 error.h "$1/lib/error.h"
+install -Dm644 error.h "$1/src/error.h"
+
+cat > lib/libintl.h << EOF
+#ifndef LIBINTL_H
+#define LIBINTL_H
+#define _(x) (x)
+#endif
+EOF
+
+export CFLAGS="$CFLAGS -Wno-error -Wno-null-dereference" 
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --program-prefix=eu- \
+    --enable-deterministic-archives \
+    --disable-nls \
+    --disable-debuginfod
+
+make
+make DESTDIR="$1" install
