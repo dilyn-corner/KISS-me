@@ -1,4 +1,0 @@
-git+https://github.com/llvm/llvm-project#f5224d437eace9593b64ef2eff501df397bce6a8
-files/c99
-files/profdata.prof
-patches/libcxx-musl_compat.patch
