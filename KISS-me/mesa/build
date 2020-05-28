@@ -42,7 +42,6 @@ meson \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
-    -Dprefer-iris=true \
     . output
 
 ninja -C output
