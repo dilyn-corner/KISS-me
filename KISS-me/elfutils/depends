@@ -1,0 +1,6 @@
+argp-standalone
+bison make
+flex make
+fts
+libtool make
+obstack
