@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+patch -p1 < luajit-clang.patch
+
+# Remove mandatory gettext dependency.
+sed -i -e 's/^/#/' src/nvim/po/CMakeLists.txt
+
+# Fix build with GCC 10.
+export CFLAGS="$CFLAGS -fcommon"
+export LDFLAGS="$LDFLAGS -lc++"
+
+make CMAKE_BUILD_TYPE=Release \
+     CMAKE_INSTALL_PREFIX=/usr \
+     CMAKE_INSTALL_LIBDIR=lib
+
+make DESTDIR="$1" install
