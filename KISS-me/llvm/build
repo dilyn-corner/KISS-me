@@ -17,7 +17,7 @@ cmake -G Ninja -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_LINK_LLVM_DYLIB=ON \
-    -DLLVM_ENABLE_PROJECTS="clang;flang;compiler-rt;libunwind;libcxxabi;libcxx;lld;openmp;mlir" \
+    -DLLVM_ENABLE_PROJECTS="clang;flang;compiler-rt;libunwind;libcxxabi;libcxx;lld" \
     -DLLVM_ENABLE_RTTI=ON \
     -DLLVM_ENABLE_EH=ON \
     -DLLVM_ENABLE_TERMINFO=OFF \
