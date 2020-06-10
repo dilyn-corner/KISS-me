@@ -8,7 +8,9 @@ scripts/setlocalversion --save-scmversion
 cp config .config
 
 make \
-    olddefconfig
+    olddefconfig \
+    CC=clang \
+    HOSTCC=clang
 
 make \
     headers \
