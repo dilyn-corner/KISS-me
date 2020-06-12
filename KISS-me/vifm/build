@@ -1,8 +1,18 @@
 #!/bin/sh -e
 
+# make doesn't actually create this file
+touch data/vifm-help.txt
+
 ./configure \
     --prefix=/usr \
-    --mandir=/usr/share/man
+    --sysconfdir=/etc \
+    --mandir=/usr/share/man \
+    --without-X11 \
+    --without-gtk \
+    --disable-build-timestamp
 
 make
 make DESTDIR="$1" install
+
+# Remove the dummy file we made
+rm "$1/usr/share/vifm/vifm-help.txt"
