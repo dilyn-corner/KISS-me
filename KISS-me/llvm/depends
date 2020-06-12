@@ -1,3 +1,4 @@
 cmake make
+perl make
 python make
 zlib
