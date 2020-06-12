@@ -13,7 +13,3 @@ cmake -B build \
 
 cmake --build   build
 cmake --install build
-
-# Ensure we find flang
-mkdir -p "$1/usr"
-ln -s flang "$1/usr/bin/gfortran"
