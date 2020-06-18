@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
-patch -p1 < no-perl.patch
+for patch in *.patch; do 
+    patch -p1 < $patch
+done
 
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
