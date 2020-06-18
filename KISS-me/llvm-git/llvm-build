@@ -17,7 +17,7 @@ cmake -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DLLVM_TARGETS_TO_BUILD="host" \
     -DLLVM_HOST_TRIPLE="$(clang -dumpmachine)" \
-    -DLLVM_ENABLE_PROJECTS="compiler-rt;libunwind;libcxxabi;libcxx;lld;mlir" \
+    -DLLVM_ENABLE_PROJECTS="clang;compiler-rt;libunwind;libcxxabi;libcxx;lld;mlir;openmp" \
     -DLLVM_ENABLE_LLD=ON \
     -DLLVM_ENABLE_LIBCXX=ON \
     -DLLVM_ENABLE_EH=ON \
