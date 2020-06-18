@@ -1,1 +1,4 @@
-/home/dilyn/git/community/community/neovim/depends
+automake make
+cmake    make
+libtool  make
+unzip    make
