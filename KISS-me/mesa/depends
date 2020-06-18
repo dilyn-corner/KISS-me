@@ -1,5 +1,4 @@
 bison        make
-elfutils
 expat
 flex         make
 libX11
@@ -9,7 +8,7 @@ libXrandr
 libXrender
 libXxf86vm
 libdrm
-#libelf
+libelf
 libxcb
 libxshmfence
 linux-headers make
