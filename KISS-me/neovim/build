@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-# Fix build with clang
-export LDFLAGS="$LDFLAGS -lc++"
-
 # Remove mandatory gettext dependency.
 sed -i -e 's/^/#/' src/nvim/po/CMakeLists.txt
 
