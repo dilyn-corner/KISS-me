@@ -1,21 +1,14 @@
 #!/bin/sh -e
 
-# Perhaps we try clang on for size
-rm -f .clang
-
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
 
 make \
-    olddefconfig \
-    CC=clang \
-    HOSTCC=clang
+    olddefconfig
 
 make \
-    headers \
-    CC=clang \
-    HOSTCC=clang
+    headers
 
 # rsync is required for headers_install.
 # So we'll install them ourself. 
