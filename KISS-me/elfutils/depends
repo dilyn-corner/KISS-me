@@ -1,6 +1,6 @@
 argp-standalone
 bison make
 flex make
-fts
+fts-standalone
 libtool make
 obstack
