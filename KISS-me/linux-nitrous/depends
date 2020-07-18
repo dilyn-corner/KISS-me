@@ -1,5 +1,5 @@
-bison make
-elfutils
-libressl
-lz4
-m4 make
+#bison make
+#elfutils
+#libressl
+#lz4
+#m4 make
