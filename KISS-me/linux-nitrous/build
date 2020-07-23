@@ -8,21 +8,26 @@ rm -f .clang
 # Set the kernel up for success!
 scripts/setlocalversion --save-scmversion
 cp config .config
-make olddefconfig 
-make kernelrelease
+make olddefconfig CC=clang HOSTCC=clang
+make kernelrelease CC=clang HOSTCC=clang
 
 # Useful variables
-modulesdir="$1/usr/lib/modules/5.7.4"
+kernver="$(cat version)"
+modulesdir="$1/usr/lib/modules/$kernver"
 builddir="$modulesdir/build"
 
 # Make that bad boy!
-echo "Making linux"
-make
+echo "Making linux-"$kernver""
+make \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Installing modules..."
 make \
     modules_install \
-    INSTALL_MOD_PATH="$1/usr"
+    INSTALL_MOD_PATH="$1/usr" \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -55,9 +60,9 @@ done
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
-ln -sv "/usr/lib/modules/5.7.4/build" "$1/usr/src/linux"
+ln -sv "$builddir" "$1/usr/src/linux"
 
 echo "Installing kernel..."
 
-install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz-5.7.4"
-install -Dm644 "System.map"            "$1/boot/System.map-5.7.4"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz-$kernver"
+install -Dm644 "System.map"            "$1/boot/System.map-$kernver"
