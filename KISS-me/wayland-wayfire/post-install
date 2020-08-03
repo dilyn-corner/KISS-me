@@ -1,0 +1,8 @@
+##!/bin/sh
+
+chmod u+s "$1/usr/bin/wayfire"
+
+cat << EOF
+A default config is included in /usr/share/wayfire
+Feel free to copy this to $HOME/.config/wayfire.ini
+EOF

@@ -1,0 +1,3 @@
+https://github.com/WayfireWM/wayfire/releases/download/0.4.0/wayfire-0.4.0.tar.xz
+patches/debug-remove.patch
+patches/wlroots_0.11.0.patch

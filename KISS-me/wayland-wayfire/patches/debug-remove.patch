@@ -1,0 +1,52 @@
+--- a/src/debug-func.hpp
++++ b/src/debug-func.hpp
+@@ -186,39 +186,3 @@
+         try_addr2line(executable, real_address),
+     };
+ }
+-
+-void wf::print_trace()
+-{
+-    void* addrlist[MAX_FRAMES];
+-    int addrlen = backtrace(addrlist, MAX_FRAMES);
+-    if (addrlen == 0)
+-    {
+-        LOGE("Failed to determine backtrace, recompile with ASAN!");
+-        return;
+-    }
+-
+-    char** symbollist = backtrace_symbols(addrlist, addrlen);
+-
+-    for(int i = 1; i < addrlen; i++)
+-    {
+-        auto result = demangle_function(symbollist[i]);
+-
+-        std::ostringstream line;
+-        line << '#' << std::left << std::setw(2) << i << " ";
+-        if (result.address.size() && result.executable.size() && HAS_ADDR2LINE) {
+-            auto source = locate_source_file(result);
+-            line << source.function_name << " " << source.function_source;
+-        } else if (result.function_name.size()) {
+-            line << result.function_name << " at " << result.address;
+-        } else {
+-            line << symbollist[i];
+-        }
+-
+-        auto contents = line.str();
+-        if (contents.size() && contents.back() == '\n')
+-            contents.pop_back();
+-        wf::log::log_plain(wf::log::LOG_LEVEL_ERROR, contents);
+-    }
+-
+-    free(symbollist);
+-}
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -202,7 +202,6 @@
+     }
+ 
+     LOGE("Fatal error: ", error);
+-    wf::print_trace();
+     std::exit(0);
+ }
+ 
