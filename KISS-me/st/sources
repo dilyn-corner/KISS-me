@@ -4,3 +4,4 @@ patches/02-ligatures.patch
 patches/03-alpha.patch
 patches/04-analyze.patch
 patches/05-font-and-padding.patch
+patches/06-osc.patch

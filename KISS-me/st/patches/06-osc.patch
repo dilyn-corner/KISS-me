@@ -1,0 +1,63 @@
+--- a/config.def.h
++++ b/config.def.h
+@@ -124,8 +124,8 @@
+  */
+ unsigned int defaultfg = 7;
+ unsigned int defaultbg = 258;
+-static unsigned int defaultcs = 256;
+-static unsigned int defaultrcs = 257;
++unsigned int defaultcs = 256;
++unsigned int defaultrcs = 257;
+ 
+ /*
+  * Default shape of cursor
+--- a/st.c
++++ b/st.c
+@@ -1942,12 +1942,24 @@
+ 			}
+ 			return;
+ 		case 4: /* color set */
+-			if (narg < 3)
+-				break;
+-			p = strescseq.args[2];
++        case 10: /* foreground set */
++        case 11: /* background set */
++        case 12: /* cursor color */
++            if ((par == 4 && narg < 3) || narg < 2)
++                    break;
++            p = strescseq.args[((par == 4) ? 2 : 1)];
+ 			/* FALLTHROUGH */
+ 		case 104: /* color reset, here p = NULL */
+-			j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
++            j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
++            if (par == 10)
++                j = defaultfg;
++            else if (par == 11)
++                j = defaultbg;
++            else if (par == 12)
++                j = defaultcs;
++            else
++                j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
++
+ 			if (xsetcolorname(j, p)) {
+ 				if (par == 104 && narg <= 1)
+ 					return; /* color reset without parameter */
+@@ -1958,7 +1970,9 @@
+ 				 * TODO if defaultbg color is changed, borders
+ 				 * are dirty
+ 				 */
+-				redraw();
++                if (j != 0 && j != 15) {
++                    redraw();
++                }
+ 			}
+ 			return;
+ 		}
+--- a/st.h
++++ b/st.h
+@@ -127,4 +127,5 @@
+ extern unsigned int tabspaces;
+ extern unsigned int defaultfg;
+ extern unsigned int defaultbg;
++extern unsigned int defaultcs;
+ extern float alpha;
