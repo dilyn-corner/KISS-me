@@ -40,43 +40,38 @@ index 1cb3ca9..eeb201b 100644
 +		}
  	}
  }
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index da3e5b5..10ec336 100644
+
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -6647,6 +6647,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+@@ -6659,6 +6659,9 @@
   *
   * preempt must be disabled.
   */
 +
 +int best_core = -1;
 +int second_best_core = -1;
-+
  static int
  select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_flags)
  {
-@@ -6669,6 +6673,21 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+@@ -6680,6 +6683,21 @@
+ 
  		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
  	}
- 
-+	if (prev_cpu != best_core && prev_cpu != second_best_core &&
-+		       cpu_rq(prev_cpu)->nr_running != 0) {
-+		if (second_best_core != -1 && cpu_rq(second_best_core)->nr_running == 0 &&
-+			       nr_iowait_cpu(second_best_core) < 2 && cpu_to_node(prev_cpu) == cpu_to_node(second_best_core))
-+			prev_cpu = second_best_core;
-+		if (best_core != -1 && cpu_rq(best_core)->nr_running == 0 &&
-+			       nr_iowait_cpu(best_core) < 2  && cpu_to_node(prev_cpu) == cpu_to_node(best_core))
-+			prev_cpu = best_core;
-+	}
++
++    if (prev_cpu != best_core && prev_cpu != second_best_core &&
++               cpu_rq(prev_cpu)->nr_running != 0) {
++        if (second_best_core != -1 && cpu_rq(second_best_core)->nr_running == 0 &&
++                   nr_iowait_cpu(second_best_core) < 2 && cpu_to_node(prev_cpu) == cpu_to_node(second_best_core))
++            prev_cpu = second_best_core;
++        if (best_core != -1 && cpu_rq(best_core)->nr_running == 0 &&
++                   nr_iowait_cpu(best_core) < 2  && cpu_to_node(prev_cpu) == cpu_to_node(best_core))
++            prev_cpu = best_core;
++    }
 +/*
-+	if (prev_cpu > 0 && cpu_rq(prev_cpu)->nr_running != 0 && cpu_rq(prev_cpu - 1)->nr_running == 0)
-+		prev_cpu = prev_cpu - 1;
++   if (prev_cpu > 0 && cpu_rq(prev_cpu)->nr_running != 0 && cpu_rq(prev_cpu - 1)->nr_running == 0)
++       prev_cpu = prev_cpu - 1;
 +*/
 +
-+
+ 
  	rcu_read_lock();
  	for_each_domain(cpu, tmp) {
- 		if (!(tmp->flags & SD_LOAD_BALANCE))
--- 
-https://clearlinux.org
-
