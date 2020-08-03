@@ -1,0 +1,6 @@
+glm make
+libevdev
+libxml2
+meson make
+wayland-protocols make
+wlroots make
