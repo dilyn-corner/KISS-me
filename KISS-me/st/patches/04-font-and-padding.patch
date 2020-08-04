@@ -17,8 +17,8 @@
  
 -static unsigned int cols = 80;
 -static unsigned int rows = 24;
-+static unsigned int cols = 95;
-+static unsigned int rows = 25;
++static unsigned int cols = 87; /* 95 */
++static unsigned int rows = 24; /* 25 */
  
  /*
   * Default colour and shape of the mouse cursor
