@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+cd qtdeclarative
+
+qmake
+
+make
+make INSTALL_ROOT="$1" install
