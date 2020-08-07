@@ -1,0 +1,6 @@
+git+https://code.qt.io/qt/qt5
+files/qt.conf
+patches/qsslsocket_openssl_cpp.patch
+patches/qsslcontext_openssl_cpp.patch
+patches/qsslsocket_openssl_symbols_p.patch
+patches/qsslsocket_openssl_symbols_cpp.patch
