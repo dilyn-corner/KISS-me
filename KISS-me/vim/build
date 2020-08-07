@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --enable-cscope \
+    --with-ex-name=vim-ex \
+    --with-view-name=vim-view \
+    --enable-python3interp \
+    --with-python3-config-dir=/usr/lib/python3.8/config-* \
+    --disable-netbeans \
+    --disable-gpm \
+    --disable-hangulinput \
+    --disable-xim \
+    --disable-gui \
+    --disable-nls
+
+make
+make DESTDIR="$1" install
+
+ln -sv "vim" "$1/usr/bin/nvim"
