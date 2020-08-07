@@ -1,0 +1,19 @@
+case $TYPE in
+    pre-build)
+        case $PKG in
+            busybox)
+                CFLAGS=" " CXXFLAGS=" "
+            ;;
+        esac
+    ;;
+
+    post-build)
+    : "${DEST:?DEST is unset}"
+
+        rm -rf "$DEST/usr/share/gettext" \
+               "$DEST/usr/share/polkit-1" \
+               "$DEST/usr/share/locale" \
+               "$DEST/usr/share/info" \
+               "$DEST/usr/lib/charset.alias" 
+    ;;
+esac
