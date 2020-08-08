@@ -14,7 +14,7 @@ make olddefconfig
 
 # Useful variables
 #kernver="$(cat version)"
-modulesdir="$1/usr/lib/modules/$kernver"
+modulesdir="$1/usr/lib/modules/$2"
 builddir="$modulesdir/build"
 
 # Make that bad boy!
