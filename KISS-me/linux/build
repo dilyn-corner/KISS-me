@@ -6,7 +6,10 @@ done
 
 # Set the kernel up for success!
 cp config .config
-make olddefconfig
+make \
+    olddefconfig \
+    CC=clang \
+    HOSTCC=clang
 
 ## If we want to include version strings
 #scripts/setlocalversion --save-scmversion
@@ -19,21 +22,26 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-make
+make \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Installing modules..."
 make \
     modules_install \
-    INSTALL_MOD_PATH="$1/usr"
+    INSTALL_MOD_PATH="$1/usr" \
+    CC=clang \
+    HOSTCC=clang
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
 
 echo "Copying files to build external modules..."
-install -Dt "$builddir"                 -m644 .config Makefile Module.symvers System.map version vmlinux
+install -Dt "$builddir"                 -m644 .config Makefile \
+                                              Module.symvers System.map  vmlinux
+install -Dt "$builddir/kernel"          -m644 kernel/Makefile
 install -Dt "$builddir/arch/x86"        -m644 arch/x86/Makefile
 install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
-install -Dt "$builddir/kernel"          -m644 kernel/Makefile
 install -Dt "$builddir/drivers/md"      -m644 drivers/md/*.h
 install -Dt "$builddir/net/mac80211"    -m644 net/mac80211/*.h
 install -Dt "$builddir/tools/objtool"         tools/objtool/objtool
@@ -57,7 +65,7 @@ done
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
-ln -sv "/usr/lib/modules/$kernver/build" "$1/usr/src/linux"
+ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
 echo "Installing kernel..."
 
