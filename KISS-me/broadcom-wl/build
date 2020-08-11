@@ -1,4 +1,4 @@
 #!/bin/sh -e
 
-make
+make CC=clang
 install -Dm644 wl.ko "$1/usr/lib/modules/$(uname -r)/kernel/drivers/net/wireless/wl.ko"
