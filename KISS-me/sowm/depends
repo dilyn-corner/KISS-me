@@ -1,4 +1,6 @@
+dmenu
 libX11
 libXau
 libxcb
 light
+st
