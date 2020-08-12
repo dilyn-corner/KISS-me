@@ -1,5 +1,11 @@
 #!/bin/sh -e
 
+if [ -e /usr/lib/libc++.so ]; then
+    PLATFORM='platform linux-clang-libc++'
+fi
+
+perl init-repository --module-subset=qtbase
+
 cd qtbase
 
 for patch in ../*.patch; do
@@ -22,7 +28,7 @@ sed -i 's/define QLOG/define N/g' \
     -examplesdir /usr/share/doc/qt/examples \
     -nomake examples \
     -nomake tests \
-    -platform linux-clang-libc++ \
+    -$PLATFORM \
     -optimized-qmake \
     -no-libudev \
     -no-separate-debug-info \

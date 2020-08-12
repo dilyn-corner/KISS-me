@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+perl init-repository --module-subset=qtwebengine
+
 cd qtwebengine
 
 for patch in ../*.patch; do
