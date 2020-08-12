@@ -1,5 +1,6 @@
 fontconfig
 freetype-harfbuzz
+iosevka-nerd-fonts
 libX11
 libXft
 ncurses make
