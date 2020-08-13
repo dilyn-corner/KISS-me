@@ -2,8 +2,7 @@ case $TYPE in
     pre-build)
         case $PKG in
             busybox)
-                CFLAGS=" " CXXFLAGS=" "
-            ;;
+                CFLAGS=" " CXXFLAGS=" " ;;
         esac
     ;;
 
