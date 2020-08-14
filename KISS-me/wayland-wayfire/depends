@@ -1,9 +1,0 @@
-cairo
-cmake make
-glm
-libexecinfo
-linux-headers make
-meson make
-wayland-protocols make
-wf-config
-wlroots
