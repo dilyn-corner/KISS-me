@@ -1,18 +1,53 @@
 case $TYPE in
     pre-build)
         case $PKG in
-            busybox)
-                CFLAGS=" " CXXFLAGS=" " ;;
+            busybox) # busybox hates clang
+                CFLAGS=" " CXXFLAGS=" "
+            ;;
+            gcc) # Add gfortran, PGO
+                _bootstrap='"${bootstrap:---enable-bootstrap}"'
+                sed -i 's/c++,/c++,fortran/'                .build.kiss
+                sed -i 's/linux-musl \\/linux-musl/'        .build.kiss
+                sed -i "/$_bootstrap/d"                     .build.kiss
+                sed -i '0,/make/s//make profiledbootstrap/' .build.kiss
+            ;;
+            vim) # add X support for clipboards
+                sed -i "s/nls \\/nls/"  .build.kiss
+                sed -i "/--without-x/d" .build.kiss
+            ;;
+            mesa) # because fuck a radeon
+                _flags=-Ddri-drivers=i965
+                _flags="$_flags\ -Dgallium-drivers=i915"
+                _flags="$_flags\ -Dvulkan-drivers=intel"
+
+                sed -i "s/\. output/$_flags \0/" .build.kiss
+            ;;
         esac
     ;;
 
     post-build)
-    : "${DEST:?DEST is unset}"
+        IFS=. read -r _end _ < /proc/uptime
 
-        rm -rf "$DEST/usr/share/gettext" \
-               "$DEST/usr/share/polkit-1" \
-               "$DEST/usr/share/locale" \
-               "$DEST/usr/share/info" \
-               "$DEST/usr/lib/charset.alias" 
+        (
+            _s=$((_end - _start))
+            _h=$((_s / 60 % 60))
+            _m=$((_s / 60 / 60 % 24))
+
+            [ "$_h" = 0 ] || _u="${_u}${_h}h "
+            [ "$_m" = 0 ] || _u="${_u}${_m}m "
+            
+            log "$PKG" "build finished in ${_u:-${_s}s}"
+        )
+
+        : "${DEST:?DEST is unset}"
+
+            rm -rf "$DEST/usr/lib/charset.alias"
+            rm -rf "$DEST/usr/share/polkit-1"
+            rm -rf "$DEST/usr/share/gettext"
+            rm -rf "$DEST/usr/share/locale"
+            rm -rf "$DEST/usr/share/info"
+            rm -rf "$DEST/usr/share/doc"
+            rm -rf "$DEST/usr/share/man"
+            rm -rf "$DEST/usr/share/zsh"
     ;;
 esac
