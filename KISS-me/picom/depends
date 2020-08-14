@@ -1,7 +1,1 @@
-libconfig
-libev
-meson make
-pixman
-uthash make
-xcb-util-image
-xcb-util-renderutil
+/home/dilyn/git/community/community/picom/depends

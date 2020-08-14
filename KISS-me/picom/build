@@ -1,12 +1,1 @@
-#!/bin/sh -e
-
-export DESTDIR="$1"
-
-meson \
-    --prefix=/usr \
-    -Ddbus=false \
-    -Dregex=false \
-    . build
-
-ninja -C build
-ninja -C build install
+/home/dilyn/git/community/community/picom/build
