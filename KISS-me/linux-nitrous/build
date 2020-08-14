@@ -6,18 +6,18 @@ patch -p1 < no-perl.patch
 rm -f .clang
 
 # Set the kernel up for success!
-scripts/setlocalversion --save-scmversion
 cp config .config
-make olddefconfig CC=clang HOSTCC=clang
-make kernelrelease CC=clang HOSTCC=clang
+make \
+    nitrous-fire_defconfig \
+    CC=clang \
+    HOSTCC=clang
 
 # Useful variables
-kernver="$(cat version)"
-modulesdir="$1/usr/lib/modules/$kernver"
+modulesdir="$1/usr/lib/modules/$2"
 builddir="$modulesdir/build"
 
 # Make that bad boy!
-echo "Making linux-"$kernver""
+echo "Making linux-"$2""
 make \
     CC=clang \
     HOSTCC=clang
@@ -33,10 +33,10 @@ echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
 
 echo "Copying files to build external modules..."
-install -Dt "$builddir"                 -m644 .config Makefile Module.symvers System.map version vmlinux
+install -Dt "$builddir"                 -m644 .config Makefile Module.symvers System.map vmlinux
+install -Dt "$builddir/kernel"          -m644 kernel/Makefile
 install -Dt "$builddir/arch/x86"        -m644 arch/x86/Makefile
 install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
-install -Dt "$builddir/kernel"          -m644 kernel/Makefile
 install -Dt "$builddir/drivers/md"      -m644 drivers/md/*.h
 install -Dt "$builddir/net/mac80211"    -m644 net/mac80211/*.h
 install -Dt "$builddir/tools/objtool"         tools/objtool/objtool
@@ -64,5 +64,5 @@ ln -sv "$builddir" "$1/usr/src/linux"
 
 echo "Installing kernel..."
 
-install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz-$kernver"
-install -Dm644 "System.map"            "$1/boot/System.map-$kernver"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz-$2"
+install -Dm644 "System.map"            "$1/boot/System.map-$2"

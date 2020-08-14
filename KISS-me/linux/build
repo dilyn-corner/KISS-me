@@ -50,7 +50,7 @@ cp -a scripts          "$builddir/scripts"
 cp -a include          "$builddir/include"
 cp -a arch/x86/include "$builddir/arch/x86/include"
 
-find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" +
+find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
 
 chmod -Rc u=rwX,go=rX "$1"
 
