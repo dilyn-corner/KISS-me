@@ -1,4 +1,4 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.tar.xz
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.1.tar.xz
 files/config
 patches/no-perl.patch
 patches/march-native-support.patch
