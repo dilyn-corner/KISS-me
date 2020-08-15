@@ -5,20 +5,19 @@ case $TYPE in
                 CFLAGS=" " CXXFLAGS=" "
             ;;
             gcc) # Add gfortran, PGO
-                _bootstrap='"${bootstrap:---enable-bootstrap}"'
                 sed -i 's/c++,/c++,fortran/'                .build.kiss
                 sed -i 's/linux-musl \\/linux-musl/'        .build.kiss
-                sed -i "/$_bootstrap/d"                     .build.kiss
+                sed -i '/^"${bootstrap/d'                   .build.kiss
                 sed -i '0,/make/s//make profiledbootstrap/' .build.kiss
             ;;
             vim) # add X support for clipboards
-                sed -i "s/nls \\/nls/"  .build.kiss
-                sed -i "/--without-x/d" .build.kiss
+                sed -i 's/nls \\/nls/'  .build.kiss
+                sed -i '/--without-x/d' .build.kiss
             ;;
             mesa) # because fuck a radeon
                 _flags=-Ddri-drivers=i965
-                _flags="$_flags\ -Dgallium-drivers=i915"
-                _flags="$_flags\ -Dvulkan-drivers=intel"
+                _flags="$_flags -Dgallium-drivers=i915"
+                _flags="$_flags -Dvulkan-drivers=intel"
 
                 sed -i "s/\. output/$_flags \0/" .build.kiss
             ;;
