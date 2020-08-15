@@ -7,7 +7,7 @@ done
 # Set the kernel up for success!
 cp config .config
 make \
-    olddefconfig \
+    oldconfig \
     CC=clang \
     HOSTCC=clang
 
