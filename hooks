@@ -6,6 +6,7 @@ case $TYPE in
                     _clang="CC=clang"
                 fi
                 sed -i "s/make/make $_clang/" .build.kiss
+            ;;
             busybox) # busybox hates clang
                 CFLAGS=" " CXXFLAGS=" "
             ;;
