@@ -2,3 +2,6 @@
 
 make
 make DESTDIR="$1" PREFIX=/usr install
+
+mkdir -p          "$1/usr/share/paleta"
+cp    -r palettes "$1/usr/share/paleta/palettes"
