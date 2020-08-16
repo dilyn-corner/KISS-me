@@ -6,10 +6,7 @@ done
 
 # Set the kernel up for success!
 cp config .config
-make \
-    oldconfig \
-    CC=clang \
-    HOSTCC=clang
+make oldconfig
 
 ## If we want to include version strings
 #scripts/setlocalversion --save-scmversion
@@ -22,16 +19,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-make \
-    CC=clang \
-    HOSTCC=clang
+make
 
 echo "Installing modules..."
-make \
-    modules_install \
-    INSTALL_MOD_PATH="$1/usr" \
-    CC=clang \
-    HOSTCC=clang
+make INSTALL_MOD_PATH="$1/usr" modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
