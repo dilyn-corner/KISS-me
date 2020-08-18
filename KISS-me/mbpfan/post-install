@@ -1,6 +1,7 @@
 #/bin/sh -e
 
-echo "Make sure you have both the applesmc and coretemp kernel modules 
-loaded, and optionally (preferably) enable at startup. This packaging 
-does not support Systemd, although the dev does 
-(this package includes a service file)."
+cat << EOF
+Make sure you have both the applesmc and coretemp kernel modules loaded, and
+optionally (preferably) enabled at startup. 
+This package does not explicitly support systemd, although the dev does. 
+EOF
