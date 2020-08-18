@@ -1,8 +1,6 @@
-diff --git a/config.def.h b/config.def.h
-index cae2009..ca7c69b 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -3,15 +3,17 @@
+@@ -3,15 +3,16 @@
  
  #define MOD Mod4Mask
  
@@ -15,21 +13,20 @@ index cae2009..ca7c69b 100644
 -const char* volup[]   = {"amixer", "sset", "Master", "5%+",         0};
 -const char* volmute[] = {"amixer", "sset", "Master", "toggle",      0};
 -const char* colors[]  = {"bud", "/home/goldie/Pictures/Wallpapers", 0};
-+const char* term[]       = {"st",                                                  0};
-+const char* web[]        = {"viper-browser",                                       0};
-+const char* top[]        = {"ytop",                                                0};
-+const char* menu[]       = {"dmenu_run", "-c", "-l", "7", "-h", "30",              0};
-+const char* voldown[]    = {"amixer", "sset", "Master", "5%-",                     0};
-+const char* volup[]      = {"amixer", "sset", "Master", "5%+",                     0};
-+const char* volmute[]    = {"amixer", "sset", "Master", "toggle",                  0};
-+const char* scrbriup[]   = {"light", "-A", "10",                                   0};
-+const char* scrbridown[] = {"light", "-U", "10",                                   0};
-+const char* kbdbriup[]   = {"light", "-As", "sysfs/leds/smc::kbd_backlight", "20", 0};
-+const char* kbdbridown[] = {"light", "-Us", "sysfs/leds/smc::kbd_backlight", "20", 0};
++const char* term[]       = {"st",                                                0};
++const char* web[]        = {"falkon",                                            0};
++const char* menu[]       = {"dmenu_run", "-c", "-l", "7", "-h", "30",            0};
++const char* voldown[]    = {"amixer", "sset", "Master", "5%-",                   0};
++const char* volup[]      = {"amixer", "sset", "Master", "5%+",                   0};
++const char* volmute[]    = {"amixer", "sset", "Master", "toggle",                0};
++const char* scrbriup[]   = {"brightnessctl", "s", "+10%",                        0};
++const char* scrbridown[] = {"brightnessctl", "s", "10%-",                        0};
++const char* kbdbriup[]   = {"brightnessctl", "-d", "smc::kbd_backlight", "+20%", 0};
++const char* kbdbridown[] = {"brightnessctl", "-d", "smc::kbd_backlight", "20%-", 0};
  
  static struct key keys[] = {
      {MOD,      XK_q,   win_kill,   {0}},
-@@ -21,16 +23,18 @@ static struct key keys[] = {
+@@ -21,16 +22,17 @@ static struct key keys[] = {
      {Mod1Mask,           XK_Tab, win_next,   {0}},
      {Mod1Mask|ShiftMask, XK_Tab, win_prev,   {0}},
  
@@ -38,15 +35,14 @@ index cae2009..ca7c69b 100644
 -    {MOD, XK_p,      run, {.com = scrot}},
      {MOD, XK_Return, run, {.com = term}},
 +    {MOD, XK_w,      run, {.com = web}},
-+    {MOD, XK_y,      run, {.com = top}},
-+    {MOD, XK_d,      run, {.com = menu}},
++    {MOD, XK_space,      run, {.com = menu}},
  
      {0,   XF86XK_AudioLowerVolume,  run, {.com = voldown}},
      {0,   XF86XK_AudioRaiseVolume,  run, {.com = volup}},
      {0,   XF86XK_AudioMute,         run, {.com = volmute}},
 -    {0,   XF86XK_MonBrightnessUp,   run, {.com = briup}},
 -    {0,   XF86XK_MonBrightnessDown, run, {.com = bridown}},
-+    {0,   XF86XK_KbdBrightnessUp,   run, {.com = kbdbriup}},
++    {0,   XF86XK_MonBrightnessUp,   run, {.com = kbdbriup}},
 +    {0,   XF86XK_KbdBrightnessDown, run, {.com = kbdbridown}},
 +    {0,   XF86XK_MonBrightnessUp,   run, {.com = scrbriup}},
 +    {0,   XF86XK_MonBrightnessDown, run, {.com = scrbridown}},
