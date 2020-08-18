@@ -3,4 +3,4 @@ freetype-harfbuzz
 iosevka-nerd-fonts
 libX11
 libXft
-ncurses make
+netbsd-curses make
