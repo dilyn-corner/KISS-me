@@ -4,9 +4,11 @@ for patch in *.patch; do
     patch -p1 < $patch
 done
 
+# We could make this script check for llvm {later}
+
 # Set the kernel up for success!
 cp config .config
-make oldconfig
+gmake YACC=yacc LLVM=1 olddefconfig
 
 ## If we want to include version strings
 #scripts/setlocalversion --save-scmversion
@@ -19,10 +21,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-make
+gmake YACC=yacc LLVM=1
 
 echo "Installing modules..."
-make INSTALL_MOD_PATH="$1/usr" modules_install
+gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"

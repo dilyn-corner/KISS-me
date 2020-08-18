@@ -1,5 +1,6 @@
 https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.1.tar.xz
 files/config
+patches/byacc.patch
 patches/no-perl.patch
 patches/march-native-support.patch
 patches/0102-increase-ext4-commit-age.patch
