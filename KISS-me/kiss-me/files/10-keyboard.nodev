@@ -1,0 +1,11 @@
+Section "InputDevice"
+    Identifier "Apple Keyboard"
+    Driver     "libinput"
+    Option     "CoreKeyboard"
+    Option     "AutoServerLayout" "true"
+    Option     "Device"           "/dev/input/event13"
+    Option     "XkbLayout"        "us"
+    Option     "XkbModel"         "pc105"
+    Option     "XkbRules"         "evdev"
+EndSection
+

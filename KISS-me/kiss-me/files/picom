@@ -1,0 +1,43 @@
+#experimental-backends = true;
+backend = "glx";
+vsync = true
+
+#corner-radius = 25;
+
+rounded-corners-exclude = [
+  "class_g = 'URxvt'",
+  "class_g = 'XTerm'",
+  "class_g = 'konsole'",
+  "class_g = 'Polybar'",
+  "class_g = 'code-oss'",
+  "class_g = 'TelegramDesktop'",
+  "class_g = 'firefox'",
+  "class_g = 'Google-chrome'",
+  "class_g = 'Thunderbird'",
+  "class_g = 'Pcmanfm'",
+  "class_g = 'Surf'",
+  "class_g = 'Falkon'"
+];
+
+shadow = true;
+shadow-radius = 15;
+shadow-offset-x = -3;
+shadow-offset-y = -1;
+shadow-opacity = 0.75;
+
+active-opacity = .8;
+inactive-opacity = .8;
+inactive-dim = .1;
+opacity-rule = [ "100:class_g = 'Falkon'",
+                 "100:class_g = 'Chromium'",
+                 "100:class_g = 'Firefox'",
+                 "100:class_g = 'viper'"
+];
+
+blur: {
+  method = "dual_kawase";
+  strength = 6;
+  background = true;
+  background-frame = false;
+  background-fixed = false;
+}

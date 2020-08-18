@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+# ~
+install -Dm755 shrc    "$1/home/dilyn/.shrc"
+install -Dm755 vimrc   "$1/home/dilyn/.vimrc"
+install -Dm755 picom   "$1/home/dilyn/.config/picom/picom.conf"
+install -Dm755 profile "$1/home/dilyn/.profile"
+
+# /etc
+install -dm755                   "$1/etc/rc.d"
+install -dm755                   "$1/etc/X11/xorg.conf.d"
+install -Dm755 doas              "$1/etc/doas.conf"
+install -Dm755 fstab             "$1/etc/fstab"
+install -Dm755 asound.conf       "$1/etc/asound.conf"
+install -Dm755 -- *.conf         "$1/etc/X11/xorg.conf.d"
+install -Dm755 -- *.nodev        "$1/etc/X11/xorg.conf.d"
+install -Dm755 -- *.boot         "$1/etc/rc.d"
+install -Dm755 -- *.pre.shutdown "$1/etc/rc.d"
