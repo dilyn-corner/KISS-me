@@ -1,18 +1,5 @@
 case $TYPE in
     post-build)
-        IFS=. read -r _end _ < /proc/uptime
-
-        (
-            _s=$((_end - _start))
-            _m=$((_s / 60 % 60))
-            _h=$((_s / 60 / 60 % 24))
-
-            [ "$_h" = 0 ] || _u="${_u}${_h}h "
-            [ "$_m" = 0 ] || _u="${_u}${_m}m "
-
-            log "$PKG" "build finished in ${_u:-${_s}s}"
-        )
-
         : "${DEST:?DEST is unset}"
 
             rm -rf "$DEST/usr/lib/charset.alias"
@@ -23,5 +10,13 @@ case $TYPE in
             rm -rf "$DEST/usr/share/doc"
             rm -rf "$DEST/usr/share/man"
             rm -rf "$DEST/usr/share/zsh"
+    ;;
+    pre-install)
+        case $PKG in
+            linux) # We should keep backup kernels... just in case
+                rm vmlinuz.old System.map.old
+                mv vmlinuz vmlinuz.old
+                mv System.map System.map.old
+            ;;
     ;;
 esac
