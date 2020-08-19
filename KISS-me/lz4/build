@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+gmake -C lib PREFIX=/usr
+gmake -C programs PREFIX=/usr lz4 lz4c
+
+gmake install PREFIX=/usr DESTDIR="$1"
