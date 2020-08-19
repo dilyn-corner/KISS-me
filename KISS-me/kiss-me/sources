@@ -3,8 +3,8 @@ files/shrc
 files/fstab
 files/vimrc
 files/picom
+files/asound
 files/profile
-files/asound.conf
 files/50-mouse.conf
 files/30-touchpad.conf
 files/10-keyboard.conf
