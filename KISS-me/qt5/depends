@@ -1,1 +1,27 @@
-/home/dilyn/git/community/community/qt5/depends
+byacc make
+flex  make
+freetype-harfbuzz
+gperf make
+libICE
+libSM
+libX11
+libXext
+libXi
+libXrandr
+libXrender
+libXslt
+libinput
+libjpeg-turbo
+libpng
+libxkbcommon
+linux-headers make
+mesa
+mtdev
+perl  make
+sqlite
+xcb-util
+xcb-util-image
+xcb-util-keysyms
+xcb-util-renderutil
+xcb-util-wm
+zlib
