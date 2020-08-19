@@ -1,7 +1,6 @@
 case $TYPE in
     post-build)
         : "${DEST:?DEST is unset}"
-
             rm -rf "$DEST/usr/lib/charset.alias"
             rm -rf "$DEST/usr/share/polkit-1"
             rm -rf "$DEST/usr/share/gettext"
@@ -14,9 +13,10 @@ case $TYPE in
     pre-install)
         case $PKG in
             linux) # We should keep backup kernels... just in case
-                rm vmlinuz.old System.map.old
-                mv vmlinuz vmlinuz.old
-                mv System.map System.map.old
+                rm /boot/vmlinuz.old /boot/System.map.old
+                mv /boot/vmlinuz /boot/vmlinuz.old
+                mv /boot/System.map /boot/System.map.old
             ;;
+        esac
     ;;
 esac
