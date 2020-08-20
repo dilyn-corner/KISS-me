@@ -1,4 +1,13 @@
 case $TYPE in
+    pre-build)
+        case $PKG in
+            nss) # Dumb variables
+            export CC=cc
+            export CCC=c++
+            export CXX=c++
+           ;;
+       esac
+    ;;
     post-build)
         : "${DEST:?DEST is unset}"
             rm -rf "$DEST/usr/lib/charset.alias"
