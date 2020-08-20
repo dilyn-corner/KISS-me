@@ -1,6 +1,7 @@
 byacc make
 flex  make
 freetype-harfbuzz
+gmake make
 gperf make
 libICE
 libSM
