@@ -1,21 +1,16 @@
 #!/bin/sh -e
 
 for patch in *.patch; do 
-    patch -p1 < $patch
+    patch -p1 < "$patch"
 done
 
 # We could make this script check for llvm {later}
 
 # Set the kernel up for success!
 cp config .config
-gmake YACC=yacc LLVM=1 olddefconfig
-
-## If we want to include version strings
-#scripts/setlocalversion --save-scmversion
-#make kernelrelease > version
+#gmake YACC=yacc LLVM=1 olddefconfig
 
 # Useful variables
-#kernver="$(cat version)"
 modulesdir="$1/usr/lib/modules/$2"
 builddir="$modulesdir/build"
 
@@ -24,7 +19,7 @@ echo "Making linux-$2"
 gmake YACC=yacc LLVM=1
 
 echo "Installing modules..."
-gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" modules_install
+gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -59,8 +54,6 @@ done
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
-
-echo "Installing kernel..."
 
 install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz"
 install -Dm644 "System.map"            "$1/boot/System.map"
