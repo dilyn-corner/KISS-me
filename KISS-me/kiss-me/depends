@@ -1,5 +1,11 @@
+alsa-utils
+broadcom-wl
+dosfstools
+efibootmgr
 feh
+hummingbird-git
 mbpfan
+mpv
 oksh
 opendoas
 paleta
@@ -10,3 +16,4 @@ sowm
 vim
 xf86-input-libinput
 xf86-input-mtrack
+xsel
