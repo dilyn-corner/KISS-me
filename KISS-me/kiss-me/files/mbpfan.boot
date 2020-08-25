@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/bin/mbpfan
+mbpfan >/dev/null 2>&1 &

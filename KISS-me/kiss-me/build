@@ -9,6 +9,7 @@ install -Dm755 profile "$1/home/dilyn/.profile"
 # /etc
 install -dm755                   "$1/etc/rc.d"
 install -dm755                   "$1/etc/X11/xorg.conf.d"
+install -Dm755 ntp               "$1/etc/ntp.conf"
 install -Dm755 doas              "$1/etc/doas.conf"
 install -Dm755 fstab             "$1/etc/fstab"
 install -Dm755 asound            "$1/etc/asound.conf"
