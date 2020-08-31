@@ -1,14 +1,56 @@
 #!/bin/sh -e
 
+# The author *insists* we optimize the ever-living-fuck out of this package.
+# So let's indulge them! LLVM makes this tricky, but here's how you do it.
+
 export DESTDIR="$1"
+export CFLAGS="$CFLAGS -fno-plt"
+# Because fuck a werror
+export CFLAGS="$CFLAGS -Wno-error"
+# Clang specific; gcc: -Wno-missing-profile
+export CFLAGS="$CFLAGS -Wno-ignored-optimization-argument"
+export CFLAGS="$CFLAGS -Wno-profile-instr-out-of-date"
 
 patch -p1 < no-doc.patch
-
 
 meson \
     --prefix=/usr \
     --buildtype=release \
-    . output
+    -Db_lto=true \
+    . build
 
-ninja -C output
-ninja -C output install
+# First, we generate a PGO build
+meson configure -Db_pgo=generate build
+ninja -C build
+
+# Then we generate some PGO data
+foot_tmp=$(mktemp)
+./build/foot --config=/dev/null \
+    --term=xterm \
+    sh -c \
+    "scripts/generate-alt-random-writes.py \
+    --scroll \
+    --scroll-region \
+    --colors-regular \
+    --colors-bright \
+    --colors-rgb \
+    ${foot_tmp} && cat ${foot_tmp}"
+rm "${foot_tmp}"
+
+# This is required for llvm
+llvm-profdata merge default_*profraw --output=default.profdata
+# Make sure it's in the right directory
+mv *.profdata build
+
+# Now we should *use* the PGO data
+# Note: we will get a hash mismatch because of this
+meson configure -Db_pgo=use build
+
+ninja -C build
+ninja -C build install
+
+# Install terminfo because duh
+mkdir -p "$1/usr/share/terminfo/f"
+
+cp build/f/foot        "$1/usr/share/terminfo/f/foot"
+cp build/f/foot-direct "$1/usr/share/terminfo/f/foot-direct"
