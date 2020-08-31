@@ -1,6 +1,6 @@
 expat
 flex make
+gmake make
 libffi
 libxml2
-meson make
-samurai make
+pkgconf make

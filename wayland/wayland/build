@@ -5,6 +5,6 @@
 	--disable-static \
 	--disable-documentation
 
-make
+gmake
 
 make DESTDIR="$1" install 
