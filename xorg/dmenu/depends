@@ -1,1 +1,3 @@
-/home/dilyn/git/community/community/dmenu/depends
+libXft
+libXinerama
+xorg-server
