@@ -1,0 +1,6 @@
+cairo
+libjpeg-turbo
+meson make
+samurai make
+wayland-protocols make
+wayland
