@@ -1,6 +1,6 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -150,14 +150,13 @@
+@@ -159,14 +159,13 @@
  
  install_data(
    'LICENSE', 'README.md', 'CHANGELOG.md',
@@ -9,7 +9,7 @@
  install_data(
    'foot.desktop', 'foot-server.desktop',
    install_dir: join_paths(get_option('datadir'), 'applications'))
- install_data('footrc', install_dir: join_paths(get_option('datadir'), 'foot'))
+ install_data('foot.ini', install_dir: join_paths(get_option('datadir'), 'foot'))
  
  subdir('completions')
 -subdir('doc')
