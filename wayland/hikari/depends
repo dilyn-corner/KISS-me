@@ -1,8 +1,9 @@
 cairo
 libinput
 libucl
+libxkbcommon
 pango
 pixman
+pkgconf make
 wlroots
 wayland-protocols make
-libxkbcommon
