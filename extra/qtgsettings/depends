@@ -1,0 +1,5 @@
+cmake make
+cmake-shared make
+glib
+qt5
+qt5-declarative
