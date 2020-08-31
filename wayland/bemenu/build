@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-#GCC10 fix
-export CFLAGS="$CFLAGS -fcommon"
+gmake clients wayland PREFIX=/usr
 
-make clients wayland PREFIX=/usr
-
-make PREFIX=/usr DESTDIR="$1" install
+gmake PREFIX=/usr DESTDIR="$1" install
