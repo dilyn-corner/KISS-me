@@ -15,11 +15,12 @@ This repository is for:
 3) for forks.
 
 
-## The structure of this repository:
+## The structure of this repository
+
 `KISS-me/core`: kernels, compilers, utils. It also includes a compressor (`lz4`)
 and proper MacbookPro fan support (`mbpfan`)
 
-`KISS-me/extra`: Basically an analogue to repo/extra. It includes two version of 
+`KISS-me/extra`: Basically an analogue to `repo/extra`. It includes two version of 
 `mesa`, one for strict-wayland and the other Xorg. Anything from `paleta` to 
 `viper` and `r` live here.
 
@@ -33,7 +34,8 @@ and proper MacbookPro fan support (`mbpfan`)
 ## Thoughts
 
 In the ever-excruciating pursuit of being different for the sake of difference,
-I have switched from KISS proper to [wyverkiss](https://github.com/wyvertux/wyverkiss)
+I have switched from KISS proper to
+[wyverkiss](https://github.com/wyvertux/wyverkiss).
 Additionally, Due to recent 
 [issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
 I have decided to commit to trying out `wayland`. So far, I'm really enjoying 
@@ -73,6 +75,23 @@ I encounter build 5.15.0 with LLVM](https://bugreports.qt.io/browse/QTBUG-85010)
 though it's unclear if it's reproducible. Unfortunately, `qt5-webengine` is a 
 literal bitch that I'm working on fixing for wyverkiss. One day I will have a 
 browser again.
+
+
+--- 
+
+## My other stuff
+
+I am the maintainer of a couple other repositories:
+
+[KISS-haskell](https://github.com/dilyn-corner/KISS-haskell) - a KISS-compliant
+repository that contains a bootstrappable `ghc`. 
+
+[KISS-kde](https://github.com/dilyn-corner/KISS-kde) - A KISS-compliant
+repository that brings the wonders of a `plasma` desktop to KISS.
+
+[dotfiles](https://github.com/dilyn-corner/dotfiles) - Just a simple way to
+maintain my dotfiles and share screenshots. Don't use it, just marvel.
+
 
 ---
 
