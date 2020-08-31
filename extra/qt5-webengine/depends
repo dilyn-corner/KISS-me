@@ -1,0 +1,17 @@
+byacc make
+ffmpeg
+flex  make
+fontconfig
+freetype-harfbuzz
+gperf make
+libdrm
+libevent
+libxml2
+linux-headers make
+nss
+python2 make
+qt5
+qt5-declarative
+qt5-webchannel
+samurai make
+zlib
