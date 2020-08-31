@@ -11,3 +11,9 @@ ninja -C build install
 
 rm -rf "$1/usr/share/zsh/"
 rm -rf "$1/usr/share/bash-completion/"
+
+cd wl-clipboard-x11/src
+
+install -Dm755 wl-clipboard-x11 "$1/usr/bin/wl-clipboard-x11"
+ln -s /usr/bin/wl-clipboard-x11 "$1/usr/bin/xclip"
+ln -s /usr/bin/wl-clipboard-x11 "$1/usr/bin/xsel"
