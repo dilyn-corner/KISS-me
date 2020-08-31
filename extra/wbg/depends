@@ -1,0 +1,9 @@
+libpng
+meson make
+pixman
+pkgconfig make
+samurai make
+tllist make
+wayland
+wayland-protocols make
+wlroots
