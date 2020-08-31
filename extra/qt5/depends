@@ -2,8 +2,8 @@ byacc make
 flex  make
 freetype-harfbuzz
 gperf make
-libICE
-libSM
+#libICE
+#libSM
 libinput
 libjpeg-turbo
 libpng

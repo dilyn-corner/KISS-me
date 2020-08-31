@@ -1,6 +1,9 @@
 #!/bin/sh -e
 
-for patch in *.patch; do
+perl init-repository --module-subset=qtbase
+cd qtbase
+
+for patch in ../*.patch; do
     patch -p1 < "$patch"
 done
 
@@ -21,7 +24,8 @@ sed -i 's/define QLOG/define N/g' \
     -nomake examples \
     -nomake tests \
     -optimized-qmake \
-    platform linux-clang-libc++ \
+    -platform linux-clang-libc++ \
+    -no-libudev \
     -no-separate-debug-info \
     -no-pch \
     -no-dbus \
@@ -33,9 +37,10 @@ sed -i 's/define QLOG/define N/g' \
     -system-sqlite \
     -system-zlib \
     -system-freetype \
-    -system-harfbuzz
+    -system-harfbuzz \
+    -silent
 
-make
-make INSTALL_ROOT="$1" install
+gmake
+gmake INSTALL_ROOT="$1" install
 
-install -Dm755 qt.conf "$1/usr/bin/qt.conf"
+install -Dm755 ../qt.conf "$1/usr/bin/qt.conf"

@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+perl init-repository --module-subset=qtwayland
+
+qmake \
+    CONFIG+=wayland-compositor
+
+make 
+make INSTALL_ROOT="$1" install
