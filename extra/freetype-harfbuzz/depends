@@ -1,1 +1,8 @@
-/var/db/kiss/wyverkiss/extra/freetype-harfbuzz/depends
+bzip2
+expat
+glib
+libdrm
+libpng
+mesa
+pixman
+zlib
