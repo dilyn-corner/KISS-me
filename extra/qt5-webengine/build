@@ -1,6 +1,9 @@
 #!/bin/sh -e
 
-for patch in *.patch; do
+perl init-repository --module-subset=qtwebengine
+cd qtwebengine
+
+for patch in ../*.patch; do
     patch -p1 < "$patch"
 done
 
