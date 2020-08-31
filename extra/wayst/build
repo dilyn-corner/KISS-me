@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+# make install doesn't create directories
+mkdir -p "$1/usr/bin"
+
+gmake
+gmake INSTALL_DIR="$1/usr/bin" install
