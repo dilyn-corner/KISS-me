@@ -5,5 +5,5 @@ libxkbcommon
 pango
 pixman
 pkgconf make
-wlroots
 wayland-protocols make
+wlroots
