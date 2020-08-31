@@ -1,0 +1,7 @@
+cairo
+glm
+libexecinfo
+linux-headers make
+meson make
+wlroots
+wayland-protocols make
