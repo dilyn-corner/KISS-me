@@ -40,6 +40,9 @@ meson \
     --localstatedir=/var \
     --buildtype=release \
     -Dplatforms=wayland,drm \
+    -Ddri-drivers=i965 \
+    -Dgallium-drivers=i915 \
+    -Dvulkan-drivers=intel \
     -Dglvnd=true \
     -Dglx=disabled \
     . output
