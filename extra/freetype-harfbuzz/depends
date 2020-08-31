@@ -4,5 +4,6 @@ glib
 libdrm
 libpng
 mesa
+meson make
 pixman
 zlib
