@@ -1,0 +1,8 @@
+cairo
+libinput
+libucl
+pango
+pixman
+wlroots
+wayland-protocols make
+libxkbcommon
