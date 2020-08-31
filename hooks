@@ -24,10 +24,10 @@ case $TYPE in
             linux) # We should keep backup kernels... just in case
                 ver=$(uname -r)
 
+                rm /boot/vmlinuz.old     /boot/System.map.old
+                mv /boot/System.map      /boot/System.map.old
+                mv /boot/vmlinuz         /boot/vmlinuz.old
                 mv /usr/lib/modules/$ver /usr/lib/modules/$ver.old
-                rm /boot/vmlinuz.old /boot/System.map.old
-                mv /boot/vmlinuz /boot/vmlinuz.old
-                mv /boot/System.map /boot/System.map.old
             ;;
         esac
     ;;
