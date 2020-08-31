@@ -5,10 +5,11 @@ for patch in *.patch; do
 done
 
 # We could make this script check for llvm {later}
+# Instead I'll just assume you aren't blindly following this
 
 # Set the kernel up for success!
 cp config .config
-#gmake YACC=yacc LLVM=1 olddefconfig
+gmake YACC=yacc LLVM=1 olddefconfig
 
 # Useful variables
 modulesdir="$1/usr/lib/modules/$2"
