@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+cmake -B build
+
+cmake --build build
+
+install -Dm644 build/libucl.a "$1/usr/include/libucl.a"
+
+mkdir -p "$1/usr/include/pkgconf"
+cat >> "$1/usr/include/pkgconf/libucl.pc" << EOF
+prefix=/usr
+exec_prefix=/usr/libexec
+libdir=/usr/lib
+includedir=/usr/include
+
+Name: LibUCL
+Description: Universal configuration library
+Version: 0.8.1
+Libs: -L/usr/lib -lucl
+Cflags: -I/usr/include/
+EOF
