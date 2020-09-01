@@ -34,7 +34,7 @@ and proper MacbookPro fan support (`mbpfan`)
 ## Thoughts
 
 In the ever-excruciating pursuit of being different for the sake of difference,
-I have switched from KISS proper to
+I have switched from KISS-proper to
 [wyverkiss](https://github.com/wyvertux/wyverkiss).
 Additionally, Due to recent 
 [issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
@@ -71,7 +71,7 @@ kiss b hikari # you'll need to install bmake
 ```
 
 `qt5` builds just fine using the latest git branch - there's [some strange issue
-I encounter build 5.15.0 with LLVM](https://bugreports.qt.io/browse/QTBUG-85010),
+I encounter building 5.15.0 with LLVM](https://bugreports.qt.io/browse/QTBUG-85010),
 though it's unclear if it's reproducible. Unfortunately, `qt5-webengine` is a 
 literal bitch that I'm working on fixing for wyverkiss. One day I will have a 
 browser again.
@@ -175,4 +175,5 @@ noxlXNrfjqR5iRoG3070gU6KoOyWK/6zeIJfEPDkP5zsE6aRYeoSiNj47Frl2sHr
 dxrnnFiK8wnADPGA3fzL/9F+fNysX9Ypg2N7pkTbvz7WOqhgDf3D+jXteVUxgq9K
 FTjDC7NBgOvvveXb5ccd
 =j6ND
+
 -----END PGP PUBLIC KEY BLOCK-----
