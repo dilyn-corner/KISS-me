@@ -1,2 +1,3 @@
-git+https://codeberg.org/dnkl/foot#52af2694ff
+git+https://codeberg.org/dnkl/foot
+#bb8d9378c948fa9b8a484447448148fdd11e2753
 patches/no-doc.patch
