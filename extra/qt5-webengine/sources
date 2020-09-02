@@ -1,5 +1,4 @@
 git+https://github.com/qt/qt5
-patches/0002-musl-don-t-use-pvalloc-as-it-s-not-available-on-musl.patch
 patches/0004-mkspecs-Allow-builds-with-libc-glibc.patch
 patches/0011-chromium-musl-sandbox-Define-TEMP_FAILURE_RETRY-if-n.patch
 patches/0012-chromium-musl-Avoid-mallinfo-APIs-on-non-glibc-linux.patch
