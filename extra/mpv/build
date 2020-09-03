@@ -1,1 +1,13 @@
-/var/db/kiss/repo/extra/mpv/build
+#!/bin/sh -e
+
+ln -s waf-2.0.18 waf
+
+python waf configure \
+    --prefix=/usr \
+    --mandir=/usr/share/man \
+    --confdir=/etc/mpv \
+    --enable-alsa \
+    --enable-libass
+
+python waf build
+python waf install --destdir="$1"
