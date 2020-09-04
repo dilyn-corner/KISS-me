@@ -43,9 +43,11 @@ meson \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
-    -Dglvnd=true \
     -Dglx=disabled \
     . output
+
+# This is always an option. But it's unecessary for now.
+    #-Dglvnd=true \
 
 ninja -C output
 ninja -C output install
