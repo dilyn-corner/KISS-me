@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-cgroup \
+    --disable-unicode \
+    --enable-taskstats
+
+gmake
+gmake DESTDIR="$1" install
