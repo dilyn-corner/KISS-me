@@ -1,3 +1,4 @@
-cmake  make
+cmake make
 python make
+samurai make
 zlib
