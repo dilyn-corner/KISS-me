@@ -3,7 +3,7 @@ expat
 flex          make
 libdrm
 libelf
-libglvnd
+#libglvnd
 linux-headers make
 llvm
 meson         make
