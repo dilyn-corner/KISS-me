@@ -1,0 +1,51 @@
+--- a/configure
++++ b/configure
+@@ -17786,7 +17786,7 @@
+ done
+ 
+ 
+-ac_config_files="$ac_config_files Makefile include/Makefile man-po/Makefile po/Makefile.in proc/libprocps.pc testsuite/Makefile"
++ac_config_files="$ac_config_files Makefile include/Makefile proc/libprocps.pc"
+ 
+ cat >confcache <<\_ACEOF
+ # This file is a shell script that caches the results of configure
+--- a/configure.ac
++++ b/configure.ac
+@@ -298,8 +298,5 @@
+ 
+ AC_CONFIG_FILES([Makefile
+                  include/Makefile
+-                 man-po/Makefile
+-                 po/Makefile.in
+-                 proc/libprocps.pc
+-                 testsuite/Makefile])
++                 proc/libprocps.pc])
+ AC_OUTPUT
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -897,10 +897,7 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ SUBDIRS = \
+-	include \
+-	man-po \
+-	po \
+-	testsuite
++	include
+ 
+ AM_CFLAGS = -Iproc
+ LDADD = ./proc/libprocps.la $(CYGWINFLAGS)
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -14,10 +14,7 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ SUBDIRS = \
+-	include \
+-	man-po \
+-	po \
+-	testsuite
++	include 
+ 
+ AM_CFLAGS = -Iproc
+ LDADD = ./proc/libprocps.la $(CYGWINFLAGS)
