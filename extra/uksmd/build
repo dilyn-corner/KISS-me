@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+make
+make PREFIX=/usr DESTDIR="$1" install
+
+install -Dm644 uksmd.run "$1/etc/sv/uksmd/run"
