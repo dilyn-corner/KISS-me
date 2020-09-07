@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+# linux-nitrous is a kernel by xdevs23 which aims to be built by a clang/llvm
+# toolchain (ultimately), and include speed-orientated optimizations.
+
 for patch in *.patch; do 
     patch -p1 < $patch
 done
