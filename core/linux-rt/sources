@@ -1,0 +1,6 @@
+https://git.kernel.org/torvalds/t/linux-5.9-rc4.tar.gz
+https://kernel.org/pub/linux/kernel/projects/rt/5.9/patch-5.9-rc4-rt4.patch.xz
+patches/byacc.patch
+patches/no-perl.patch
+patches/march-native-support.patch
+files/config
