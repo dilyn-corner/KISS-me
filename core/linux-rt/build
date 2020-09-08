@@ -62,7 +62,7 @@ echo "Installing modules..."
 gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
-#rm "$modulesdir/build" "$modulesdir/source"
+rm "$modulesdir/build" "$modulesdir/source"
 
 echo "Copying files to build external modules..."
 install -Dt "$builddir"                 -m644 .config Makefile \
