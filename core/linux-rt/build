@@ -1,0 +1,99 @@
+#!/bin/sh -e
+
+# linux-rt is the mainline Linux kernel with a real-time patchset. The goals of
+# linux-rt are to improve desktop usability by enabling kernel preemption in
+# almost every line of kernel code possible, thereby reducing latency. Many
+# patches will be upstreamed. Refer to official documentation for more info:
+# wiki.linuxfoundation.org/realtime
+
+# All the rt patches will come separately, direct from upstream
+xzcat "patch-$2-rt4.patch.xz" | patch -p1
+
+# These are just additional patches
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+# We could make this script check for llvm {later}
+# Instead I'll just assume you aren't blindly following this
+
+# Some important facts to mention about specifically linux-rt:
+# CONFIG_EXPERT=y and CONFIG_RCU_EXPERT=y are required for CONFIG_PREEMPT_RT.
+# Ensure that CONFIG_PREEMPT_RT_FULL=y in order to actually utilize the patchset.
+# Some possibly important config options are hidden with CONFIG_PREEMPT_RT_FULL=y.
+# Mostly, these options are for non-x86 architectures. Notably, however, is the
+# disabling of TRANSPARENT_HUGEPAGE, OPRIFLE, BCACHE, and RT_GROUP_SCHED.
+
+# For EFI systems, runtime services are disabled to avoid latency spikes. If
+# these are required, add 'efi=runtime' to the kernel command line.
+
+# Memory compaction can cause pagefaults for even mlock() protected pages. To
+# evade this issue,
+# echo 0 > /proc/sys/vm/compact_unevictable_allowed
+
+# CONFIG_PREEMPT_RCU=y to avoid excessive latency related to nonpreemptible RCU.
+
+# On embedded systems, CONFIG_RCU_EXPIDITE_BOOT should be used
+
+# Debugging options should be in general turned off when measuring latency.
+# These options include DEBUG_PREEMPT, DEBUG_OBJECTS, and 
+# Kernel Hacking/lock debugging (spinlocks, mutexes, etc)
+# However, if debugging is required, do:
+# CONFIG_RCU_BOOST=y
+# Fiddle with the following:
+# CONFIG_RCU_KTHREAD_PRIO
+# CONFIG_RCU_BOOST_DELAY
+
+# The rest of configuring the kernel is identical to a non-rt kernel. Have fun!
+
+# Set the kernel up for success!
+cp config .config
+gmake YACC=yacc LLVM=1 olddefconfig
+
+# Useful variables
+modulesdir="$1/usr/lib/modules/$2"
+builddir="$modulesdir/build"
+
+# Make that bad boy!
+echo "Making linux-$2"
+gmake YACC=yacc LLVM=1
+
+echo "Installing modules..."
+gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
+
+echo "Cleaning up..."
+#rm "$modulesdir/build" "$modulesdir/source"
+
+echo "Copying files to build external modules..."
+install -Dt "$builddir"                 -m644 .config Makefile \
+                                              Module.symvers System.map  vmlinux
+install -Dt "$builddir/kernel"          -m644 kernel/Makefile
+install -Dt "$builddir/arch/x86"        -m644 arch/x86/Makefile
+install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+install -Dt "$builddir/drivers/md"      -m644 drivers/md/*.h
+install -Dt "$builddir/net/mac80211"    -m644 net/mac80211/*.h
+install -Dt "$builddir/tools/objtool"         tools/objtool/objtool
+
+cp -a scripts          "$builddir/scripts"
+cp -a include          "$builddir/include"
+cp -a arch/x86/include "$builddir/arch/x86/include"
+
+find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
+
+chmod -Rc u=rwX,go=rX "$1"
+
+echo "Removing cruft..."
+rm -r "$builddir/Documentation"
+find -L "$builddir" -type l             -exec rm -rf {} +
+find    "$builddir" -type f -name "*.o" -exec rm -rf {} +
+
+for arch in alpha,arc,arm,arm64,c6x,csky,h8300,hexagon,ia64,m68k,microblaze,mips,nds32,nios2,openrisc,parisc,powerpc,riscv,s390,sh,sparc,um,unicore32,xtensa; do
+    rm -rf $arch
+done
+
+echo "Laying trap..."
+mkdir -p "$1/usr/src"
+ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
+
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/vmlinuz"
+install -Dm644 "System.map"            "$1/boot/System.map"
