@@ -1,20 +1,7 @@
 #!/bin/sh -e
 
-cmake -B shared \
-    -DBUILD_SHARED_LIBS=ON
+./configure \
+    --prefix=/usr
 
-cmake -B static
-
-cmake --build shared
-cmake --build static
-
-# Because why write an install script
-install -Dm644 libucl.pc              "$1/usr/lib/pkgconfig/libucl.pc"
-install -Dm644 include/ucl.h          "$1/usr/include/ucl.h"
-install -Dm644 include/ucl++.h        "$1/usr/include/ucl++.h"
-install -Dm644 static/libucl.a        "$1/usr/lib/libucl.a"
-install -Dm644 shared/libucl.so.0.5.0 "$1/usr/lib/libucl.so.0.5.0"
-
-ln -s "$1/usr/lib/libucl.so.0.5.0" "$1/usr/lib/libucl.so.0"
-ln -s "$1/usr/lib/libucl.so.0"     "$1/usr/lib/libucl.so"  
-
+make
+make DESTDIR="$1" install
