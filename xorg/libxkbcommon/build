@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < byacc.patch
+
+meson \
+    --prefix=/usr \
+    -Denable-docs=false \
+    -Denable-wayland=true \
+    -Denable-x11=false \
+    . build
+
+ninja -C build
+ninja -C build install
