@@ -1,5 +1,10 @@
 #!/bin/sh -e
 
+sed -i "s/'doc',//"       meson.build
+sed -i '/doc/d'          meson.build
+
+rm -rf .git
+
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
 
@@ -10,8 +15,6 @@ export CFLAGS="$CFLAGS -Wno-error"
 # Clang specific; gcc: -Wno-missing-profile
 export CFLAGS="$CFLAGS -Wno-ignored-optimization-argument"
 export CFLAGS="$CFLAGS -Wno-profile-instr-out-of-date"
-
-patch -p1 < no-doc.patch
 
 meson \
     --prefix=/usr \
