@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+export QMAKE_CXX_FLAGS="$QMAKE_CXXFLAGS -stdlib=libc++"
+export QMAKE_LFLAGS="$QMAKE_LFLAGS -stdlib=libc++"
+
 perl init-repository --module-subset=qtwebengine
 cd qtwebengine
 
@@ -43,7 +46,7 @@ find . -name '*.pr[fio]' | while read -r file; do
     sed -i "s#INCLUDEPATH += #&\$\$QTWEBENGINE_ROOT/include #" "$file"
 done
 
-qmake QMAKE_CXXFLAGS=-DQT_NO_ACCESSIBILITY -- \
+qmake QMAKE_CXXFLAGS="$QMAKE_CXXFLAGS -DQT_NO_ACCESSIBILITY" -- \
     -feature-webengine-system-ninja \
     -feature-webengine-system-zlib \
     -feature-webengine-system-harfbuzz \
