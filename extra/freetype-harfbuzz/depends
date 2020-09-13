@@ -6,5 +6,6 @@ libdrm
 libpng
 mesa
 meson make
+pkgconf make
 pixman
 zlib
