@@ -3,4 +3,5 @@ ffmpeg
 freetype-harfbuzz
 libass
 mesa
-python            make
+pkgconf make
+python  make
