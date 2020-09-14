@@ -1,9 +1,6 @@
 #!/bin/sh -e
 
-perl init-repository --module-subset=qtbase
-cd qtbase
-
-for patch in ../*.patch; do
+for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
@@ -43,4 +40,4 @@ sed -i 's/define QLOG/define N/g' \
 gmake
 gmake INSTALL_ROOT="$1" install
 
-install -Dm755 ../qt.conf "$1/usr/bin/qt.conf"
+install -Dm755 qt.conf "$1/usr/bin/qt.conf"

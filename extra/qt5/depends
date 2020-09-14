@@ -8,6 +8,7 @@ libjpeg-turbo
 libpng
 libxkbcommon
 linux-headers make
+m4 make
 mesa
 mtdev
 perl  make
