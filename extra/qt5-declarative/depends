@@ -5,7 +5,6 @@ libdrm
 libpng
 libxcb
 mesa
-perl make
 python make
 qt5
 zlib

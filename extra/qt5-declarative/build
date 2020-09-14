@@ -1,9 +1,6 @@
 #!/bin/sh -e
 
-perl init-repository --module-subset=qtdeclarative
-cd qtdeclarative
-
 qmake
 
-make
-make INSTALL_ROOT="$1" install
+gmake
+gmake INSTALL_ROOT="$1" install
