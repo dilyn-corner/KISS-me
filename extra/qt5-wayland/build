@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-perl init-repository --module-subset=qtwayland
-
 qmake \
     CONFIG+=wayland-compositor
 
