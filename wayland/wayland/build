@@ -1,10 +1,11 @@
 #!/bin/sh -e
 
-./configure \
+export DESTDIR="$1"
+
+meson \
 	--prefix=/usr \
-	--disable-static \
-	--disable-documentation
+    -Ddocumentation=false \
+    . build
 
-gmake
-
-make DESTDIR="$1" install 
+ninja -C build
+ninja -C build install
