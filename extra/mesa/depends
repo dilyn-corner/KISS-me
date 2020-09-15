@@ -1,11 +1,8 @@
 byacc         make
-expat
 flex          make
 libdrm
-libelf
-#libglvnd
+libglvnd
 linux-headers make
-llvm
 m4            make
 meson         make
 pkgconf       make

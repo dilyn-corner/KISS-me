@@ -43,13 +43,9 @@ meson \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
-    -Dgbm=true \
     -Dglx=disabled \
+    -Dglvnd=true \
     . build
-
-# These is a necessary include for firefox to akrite
-    #-Dglvnd=true \
-    #-Dglx=disabled \
 
 ninja -C build
 ninja -C build install
