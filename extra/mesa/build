@@ -43,6 +43,7 @@ meson \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
+    -Dgbm=true \
     -Dglx=disabled \
     . build
 
