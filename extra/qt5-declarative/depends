@@ -1,9 +1,9 @@
 bzip2
 expat
 freetype-harfbuzz
+gmake make
 libdrm
 libpng
-libxcb
 mesa
 python make
 qt5
