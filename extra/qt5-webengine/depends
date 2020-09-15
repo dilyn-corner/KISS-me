@@ -3,6 +3,7 @@ ffmpeg
 flex  make
 fontconfig
 freetype-harfbuzz
+gmake make
 gperf make
 libdrm
 libevent
@@ -10,6 +11,7 @@ libxml2
 linux-headers make
 nss
 perl make
+pkgconf make
 python2 make
 qt5
 qt5-declarative
