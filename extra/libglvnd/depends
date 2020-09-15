@@ -1,5 +1,2 @@
-libXext
-libX11 make
-xorgproto make
 python make
 meson make
