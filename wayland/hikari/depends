@@ -2,6 +2,7 @@ cairo
 libinput
 libucl
 libxkbcommon
+linux-headers make
 pango
 pixman
 pkgconf make
