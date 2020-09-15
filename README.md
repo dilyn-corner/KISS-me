@@ -46,15 +46,38 @@ I've opted for `hikari` over `sway` and others. It's just enough, even perhaps
 too much. The configuration is easy, the dependencies are small, and the 
 environment is sane!
 
-Because wyverkiss uses `llvm` instead of `gcc`, `rust` is a no-go. Which is fine
-for me; I'm not a big fan of the compile time of `rust`. This means that
-`alacritty` is out. `kitty` requires `dbus`. `wayst` couldn't find my favorite
-font, and it would segfault with terminus. `foot` is an excellent option - the
-only downside is it builds with `meson`, but it's fast and easy. The developer
-suggests pgo, so read that build file for some giggles. But it pays off; it's
-probably the fastest, most responsive terminal emulator I've ever used. 
+As for terminal emulators; the fact that `alacritty` requires `rust` is comedic.
+So that's out. `kitty` requires `dbus`, so we'll pass. `wayst` builds, but it
+segfaults - I don't feel like troubleshooting this. But, we're in luck! `foot`
+is an excellent option - it uses `meson` which, while frustrating (damn dirty
+`python req`), provides a fast and simple to configure build. The developer
+suggests pgo, which presented a fun-looking build script. 
 
-If you want to try out `wayland` on KISS, you can just:
+Wayland has been a pretty stupendous experience thus far. It's no heavier than
+Xorg, has far fewer dependencies to wrangle up and understand, and feels much
+more responsive - `st` would take multiple-seconds to redraw vim when resizing,
+and `foot` does not have this problem - it's almost instantaneous. Everything
+launches very quickly, device detection works just fine, etc. etc. The one
+downside is that so much work is offloaded to the compositor, so things like
+swapping caps and escape are syntactically dependent on implementation. This is,
+however, perhaps better than the Xorg way: a keyboard config file in
+`/etc/X11/xorg.conf.d/` OR `/usr/share/X11/xorg.conf.d` OR a line in .xinitrc OR
+install `setxkbmap` and add a startup script OR OR OR... Here it's just a single
+one liner in `hikari`, plainly documented. I like this.
+
+This is a super minimal build - the only two X packages are `xkeyboard-config`
+and `libxkbcommon`. I'm still working on things, of course. Maybe we could drop
+`glib` at some point... 
+These are what I take to be the minimum number of packages you will have to
+tweak on a regular KISS install:
+`cairo`
+`freetype-harfbuzz`
+`mesa`
+`pango`
+`qt5`
+`qt5-webengine`
+`libxkbcommon`
+`xkeyboard-config`
 
 ```
 # kiss-reset would make everything easy. 
@@ -70,12 +93,22 @@ export KISS_PATH=$REPOS/KISS-me/wayland:$REPOS/KISS-me/extra:$KISS_PATH
 kiss b hikari # you'll need to install bmake
 ```
 
-`qt5` builds just fine using the latest git branch - there's [some strange issue
-I encounter building 5.15.0 with LLVM](https://bugreports.qt.io/browse/QTBUG-85010),
-though it's unclear if it's reproducible. Unfortunately, `qt5-webengine` is a 
-literal bitch that I'm working on fixing for wyverkiss. One day I will have a 
-browser again.
+`qt5` is dumb. I spent so long banging my head against a wall, and after
+spending a ridiculous amount of time exploring mkspecs and how the
+linux-clang-libc++ build system works (it basically jsut inherehits linux-clang
+and linux-g++ stuff), I eventually found a patch from 2015(!) that solves my
+issue. Genius. 
 
+`qt5-webengine` requires `bison`, `GNU flex/m4` to build (for now?), and `gn`
+does not link properly with an `llvm` toolchain - the blame lies on exactly one
+flag: `--static-libstdc++`. We have to coopt the `gn` bootstrap flags used
+during the `qt5-webengine` build prior to generating a `gn` build to ensure this
+flag isn't set. This took many many hours of troubleshooting. 
+
+Qt browsers work just fine in every way except video playback - at least on
+YouTube, the page crashes. Still troubleshooting, probably has soemthing to do
+with ELGS - which means that I will need to fix GL, and rebuild *at least*
+`qt5`, if not `qt5-webengine`. Joy.
 
 --- 
 
