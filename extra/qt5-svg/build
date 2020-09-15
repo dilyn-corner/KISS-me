@@ -1,6 +1,0 @@
-#!/bin/sh -e
-
-qmake
-
-gmake
-gmake INSTALL_ROOT="$1" install
