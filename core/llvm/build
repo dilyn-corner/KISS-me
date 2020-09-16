@@ -10,9 +10,12 @@ export DESTDIR="$1"
 sed -i 's/!defined(_GCC_MAX_ALIGN_T)/& \&\& !defined(__DEFINED_max_align_t)/' libcxx/include/stddef.h
 sed -i 's/set(COMPILER_RT_HAS_SANITIZER_COMMON TRUE)/set(COMPILER_RT_HAS_SANITIZER_COMMON FALSE)/' compiler-rt/cmake/config-ix.cmake
 
+    #-DCMAKE_RANLIB=ranlib \
+    #-DCMAKE_AR=ar \
 cmake -B build \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DLLVM_ENABLE_LTO=Thin \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
@@ -30,7 +33,9 @@ cmake -B build \
     -DLLVM_BUILD_TESTS=OFF \
     -DLLVM_ENABLE_LIBCXX=ON \
     -DLLVM_ENABLE_LLD=ON \
+    -DLLVM_OPTIMIZED_TABLEGEN=ON \
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
+    -DLIBUNWIND_ENABLE_SHARED=ON \
     -DLIBUNWIND_USE_COMPILER_RT=ON \
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
     -DLIBCXXABI_USE_COMPILER_RT=ON \
