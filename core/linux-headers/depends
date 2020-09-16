@@ -1,4 +1,4 @@
 byacc make
-flex make
+flex  make
 gmake make
-m4 make
+m4    make

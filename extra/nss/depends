@@ -1,6 +1,6 @@
-gmake make
-gnu-as make
+gmake         make
+gnu-as        make
 linux-headers make
-perl make
+perl          make
 sqlite
 zlib

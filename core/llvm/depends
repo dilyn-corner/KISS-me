@@ -1,1 +1,4 @@
-/var/db/kiss/wyverkiss/core/llvm/depends
+cmake   make
+python  make
+samurai make
+zlib

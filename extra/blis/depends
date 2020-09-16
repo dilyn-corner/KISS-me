@@ -1,3 +1,3 @@
-bash make
+bash   make
 openmp
 python make

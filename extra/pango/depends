@@ -3,5 +3,5 @@ fontconfig
 freetype-harfbuzz
 fribidi
 glib
-meson make
+meson   make
 pkgconf make

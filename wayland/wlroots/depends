@@ -1,10 +1,10 @@
-flex make
+flex              make
 libinput
 libxkbcommon
-linux-headers make
+linux-headers     make
 mesa 
-meson make
+meson             make
 pixman
-samurai make
+samurai           make
 wayland-protocols make
 xkeyboard-config

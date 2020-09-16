@@ -1,9 +1,9 @@
 libpng
-meson make
+meson             make
 pixman
-pkgconfig make
-samurai make
-tllist make
+pkgconfig         make
+samurai           make
+tllist            make
 wayland
 wayland-protocols make
 wlroots

@@ -1,16 +1,16 @@
-byacc make
-flex  make
+byacc         make
+flex          make
 freetype-harfbuzz
-gmake make
-gperf make
+gmake         make
+gperf         make
 libinput
 libjpeg-turbo
 libpng
 libxkbcommon
 linux-headers make
-m4 make
+m4            make
 mesa
 mtdev
-perl  make
+perl          make
 sqlite
 zlib

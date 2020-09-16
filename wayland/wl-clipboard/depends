@@ -1,4 +1,4 @@
-meson make
-samurai make
+meson             make
+samurai           make
 wayland
 wayland-protocols make
