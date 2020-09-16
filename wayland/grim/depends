@@ -1,7 +1,7 @@
 cairo
 libjpeg-turbo
-meson make
-pkgconf make
-samurai make
+meson             make
+pkgconf           make
+samurai           make
 wayland
 wayland-protocols make

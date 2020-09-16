@@ -1,8 +1,8 @@
-byacc make
-flex make
-gmake make
+byacc  make
+flex   make
+gmake  make
 gnu-as make
 libelf
 libressl
 lz4
-m4 make
+m4     make

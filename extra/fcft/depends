@@ -2,4 +2,4 @@ fontconfig
 freetype-harfbuzz
 pixman
 pkgconf make
-tllist make
+tllist  make

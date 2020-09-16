@@ -1,11 +1,11 @@
 bzip2
 expat
 glib
-gmake make
+gmake   make
 libdrm
 libpng
 mesa
-meson make
+meson   make
 pkgconf make
 pixman
 zlib

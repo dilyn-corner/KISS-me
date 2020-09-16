@@ -2,10 +2,10 @@ cairo
 libinput
 libucl
 libxkbcommon
-linux-headers make
+linux-headers     make
 pango
 pixman
-pkgconf make
+pkgconf           make
 wayland
 wayland-protocols make
 wlroots

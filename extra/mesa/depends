@@ -1,12 +1,12 @@
-byacc         make
-flex          make
+byacc             make
+flex              make
 libdrm
 libglvnd
-linux-headers make
-m4            make
-meson         make
-pkgconf       make
-python        make
+linux-headers     make
+m4                make
+meson             make
+pkgconf           make
+python            make
 wayland
 wayland-protocols make
 zlib

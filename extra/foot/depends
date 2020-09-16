@@ -1,13 +1,13 @@
-cmake make
+cmake             make
 fcft
 fontconfig
 libxkbcommon
-linux-headers make
-meson make
-ncurses make
+linux-headers     make
+meson             make
+ncurses           make
 pixman
-pkgconf make
-python make
-tllist make
+pkgconf           make
+python            make
+tllist            make
 wayland
 wayland-protocols make
