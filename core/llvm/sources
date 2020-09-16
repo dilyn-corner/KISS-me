@@ -8,3 +8,9 @@ https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/libcxxabi-
 https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lld-10.0.1.src.tar.xz lld/
 patches/libcxx-musl_compat.patch
 files/c99
+
+# Monolithic source
+#https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/llvm-project-10.0.1.tar.xz
+
+# 11.0.0 RC2 releases
+#https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-project-11.0.0rc2.tar.xz
