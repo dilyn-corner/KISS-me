@@ -1,13 +1,4 @@
 case $TYPE in
-#    pre-build)
-#        case $PKG in
-#            nss) # Dumb variables
-#            export CC=cc
-#            export CCC=c++
-#            export CXX=c++
-#            ;;
-#       esac
-#    ;;
     post-build)
         case $PKG in
             kiss) # ensure we keep docs
@@ -17,27 +8,15 @@ case $TYPE in
                 install -Dm755 helper "$DEST/usr/bin/helper"
             ;;
             *)
-            rm -rf "$DEST/etc/bash_completions.d"
-            rm -rf "$DEST/usr/lib/charset.alias"
-            rm -rf "$DEST/usr/share/polkit-1"
-            rm -rf "$DEST/usr/share/gettext"
-            rm -rf "$DEST/usr/share/locale"
-            rm -rf "$DEST/usr/share/info"
-            rm -rf "$DEST/usr/share/doc"
-            rm -rf "$DEST/usr/share/man"
-            rm -rf "$DEST/usr/share/zsh"
-            ;;
-        esac
-    ;;
-    pre-install)
-        case $PKG in
-            linux) # We should keep backup kernels... just in case
-                ver=$(uname -r)
-
-                rm /boot/vmlinuz.old     /boot/System.old
-                mv /boot/System.map      /boot/System.old
-                mv /boot/vmlinuz         /boot/vmlinuz.old
-                mv /usr/lib/modules/$ver /usr/lib/modules/$ver.old
+                rm -rf "$DEST/etc/bash_completions.d"
+                rm -rf "$DEST/usr/lib/charset.alias"
+                rm -rf "$DEST/usr/share/polkit-1"
+                rm -rf "$DEST/usr/share/gettext"
+                rm -rf "$DEST/usr/share/locale"
+                rm -rf "$DEST/usr/share/info"
+                rm -rf "$DEST/usr/share/doc"
+                rm -rf "$DEST/usr/share/man"
+                rm -rf "$DEST/usr/share/zsh"
             ;;
         esac
     ;;
