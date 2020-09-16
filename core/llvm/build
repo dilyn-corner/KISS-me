@@ -48,8 +48,8 @@ cmake -B build \
     -DCLANG_DEFAULT_RTLIB=compiler-rt \
     -Wno-dev llvm -G Ninja
 
-cmake --build   build
-cmake --install build
+ninja -C build
+ninja -C build install
 
 # libc++abi header files
 mkdir -p "$1/usr"
