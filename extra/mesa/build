@@ -39,14 +39,13 @@ meson \
     --mandir=/usr/share/man \
     --localstatedir=/var \
     --buildtype=release \
+    -Db_lto=true \
     -Dplatforms=wayland,drm \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
     -Dglx=disabled \
     -Dglvnd=true \
-    -Dgbm=true \
-    -Degl=true \
     . build
 
 ninja -C build
