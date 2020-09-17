@@ -1,0 +1,8 @@
+fcft 
+meson   make
+pixman
+pkgconf make
+samurai make
+tllist  make
+wayland
+yaml
