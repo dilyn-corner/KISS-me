@@ -45,6 +45,8 @@ meson \
     -Dvulkan-drivers=intel \
     -Dglx=disabled \
     -Dglvnd=true \
+    -Dgbm=true \
+    -Degl=true \
     . build
 
 ninja -C build
