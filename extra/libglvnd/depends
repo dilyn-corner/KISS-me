@@ -1,2 +1,2 @@
-python make
 meson  make
+python make
