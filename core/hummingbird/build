@@ -1,7 +1,6 @@
 #!/bin/sh -e
 
 sed -i 's/CC := gcc/CC := cc/' Makefile
-CC="${CC:-cc}"
 
 make
 make DESTDIR="$1" install
