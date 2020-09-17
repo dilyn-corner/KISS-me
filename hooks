@@ -11,11 +11,11 @@ case $TYPE in
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            mesa | mpv) # lto broken
+            mpv) # lto broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            ffmpeg | python | python2) # we forked these 
+            ffmpeg | mesa | python | python2) # we forked these 
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
