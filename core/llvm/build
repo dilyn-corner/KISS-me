@@ -7,15 +7,18 @@ export DESTDIR="$1"
     patch -p1 < ../libcxx-musl_compat.patch
 )
 
-sed -i 's/!defined(_GCC_MAX_ALIGN_T)/& \&\& !defined(__DEFINED_max_align_t)/' libcxx/include/stddef.h
-sed -i 's/set(COMPILER_RT_HAS_SANITIZER_COMMON TRUE)/set(COMPILER_RT_HAS_SANITIZER_COMMON FALSE)/' compiler-rt/cmake/config-ix.cmake
+# This is uneeded with llvm 11 I guess?
+#sed -i 's/!defined(_GCC_MAX_ALIGN_T)/& \&\& !defined(__DEFINED_max_align_t)/' \
+#    libcxx/include/stddef.h
 
-    #-DCMAKE_RANLIB=ranlib \
-    #-DCMAKE_AR=ar \
-    #-DLIBUNWIND_ENABLE_SHARED=ON \
+sed -i 's/SANITIZER_COMMON TRUE)/set(SANITIZER_COMMON FALSE)/' \
+    compiler-rt/cmake/config-ix.cmake
+
 cmake -B build \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_RANLIB=llvm-ranlib \
+    -DCMAKE_AR=llvm-ar \
     -DLLVM_ENABLE_LTO=Thin \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
