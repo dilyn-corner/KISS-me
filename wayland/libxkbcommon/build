@@ -9,6 +9,7 @@ meson \
     -Denable-x11=false \
     -Dxkb-config-root=/usr/share/X11/xkb \
     -Dx-locale-root=/usr/share/X11/locale \
+    -Denable-xkbregistry=false \
     . build
 
 ninja -C build
