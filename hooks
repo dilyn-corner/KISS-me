@@ -1,14 +1,20 @@
+export defCFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
+
 case $TYPE in
     pre-build)
         case $PKG in
-            x264) # we fail little-endian test with -flto=thin?
-                export CFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
-                export CXXFLAGS="$CFLAGS"
-                # allegedly adding -ffat-lto-objects to the configure test fixes it?
-            ;;
             musl) # lto alegedly breaks... everything. For GCC. Unclear about LLVM.
-                export CFLAGS="-march=native -mtune=native -O3 --fno-math-errno -pipe"
-                export CXXFLAGS="$CFLAGS"
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
+            ;;
+            python) # /shrug/
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
+            ;;
+            x264) # we fail little-endian test with -flto=thin?
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
+                # allegedly adding -ffat-lto-objects to the configure test fixes it?
             ;;
         esac
     ;;
