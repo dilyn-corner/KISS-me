@@ -1,4 +1,17 @@
 case $TYPE in
+    pre-build)
+        case $PKG in
+            x264) # we fail little-endian test with -flto=thin?
+                export CFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
+                export CXXFLAGS="$CFLAGS"
+                # allegedly adding -ffat-lto-objects to the configure test fixes it?
+            ;;
+            musl) # lto alegedly breaks... everything. For GCC. Unclear about LLVM.
+                export CFLAGS="-march=native -mtune=native -O3 --fno-math-errno -pipe"
+                export CXXFLAGS="$CFLAGS"
+            ;;
+        esac
+    ;;
     post-build)
         case $PKG in
             kiss) # ensure we keep docs
