@@ -3,18 +3,30 @@ export defCFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
 case $TYPE in
     pre-build)
         case $PKG in
-            musl) # lto alegedly breaks... everything. For GCC. Unclear about LLVM.
+            byacc | libressl | llvm | e2fsprogs | lame) # lto  broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            python) # /shrug/
+            libass | libpng | opus | util-linux | vim) # lto  broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            x264) # we fail little-endian test with -flto=thin?
+            mesa | mpv) # lto broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
-                # allegedly adding -ffat-lto-objects to the configure test fixes it?
+            ;;
+            ffmpeg | python | python2) # we forked these 
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
+            ;;
+            musl) # breaks everything
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
+            ;;
+            x264) # We can fix this at configure with -ffat-lto-objects
+                  # in configure's little-endian test?
+                export CFLAGS="$defCFLAGS"
+                export CXXFLAGS="$defCFLAGS"
             ;;
         esac
     ;;
