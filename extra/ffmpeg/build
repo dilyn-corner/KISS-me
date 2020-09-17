@@ -25,6 +25,7 @@ export CXXFLAGS="$CFLAGS"
     --enable-libwebp \
     --enable-libdrm \
     --x86asmexe=nasm \
+    --disable-libxml2 \
     --disable-debug
 
 gmake
