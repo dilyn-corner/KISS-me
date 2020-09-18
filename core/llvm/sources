@@ -13,4 +13,4 @@ files/c99
 #https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/llvm-project-10.0.1.tar.xz
 
 # 11.0.0 RC2 releases
-https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0-rc2/llvm-project-11.0.0rc2.tar.xz llvm
+https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0-rc2/llvm-project-11.0.0rc2.tar.xz
