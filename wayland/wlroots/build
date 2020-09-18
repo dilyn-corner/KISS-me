@@ -1,22 +1,16 @@
 #!/bin/sh -e
 
-#GCC10 fix
-export CFLAGS="$CFLAGS -fcommon"
-
 export DESTDIR="$1"
 
 meson \
 	--prefix=/usr \
-	--buildtype=plain \
+	--buildtype=release \
 	-Dexamples=false \
-        -Dlibcap=disabled \
-        -Dlogind=disabled \
-        -Dxcb-errors=disabled \
-        -Dxcb-icccm=disabled \
-        -Dxcb-xkb=disabled \
-        -Dxwayland=disabled \
-        -Dx11-backend=disabled \
-	-Dfreerdp=disabled \
+    -Dlogind=disabled \
+    -Dxcb-errors=disabled \
+    -Dxcb-icccm=disabled \
+    -Dxwayland=disabled \
+    -Dx11-backend=disabled \
 	. build
 
 ninja -C build
