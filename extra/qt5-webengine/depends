@@ -8,7 +8,7 @@ gmake         make
 gperf         make
 libdrm
 libevent
-libxml2
+#libxml2
 linux-headers make
 nss
 perl          make
