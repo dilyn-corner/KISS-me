@@ -5,6 +5,7 @@ linux-headers     make
 mesa 
 meson             make
 pixman
+pkgconf           make
 samurai           make
 wayland-protocols make
 xkeyboard-config
