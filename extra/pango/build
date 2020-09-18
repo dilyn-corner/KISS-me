@@ -1,1 +1,15 @@
-/var/db/kiss/wyverkiss/extra/pango/build
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+sed -i "/subdir('tests')/d"    meson.build
+sed -i "/subdir('examples')/d" meson.build
+
+meson \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dintrospection=false \
+    . build
+
+ninja -C build
+ninja -C build install
