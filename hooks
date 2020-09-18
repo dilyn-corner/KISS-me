@@ -7,11 +7,11 @@ case $TYPE in
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            libass | libpng | opus | util-linux | vim) # lto  broken
+            libass | libpng | pixman | opus | util-linux) # lto  broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            mpv) # lto broken
+            vim | mpv) # lto broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
