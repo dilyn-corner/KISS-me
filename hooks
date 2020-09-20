@@ -3,15 +3,15 @@ export defCFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
 case $TYPE in
     pre-build)
         case $PKG in
-            byacc | libressl | llvm | e2fsprogs | lame) # lto  broken
+            byacc | e2fsprogs | lame | libass | libressl) # lto  broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            libass | libpng | pixman | opus | util-linux) # lto  broken
+            libpng | llvm | mpv | pixman | opus) # lto  broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            vim | mpv) # lto broken
+            util-linux | vim) # lto broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
