@@ -11,7 +11,7 @@ case $TYPE in
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            ffmpeg | llvm | mesa | python | python2 | x264) # we add lto at configure
+            ffmpeg | llvm | linux-rt | mesa | python | python2 | x264) # we add lto at configure
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
