@@ -44,9 +44,12 @@ meson \
     -Ddri-drivers=i965 \
     -Dgallium-drivers=i915 \
     -Dvulkan-drivers=intel \
+    -Dgles1=false \
+    -Dgbm=true \
     -Dglx=disabled \
-    -Dglvnd=true \
     . build
+
+    #-Dglvnd=true \
 
 ninja -C build
 ninja -C build install
