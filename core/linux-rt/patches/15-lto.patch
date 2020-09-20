@@ -1,412 +1,144 @@
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -184,19 +184,57 @@ extern bool initcall_debug;
-  * as KEEP() in the linker script.
-  */
- 
-+/* Format: <modname>__<counter>_<line>_<fn> */
-+#define __initcall_id(fn)					\
-+	__PASTE(__KBUILD_MODNAME,				\
-+	__PASTE(__,						\
-+	__PASTE(__COUNTER__,					\
-+	__PASTE(_,						\
-+	__PASTE(__LINE__,					\
-+	__PASTE(_, fn))))))
-+
-+/* Format: __<prefix>__<iid><id> */
-+#define __initcall_name(prefix, __iid, id)			\
-+	__PASTE(__,						\
-+	__PASTE(prefix,						\
-+	__PASTE(__,						\
-+	__PASTE(__iid, id))))
-+
-+#ifdef CONFIG_LTO_CLANG
-+/*
-+ * With LTO, the compiler doesn't necessarily obey link order for
-+ * initcalls. In order to preserve the correct order, we add each
-+ * variable into its own section and generate a linker script (in
-+ * scripts/link-vmlinux.sh) to specify the order of the sections.
-+ */
-+#define __initcall_section(__sec, __iid)			\
-+	#__sec ".init.." #__iid
-+#else
-+#define __initcall_section(__sec, __iid)			\
-+	#__sec ".init"
-+#endif
-+
- #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
--#define ___define_initcall(fn, id, __sec)			\
-+#define ____define_initcall(fn, __name, __sec)			\
- 	__ADDRESSABLE(fn)					\
--	asm(".section	\"" #__sec ".init\", \"a\"	\n"	\
--	"__initcall_" #fn #id ":			\n"	\
-+	asm(".section	\"" __sec "\", \"a\"		\n"	\
-+	    __stringify(__name) ":			\n"	\
- 	    ".long	" #fn " - .			\n"	\
- 	    ".previous					\n");
- #else
--#define ___define_initcall(fn, id, __sec) \
--	static initcall_t __initcall_##fn##id __used \
--		__attribute__((__section__(#__sec ".init"))) = fn;
-+#define ____define_initcall(fn, __name, __sec)			\
-+	static initcall_t __name __used 			\
-+		__attribute__((__section__(__sec))) = fn;
- #endif
- 
-+#define __unique_initcall(fn, id, __sec, __iid)			\
-+	____define_initcall(fn,					\
-+		__initcall_name(initcall, __iid, id),		\
-+		__initcall_section(__sec, __iid))
-+
-+#define ___define_initcall(fn, id, __sec)			\
-+	__unique_initcall(fn, id, __sec, __initcall_id(fn))
-+
- #define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
- 
- /*
-@@ -236,7 +274,7 @@ extern bool initcall_debug;
- #define __exitcall(fn)						\
- 	static exitcall_t __exitcall_##fn __exit_call = fn
- 
--#define console_initcall(fn)	___define_initcall(fn,, .con_initcall)
-+#define console_initcall(fn)	___define_initcall(fn, con, .con_initcall)
- 
- struct obs_kernel_param {
- 	const char *str;
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 3d599716940c..7e382d12d309 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -117,9 +117,11 @@ target-stem = $(basename $(patsubst $(obj)/%,%,$@))
- # These flags are needed for modversions and compiling, so we define them here
- # $(modname_flags) defines KBUILD_MODNAME as the name of the module it will
- # end up in (or would, if it gets compiled in)
--name-fix = $(call stringify,$(subst $(comma),_,$(subst -,_,$1)))
-+name-fix-token = $(subst $(comma),_,$(subst -,_,$1))
-+name-fix = $(call stringify,$(call name-fix-token,$1))
- basename_flags = -DKBUILD_BASENAME=$(call name-fix,$(basetarget))
--modname_flags  = -DKBUILD_MODNAME=$(call name-fix,$(modname))
-+modname_flags  = -DKBUILD_MODNAME=$(call name-fix,$(modname)) \
-+		 -D__KBUILD_MODNAME=kmod_$(call name-fix-token,$(modname))
- modfile_flags  = -DKBUILD_MODFILE=$(call stringify,$(modfile))
- 
- _c_flags       = $(filter-out $(CFLAGS_REMOVE_$(target-stem).o), \
-diff --git a/scripts/generate_initcall_order.pl b/scripts/generate_initcall_order.pl
-new file mode 100755
-index 000000000000..fe83aec2b51e
---- /dev/null
-+++ b/scripts/generate_initcall_order.pl
-@@ -0,0 +1,270 @@
-+#!/usr/bin/env perl
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Generates a linker script that specifies the correct initcall order.
-+#
-+# Copyright (C) 2019 Google LLC
-+
-+use strict;
-+use warnings;
-+use IO::Handle;
-+use IO::Select;
-+use POSIX ":sys_wait_h";
-+
-+my $nm = $ENV{'NM'} || die "$0: ERROR: NM not set?";
-+my $objtree = $ENV{'objtree'} || '.';
-+
-+## currently active child processes
-+my $jobs = {};		# child process pid -> file handle
-+## results from child processes
-+my $results = {};	# object index -> [ { level, secname }, ... ]
-+
-+## reads _NPROCESSORS_ONLN to determine the maximum number of processes to
-+## start
-+sub get_online_processors {
-+	open(my $fh, "getconf _NPROCESSORS_ONLN 2>/dev/null |")
-+		or die "$0: ERROR: failed to execute getconf: $!";
-+	my $procs = <$fh>;
-+	close($fh);
-+
-+	if (!($procs =~ /^\d+$/)) {
-+		return 1;
-+	}
-+
-+	return int($procs);
-+}
-+
-+## writes results to the parent process
-+## format: <file index> <initcall level> <base initcall section name>
-+sub write_results {
-+	my ($index, $initcalls) = @_;
-+
-+	# sort by the counter value to ensure the order of initcalls within
-+	# each object file is correct
-+	foreach my $counter (sort { $a <=> $b } keys(%{$initcalls})) {
-+		my $level = $initcalls->{$counter}->{'level'};
-+
-+		# section name for the initcall function
-+		my $secname = $initcalls->{$counter}->{'module'} . '__' .
-+			      $counter . '_' .
-+			      $initcalls->{$counter}->{'line'} . '_' .
-+			      $initcalls->{$counter}->{'function'};
-+
-+		print "$index $level $secname\n";
-+	}
-+}
-+
-+## reads a result line from a child process and adds it to the $results array
-+sub read_results{
-+	my ($fh) = @_;
-+
-+	# each child prints out a full line w/ autoflush and exits after the
-+	# last line, so even if buffered I/O blocks here, it shouldn't block
-+	# very long
-+	my $data = <$fh>;
-+
-+	if (!defined($data)) {
-+		return 0;
-+	}
-+
-+	chomp($data);
-+
-+	my ($index, $level, $secname) = $data =~
-+		/^(\d+)\ ([^\ ]+)\ (.*)$/;
-+
-+	if (!defined($index) ||
-+		!defined($level) ||
-+		!defined($secname)) {
-+		die "$0: ERROR: child process returned invalid data: $data\n";
-+	}
-+
-+	$index = int($index);
-+
-+	if (!exists($results->{$index})) {
-+		$results->{$index} = [];
-+	}
-+
-+	push (@{$results->{$index}}, {
-+		'level'   => $level,
-+		'secname' => $secname
-+	});
-+
-+	return 1;
-+}
-+
-+## finds initcalls from an object file or all object files in an archive, and
-+## writes results back to the parent process
-+sub find_initcalls {
-+	my ($index, $file) = @_;
-+
-+	die "$0: ERROR: file $file doesn't exist?" if (! -f $file);
-+
-+	open(my $fh, "\"$nm\" --defined-only \"$file\" 2>/dev/null |")
-+		or die "$0: ERROR: failed to execute \"$nm\": $!";
-+
-+	my $initcalls = {};
-+
-+	while (<$fh>) {
-+		chomp;
-+
-+		# check for the start of a new object file (if processing an
-+		# archive)
-+		my ($path)= $_ =~ /^(.+)\:$/;
-+
-+		if (defined($path)) {
-+			write_results($index, $initcalls);
-+			$initcalls = {};
-+			next;
-+		}
-+
-+		# look for an initcall
-+		my ($module, $counter, $line, $symbol) = $_ =~
-+			/[a-z]\s+__initcall__(\S*)__(\d+)_(\d+)_(.*)$/;
-+
-+		if (!defined($module)) {
-+			$module = ''
-+		}
-+
-+		if (!defined($counter) ||
-+			!defined($line) ||
-+			!defined($symbol)) {
-+			next;
-+		}
-+
-+		# parse initcall level
-+		my ($function, $level) = $symbol =~
-+			/^(.*)((early|rootfs|con|[0-9])s?)$/;
-+
-+		die "$0: ERROR: invalid initcall name $symbol in $file($path)"
-+			if (!defined($function) || !defined($level));
-+
-+		$initcalls->{$counter} = {
-+			'module'   => $module,
-+			'line'     => $line,
-+			'function' => $function,
-+			'level'    => $level,
-+		};
-+	}
-+
-+	close($fh);
-+	write_results($index, $initcalls);
-+}
-+
-+## waits for any child process to complete, reads the results, and adds them to
-+## the $results array for later processing
-+sub wait_for_results {
-+	my ($select) = @_;
-+
-+	my $pid = 0;
-+	do {
-+		# unblock children that may have a full write buffer
-+		foreach my $fh ($select->can_read(0)) {
-+			read_results($fh);
-+		}
-+
-+		# check for children that have exited, read the remaining data
-+		# from them, and clean up
-+		$pid = waitpid(-1, WNOHANG);
-+		if ($pid > 0) {
-+			if (!exists($jobs->{$pid})) {
-+				next;
-+			}
-+
-+			my $fh = $jobs->{$pid};
-+			$select->remove($fh);
-+
-+			while (read_results($fh)) {
-+				# until eof
-+			}
-+
-+			close($fh);
-+			delete($jobs->{$pid});
-+		}
-+	} while ($pid > 0);
-+}
-+
-+## forks a child to process each file passed in the command line and collects
-+## the results
-+sub process_files {
-+	my $index = 0;
-+	my $njobs = get_online_processors();
-+	my $select = IO::Select->new();
-+
-+	while (my $file = shift(@ARGV)) {
-+		# fork a child process and read it's stdout
-+		my $pid = open(my $fh, '-|');
-+
-+		if (!defined($pid)) {
-+			die "$0: ERROR: failed to fork: $!";
-+		} elsif ($pid) {
-+			# save the child process pid and the file handle
-+			$select->add($fh);
-+			$jobs->{$pid} = $fh;
-+		} else {
-+			# in the child process
-+			STDOUT->autoflush(1);
-+			find_initcalls($index, "$objtree/$file");
-+			exit;
-+		}
-+
-+		$index++;
-+
-+		# limit the number of children to $njobs
-+		if (scalar(keys(%{$jobs})) >= $njobs) {
-+			wait_for_results($select);
-+		}
-+	}
-+
-+	# wait for the remaining children to complete
-+	while (scalar(keys(%{$jobs})) > 0) {
-+		wait_for_results($select);
-+	}
-+}
-+
-+sub generate_initcall_lds() {
-+	process_files();
-+
-+	my $sections = {};	# level -> [ secname, ...]
-+
-+	# sort results to retain link order and split to sections per
-+	# initcall level
-+	foreach my $index (sort { $a <=> $b } keys(%{$results})) {
-+		foreach my $result (@{$results->{$index}}) {
-+			my $level = $result->{'level'};
-+
-+			if (!exists($sections->{$level})) {
-+				$sections->{$level} = [];
-+			}
-+
-+			push(@{$sections->{$level}}, $result->{'secname'});
-+		}
-+	}
-+
-+	die "$0: ERROR: no initcalls?" if (!keys(%{$sections}));
-+
-+	# print out a linker script that defines the order of initcalls for
-+	# each level
-+	print "SECTIONS {\n";
-+
-+	foreach my $level (sort(keys(%{$sections}))) {
-+		my $section;
-+
-+		if ($level eq 'con') {
-+			$section = '.con_initcall.init';
-+		} else {
-+			$section = ".initcall${level}.init";
-+		}
-+
-+		print "\t${section} : {\n";
-+
-+		foreach my $secname (@{$sections->{$level}}) {
-+			print "\t\t*(${section}..${secname}) ;\n";
-+		}
-+
-+		print "\t}\n";
-+	}
-+
-+	print "}\n";
-+}
-+
-+generate_initcall_lds();
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index a352a5ad9ef7..1d5730176bed 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -43,6 +43,16 @@ info()
- 	fi
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Return-Path: <SRS0=kw6z=C3=vger.kernel.org=linux-kernel-owner@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A5BC43466
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Sep 2020 20:15:26 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 545E123718
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Sep 2020 20:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sk1n8gFB"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726588AbgIRUPZ (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 18 Sep 2020 16:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgIRUPO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Sep 2020 16:15:14 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F91C0613D0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Sep 2020 13:15:14 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id y53so6132180qth.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Sep 2020 13:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=sDhFGpvlf4HylY15zQIKyDPQxuNLHaPJE4lahmB/U3o=;
+        b=sk1n8gFBPt/lpLBQ+GOEZFF5kf8UOnntxOTB32HnkQWAWrSaStYhtRE7qWdbcSLxg4
+         Gg9GXRGdMLUsdCB/c8c7q8AGDDfB/5JLmacB5t9QnbyA5wUTdMVAdy75TO8BlVneBzVp
+         lSI/Cl7ny5ny1K6+J3oitNwzfaSptJ76VcMWpOgVfjxm3SIpHxo4N7r4B3FBuFcxcDvy
+         /qw4ESM9nEFmfuEfRVkLCqb7J/wr+gTYbwx15VUb419uhouvZ7OLiu3JBT/XiuB7nklt
+         UMu9qGA0f4VwicJFQUJEGU3naFOTNsTQSVhBYOgrLyZldxhatmDZWt2FeBBqcQGwQmbr
+         piUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=sDhFGpvlf4HylY15zQIKyDPQxuNLHaPJE4lahmB/U3o=;
+        b=ntOaWScBeDV8ne7+PrPM3hqf5Y0CZp+qq7rJd23aShae987+pyQ3cnEaBPK5dBS+p0
+         BsYcr4/7PhOKyCSlTjHK610AF3ZoBuGJHy27zJhcZ+i4K4TBGMx1sEflpNr11ckCnucj
+         78R8UP5DWLUomYNt2mQoO49TbDoJURcFEqM2fDM2+agV1CT4FE0tRtO+XVEz5iinyx8q
+         o0JCsLFacOQK90k0q/AvwnRSx5QK/3RIbRtqqxupCsSVp1tCTlYD53RuIcFa01iJjd2g
+         /LmN1s01VVs1dITGv/R86JPLKPN9c8Li4G7m1w3/V/E8a8EuNZTESO46PMaLMqV/l5Gv
+         3rbQ==
+X-Gm-Message-State: AOAM533I9Myvzfg59X1vpU71qBbzCzA6OeU+uu1i6BgJJHzCfTO6Tlke
+        3n4iU/bEMTeKc0+cBsCEsMwoU8dX/v8YahCupt0=
+X-Google-Smtp-Source: ABdhPJzcLc2Llf2NYvBudjp2BIXvLbxitZeqdCSBF9rMkMxLi5VdEAKNXht5tAMiNUsnOx/RDEKyI2Da9coZSC3R4XU=
+Sender: "samitolvanen via sendgmr" 
+        <samitolvanen@samitolvanen1.mtv.corp.google.com>
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a0c:9d04:: with SMTP id
+ m4mr18731516qvf.50.1600460113739; Fri, 18 Sep 2020 13:15:13 -0700 (PDT)
+Date:   Fri, 18 Sep 2020 13:14:21 -0700
+In-Reply-To: <20200918201436.2932360-1-samitolvanen@google.com>
+Message-Id: <20200918201436.2932360-16-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200918201436.2932360-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.681.g6f77f65b4e-goog
+Subject: [PATCH v3 15/30] kbuild: lto: merge module sections
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+Archived-At: <https://lkml.kernel.org/lkml/20200918201436.2932360-16-samitolvanen@google.com/>
+List-Archive: <https://lkml.kernel.org/lkml/>
+List-Post: <mailto:linux-kernel@vger.kernel.org>
+
+LLD always splits sections with LTO, which increases module sizes. This
+change adds linker script rules to merge the split sections in the final
+module.
+
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ scripts/module.lds.S | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+index 69b9b71a6a47..037120173a22 100644
+--- a/scripts/module.lds.S
++++ b/scripts/module.lds.S
+@@ -25,5 +25,33 @@ SECTIONS {
+ 	__jump_table		0 : ALIGN(8) { KEEP(*(__jump_table)) }
  }
  
-+# Generate a linker script to ensure correct ordering of initcalls.
-+gen_initcalls()
-+{
-+	info GEN .tmp_initcalls.lds
++#ifdef CONFIG_LTO_CLANG
++/*
++ * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
++ * -ffunction-sections, which increases the size of the final module.
++ * Merge the split sections in the final binary.
++ */
++SECTIONS {
++	__patchable_function_entries : { *(__patchable_function_entries) }
 +
-+	${srctree}/scripts/generate_initcall_order.pl \
-+		${KBUILD_VMLINUX_OBJS} ${KBUILD_VMLINUX_LIBS} \
-+		> .tmp_initcalls.lds
++	.bss : {
++		*(.bss .bss.[0-9a-zA-Z_]*)
++		*(.bss..L*)
++	}
++
++	.data : {
++		*(.data .data.[0-9a-zA-Z_]*)
++		*(.data..L*)
++	}
++
++	.rodata : {
++		*(.rodata .rodata.[0-9a-zA-Z_]*)
++		*(.rodata..L*)
++	}
++
++	.text : { *(.text .text.[0-9a-zA-Z_]*) }
 +}
++#endif
 +
- # If CONFIG_LTO_CLANG is selected, collect generated symbol versions into
- # .tmp_symversions.lds
- gen_symversions()
-@@ -74,6 +84,9 @@ modpost_link()
- 		--end-group"
- 
- 	if [ -n "${CONFIG_LTO_CLANG}" ]; then
-+		gen_initcalls
-+		lds="-T .tmp_initcalls.lds"
-+
- 		if [ -n "${CONFIG_MODVERSIONS}" ]; then
- 			gen_symversions
- 			lds="${lds} -T .tmp_symversions.lds"
-@@ -285,6 +298,7 @@ cleanup()
- {
- 	rm -f .btf.*
- 	rm -f .tmp_System.map
-+	rm -f .tmp_initcalls.lds
- 	rm -f .tmp_symversions.lds
- 	rm -f .tmp_vmlinux*
- 	rm -f System.map
+ /* bring in arch-specific sections */
+ #include <asm/module.lds.h>
 -- 
-2.28.0.402.g5ffc5be6b7-goog
+2.28.0.681.g6f77f65b4e-goog
 
 

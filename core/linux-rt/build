@@ -6,13 +6,28 @@
 # patches will be upstreamed. Refer to official documentation for more info:
 # wiki.linuxfoundation.org/realtime
 
+# Set the kernel up for success!
+cp config .config
+
+# Some patches require this!
+gmake LLVM=1 modules_prepare
+
 # All the rt patches will come separately, direct from upstream
-xzcat "patch-$2-rt4.patch.xz" | patch -p1
+xzcat "patch-5.9-rc5-rt7.patch.xz" | patch -p1
 
 # These are just additional patches
+# Beware! This package includes a patchset for enabling LTO. This is only
+# intended for systems utilizing LLVM ar/nm and clang! Make sure you've removed
+# the patches before proceeding if you do not meet these requirements!
+# Ensure a file exists before it is patched
+mv scripts/module-common.lds scripts/module.lds.S
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
+
+# Enable LTO
+scripts/config -e LTO_CLANG
+gmake LLVM=1 olddefconfig
 
 # We could make this script check for llvm {later}
 # Instead I'll just assume you aren't blindly following this
@@ -45,10 +60,6 @@ done
 # CONFIG_RCU_BOOST_DELAY
 
 # The rest of configuring the kernel is identical to a non-rt kernel. Have fun!
-
-# Set the kernel up for success!
-cp config .config
-gmake YACC=yacc LLVM=1 olddefconfig
 
 # Useful variables
 modulesdir="$1/usr/lib/modules/$2"
