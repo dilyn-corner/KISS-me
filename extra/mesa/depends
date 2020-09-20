@@ -1,7 +1,7 @@
 byacc             make
 flex              make
 libdrm
-libglvnd
+#libglvnd
 linux-headers     make
 m4                make
 meson             make
