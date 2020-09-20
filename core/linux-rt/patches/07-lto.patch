@@ -1,0 +1,116 @@
+--- a/Makefile
++++ b/Makefile
+@@ -859,17 +859,34 @@ ifdef CONFIG_HAVE_FENTRY
+   ifeq ($(call cc-option-yn, -mfentry),y)
+     CC_FLAGS_FTRACE	+= -mfentry
+     CC_FLAGS_USING	+= -DCC_USING_FENTRY
++    export CC_USING_FENTRY := 1
+   endif
+ endif
+ export CC_FLAGS_FTRACE
+-KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
+-KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
+ ifdef CONFIG_DYNAMIC_FTRACE
+-	ifdef CONFIG_HAVE_C_RECORDMCOUNT
+-		BUILD_C_RECORDMCOUNT := y
+-		export BUILD_C_RECORDMCOUNT
+-	endif
++  ifndef CC_USING_RECORD_MCOUNT
++  ifndef CC_USING_PATCHABLE_FUNCTION_ENTRY
++    # use objtool or recordmcount to generate mcount tables
++    ifdef CONFIG_HAVE_OBJTOOL_MCOUNT
++      ifdef CC_USING_FENTRY
++        USE_OBJTOOL_MCOUNT := y
++        CC_FLAGS_USING += -DCC_USING_NOP_MCOUNT
++        export USE_OBJTOOL_MCOUNT
++      endif
++    endif
++    ifndef USE_OBJTOOL_MCOUNT
++      USE_RECORDMCOUNT := y
++      export USE_RECORDMCOUNT
++      ifdef CONFIG_HAVE_C_RECORDMCOUNT
++        BUILD_C_RECORDMCOUNT := y
++        export BUILD_C_RECORDMCOUNT
++      endif
++    endif
++  endif
++  endif
+ endif
++KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
++KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
+ endif
+ 
+ # We trigger additional mismatches with less inlining
+@@ -1218,11 +1235,16 @@ uapi-asm-generic:
+ PHONY += prepare-objtool prepare-resolve_btfids
+ prepare-objtool: $(objtool_target)
+ ifeq ($(SKIP_STACK_VALIDATION),1)
++objtool-lib-prompt := "please install libelf-dev, libelf-devel or elfutils-libelf-devel"
++ifdef USE_OBJTOOL_MCOUNT
++	@echo "error: Cannot generate __mcount_loc for CONFIG_DYNAMIC_FTRACE=y, $(objtool-lib-prompt)" >&2
++	@false
++endif
+ ifdef CONFIG_UNWINDER_ORC
+-	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
++	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, $(objtool-lib-prompt)" >&2
+ 	@false
+ else
+-	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
++	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, $(objtool-lib-prompt)" >&2
+ endif
+ endif
+ 
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a4020c0b4508..b510af5b216c 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -56,6 +56,11 @@ config HAVE_C_RECORDMCOUNT
+ 	help
+ 	  C version of recordmcount available?
+ 
++config HAVE_OBJTOOL_MCOUNT
++	bool
++	help
++	  Arch supports objtool --mcount
++
+ config TRACER_MAX_TRACE
+ 	bool
+ 
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index a467b9323442..6ecf30c70ced 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -178,8 +178,7 @@ cmd_modversions_c =								\
+ 	fi
+ endif
+ 
+-ifdef CONFIG_FTRACE_MCOUNT_RECORD
+-ifndef CC_USING_RECORD_MCOUNT
++ifdef USE_RECORDMCOUNT
+ # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
+ ifdef BUILD_C_RECORDMCOUNT
+ ifeq ("$(origin RECORDMCOUNT_WARN)", "command line")
+@@ -206,8 +205,7 @@ recordmcount_source := $(srctree)/scripts/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
+ 	$(sub_cmd_record_mcount))
+-endif # CC_USING_RECORD_MCOUNT
+-endif # CONFIG_FTRACE_MCOUNT_RECORD
++endif # USE_RECORDMCOUNT
+ 
+ ifdef CONFIG_STACK_VALIDATION
+ ifneq ($(SKIP_STACK_VALIDATION),1)
+@@ -230,6 +228,9 @@ endif
+ ifdef CONFIG_X86_SMAP
+   objtool_args += --uaccess
+ endif
++ifdef USE_OBJTOOL_MCOUNT
++  objtool_args += --mcount
++endif
+ 
+ # 'OBJECT_FILES_NON_STANDARD := y': skip objtool checking for a directory
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
+-- 
+2.28.0.402.g5ffc5be6b7-goog
+
+
