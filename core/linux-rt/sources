@@ -1,5 +1,5 @@
 https://git.kernel.org/torvalds/t/linux-5.9-rc5.tar.gz
-https://kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc5-rt7.patch.xz patch-5.90-rc5.patch.xz
+https://kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc5-rt7.patch.xz patch-5.9.0-rc5.patch.xz
 files/config
 patches/01-lto.patch
 patches/02-lto.patch
