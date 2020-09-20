@@ -9,9 +9,6 @@
 # Set the kernel up for success!
 cp config .config
 
-# Some patches require this!
-gmake LLVM=1 modules_prepare
-
 # All the rt patches will come separately, direct from upstream
 xzcat "patch-5.9-rc5-rt7.patch.xz" | patch -p1
 
@@ -25,9 +22,7 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-# Enable LTO
-scripts/config -e LTO_CLANG
-gmake LLVM=1 olddefconfig
+gmake YACC=yacc LLVM=1 olddefconfig
 
 # We could make this script check for llvm {later}
 # Instead I'll just assume you aren't blindly following this
