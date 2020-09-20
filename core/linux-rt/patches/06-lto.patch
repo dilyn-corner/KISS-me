@@ -1,0 +1,39 @@
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -64,7 +64,7 @@ objtool_link()
+ 	local objtoolopt;
+ 
+ 	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
+-		objtoolopt="check"
++		objtoolopt="check --vmlinux"
+ 		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
+ 			objtoolopt="${objtoolopt} --no-fp"
+ 		fi
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 71595cf4946d..eaa06eb18690 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -41,18 +41,10 @@ const struct option check_options[] = {
+ 
+ int cmd_check(int argc, const char **argv)
+ {
+-	const char *objname, *s;
+-
+ 	argc = parse_options(argc, argv, check_options, check_usage, 0);
+ 
+ 	if (argc != 1)
+ 		usage_with_options(check_usage, check_options);
+ 
+-	objname = argv[0];
+-
+-	s = strstr(objname, "vmlinux.o");
+-	if (s && !s[9])
+-		vmlinux = true;
+-
+-	return check(objname, false);
++	return check(argv[0], false);
+ }
+-- 
+2.28.0.402.g5ffc5be6b7-goog
+
+

@@ -1,0 +1,47 @@
+--- a/Makefile
++++ b/Makefile
+@@ -921,6 +921,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
+ # Limit inlining across translation units to reduce binary size
+ LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
+ KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
++
++KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
+ endif
+ 
+ ifdef CONFIG_LTO
+diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
+new file mode 100644
+index 000000000000..cbb11dc3639a
+--- /dev/null
++++ b/scripts/module-lto.lds
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
++ * -ffunction-sections, which increases the size of the final module.
++ * Merge the split sections in the final binary.
++ */
++SECTIONS {
++	__patchable_function_entries : { *(__patchable_function_entries) }
++
++	.bss : {
++		*(.bss .bss.[0-9a-zA-Z_]*)
++		*(.bss..L*)
++	}
++
++	.data : {
++		*(.data .data.[0-9a-zA-Z_]*)
++		*(.data..L*)
++	}
++
++	.rodata : {
++		*(.rodata .rodata.[0-9a-zA-Z_]*)
++		*(.rodata..L*)
++	}
++
++	.text : { *(.text .text.[0-9a-zA-Z_]*) }
++}
+-- 
+2.28.0.402.g5ffc5be6b7-goog
+
+
