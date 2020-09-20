@@ -10,7 +10,7 @@
 cp config .config
 
 # All the rt patches will come separately, direct from upstream
-xzcat "patch-5.9-rc5-rt7.patch.xz" | patch -p1
+xzcat "patch-$2-rt7.patch.xz" | patch -p1
 
 # These are just additional patches
 # Beware! This package includes a patchset for enabling LTO. This is only
@@ -22,7 +22,7 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-gmake YACC=yacc LLVM=1 olddefconfig
+gmake LLVM=1 YACC=yacc olddefconfig
 
 # We could make this script check for llvm {later}
 # Instead I'll just assume you aren't blindly following this
@@ -62,10 +62,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-gmake YACC=yacc LLVM=1
+gmake LLVM=1 YACC=yacc
 
 echo "Installing modules..."
-gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
+gmake LLVM=1 YACC=yacc INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
