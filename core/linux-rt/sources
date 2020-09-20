@@ -1,8 +1,5 @@
-https://git.kernel.org/torvalds/t/linux-5.9-rc4.tar.gz
-https://kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc4-rt4.patch.xz
-patches/byacc.patch
-patches/no-perl.patch
-patches/march-native-support.patch
+https://git.kernel.org/torvalds/t/linux-5.9-rc5.tar.gz
+https://kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc5-rt7.patch.xz
 files/config
 patches/01-lto.patch
 patches/02-lto.patch
@@ -30,4 +27,6 @@ patches/23-lto.patch
 patches/24-lto.patch
 patches/25-lto.patch
 patches/26-lto.patch
-patches/27-lto.patch
+patches/byacc.patch
+patches/march-native-support.patch
+patches/no-perl.patch
