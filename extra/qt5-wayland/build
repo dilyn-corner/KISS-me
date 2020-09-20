@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 qmake \
-    CONFIG+=wayland-client
+    CONFIG+=wayland-compositor
 
 make 
 make INSTALL_ROOT="$1" install
