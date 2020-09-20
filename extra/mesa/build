@@ -40,15 +40,16 @@ meson \
     --localstatedir=/var \
     --buildtype=release \
     -Db_lto=true \
-    -Dplatforms=wayland,drm \
-    -Ddri-drivers=i965 \
-    -Dgallium-drivers=i915 \
-    -Dvulkan-drivers=intel \
-    -Dgles1=false \
     -Dgbm=true \
+    -Dgles1=false \
     -Dglx=disabled \
+    -Ddri-drivers=i965 \
+    -Dvulkan-drivers=intel \
+    -Dgallium-drivers=i915 \
+    -Dplatforms=wayland,drm \
     . build
 
+# Maybe later?
     #-Dglvnd=true \
 
 ninja -C build
