@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+patch -p1 < x264-no-bash.patch
+
+CC=cc CXX=c++ ./configure \
+    --prefix=/usr \
+    --disable-swscale \
+    --enable-static \
+    --enable-pic \
+    --enable-lto \
+    --enable-shared
+
+gmake
+gmake DESTDIR="$1" install
