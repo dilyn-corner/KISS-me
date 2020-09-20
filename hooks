@@ -7,24 +7,15 @@ case $TYPE in
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            libpng | llvm | mpv | pixman | opus) # lto  broken
+            libpng | nss | mpv | pixman | opus | util-linux | vim) # lto broken
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
-            util-linux | vim) # lto broken
-                export CFLAGS="$defCFLAGS"
-                export CXXFLAGS="$defCFLAGS"
-            ;;
-            ffmpeg | mesa | python | python2) # we forked these 
+            ffmpeg | llvm | mesa | python | python2 | x264) # we add lto at configure
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
             musl) # breaks everything
-                export CFLAGS="$defCFLAGS"
-                export CXXFLAGS="$defCFLAGS"
-            ;;
-            x264) # We can fix this at configure with -ffat-lto-objects
-                  # in configure's little-endian test?
                 export CFLAGS="$defCFLAGS"
                 export CXXFLAGS="$defCFLAGS"
             ;;
