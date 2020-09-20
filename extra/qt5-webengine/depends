@@ -1,6 +1,6 @@
 ffmpeg
+flex          make
 gnu-bison     make
-gnu-flex      make
 gnu-m4        make
 fontconfig
 freetype-harfbuzz
@@ -8,7 +8,6 @@ gmake         make
 gperf         make
 libdrm
 libevent
-#libxml2
 linux-headers make
 nss
 perl          make
