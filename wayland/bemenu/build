@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -fPIC"
+export CXXFLAGS="$CFLAGS"
+
 gmake clients wayland PREFIX=/usr
 
 gmake PREFIX=/usr DESTDIR="$1" install
