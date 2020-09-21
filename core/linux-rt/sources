@@ -27,6 +27,6 @@ patches/23-lto.patch
 patches/24-lto.patch
 patches/25-lto.patch
 patches/26-lto.patch
-patches/byacc.patch
-patches/march-native-support.patch
-patches/no-perl.patch
+patches/27-march-native-support.patch
+patches/28-no-perl.patch
+patches/29-byacc.patch
