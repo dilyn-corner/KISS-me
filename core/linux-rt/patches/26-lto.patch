@@ -1,94 +1,3 @@
-From mboxrd@z Thu Jan  1 00:00:00 1970
-Return-Path: <SRS0=kw6z=C3=vger.kernel.org=linux-kernel-owner@kernel.org>
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC57C43463
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Sep 2020 20:16:56 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D232074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Sep 2020 20:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BCRPev+r"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgIRUQz (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Sep 2020 16:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgIRUP5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Sep 2020 16:15:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8379C0613DA
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Sep 2020 13:15:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id d15so6783794ybk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Sep 2020 13:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=o2DL67IOGBCnkKLJVmvx6mUhLGuExASqR4QZ4OZyxOY=;
-        b=BCRPev+rE/eCdhTRad14OxKPRC759YffFhBrw/j99zRl+XMk2SeRH2Ro57Q+fpYAoY
-         41dQCr5nRdN1nuAqPl79eRYF7Et/K4hrYua59TnFUm5Qft7hifOftA32AELoX+E867b9
-         2jVvQFpvTUQ2M35PWVTe002iSNw0bKhWwMU3J5xh89MftQHJTF8aTjqfy5S8odXPfmkR
-         B2V75MstoeJ9GqBepGfubW5/qhE+jhI/WYG/r7dM4O293zVEla547bOEPQpSKmz7YdJU
-         wGZC1Jet9cEIKlifpza3a2tLHND8kbzGrtrT3REGXctWnfeV7IsjeRGJP72+hJcsyY8w
-         zCoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=o2DL67IOGBCnkKLJVmvx6mUhLGuExASqR4QZ4OZyxOY=;
-        b=Vq0XygC4a5R3g7mjswXHYDYwEr8G5wSk9/ALr+j2xtmxAHD6K4cbV9JcOV0z8mQILU
-         lx7n2wKzPXGeMAst7Ei0gYjVrIfyYzhDpnsq7FnYAdn6amhjZaRgNGdjFtINFzeZDcer
-         YAaDe/iFlLmYhwXXEX6bSt5Z6BSzX8Hmvik3/btVrm1zXyJjskZODA3KJzvp63TPLsfd
-         nyO+dfd1tHM5vu76xdN/4lWT46eS5VymlvnQRejCSeNWmcxselR4oXJs11lqlzwmyajH
-         6DcQeYmt7cebssgIWG5w7H2P8YwYtvbtrXvfqpEVrkjQVPzZ1k1P3cj9a/22S5n7xy6B
-         sVqg==
-X-Gm-Message-State: AOAM530dc5dm/5DuonErAdEWcM74cj2DyIEca64qDvhziW+oqJJz3J7F
-        xcBCu8tn/oU26ta+hE4P5IwtytjrcCbA0IaabpM=
-X-Google-Smtp-Source: ABdhPJwrzpZNvpYit1QmzfPWE8TC9Luw0JQEd0AJRVJCA8aClr3KtmTNrVIGHe8CNeT/kpakU/IVCxd5qz42yc0kkDA=
-Sender: "samitolvanen via sendgmr" 
-        <samitolvanen@samitolvanen1.mtv.corp.google.com>
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a25:887:: with SMTP id
- 129mr35650576ybi.513.1600460151944; Fri, 18 Sep 2020 13:15:51 -0700 (PDT)
-Date:   Fri, 18 Sep 2020 13:14:36 -0700
-In-Reply-To: <20200918201436.2932360-1-samitolvanen@google.com>
-Message-Id: <20200918201436.2932360-31-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200918201436.2932360-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.28.0.681.g6f77f65b4e-goog
-Subject: [PATCH v3 30/30] x86, build: allow LTO_CLANG and THINLTO to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
-Archived-At: <https://lkml.kernel.org/lkml/20200918201436.2932360-31-samitolvanen@google.com/>
-List-Archive: <https://lkml.kernel.org/lkml/>
-List-Post: <mailto:linux-kernel@vger.kernel.org>
-
 Pass code model and stack alignment to the linker as these are
 not stored in LLVM bitcode, and allow both CONFIG_LTO_CLANG and
 CONFIG_THINLTO to be selected.
@@ -101,7 +10,6 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
  2 files changed, 7 insertions(+)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6de2e5c0bdba..0a49008c2363 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
 @@ -92,6 +92,8 @@
@@ -113,17 +21,15 @@ index 6de2e5c0bdba..0a49008c2363 100644
  	select ARCH_SUPPORTS_RT
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_QUEUED_RWLOCKS
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 4346ffb2e39f..49e3b8674eb5 100644
 --- a/arch/x86/Makefile
 +++ b/arch/x86/Makefile
-@@ -173,6 +173,11 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+@@ -173,6 +173,11 @@
  	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
  endif
  
 +ifdef CONFIG_LTO_CLANG
-+KBUILD_LDFLAGS	+= -plugin-opt=-code-model=kernel \
-+		   -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
++KBUILD_LDFLAGS += -plugin-opt=-code-model=kernel \
++        -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
 +endif
 +
  # Workaround for a gcc prelease that unfortunately was shipped in a suse release
@@ -131,5 +37,3 @@ index 4346ffb2e39f..49e3b8674eb5 100644
  #
 -- 
 2.28.0.681.g6f77f65b4e-goog
-
-
