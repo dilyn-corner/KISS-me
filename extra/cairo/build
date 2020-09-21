@@ -3,6 +3,7 @@
 # Disable building 'cairo-sphinx'.
 sed -i "s/BUILD_SPHINX_TRUE=/BUILD_SPHINX_TRUE='#'/"   configure
 sed -i "s/BUILD_SPHINX_FALSE='#'/BUILD_SPHINX_FALSE=/" configure
+sed -i 's/test perf//g' Makefile.in
 
 ./configure \
     --prefix=/usr \
