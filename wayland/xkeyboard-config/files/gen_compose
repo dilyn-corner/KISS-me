@@ -1,0 +1,42 @@
+#!/bin/sh -e
+#
+# This bypasses the build system to grab the compose files for
+# xkbcommon without requiring Xorg libraries be present.
+# Everything below is taken from nls/Makefile.
+
+export LC_CTYPE=C
+
+locale_dir=$1
+
+mkdir -p \
+    "$locale_dir/C" \
+    "$locale_dir/en_US.UTF-8"
+
+for file in \
+    compose.dir \
+    C/Compose \
+    en_US.UTF-8/Compose
+do
+    < "$file.pre" \
+        cpp -undef \
+            -traditional \
+            -DWCHAR32=1 |
+
+    > "$file.l1" \
+        sed -e '/^#  *[0-9][0-9]*  *.*$/d'  \
+            -e '/^#line  *[0-9][0-9]*  *.*$/d' \
+            -e '/^[      ]*XCOMM$/s/XCOMM/#/' \
+            -e '/^[    ]*XCOMM[^a-zA-Z0-9_]/s/XCOMM/#/' \
+            -e '/^[ ]*XHASH/s/XHASH/#/' \
+            -e 's,X11_LOCALEDATADIR,/usr/share/X11/locale,g' \
+            -e '/\@\@$/s/\@\@$/\\/'
+
+    < "$file.l1" \
+    > "$file.l2" \
+        sed -e '/^[^#][^  ]*:/s/://' \
+            -e '/^[^#].*[    ].*:/d'
+
+    > "$locale_dir/$file" \
+        cat "$file.l2" \
+            "$file.l1"
+done
