@@ -10,7 +10,7 @@
 cp config .config
 
 # All the rt patches will come separately, direct from upstream
-xzcat "patch-$2-rt7.patch.xz" | patch -p1
+xzcat patch-5.9-rc5-rt7.patch.xz | patch -p1
 
 # These are just additional patches
 # Beware! This package includes a patchset for enabling LTO. This is only
