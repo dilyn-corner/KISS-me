@@ -1,11 +1,7 @@
 #!/bin/sh -e
 
 # Note to self: always make doc generation toggleable
-sed -i "s/'doc',//"      meson.build
-sed -i '/doc/d'          meson.build
-
-# foot version seems broken when building master?
-rm -rf .git
+sed -i "/subdir('doc')/d" meson.build
 
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
