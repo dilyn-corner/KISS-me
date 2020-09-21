@@ -28,13 +28,14 @@ build_harfbuzz() (
         -Ddefault_library=both \
         -Dfreetype=enabled \
         -Dcairo=disabled \
+        -Dglib=disabled \
         -Dicu=disabled \
         -Dbenchmark=disabled \
         -Dtests=disabled \
-        . output
+        . build
 
-    ninja -C output
-    ninja -C output install
+    ninja -C build
+    ninja -C build install
 )
 
 build_freetype "$1" no
