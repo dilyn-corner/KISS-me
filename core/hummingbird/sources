@@ -1,1 +1,2 @@
-/home/dilyn/git/community/community/hummingbird-git/sources
+git+https://github.com/Sweets/hummingbird.git
+patches/one-tty.patch
