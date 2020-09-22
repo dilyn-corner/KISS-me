@@ -1,7 +1,8 @@
 libpng
+libjpeg-turbo
 meson             make
 pixman
-pkgconfig         make
+pkgconf           make
 samurai           make
 tllist            make
 wayland
