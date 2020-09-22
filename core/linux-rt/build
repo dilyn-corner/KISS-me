@@ -18,6 +18,7 @@ xzcat patch-5.9-rc5-rt7.patch.xz | patch -p1
 # the patches before proceeding if you do not meet these requirements!
 # Ensure a file exists before it is patched
 mv scripts/module-common.lds scripts/module.lds.S
+
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
