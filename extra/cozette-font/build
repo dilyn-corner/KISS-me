@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+cd CozetteFonts
+install -Dm644 cozette.otb       "$1/usr/share/fonts/misc/cozette.otb"
+install -Dm644 CozetteVector.ttf "$1/usr/share/fonts/TTF/CozetteVector.ttf"
