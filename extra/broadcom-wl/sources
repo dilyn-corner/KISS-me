@@ -1,1 +1,2 @@
-https://github.com/dilyn-corner/KISS-me/releases/download/pkg-src/broadcom-wl-6.30.223.271-4.tar.xz
+https://github.com/dilyn-corner/KISS-me/releases/download/pkg-src/broadcom-wl-6.30.223.271-5.tar.xz
+patches/remove-get_fs-set_fs.patch
