@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+patch -p1 < one-tty.patch
+
 sed -i 's/CC := gcc/CC := cc/' Makefile
 
 make
