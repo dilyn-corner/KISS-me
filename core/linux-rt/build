@@ -13,15 +13,21 @@ cp config .config
 xzcat patch-5.9-rc5-rt7.patch.xz | patch -p1
 
 # These are just additional patches
+
 # Beware! This package includes a patchset for enabling LTO. This is only
 # intended for systems utilizing LLVM ar/nm and clang! Make sure you've removed
 # the patches before proceeding if you do not meet these requirements!
+
 # Ensure a file exists before it is patched
 mv scripts/module-common.lds scripts/module.lds.S
 
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
+
+#patch -p1 < 27-march-native-support.patch
+#patch -p1 < 28-no-perl.patch
+#patch -p1 < 29-byacc.patch
 
 gmake LLVM=1 YACC=yacc olddefconfig
 
