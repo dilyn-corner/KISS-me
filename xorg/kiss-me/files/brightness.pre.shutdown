@@ -1,4 +1,0 @@
-#!/bin/sh
-
-brightnessctl -s >/dev/null 2>&1 &
-brightnessctl -d smc::kbd_backlight -s >/dev/null 2>&1 &

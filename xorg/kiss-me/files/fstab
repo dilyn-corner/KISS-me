@@ -1,9 +1,0 @@
-# <device>					<mount> 	<type> 		<options> 	<dump> <fsck>
-# root
-/dev/nvme0n1p2					/         	ext4      	rw,noatime	0 	2
-# boot
-/dev/nvme0n1p1      				/boot     	vfat      	rw,noatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro	0 0
-# home
-/dev/nvme0n1p4					/home     	ext4      	rw,noatime	0 	1
-
-/swapfile					none 		swap		defaults 	0	0
