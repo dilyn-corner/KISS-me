@@ -20,15 +20,11 @@ This repository is for:
 `KISS-me/core`: kernels, compilers, utils. It also includes a compressor (`lz4`)
 and proper MacbookPro fan support (`mbpfan`)
 
-`KISS-me/extra`: Basically an analogue to `repo/extra`. It includes two version of 
-`mesa`, one for strict-wayland and the other Xorg. Anything from `paleta` to 
-`viper` and `r` live here.
+`KISS-me/extra`: Basically an analogue to `repo/extra`
 
-`KISS-me/wayland`: Just `wayland` things. 
+`KISS-me/wayland`: Just `wayland` things
 
-`KISS-me/xorg`: Just `xorg` things.
-
-`KISS-me/hesitation`: Things that are being tested. Loosely.
+`KISS-me/hesitation`: Things that are being tested. Loosely
 
 
 ## Thoughts
@@ -47,11 +43,10 @@ too much. The configuration is easy, the dependencies are small, and the
 environment is sane!
 
 As for terminal emulators; the fact that `alacritty` requires `rust` is comedic.
-So that's out. `kitty` requires `dbus`, so we'll pass. `wayst` builds, but it
-segfaults - I don't feel like troubleshooting this. But, we're in luck! `foot`
-is an excellent option - it uses `meson` which, while frustrating (damn dirty
-`python req`), provides a fast and simple to configure build. The developer
-suggests pgo, which presented a fun-looking build script. 
+So that's out. But, we're in luck! `foot` is an excellent option - it uses 
+`meson` which, while frustrating (damn dirty `python req`), provides a fast 
+and simple to configure build. The developer suggests pgo, which presented a 
+fun-looking build script. 
 
 Wayland has been a pretty stupendous experience thus far. It's no heavier than
 Xorg, has far fewer dependencies to wrangle up and understand, and feels much
@@ -61,37 +56,13 @@ launches very quickly, device detection works just fine, etc. etc. The one
 downside is that so much work is offloaded to the compositor, so things like
 swapping caps and escape are syntactically dependent on implementation. This is,
 however, perhaps better than the Xorg way: a keyboard config file in
-`/etc/X11/xorg.conf.d/` OR `/usr/share/X11/xorg.conf.d` OR a line in .xinitrc OR
-install `setxkbmap` and add a startup script OR OR OR... Here it's just a single
-one liner in `hikari`, plainly documented. I like this.
+`/etc/X11/xorg.conf.d/` OR `/usr/share/X11/xorg.conf.d` OR a line in `.xinitrc` 
+OR install `setxkbmap` and add a startup script OR OR OR... Here it's just a 
+single one liner in `hikari`, plainly documented. I like this.
 
 This is a super minimal build - the only two X packages are `xkeyboard-config`
 and `libxkbcommon`. I'm still working on things, of course. Maybe we could drop
 `glib` at some point... 
-These are what I take to be the minimum number of packages you will have to
-tweak on a regular KISS install:
-`cairo`
-`freetype-harfbuzz`
-`mesa`
-`pango`
-`qt5`
-`qt5-webengine`
-`libxkbcommon`
-`xkeyboard-config`
-
-```
-# kiss-reset would make everything easy. 
-# Just remove xorg et al first to ensure simplicity.
-
-cd $REPOS && git clone https://github.com/dilyn-corner/KISS-me
-
-# Fix symlinks as necessary
-# Fix depends files as needed (byacc -> bison, drop gmake, etc)
-# Drop the i915/965/intel lines in mesa/build for a full-mesa
-
-export KISS_PATH=$REPOS/KISS-me/wayland:$REPOS/KISS-me/extra:$KISS_PATH
-kiss b hikari # you'll need to install bmake
-```
 
 `qt5` is dumb. I spent so long banging my head against a wall, and after
 spending a ridiculous amount of time exploring mkspecs and how the
@@ -99,18 +70,20 @@ linux-clang-libc++ build system works (it basically jsut inherehits linux-clang
 and linux-g++ stuff), I eventually found a patch from 2015(!) that solves my
 issue. Genius. 
 
-`qt5-webengine` requires `bison`, `GNU flex/m4` to build (for now?), and `gn`
-does not link properly with an `llvm` toolchain - the blame lies on exactly one
-flag: `--static-libstdc++`. We have to coopt the `gn` bootstrap flags used
-during the `qt5-webengine` build prior to generating a `gn` build to ensure this
-flag isn't set. This took many many hours of troubleshooting. 
+`qt5-webengine` presented surreal issues. `gn` does not link properly with an 
+`llvm` toolchain - the blame lies on exactly one flag: `--static-libstdc++`. 
+We have to coopt the `gn` bootstrap flags used during the `qt5-webengine` build 
+prior to generating a `gn` build to ensure this flag isn't set. This took many 
+many hours of troubleshooting. The next goal is merely to ensure it can link
+statically.
 
-Qt browsers work just fine in every way except video playback - at least on
-YouTube, the page crashes. Still troubleshooting, probably has soemthing to do
-with ELGS - which means that I will need to fix GL, and rebuild *at least*
-`qt5`, if not `qt5-webengine`. Joy.
+Video playback causes the tab to crash in `falkon` and `viper-browser`. This
+error is attributed to `qt.qpa.wayland: Wayland does not support
+QWindow:requestActivate()`. Unclear what this means exactly; further
+investigation required.
 
 --- 
+
 
 ## My other stuff
 
