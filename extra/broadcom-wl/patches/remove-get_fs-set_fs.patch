@@ -1,6 +1,5 @@
-This patch is courtesy of https://github.com/joanbm! Excellent work.
 diff --git a/src/wl/sys/wl_cfg80211_hybrid.c b/src/wl/sys/wl_cfg80211_hybrid.c
-index f36db0b..19c8e23 100644
+index f36db0b..6d617ca 100644
 --- a/src/wl/sys/wl_cfg80211_hybrid.c
 +++ b/src/wl/sys/wl_cfg80211_hybrid.c
 @@ -41,6 +41,7 @@
@@ -11,7 +10,7 @@ index f36db0b..19c8e23 100644
  
  #define EVENT_TYPE(e) dtoh32((e)->event_type)
  #define EVENT_FLAGS(e) dtoh16((e)->flags)
-@@ -442,34 +443,7 @@ static void key_endian_to_host(struct wl_wsec_key *key)
+@@ -442,34 +443,8 @@ static void key_endian_to_host(struct wl_wsec_key *key)
  static s32
  wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
  {
@@ -20,7 +19,7 @@ index f36db0b..19c8e23 100644
 -	mm_segment_t fs;
 -	s32 err = 0;
 -
--	BUG_ON(len < sizeof(int));
+ 	BUG_ON(len < sizeof(int));
 -
 -	memset(&ioc, 0, sizeof(ioc));
 -	ioc.cmd = cmd;
@@ -48,14 +47,14 @@ index f36db0b..19c8e23 100644
  
  static s32
 diff --git a/src/wl/sys/wl_iw.c b/src/wl/sys/wl_iw.c
-index c4c610b..3a2c5e0 100644
+index c4c610b..8efad06 100644
 --- a/src/wl/sys/wl_iw.c
 +++ b/src/wl/sys/wl_iw.c
 @@ -37,6 +37,7 @@ typedef const struct si_pub	si_t;
  
  #include <wl_dbg.h>
  #include <wl_iw.h>
-+#include (wl_linux.h)
++#include <wl_linux.h>
  
  extern bool wl_iw_conn_status_str(uint32 event_type, uint32 status,
  	uint32 reason, char* stringBuf, uint buflen);
@@ -86,27 +85,31 @@ index c4c610b..3a2c5e0 100644
 -	set_fs(fs);
 -
 -	return ret;
-+    return wlc_ioctl_internal(dev, cmd, arg, len);
++    return wcl_ioctl_internal(dev, cmd, arg, len);
  }
  
  static int
 diff --git a/src/wl/sys/wl_linux.c b/src/wl/sys/wl_linux.c
-index a2775c4..6065719 100644
+index 8075833..a3ae6dc 100644
 --- a/src/wl/sys/wl_linux.c
 +++ b/src/wl/sys/wl_linux.c
-@@ -1657,10 +1657,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+@@ -1657,14 +1657,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
  		goto done2;
  	}
  
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 9, 0)
 -	if (segment_eq(get_fs(), KERNEL_DS))
+-#else
+-	if (uaccess_kernel())
+-#endif
 -		buf = ioc.buf;
 -
 -	else if (ioc.buf) {
-+	if (ioc.buf) {
++    if (ioc.buf) {
  		if (!(buf = (void *) MALLOC(wl->osh, MAX(ioc.len, WLC_IOCTL_MAXLEN)))) {
  			bcmerror = BCME_NORESOURCE;
  			goto done2;
-@@ -1677,7 +1674,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+@@ -1681,7 +1674,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
  	WL_UNLOCK(wl);
  
  done1:
@@ -115,15 +118,14 @@ index a2775c4..6065719 100644
  		if (copy_to_user(ioc.buf, buf, ioc.len))
  			bcmerror = BCME_BADADDR;
  		MFREE(wl->osh, buf, MAX(ioc.len, WLC_IOCTL_MAXLEN));
-@@ -1689,6 +1686,39 @@ done2:
- 		wl->pub->bcmerror = bcmerror;
+@@ -1694,6 +1687,39 @@ done2:
  	return (OSL_ERROR(bcmerror));
  }
-+ 
+ 
 +int
 +wlc_ioctl_internal(struct net_device *dev, int cmd, void *buf, int len)
 +{
-+    wl_info_t *wl;
++	wl_info_t *wl;
 +	wl_if_t *wlif;
 +	int bcmerror;
 +
@@ -152,9 +154,10 @@ index a2775c4..6065719 100644
 +		wl->pub->bcmerror = bcmerror;
 +	return (OSL_ERROR(bcmerror));
 +}
- 
++
  static struct net_device_stats*
  wl_get_stats(struct net_device *dev)
+ {
 diff --git a/src/wl/sys/wl_linux.h b/src/wl/sys/wl_linux.h
 index 5b1048e..c8c1f41 100644
 --- a/src/wl/sys/wl_linux.h
