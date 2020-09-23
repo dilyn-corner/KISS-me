@@ -1,3 +1,0 @@
-git+https://git.suckless.org/dmenu
-patches/01-lineheight.patch
-patches/02-center.patch

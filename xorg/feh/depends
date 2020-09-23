@@ -1,7 +1,0 @@
-curl
-gmake make
-imlib2
-libexif
-libjpeg-turbo
-libXt
-libXinerama
