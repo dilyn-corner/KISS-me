@@ -21,13 +21,13 @@ xzcat patch-5.9-rc6-rt8.patch.xz | patch -p1
 # Ensure a file exists before it is patched
 mv scripts/module-common.lds scripts/module.lds.S
 
-#for patch in *.patch; do
-#    patch -p1 < "$patch"
-#done
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
 
-patch -p1 < 27-march-native-support.patch
-patch -p1 < 28-no-perl.patch
-patch -p1 < 29-byacc.patch
+#patch -p1 < 27-march-native-support.patch
+#patch -p1 < 28-no-perl.patch
+#patch -p1 < 29-byacc.patch
 
 gmake LLVM=1 YACC=yacc olddefconfig
 

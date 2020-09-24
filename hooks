@@ -3,7 +3,7 @@ export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
 case $TYPE in
     pre-build)
         case $PKG in
-            botan | byacc | e2fsprogs | lame | libass | libressl) # lto broke
+            botan | byacc | efivar | e2fsprogs | lame | libass | libressl) # lto broke
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
