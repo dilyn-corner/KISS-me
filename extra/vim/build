@@ -1,0 +1,25 @@
+#!/bin/sh -e
+
+patch -p1 < feature-h.patch
+
+./configure \
+    --prefix=/usr \
+    --with-features=normal
+
+make
+make DESTDIR="$1" install
+
+cp -r runtime/* "$1/usr/share/vim/vim82"
+
+rm -rf "$1/usr/share/icons"
+rm -rf "$1/usr/share/applications"
+rm -rf "$1/usr/share/vim/vim82/doc"
+rm -rf "$1/usr/share/vim/vim82/gvim*"
+rm -rf "$1/usr/share/vim/vim82/icon*"
+rm -rf "$1/usr/share/vim/vim82/keymap"
+rm -rf "$1/usr/share/vim/vim82/lang"
+rm -rf "$1/usr/share/vim/vim82/tutor"
+rm -rf "$1/usr/share/vim/vim82/vimlogo*"
+rm -rf "$1/usr/share/vim/vim82/vim48*"
+rm -rf "$1/usr/share/vim/vim82/vim32*"
+rm -rf "$1/usr/share/vim/vim82/vim16*"
