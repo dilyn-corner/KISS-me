@@ -7,7 +7,7 @@ case $TYPE in
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
-            libpng | nss | mpv | pixman | opus | util-linux | vim) # lto broke
+            libpng | nss | mpv | pixman | opus | util-linux) # lto broke
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
