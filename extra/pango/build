@@ -9,6 +9,8 @@ meson \
     --prefix=/usr \
     --buildtype=release \
     -Dintrospection=false \
+    -Dxft=disabled \
+    -Dgir=false \
     . build
 
 ninja -C build
