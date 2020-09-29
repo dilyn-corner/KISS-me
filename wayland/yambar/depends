@@ -1,8 +1,12 @@
+alsa-lib
 fcft 
-meson   make
+json-c
+libmpdclient
+meson             make
 pixman
-pkgconf make
-samurai make
-tllist  make
+pkgconf           make
+samurai           make
+tllist            make
 wayland
+wayland-protocols make
 yaml
