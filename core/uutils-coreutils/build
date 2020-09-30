@@ -1,14 +1,45 @@
 #!/bin/sh -e
 
 echo "## STILL IN TESTING ##" 
-sleep 10
 
-cargo build --release
-cargo install --root="$1/usr"
+export CARGO_HOME=$PWD
 
-"$1/usr/bin/uutils" --help | tail -n 74 | while read -r util; do
+(
+    cd vendor
+
+    for crate in *.crate; do
+        tar xf "$crate"
+
+        # Strip the filename from the sha256sum output.
+        sha256=$(sha256sum "$crate")
+        sha256=${sha256%% *}
+
+        printf '{"package":"%s","files":{}}\n' "$sha256" \
+            > "${crate%.crate}/.cargo-checksum.json"
+    done
+)
+
+mkdir -p .cargo
+
+cat > .cargo/config << EOF
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+EOF
+
+# We have to explicitly exclude certain features that relate to utmp/wtmp; see
+# https://wiki.musl-libc.org/faq.html#Q:-Why-is-the-utmp/wtmp-functionality-only-implemented-as-stubs?
+
+cargo build \
+    --release \
+    --features "$(cat feat-list)" \
+    --no-default-features
+
+install -Dm755 target/release/uutils "$1/usr/bin/uutils"
+
+# We'll go ahead and add our symlinks because we created a monolithic binary.
+while read util; do
     ln -sv uutils "$1/usr/bin/$util"
 done
-
-# uutils cp is not fully implemented and fails to work with kiss a
-unlink "$1/usr/bin/cp"
