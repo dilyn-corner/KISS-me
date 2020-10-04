@@ -20,9 +20,9 @@ case $TYPE in
                 export CXXFLAGS="$defFLAGS"
             ;;
             llvm) # we have a memory problem
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-                export SAMUFLAGS=-j2
+                export CFLAGS="-march=native -mtune=native -O3"
+                export CXXFLAGS="$CFLAGS"
+                export SAMUFLAGS=-j1
             ;;
         esac
     ;;
