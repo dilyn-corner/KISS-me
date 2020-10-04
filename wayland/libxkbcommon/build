@@ -10,6 +10,7 @@ meson \
     -Dxkb-config-root=/usr/share/X11/xkb \
     -Dx-locale-root=/usr/share/X11/locale \
     -Denable-xkbregistry=false \
+    -Ddefault_library=both \
     . build
 
 ninja -C build
