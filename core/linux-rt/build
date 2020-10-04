@@ -19,15 +19,15 @@ xzcat patch-5.9-rc6-rt8.patch.xz | patch -p1
 # the patches before proceeding if you do not meet these requirements!
 
 # Ensure a file exists before it is patched
-mv scripts/module-common.lds scripts/module.lds.S
+#mv scripts/module-common.lds scripts/module.lds.S
 
-for patch in *.patch; do
-    patch -p1 < "$patch"
-done
+#for patch in *.patch; do
+#    patch -p1 < "$patch"
+#done
 
-#patch -p1 < 27-march-native-support.patch
-#patch -p1 < 28-no-perl.patch
-#patch -p1 < 29-byacc.patch
+patch -p1 < 27-march-native-support.patch
+patch -p1 < 28-no-perl.patch
+patch -p1 < 29-byacc.patch
 
 gmake LLVM=1 YACC=yacc olddefconfig
 
@@ -93,7 +93,7 @@ cp -a arch/x86/include "$builddir/arch/x86/include"
 
 # Because we move this script, we should create a sylink to what Kconfig
 # expects. There is... probably a better solution.
-ln -s "$builddir/scripts/module.lds.S" "$builddir/scripts/module-common.lds"
+#ln -s "$builddir/scripts/module.lds.S" "$builddir/scripts/module-common.lds"
 
 find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
 
