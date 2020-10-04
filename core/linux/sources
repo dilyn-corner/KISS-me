@@ -1,4 +1,4 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.10.tar.xz
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.13.tar.xz
 files/config
 patches/byacc.patch
 patches/no-perl.patch
