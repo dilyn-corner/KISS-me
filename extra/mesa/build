@@ -47,6 +47,7 @@ meson \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
     -Dplatforms=wayland,drm \
+    -Dzstd=false \
     . build
 
 # Maybe later?
