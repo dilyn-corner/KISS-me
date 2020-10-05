@@ -1,13 +1,1 @@
-cmake             make
-fcft
-fontconfig
-libxkbcommon
-linux-headers     make
-meson             make
-ncurses           make
-pixman
-pkgconf           make
-python            make
-tllist            make
-wayland
-wayland-protocols make
+../foot-pgo/depends
