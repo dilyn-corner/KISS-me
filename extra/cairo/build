@@ -7,7 +7,6 @@ sed -i 's/test perf//g' Makefile.in
 
 ./configure \
     --prefix=/usr \
-    --disable-static \
     --enable-tee \
     --disable-trace \
     --disable-valgrind \
