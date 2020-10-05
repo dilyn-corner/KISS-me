@@ -1,0 +1,55 @@
+Courtesy of Dylan Araps.
+diff --git a/meson.build b/meson.build
+index fc79f8a..7f5617b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -53,20 +53,20 @@ if cc.has_argument('-fmacro-prefix-map=/foo=')
+ endif
+ 
+ math = cc.find_library('m')
+-threads = dependency('threads')
+-pixman = dependency('pixman-1')
+-wayland_protocols = dependency('wayland-protocols')
+-wayland_client = dependency('wayland-client')
+-wayland_cursor = dependency('wayland-cursor')
+-xkb = dependency('xkbcommon')
+-fontconfig = dependency('fontconfig')
++threads = dependency('threads', static: true)
++pixman = dependency('pixman-1', static: true)
++wayland_protocols = dependency('wayland-protocols', static: true)
++wayland_client = dependency('wayland-client', static: true)
++wayland_cursor = dependency('wayland-cursor', static: true)
++xkb = dependency('xkbcommon', static: true)
++fontconfig = dependency('fontconfig', static: true)
+ 
+ tllist = dependency('tllist', version: '>=1.0.4', fallback: 'tllist')
+ fcft = dependency('fcft', version: ['>=2.3.0', '<3.0.0'], fallback: 'fcft')
+ 
+ wayland_protocols_datadir = wayland_protocols.get_pkgconfig_variable('pkgdatadir')
+ 
+-wscanner = dependency('wayland-scanner', native: true)
++wscanner = dependency('wayland-scanner', native: true, static: true)
+ wscanner_prog = find_program(
+   wscanner.get_pkgconfig_variable('wayland_scanner'), native: true)
+ 
+diff --git a/subprojects/fcft/meson.build b/subprojects/fcft/meson.build
+index e0cdbf5..bb0f6da 100644
+--- a/subprojects/fcft/meson.build
++++ b/subprojects/fcft/meson.build
+@@ -61,11 +61,11 @@ if cc.has_argument('-fmacro-prefix-map=/foo=')
+ endif
+ 
+ math = cc.find_library('m')
+-threads = dependency('threads')
+-fontconfig = dependency('fontconfig')
+-freetype = dependency('freetype2')
+-harfbuzz = dependency('harfbuzz', required: get_option('text-shaping'))
+-pixman = dependency('pixman-1')
++threads = dependency('threads', static: true)
++fontconfig = dependency('fontconfig', static: true)
++freetype = dependency('freetype2', static: true)
++harfbuzz = dependency('harfbuzz', required: get_option('text-shaping'), static: true)
++pixman = dependency('pixman-1', static: true)
+ # required on the freebsd platform (maybe even on others)
+ stdthreads = cc.find_library('stdthreads', required: host_machine.system() == 'freebsd')
+ 
