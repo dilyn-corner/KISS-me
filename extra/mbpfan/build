@@ -1,0 +1,6 @@
+#!/bin/sh -e 
+
+gmake
+gmake DESTDIR="$1" install
+
+install -Dm755 mbpfan.run "$1/etc/sv/mbpfan/run"
