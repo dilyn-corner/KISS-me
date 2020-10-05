@@ -1,12 +1,10 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
+./configure \
+    --prefix=/usr \
+    --enable-static \
+    --disable-dtd-validation \
+    --disable-documentation
 
-meson \
-	--prefix=/usr \
-    -Ddocumentation=false \
-    -Ddtd_validation=false \
-    . build
-
-ninja -C build
-ninja -C build install
+gmake
+gmake DESTDIR="$1" install

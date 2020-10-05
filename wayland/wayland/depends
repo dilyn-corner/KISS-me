@@ -1,6 +1,5 @@
 expat
 flex    make
+gmake   make
 libffi
-meson   make
 pkgconf make
-samurai make
