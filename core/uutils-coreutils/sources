@@ -1,4 +1,5 @@
 git+https://github.com/uutils/coreutils
+#git+https://github.com/uutils/uucore@canary vendor
 https://static.crates.io/crates/advapi32-sys/advapi32-sys-0.2.0.crate vendor
 https://static.crates.io/crates/aho-corasick/aho-corasick-0.6.10.crate vendor
 https://static.crates.io/crates/aho-corasick/aho-corasick-0.7.10.crate vendor
