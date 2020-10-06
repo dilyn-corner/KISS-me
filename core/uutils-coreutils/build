@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-echo "## STILL IN TESTING ##" 
-
 export CARGO_HOME=$PWD
 
 (
@@ -32,14 +30,19 @@ EOF
 # We have to explicitly exclude certain features that relate to utmp/wtmp; see
 # https://wiki.musl-libc.org/faq.html#Q:-Why-is-the-utmp/wtmp-functionality-only-implemented-as-stubs?
 
+# If this is going to be merged into community, we need to be able to add
+# --frozen. The only roadblock to this is uucore; the build system refuses to
+# find the one we download instead, even though it is very few commits
+# separated. It's strange.
+
 cargo build \
     --release \
     --features "$(cat feat-list)" \
     --no-default-features
 
-install -Dm755 target/release/uutils "$1/usr/bin/uutils"
+install -Dm755 target/release/coreutils "$1/usr/bin/coreutils"
 
 # We'll go ahead and add our symlinks because we created a monolithic binary.
 while read util; do
-    ln -sv uutils "$1/usr/bin/$util"
-done
+    ln -s coreutils "$1/usr/bin/$util"
+done < feat-list
