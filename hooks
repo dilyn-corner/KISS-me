@@ -11,7 +11,7 @@ case $TYPE in
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
-            ffmpeg | llvm | linux-rt | mesa | python | | x264) # forked
+            ffmpeg | llvm | linux-rt | mesa | python | x264) # forked
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
