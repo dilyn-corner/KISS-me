@@ -7,11 +7,11 @@ case $TYPE in
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
-            libpng | nss | mpv | pixman | opus | util-linux) # lto broke
+            libpng | nss | mpv | pixman | python2 | opus | rust | util-linux) # lto broke
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
-            ffmpeg | llvm | linux-rt | mesa | python | python2 | x264) # forked
+            ffmpeg | llvm | linux-rt | mesa | python | | x264) # forked
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
