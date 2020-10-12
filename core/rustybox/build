@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+export CARGO_HOME=$PWD
+
+(
+    cd vendor
+
+    for crate in *.crate; do
+        tar xf "$crate"
+
+        # Strip the filename from the sha256sum output.
+        sha256=$(sha256sum "$crate")
+        sha256=${sha256%% *}
+
+        printf '{"package":"%s","files":{}}\n' "$sha256" \
+            > "${crate%.crate}/.cargo-checksum.json"
+    done
+)
+
+mkdir -p .cargo
+
+cat > .cargo/config << EOF
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+EOF
+
+# We have to explicitly exclude certain features that relate to utmp/wtmp; see
+# https://wiki.musl-libc.org/faq.html#Q:-Why-is-the-utmp/wtmp-functionality-only-implemented-as-stubs?
+
+# If this is going to be merged into community, we need to be able to add
+# --frozen. The only roadblock to this is uucore; the build system refuses to
+# find the one we download instead, even though it is very few commits
+# separated. It's strange.
+
+cargo build \
+    --release \
+    --frozen \
