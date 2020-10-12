@@ -21,7 +21,7 @@ cmake -B build \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_LINK_LLVM_DYLIB=ON \
     -DLLVM_TARGETS_TO_BUILD="host" \
-    -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;flang;openmp;libunwind;libcxxabi;libcxx;lld" \
+    -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;;libunwind;libcxxabi;libcxx;lld" \
     -DLLVM_ENABLE_RTTI=ON \
     -DLLVM_ENABLE_EH=ON \
     -DLLVM_ENABLE_TERMINFO=OFF \
