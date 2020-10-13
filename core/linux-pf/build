@@ -59,4 +59,4 @@ echo "Laying trap..."
 mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
-install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-$2.efi"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-pf.efi"
