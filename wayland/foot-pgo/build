@@ -1,7 +1,6 @@
 #!/bin/sh -e
 
-# Version detection is just like... Mad borked
-rm -rf .git
+export DESTDIR="$1"
 
 patch -p1 < static.patch
 
@@ -10,8 +9,12 @@ export CFLAGS="$CFLAGS -static -l:libffi.a"
 export CC=/usr/bin/cc
 
 # Note to self: always make doc generation toggleable
-sed -i "/subdir('doc')/d" meson.build
+sed -i "s|subdir('doc')||"          meson.build
 
+# These headers are never in the right spot
+fixHead=subprojects/fcft
+install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
+install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
 # PGO builds only work with an active wayland session, so we assume the first

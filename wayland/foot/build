@@ -1,17 +1,17 @@
 #!/bin/sh -e
 
-patch -p1 < static.patch
+export DESTDIR="$1"
 
-# For static building
-export CFLAGS="$CFLAGS -static -l:libffi.a"
-export CC=/usr/bin/cc
+fixHead=subprojects/fcft
+install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
+install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
 
 # Note to self: always make doc generation toggleable
 sed -i "/subdir('doc')/d" meson.build
 
 meson \
     --prefix=/usr \
-    --buildtype=release \
+    --buildtype=debug \
     . build
 
 ninja -C build
