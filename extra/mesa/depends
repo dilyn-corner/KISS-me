@@ -1,9 +1,9 @@
-#byacc             make
+byacc             make
 flex              make
 libdrm
 #libglvnd
 linux-headers     make
-#m4                make
+m4                make
 meson             make
 pkgconf           make
 python            make
