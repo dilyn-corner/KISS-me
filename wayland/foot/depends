@@ -1,1 +1,12 @@
-../foot-pgo/depends
+fontconfig
+freetype-harfbuzz
+libxkbcommon
+linux-headers     make
+meson             make
+ncurses           make
+pixman
+pkgconf           make
+python            make
+samurai           make
+wayland
+wayland-protocols make
