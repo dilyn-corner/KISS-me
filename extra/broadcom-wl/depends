@@ -1,3 +1,2 @@
-byacc         make
-gnu-as        make
+bison         make
 linux-headers make

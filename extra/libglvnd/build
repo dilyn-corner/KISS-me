@@ -4,7 +4,6 @@ export DESTDIR="$1"
 
 meson \
     --prefix=/usr \
-    -Dx11=disabled \
     -Dglx=disabled \
     -Dtls=disabled \
      . build

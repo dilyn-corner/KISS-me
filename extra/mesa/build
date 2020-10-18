@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-patch -p1 < byacc.patch
-
 # Install python-mako which is solely needed for mesa
 # and thus contained in this build.
 {
@@ -46,7 +44,7 @@ meson \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
-    -Dplatforms=wayland,drm \
+    -Dplatforms=x11,wayland,drm \
     -Dzstd=false \
     . build
 

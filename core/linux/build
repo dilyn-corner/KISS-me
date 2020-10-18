@@ -9,7 +9,7 @@ done
 
 # Set the kernel up for success!
 cp config .config
-gmake YACC=yacc LLVM=1 olddefconfig
+make olddefconfig
 
 # Useful variables
 modulesdir="$1/usr/lib/modules/$2"
@@ -17,10 +17,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-gmake YACC=yacc LLVM=1
+make
 
 echo "Installing modules..."
-gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
+make INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -56,4 +56,4 @@ echo "Laying trap..."
 mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
-install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz.efi"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz.kde.efi"

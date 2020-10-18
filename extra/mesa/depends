@@ -1,7 +1,17 @@
-byacc             make
+bison             make
+expat
 flex              make
+libX11
+libXdamage
+libXext
+libXrandr
+libXrender
+libXxf86vm
 libdrm
+libelf
 #libglvnd
+libxcb
+libxshmfence
 linux-headers     make
 m4                make
 meson             make
@@ -9,4 +19,5 @@ pkgconf           make
 python            make
 wayland
 wayland-protocols make
+xorgproto
 zlib

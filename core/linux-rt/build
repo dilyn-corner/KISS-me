@@ -10,29 +10,14 @@
 cp config .config
 
 # All the rt patches will come separately, direct from upstream
-xzcat patch-5.9-rc6-rt8.patch.xz | patch -p1
+xzcat patch-5.9-rt16.patch.xz | patch -p1
 
 # These are just additional patches
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
 
-# Beware! This package includes a patchset for enabling LTO. This is only
-# intended for systems utilizing LLVM ar/nm and clang! Make sure you've removed
-# the patches before proceeding if you do not meet these requirements!
-
-# Ensure a file exists before it is patched
-#mv scripts/module-common.lds scripts/module.lds.S
-
-#for patch in *.patch; do
-#    patch -p1 < "$patch"
-#done
-
-patch -p1 < 27-march-native-support.patch
-patch -p1 < 28-no-perl.patch
-patch -p1 < 29-byacc.patch
-
-gmake LLVM=1 YACC=yacc olddefconfig
-
-# We could make this script check for llvm {later}
-# Instead I'll just assume you aren't blindly following this
+make olddefconfig
 
 # Some important facts to mention about specifically linux-rt:
 # CONFIG_EXPERT=y and CONFIG_RCU_EXPERT=y are required for CONFIG_PREEMPT_RT.
@@ -69,10 +54,10 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-gmake LLVM=1 YACC=yacc
+make
 
 echo "Installing modules..."
-gmake LLVM=1 YACC=yacc INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
+make INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -112,4 +97,4 @@ echo "Laying trap..."
 mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
-install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-rt.efi"
+install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-rt.kde.efi"

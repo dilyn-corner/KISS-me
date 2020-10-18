@@ -1,5 +1,0 @@
-#!/bin/sh -e
-
-cat << EOF
-Be sure to update your bootloader entry.
-EOF

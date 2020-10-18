@@ -1,7 +1,5 @@
-byacc  make
+bison  make
 flex   make
-gmake  make
-gnu-as make
 libelf
 libressl
 lz4

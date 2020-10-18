@@ -6,5 +6,5 @@
     --disable-dtd-validation \
     --disable-documentation
 
-gmake
-gmake DESTDIR="$1" install
+make
+make DESTDIR="$1" install

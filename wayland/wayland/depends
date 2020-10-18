@@ -1,5 +1,4 @@
 expat
 flex    make
-gmake   make
 libffi
 pkgconf make
