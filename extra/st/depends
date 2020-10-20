@@ -1,0 +1,6 @@
+fontconfig
+freetype-harfbuzz
+libX11
+libXft
+ncurses make
+pkgconf make
