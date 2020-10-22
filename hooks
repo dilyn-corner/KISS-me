@@ -1,32 +1,4 @@
-export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
-
 case $TYPE in
-    pre-build)
-        case $PKG in
-            botan | byacc | efivar | e2fsprogs | lame | libass | libressl) # lto broke
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            libpng | nss | mpv | pixman | python2 | opus | rust | util-linux) # lto broke
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            ffmpeg | llvm | linux-rt | mesa | python | x264) # forked
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            musl) # breaks
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            llvm) # we have a memory problem
-                export CFLAGS="-march=native -mtune=native -O3 -pipe"
-                export CXXFLAGS="$CFLAGS"
-                export MAKEFLAGS=-j2
-                export SAMUFLAGS=-j2
-            ;;
-        esac
-    ;;
     post-build)
         case $PKG in
             kiss) # ensure we keep docs
@@ -38,14 +10,11 @@ case $TYPE in
             *)
                 rm -rf "$DEST/usr/share/bash-completions"
                 rm -rf "$DEST/etc/bash_completions.d"
-                rm -rf "$DEST/usr/share/applications"
                 rm -rf "$DEST/usr/lib/charset.alias"
-                rm -rf "$DEST/usr/share/polkit-1"
                 rm -rf "$DEST/usr/share/gettext"
                 rm -rf "$DEST/usr/share/gtk-doc"
                 rm -rf "$DEST/usr/share/locale"
                 rm -rf "$DEST/usr/share/sounds"
-                rm -rf "$DEST/usr/share/icons"
                 rm -rf "$DEST/usr/share/info"
                 rm -rf "$DEST/usr/share/doc"
                 rm -rf "$DEST/usr/share/man"
