@@ -42,7 +42,7 @@
      {0,   XF86XK_AudioMute,         run, {.com = volmute}},
 -    {0,   XF86XK_MonBrightnessUp,   run, {.com = briup}},
 -    {0,   XF86XK_MonBrightnessDown, run, {.com = bridown}},
-+    {0,   XF86XK_MonBrightnessUp,   run, {.com = kbdbriup}},
++    {0,   XF86XK_KbdBrightnessUp,   run, {.com = kbdbriup}},
 +    {0,   XF86XK_KbdBrightnessDown, run, {.com = kbdbridown}},
 +    {0,   XF86XK_MonBrightnessUp,   run, {.com = scrbriup}},
 +    {0,   XF86XK_MonBrightnessDown, run, {.com = scrbridown}},
