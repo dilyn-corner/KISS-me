@@ -11,7 +11,7 @@ case $TYPE in
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
-            ffmpeg | llvm | linux-rt | mesa | python | x264) # forked
+            ffmpeg | llvm | mesa | x264) # forked
                 export CFLAGS="$defFLAGS"
                 export CXXFLAGS="$defFLAGS"
             ;;
@@ -28,6 +28,21 @@ case $TYPE in
         esac
     ;;
     post-build)
+        IFS=. read -r _end _ < /proc/uptime
+
+        (
+            _s=$((_end - _start))
+            _m=$((_s / 60 % 60))
+            _h=$((_s / 60 / 60 % 24))
+
+            [ "$_h" = 0 ] || _u="${_u}${_h}h "
+            [ "$_m" = 0 ] || _u="${_u}${_m}m "
+
+            log "$PKG" "build finished in ${_u:-${_s}s}"
+        )
+
+        : "${DEST:?DEST is unset}"
+
         case $PKG in
             kiss) # ensure we keep docs
             ;;
@@ -50,6 +65,24 @@ case $TYPE in
                 rm -rf "$DEST/usr/share/doc"
                 rm -rf "$DEST/usr/share/man"
                 rm -rf "$DEST/usr/share/zsh"
+            ;;
+        esac
+    ;;
+    pre-install)
+        case $PKG in
+            linux | linux-pf | linux-rt | linux-nitrous)
+                mount /dev/nvme0n1p1 /boot
+            ;;
+        esac
+    ;;
+    post-install)
+        case $PKG in
+            linux | linux-pf | linux-rt | linux-nitrous)
+                umount /boot
+            ;;
+            sls)
+                chown root:dilyn /usr/bin/sls
+                chmod gu+s       /usr/bin/sls
             ;;
         esac
     ;;
