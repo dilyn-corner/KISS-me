@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+export CFLAGS="$CFLAGS -static"
+export CXXFLAGS="$CXXFLAGS -static"
+export LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind -static"
+
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_TESTING=OFF \
+    -DENABLE_IPO=ON \
+    -DZSTD_LIBRARY=/usr/lib/libzstd.a \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
+
+mkdir -p "$1/usr/lib/ccache/bin"
+
+for link in \
+    cc      \
+    clang   \
+    clang++ \
+    cpp     \
+    c++
+do
+    ln -sf /usr/bin/ccache "$1/usr/lib/ccache/bin/$link"
+done
