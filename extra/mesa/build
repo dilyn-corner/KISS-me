@@ -40,14 +40,14 @@ meson \
     --localstatedir=/var \
     --buildtype=release \
     -Db_lto=true \
-    -Dgbm=true \
-    -Dgles1=false \
+    -Dgbm=enabled \
+    -Dgles1=disabled \
     -Dglx=disabled \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
-    -Dplatforms=wayland,drm \
-    -Dzstd=false \
+    -Dplatforms=wayland \
+    -Dzstd=disabled \
     . build
 
 # Maybe later?
