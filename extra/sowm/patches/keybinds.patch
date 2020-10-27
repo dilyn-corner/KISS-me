@@ -14,7 +14,7 @@
 -const char* volmute[] = {"amixer", "sset", "Master", "toggle",      0};
 -const char* colors[]  = {"bud", "/home/goldie/Pictures/Wallpapers", 0};
 +const char* term[]       = {"st",                                                     0};
-+const char* web[]        = {"falkon",                                                 0};
++const char* web[]        = {"firefox",                                                0};
 +const char* menu[]       = {"dmenu_run", "-c", "-l", "7", "-h", "30",                 0};
 +const char* voldown[]    = {"amixer", "sset", "Master", "5%-",                        0};
 +const char* volup[]      = {"amixer", "sset", "Master", "5%+",                        0};
@@ -35,7 +35,7 @@
 -    {MOD, XK_p,      run, {.com = scrot}},
      {MOD, XK_Return, run, {.com = term}},
 +    {MOD, XK_w,      run, {.com = web}},
-+    {MOD, XK_space,      run, {.com = menu}},
++    {MOD, XK_space,  run, {.com = menu}},
  
      {0,   XF86XK_AudioLowerVolume,  run, {.com = voldown}},
      {0,   XF86XK_AudioRaiseVolume,  run, {.com = volup}},
