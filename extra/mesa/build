@@ -37,7 +37,7 @@ meson \
     --mandir=/usr/share/man \
     --localstatedir=/var \
     --buildtype=release \
-    -Db_lto=enabled \
+    -Db_lto=true \
     -Dgbm=enabled \
     -Dgles1=disabled \
     -Dglx=disabled \
