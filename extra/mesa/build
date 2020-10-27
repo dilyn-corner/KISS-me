@@ -37,15 +37,15 @@ meson \
     --mandir=/usr/share/man \
     --localstatedir=/var \
     --buildtype=release \
-    -Db_lto=true \
-    -Dgbm=true \
-    -Dgles1=false \
+    -Db_lto=enabled \
+    -Dgbm=enabled \
+    -Dgles1=disabled \
     -Dglx=disabled \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
-    -Dplatforms=x11,wayland,drm \
-    -Dzstd=false \
+    -Dplatforms=x11,wayland \
+    -Dzstd=disabled \
     . build
 
 # Maybe later?
