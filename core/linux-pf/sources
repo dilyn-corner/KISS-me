@@ -1,4 +1,5 @@
-https://gitlab.com/post-factum/pf-kernel/-/archive/v5.8-pf6/pf-kernel-v5.8-pf6.tar.gz
+https://kernel.org/pub/linux/kernel/v5.x/linux-5.9.tar.xz
+https://gitlab.com/alfredchen/projectc/raw/master/5.9/prjc_v5.9-r1.patch
 files/config
 patches/byacc.patch
 patches/no-perl.patch
