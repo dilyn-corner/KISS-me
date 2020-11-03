@@ -3,10 +3,12 @@ flex          make
 freetype-harfbuzz
 gmake         make
 gperf         make
+libXslt
 libinput
 libjpeg-turbo
 libpng
 libxkbcommon
+libxml2
 linux-headers make
 m4            make
 mesa
