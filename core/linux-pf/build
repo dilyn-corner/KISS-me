@@ -3,6 +3,10 @@
 # linux-pf is a kernel by post-factum which seeks to improve desktop
 # interactivity and performace. It includes a bunch of patches and bug fixes!
 
+# Apply the pf patchset
+patch -p1 < prjc_v5.9-r1.patch
+
+# Apply other patches
 for patch in *.patch; do 
     patch -p1 < "$patch"
 done
