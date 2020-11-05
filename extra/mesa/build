@@ -40,7 +40,7 @@ meson \
     -Db_lto=true \
     -Dgbm=enabled \
     -Dgles1=disabled \
-    -Dglx=disabled \
+    -Dglx=dri \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
