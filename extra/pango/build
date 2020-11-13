@@ -8,8 +8,8 @@ sed -i "/subdir('examples')/d" meson.build
 meson \
     --prefix=/usr \
     --buildtype=release \
-    -Dintrospection=false \
-    -Dgir=false \
+    -Dintrospection=disabled \
+    -Dgir=disabled \
     . build
 
 ninja -C build
