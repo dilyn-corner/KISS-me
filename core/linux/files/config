@@ -432,7 +432,7 @@ CONFIG_HOTPLUG_CPU=y
 # CONFIG_LEGACY_VSYSCALL_XONLY is not set
 CONFIG_LEGACY_VSYSCALL_NONE=y
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="root=/dev/nvme0n1p2 rw acpi_osi=!Darwin acpi_gpe_mask=0x4E zswap_enabled=1"
+CONFIG_CMDLINE="root=/dev/nvme0n1p3 rw acpi_osi=!Darwin acpi_gpe_mask=0x4E zswap_enabled=1"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_MODIFY_LDT_SYSCALL is not set
 CONFIG_HAVE_LIVEPATCH=y
