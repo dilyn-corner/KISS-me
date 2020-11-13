@@ -1,0 +1,33 @@
+alsa-lib
+atk
+bzip2
+cairo
+cbindgen      make
+expat
+ffmpeg
+fontconfig
+freetype-harfbuzz
+fribidi
+gdk-pixbuf
+glib
+gmake         make
+gnu-as        make
+gtk+3
+hicolor-icon-theme
+libdrm
+libepoxy
+libffi
+libjpeg-turbo
+libpng
+libvpx
+mesa
+nasm          make
+nodejs        make
+pango
+perl          make
+pixman
+python        make
+rust          make
+util-linux
+zip           make
+zlib
