@@ -14,7 +14,3 @@ sed -i 's/perl //;s/xml2lst\.pl/xml2lst/' rules/Makefile.in
 
 gmake
 gmake DESTDIR="$1" install
-
-# To evade libX11 and its deps, we will carry around our own locale files.
-cd libX11/nls
-./gen_compose "$1/usr/share/X11/locale"
