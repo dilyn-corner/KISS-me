@@ -1,12 +1,11 @@
 #!/bin/sh -e
 
-patch -p1 < one-tty.patch
-
 sed -i 's/CC := gcc/CC := cc/' Makefile
 
 make
 make DESTDIR="$1" install
 
 install -Dm755 usr/lib/hummingbird/* "$1/usr/lib/hummingbird"
-install -Dm755 dist/kiss/* "$1/usr/lib/hummingbird"
+install -Dm755 dist/kiss/*           "$1/usr/lib/hummingbird"
+
 ln -s hummingbird "$1/usr/bin/init"
