@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.9.9 Kernel Configuration
+# Linux/x86 5.9.10 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="clang version 11.0.0"
 CONFIG_GCC_VERSION=0
@@ -3080,7 +3080,9 @@ CONFIG_INOTIFY_USER=y
 #
 # CD-ROM/DVD Filesystems
 #
-# CONFIG_ISO9660_FS is not set
+CONFIG_ISO9660_FS=y
+# CONFIG_JOLIET is not set
+# CONFIG_ZISOFS is not set
 # CONFIG_UDF_FS is not set
 # end of CD-ROM/DVD Filesystems
 
