@@ -1,0 +1,353 @@
+--- a/dom/plugins/base/nsNPAPIPlugin.cpp
++++ b/dom/plugins/base/nsNPAPIPlugin.cpp
+@@ -58,7 +58,9 @@
+ // needed for nppdf plugin
+ #if (MOZ_WIDGET_GTK)
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#     include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #include "nsJSUtils.h"
+--- a/dom/plugins/base/nsPluginHost.cpp
++++ b/dom/plugins/base/nsPluginHost.cpp
+@@ -87,7 +87,9 @@
+ #endif
+ #if (MOZ_WIDGET_GTK)
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#     include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #include "npapi.h"
+--- a/dom/ipc/ContentChild.cpp
++++ b/dom/ipc/ContentChild.cpp
+@@ -6,7 +6,9 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gtk/gtk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #include "ContentChild.h"
+--- a/toolkit/xre/nsGDKErrorHandler.cpp
++++ b/toolkit/xre/nsGDKErrorHandler.cpp
+@@ -6,7 +6,9 @@
+ #include "nsGDKErrorHandler.h"
+ 
+ #include <gtk/gtk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <string.h>
+--- a/toolkit/components/remote/nsGTKRemoteServer.cpp
++++ b/toolkit/components/remote/nsGTKRemoteServer.cpp
+@@ -9,7 +9,9 @@
+ 
+ #include <gtk/gtk.h>
+ #include <gdk/gdk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#       include <gdk/gdkx.h>
++#endif
+ 
+ #include "mozilla/ModuleUtils.h"
+ #include "nsAppShellCID.h"
+--- a/toolkit/components/remote/nsGTKRemoteServer.h
++++ b/toolkit/components/remote/nsGTKRemoteServer.h
+@@ -9,7 +9,9 @@
+ #define __nsGTKRemoteServer_h__
+ 
+ #include <gdk/gdk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++# include <gdk/gdkx.h>
++#endif
+ #include <gtk/gtk.h>
+ 
+ #include "nsRemoteServer.h"
+--- a/widget/ScreenManager.cpp
++++ b/widget/ScreenManager.cpp
+@@ -13,7 +13,9 @@
+ #include "mozilla/StaticPtr.h"
+ #ifdef MOZ_WAYLAND
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #  include <gdk/gdkwayland.h>
+ #endif /* MOZ_WAYLAND */
+ 
+--- a/widget/GfxInfoX11.cpp
++++ b/widget/GfxInfoX11.cpp
+@@ -21,7 +21,10 @@
+ 
+ #include "GfxInfoX11.h"
+ 
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#       include <gdk/gdkx.h>
++#endif
++
+ #ifdef MOZ_WAYLAND
+ #  include "mozilla/widget/nsWaylandDisplay.h"
+ #  include "mozilla/widget/DMABufLibWrapper.h"
+--- a/widget/gtk/nsPrintDialogGTK.cpp
++++ b/widget/gtk/nsPrintDialogGTK.cpp
+@@ -25,7 +25,10 @@
+ #include "nsIObserverService.h"
+ 
+ // for gdk_x11_window_get_xid
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
++
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+--- a/widget/gtk/nsClipboardX11.cpp
++++ b/widget/gtk/nsClipboardX11.cpp
+@@ -22,14 +22,17 @@
+ #include <gtk/gtk.h>
+ 
+ // For manipulation of the X event queue
+-#include <X11/Xlib.h>
+ #include <poll.h>
+-#include <gdk/gdkx.h>
+ #include <sys/time.h>
+ #include <sys/types.h>
+ #include <errno.h>
+ #include <unistd.h>
+-#include "X11UndefineNone.h"
++
++#ifdef MOZ_X11
++#   include <X11/Xlib.h>
++#   include <gdk/gdkx.h>
++#   include "X11UndefineNone.h"
++#endif
+ 
+ using namespace mozilla;
+ 
+--- a/widget/gtk/nsGtkKeyUtils.cpp
++++ b/widget/gtk/nsGtkKeyUtils.cpp
+@@ -12,7 +12,9 @@
+ #include <gdk/gdkkeysyms.h>
+ #include <algorithm>
+ #include <gdk/gdk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ #include <dlfcn.h>
+ #include <gdk/gdkkeysyms-compat.h>
+ #include <X11/XKBlib.h>
+--- a/widget/gtk/MozContainerWayland.cpp
++++ b/widget/gtk/MozContainerWayland.cpp
+@@ -9,7 +9,9 @@
+ 
+ #include <glib.h>
+ #include <gtk/gtk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ #include "nsWaylandDisplay.h"
+ #include "gfxPlatformGtk.h"
+ #include <wayland-egl.h>
+--- a/widget/gtk/nsDragService.cpp
++++ b/widget/gtk/nsDragService.cpp
+@@ -22,7 +22,9 @@
+ #include "prthread.h"
+ #include <dlfcn.h>
+ #include <gtk/gtk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ #include "nsCRT.h"
+ #include "mozilla/BasicEvents.h"
+ #include "mozilla/Services.h"
+--- a/widget/gtk/DMABufLibWrapper.cpp
++++ b/widget/gtk/DMABufLibWrapper.cpp
+@@ -12,7 +12,9 @@
+ #include "mozilla/gfx/gfxVars.h"
+ 
+ #include <gdk/gdk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+--- a/widget/gtk/MozContainer.cpp
++++ b/widget/gtk/MozContainer.cpp
+@@ -9,7 +9,9 @@
+ 
+ #include <glib.h>
+ #include <gtk/gtk.h>
+-#include <gdk/gdkx.h>
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#endif
+ #include <stdio.h>
+ #ifdef MOZ_WAYLAND
+ #  include "gfxPlatformGtk.h"
+--- a/layout/xul/nsMenuPopupFrame.cpp
++++ b/layout/xul/nsMenuPopupFrame.cpp
+@@ -58,7 +58,9 @@
+ #include <algorithm>
+ #ifdef MOZ_WAYLAND
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #  include <gdk/gdkwayland.h>
+ #endif /* MOZ_WAYLAND */
+ 
+--- a/gfx/src/X11Util.h
++++ b/gfx/src/X11Util.h
+@@ -11,7 +11,9 @@
+ 
+ #if defined(MOZ_WIDGET_GTK)
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #  include "X11UndefineNone.h"
+ #else
+ #  error Unknown toolkit
+--- a/gfx/webrender_bindings/RenderThread.cpp
++++ b/gfx/webrender_bindings/RenderThread.cpp
+@@ -38,7 +38,7 @@
+ #  include "mozilla/webrender/RenderAndroidSurfaceTextureHost.h"
+ #endif
+ 
+-#ifdef MOZ_WIDGET_GTK
++#if defined(MOZ_WIDGET_GTK) && defined(MOZ_X11)
+ #  include <gdk/gdkx.h>
+ #endif
+ 
+--- a/gfx/webrender_bindings/RenderCompositorEGL.cpp
++++ b/gfx/webrender_bindings/RenderCompositorEGL.cpp
+@@ -18,7 +18,9 @@
+ #ifdef MOZ_WAYLAND
+ #  include "mozilla/widget/GtkCompositorWidget.h"
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #ifdef MOZ_WIDGET_ANDROID
+--- a/gfx/gl/GLContextProviderGLX.cpp
++++ b/gfx/gl/GLContextProviderGLX.cpp
+@@ -5,14 +5,16 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
+ #  define GET_NATIVE_WINDOW(aWidget) \
+     GDK_WINDOW_XID((GdkWindow*)aWidget->GetNativeData(NS_NATIVE_WINDOW))
+ #endif
+ 
++#ifdef MOZ_X11
++#include <gdk/gdkx.h>
+ #include <X11/Xlib.h>
+ #include <X11/Xutil.h>
+ #include "X11UndefineNone.h"
++#endif
+ 
+ #include "mozilla/MathAlgorithms.h"
+ #include "mozilla/StaticPtr.h"
+--- a/gfx/gl/GLContextProviderWayland.cpp
++++ b/gfx/gl/GLContextProviderWayland.cpp
+@@ -5,7 +5,9 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #include "GLContextProvider.h"
+--- a/dom/plugins/ipc/PluginModuleChild.cpp
++++ b/dom/plugins/ipc/PluginModuleChild.cpp
+@@ -14,7 +14,6 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gtk/gtk.h>
+-#  include <gdk/gdkx.h>
+ #endif
+ 
+ #include "nsIFile.h"
+@@ -26,6 +25,7 @@
+ #include "nsXULAppAPI.h"
+ 
+ #ifdef MOZ_X11
++#  include <gdk/gdkx.h>
+ #  include "nsX11ErrorHandler.h"
+ #  include "mozilla/X11Util.h"
+ #endif
+@@ -330,7 +330,7 @@
+   return true;
+ }
+ 
+-#if defined(MOZ_WIDGET_GTK)
++#if defined(MOZ_WIDGET_GTK) && defined (MOZ_X11)
+ 
+ typedef void (*GObjectDisposeFn)(GObject*);
+ typedef gboolean (*GtkWidgetScrollEventFn)(GtkWidget*, GdkEventScroll*);
+--- a/dom/plugins/ipc/PluginInstanceChild.cpp
++++ b/dom/plugins/ipc/PluginInstanceChild.cpp
+@@ -17,6 +17,7 @@
+ #include "mozilla/gfx/2D.h"
+ #ifdef MOZ_X11
+ #  include "gfxXlibSurface.h"
++#  include <gdk/gdkx.h>
+ #endif
+ #ifdef XP_WIN
+ #  include "mozilla/D3DMessageUtils.h"
+@@ -47,7 +48,6 @@
+ #ifdef MOZ_WIDGET_GTK
+ 
+ #  include <gtk/gtk.h>
+-#  include <gdk/gdkx.h>
+ #  include <gdk/gdk.h>
+ 
+ #elif defined(OS_WIN)
+@@ -1247,7 +1247,7 @@
+ 
+ #elif defined(ANDROID)
+   // TODO: Need Android impl
+-#elif defined(MOZ_WIDGET_UIKIT)
++#elif defined(MOZ_WIDGET_UIKIT) || defined(MOZ_WAYLAND)
+   // Don't care
+ #else
+ #  error Implement me for your OS
+@@ -1257,7 +1257,7 @@
+ }
+ 
+ bool PluginInstanceChild::Initialize() {
+-#ifdef MOZ_WIDGET_GTK
++#if defined(MOZ_WIDGET_GTK) && defined(MOZ_X11)
+   if (mWsInfo.display) {
+     // Already initialized
+     return true;

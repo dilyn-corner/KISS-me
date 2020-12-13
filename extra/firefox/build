@@ -2,11 +2,18 @@
 
 # Remove libc header which conflicts with 7 or so Linux
 # kernel headers. See: https://github.com/kisslinux/repo/issues/207
-sed -i '/net\/if/d' \
-    media/mtransport/third_party/nICEr/src/stun/addrs-netlink.c
 
-patch -p1 < if_indextoname.patch
-patch -p1 < no-gtk2.patch
+
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+sed -i 's/5add36bcf8dd824ee0f5018b2efab1a2747125b3e374ac5f58568edb431f2805/9e4a28d752a2dc9d8cc0474403b4d57e398186e1b4d7657db0a8541fe18c8414/' third_party/rust/gfx-backend-vulkan/.cargo-checksum.json
+
+sed -i 's/9e4a28d752a2dc9d8cc0474403b4d57e398186e1b4d7657db0a8541fe18c8414/5add36bcf8dd824ee0f5018b2efab1a2747125b3e374ac5f58568edb431f2805/' third_party/rust/gfx-backend-vulkan/.cargo-checksum.json
+
+sed -i '/#if defined(LINUX)/a #include <net/if.h>' \
+dom/media/webrtc/transport/third_party/nICEr/src/stun/addrs-netlink.c
 
 # autoconf requires GNU m4.
 (

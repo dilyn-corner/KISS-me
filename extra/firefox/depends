@@ -2,7 +2,7 @@ alsa-lib
 atk
 bzip2
 cairo
-cbindgen      make
+cbindgen          make
 expat
 ffmpeg
 fontconfig
@@ -10,8 +10,8 @@ freetype-harfbuzz
 fribidi
 gdk-pixbuf
 glib
-gmake         make
-gnu-as        make
+gmake             make
+gnu-as            make
 gtk+3
 hicolor-icon-theme
 libdrm
@@ -21,13 +21,14 @@ libjpeg-turbo
 libpng
 libvpx
 mesa
-nasm          make
-nodejs        make
+nasm              make
+nodejs            make
 pango
-perl          make
+perl              make
 pixman
-python        make
-rust          make
+python            make
+rust              make
 util-linux
-zip           make
+wayland-protocols make
+zip               make
 zlib

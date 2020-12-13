@@ -1,18 +1,6 @@
-From 032a0788bf115e9915724c76c19153c2e1e71519 Mon Sep 17 00:00:00 2001
-From: Philipp Ammann <philipp.ammann@posteo.de>
-Date: Tue, 11 Aug 2020 09:53:12 +0000
-Subject: [PATCH 3/8] Move X11 headers behind CONFIG['MOZ_X11']
-
-Required in preparation for a Wayland-only build.
----
- config/system-headers.mozbuild | 64 ++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
-
-diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
-index 8942b6244e61..ebd266ad7e18 100644
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -309,7 +309,6 @@ system_headers = [
+@@ -309,7 +309,6 @@
      'gdk/gdkkeysyms.h',
      'gdk/gdkprivate.h',
      'gdk/gdkwayland.h',
@@ -20,7 +8,7 @@ index 8942b6244e61..ebd266ad7e18 100644
      'gdk-pixbuf/gdk-pixbuf.h',
      'Gestalt.h',
      'getopt.h',
-@@ -333,7 +332,6 @@ system_headers = [
+@@ -333,7 +332,6 @@
      'gst/video/video.h',
      'gtk/gtk.h',
      'gtk/gtkunixprint.h',
@@ -28,7 +16,7 @@ index 8942b6244e61..ebd266ad7e18 100644
      'hasht.h',
      'HIToolbox/HIToolbox.h',
      'hlink.h',
-@@ -1015,38 +1013,44 @@ system_headers = [
+@@ -1015,37 +1013,43 @@
      'wx/toolbar.h',
      'wx/wx.h',
      'wx/xrc/xmlres.h',
@@ -63,7 +51,7 @@ index 8942b6244e61..ebd266ad7e18 100644
      'xlocale.h',
      'zmouse.h',
  ]
- 
++
 +if CONFIG['MOZ_X11']:
 +    system_headers += [
 +        'gdk/gdkx.h',
@@ -97,10 +85,6 @@ index 8942b6244e61..ebd266ad7e18 100644
 +        'xcb/shm.h',
 +        'xcb/xcb.h',
 +    ]
-+
+ 
  if CONFIG['OS_TARGET'] == 'Android':
      system_headers += [
-         'android/api-level.h',
--- 
-2.27.0
-
