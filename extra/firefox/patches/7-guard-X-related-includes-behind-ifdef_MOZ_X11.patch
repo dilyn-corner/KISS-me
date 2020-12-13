@@ -1,0 +1,89 @@
+--- a/gfx/layers/client/TextureClient.cpp
++++ b/gfx/layers/client/TextureClient.cpp
+@@ -54,7 +54,9 @@
+ #  include "mozilla/layers/TextureClientX11.h"
+ #endif
+ #ifdef MOZ_WAYLAND
+-#  include <gtk/gtkx.h>
++#  ifdef MOZ_X11
++#   include <gtk/gtkx.h>
++#  endif
+ 
+ #  include "gfxPlatformGtk.h"
+ #  include "mozilla/layers/DMABUFTextureClientOGL.h"
+ 
+--- a/widget/gtk/mozwayland/mozwayland.c
++++ b/widget/gtk/mozwayland/mozwayland.c
+@@ -8,7 +8,9 @@
+ #include <stdlib.h>
+ #include "mozilla/Types.h"
+ #include <gtk/gtk.h>
+-#include <gtk/gtkx.h>
++#ifdef MOZ_X11
++#   include <gtk/gtkx.h>
++#endif
+ #include <gdk/gdkwayland.h>
+ 
+ union wl_argument;
+--- a/widget/gtk/nsClipboard.cpp
++++ b/widget/gtk/nsClipboard.cpp
+@@ -10,9 +10,6 @@
+ #include "nsArrayUtils.h"
+ #include "nsClipboard.h"
+ #include "nsClipboardX11.h"
+-#if defined(MOZ_WAYLAND)
+-#  include "nsClipboardWayland.h"
+-#endif
+ #include "nsContentUtils.h"
+ #include "HeadlessClipboard.h"
+ #include "nsSupportsPrimitives.h"
+@@ -31,8 +28,12 @@
+ #include "imgIContainer.h"
+ 
+ #include <gtk/gtk.h>
+-#include <gtk/gtkx.h>
+ 
++#if defined(MOZ_X11)
++#   include "nsClipboardX11.h"
++#   include <gtk/gtkx.h>
++#endif
++
+ #include "mozilla/Encoding.h"
+ 
+ using namespace mozilla;
+@@ -92,12 +93,16 @@
+ NS_IMPL_ISUPPORTS(nsClipboard, nsIClipboard, nsIObserver)
+ 
+ nsresult nsClipboard::Init(void) {
++#if defined(MOZ_X11)
+   if (gfxPlatformGtk::GetPlatform()->IsX11Display()) {
+     mContext = MakeUnique<nsRetrievalContextX11>();
+ #if defined(MOZ_WAYLAND)
+   } else {
+     mContext = MakeUnique<nsRetrievalContextWayland>();
+-#endif
++#endif /* MOZ_WAYLAND */
++#else
++    mContext = MakeUnique<nsRetrievalContextWayland>();
++#endif /* MOZ_X11 */
+   }
+   NS_ASSERTION(mContext, "Missing nsRetrievalContext for nsClipboard!");
+ 
+--- a/widget/gtk/nsWindow.cpp
++++ b/widget/gtk/nsWindow.cpp
+@@ -45,7 +45,6 @@
+ #include "ScreenHelperGTK.h"
+ 
+ #include <gtk/gtk.h>
+-#include <gtk/gtkx.h>
+ 
+ #ifdef MOZ_WAYLAND
+ #  include <gdk/gdkwayland.h>
+@@ -53,6 +52,7 @@
+ 
+ #ifdef MOZ_X11
+ #  include <gdk/gdkx.h>
++#  include <gtk/gtkx.h>
+ #  include <X11/Xatom.h>
+ #  include <X11/extensions/XShm.h>
+ #  include <X11/extensions/shape.h>
