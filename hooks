@@ -1,46 +1,33 @@
-export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
+#export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
 
 case $TYPE in
-    pre-build)
-        case $PKG in
-            botan | byacc | efivar | e2fsprogs | gtk+3 | lame | libass | libressl) # lto broke
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            libpng | nss | mpv | pixman | python | python2 | opus | rust | util-linux) # lto broke
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            ffmpeg | llvm | mesa | x264) # forked
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            musl) # breaks
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            llvm) # we have a memory problem
-                export CFLAGS="-march=native -mtune=native -O3 -pipe"
-                export CXXFLAGS="$CFLAGS"
-                export MAKEFLAGS=-j2
-                export SAMUFLAGS=-j2
-            ;;
-        esac
-    ;;
+#    pre-build)
+#        case $PKG in
+#            botan | byacc | efivar | e2fsprogs | gtk+3 | lame | libass | libressl) # lto broke
+#                export CFLAGS="$defFLAGS"
+#                export CXXFLAGS="$defFLAGS"
+#            ;;
+#            libpng | nss | mpv | pixman | python | python2 | opus | rust | util-linux) # lto broke
+#                export CFLAGS="$defFLAGS"
+#                export CXXFLAGS="$defFLAGS"
+#            ;;
+#            ffmpeg | llvm | mesa | x264) # forked
+#                export CFLAGS="$defFLAGS"
+#                export CXXFLAGS="$defFLAGS"
+#            ;;
+#            musl) # breaks
+#                export CFLAGS="$defFLAGS"
+#                export CXXFLAGS="$defFLAGS"
+#            ;;
+#            llvm) # we have a memory problem
+#                export CFLAGS="-march=native -mtune=native -O3 -pipe"
+#                export CXXFLAGS="$CFLAGS"
+#                export MAKEFLAGS=-j2
+#                export SAMUFLAGS=-j2
+#            ;;
+#        esac
+#    ;;
     post-build)
-        IFS=. read -r _end _ < /proc/uptime
-
-        (
-            _s=$((_end - _start))
-            _m=$((_s / 60 % 60))
-            _h=$((_s / 60 / 60 % 24))
-
-            [ "$_h" = 0 ] || _u="${_u}${_h}h "
-            [ "$_m" = 0 ] || _u="${_u}${_m}m "
-
-            log "$PKG" "build finished in ${_u:-${_s}s}"
-        )
-
         : "${DEST:?DEST is unset}"
 
         case $PKG in
@@ -70,14 +57,14 @@ case $TYPE in
     ;;
     pre-install)
         case $PKG in
-            linux | linux-pf | linux-rt | linux-nitrous)
+            linux*) 
                 mount /dev/nvme0n1p1 /boot
             ;;
         esac
     ;;
     post-install)
         case $PKG in
-            linux | linux-pf | linux-rt | linux-nitrous)
+            linux*)
                 umount /boot
             ;;
             sls)
