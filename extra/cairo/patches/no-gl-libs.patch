@@ -1,0 +1,38 @@
+--- a/configure
++++ b/configure
+@@ -26908,7 +26908,7 @@
+ 
+       gallium_DIR="$mesa_DIR/src/gallium"
+       gallium_NONPKGCONFIG_CFLAGS="-I$mesa_DIR/include -I$mesa_DIR/src/mesa -I$gallium_DIR/include -I$gallium_DIR/auxiliary"
+-      gallium_NONPKGCONFIG_LIBS="-lGL"
++      gallium_NONPKGCONFIG_LIBS=
+ 
+ 
+   else
+@@ -27560,7 +27560,7 @@
+ 
+ 	  if test "x$use_gl" = "xyes"; then
+ 	      gl_NONPKGCONFIG_CFLAGS=
+-	      gl_NONPKGCONFIG_LIBS="-lGL"
++	      gl_NONPKGCONFIG_LIBS=
+ 	  fi
+ elif test $pkg_failed = untried; then
+ 
+@@ -27574,7 +27574,7 @@
+ 
+ 	  if test "x$use_gl" = "xyes"; then
+ 	      gl_NONPKGCONFIG_CFLAGS=
+-	      gl_NONPKGCONFIG_LIBS="-lGL"
++	      gl_NONPKGCONFIG_LIBS=
+ 	  fi
+ else
+ 	gl_CFLAGS=$pkg_cv_gl_CFLAGS
+@@ -29942,7 +29942,7 @@
+ 
+ 
+     glx_NONPKGCONFIG_CFLAGS=
+-    glx_NONPKGCONFIG_LIBS="-lGL"
++    glx_NONPKGCONFIG_LIBS=
+     CFLAGS="$save_CFLAGS"
+   else
+       use_glx="no (not required by any backend)"

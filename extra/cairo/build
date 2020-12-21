@@ -5,12 +5,19 @@ sed -i "s/BUILD_SPHINX_TRUE=/BUILD_SPHINX_TRUE='#'/"   configure
 sed -i "s/BUILD_SPHINX_FALSE='#'/BUILD_SPHINX_FALSE=/" configure
 sed -i 's/test perf//g' Makefile.in
 
-./configure \
+CFLAGS=-Wno-enum-conversion ./configure \
     --prefix=/usr \
-    --enable-tee \
     --disable-trace \
     --disable-valgrind \
-    --disable-gtk-doc-html
+    --disable-gtk-doc-html \
+    --disable-glx \
+    --disable-xlib \
+    --disable-xcb-shm \
+    --disable-xlib-xrender \
+    --enable-gl \
+    --enable-egl \
+    --enable-tee \
+    --enable-glesv2
 
 make
 make DESTDIR="$1" install
