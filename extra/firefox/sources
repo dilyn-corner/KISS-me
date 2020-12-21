@@ -11,4 +11,5 @@ patches/6-explicitly-include-glib.h.patch
 patches/7-guard-X-related-includes-behind-ifdef_MOZ_X11.patch
 patches/8-guard-X11-only-code-behind-ifdef_MOZX11.patch
 patches/9-new-MOZ_X11-ifdefs.patch
+patches/10-glx-no_go.patch
 patches/if_indextoname.patch

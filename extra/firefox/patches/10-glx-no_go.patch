@@ -1,0 +1,194 @@
+--- a/gfx/gl/GLContextProviderGLX.cpp
++++ b/gfx/gl/GLContextProviderGLX.cpp
+@@ -5,14 +5,16 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
+ #  define GET_NATIVE_WINDOW(aWidget) \
+     GDK_WINDOW_XID((GdkWindow*)aWidget->GetNativeData(NS_NATIVE_WINDOW))
+ #endif
+ 
+-#include <X11/Xlib.h>
+-#include <X11/Xutil.h>
+-#include "X11UndefineNone.h"
++#ifdef MOZ_X11
++#   include <gdk/gdkx.h>
++#   include <X11/Xlib.h>
++#   include <X11/Xutil.h>
++#   include "X11UndefineNone.h"
++#endif
+ 
+ #include "mozilla/MathAlgorithms.h"
+ #include "mozilla/StaticPtr.h"
+@@ -69,6 +71,13 @@
+     return false;
+   }
+   mTriedInitializing = true;
++
++#ifdef MOZ_WIDGET_GTK
++  if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
++      mGLXMajorVersion = 0;
++      mGLXMinorVersion = 0;
++  }
++#endif
+ 
+   // Force enabling s3 texture compression. (Bug 774134)
+   PR_SetEnv("force_s3tc_enable=true");
+--- a/gfx/gl/GLReadTexImageHelper.cpp
++++ b/gfx/gl/GLReadTexImageHelper.cpp
+@@ -185,7 +185,9 @@
+   }
+ 
+   if (fallback) {
+-    *out_readFormat = LOCAL_GL_RGBA;
++    // Use GL_BGRA format as it's compatible with WebRenderer
++    // see wr::SurfaceFormatToImageFormat().
++    *out_readFormat = LOCAL_GL_BGRA;
+     *out_readType = LOCAL_GL_UNSIGNED_BYTE;
+     return false;
+   } else {
+--- a/gfx/gl/moz.build
++++ b/gfx/gl/moz.build
+@@ -13,7 +13,7 @@
+ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'uikit':
+     gl_provider = 'EAGL'
+ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
+-    if CONFIG['MOZ_EGL_XRENDER_COMPOSITE']:
++    if CONFIG['MOZ_EGL_XRENDER_COMPOSITE'] or CONFIG['MOZ_WAYLAND']:
+         gl_provider = 'EGL'
+     else:
+         gl_provider = 'GLX'
+@@ -125,6 +125,7 @@
+         'GLContextProviderWayland.cpp',
+         'SharedSurfaceDMABUF.cpp'
+     ]
++    OS_LIBS += ['gdk-3']
+
+ UNIFIED_SOURCES += [
+     'AndroidSurfaceTexture.cpp',
+
+--- a/gfx/angle/checkout/include/EGL/eglplatform.h
++++ b/gfx/angle/checkout/include/EGL/eglplatform.h
+@@ -55,6 +55,8 @@
+ #endif
+ #define EGLAPIENTRYP EGLAPIENTRY*
+ 
++#define EGL_NO_X11
++
+ /* The types NativeDisplayType, NativeWindowType, and NativePixmapType
+  * are aliases of window-system-dependent types, such as X Display * or
+  * Windows Device Context. They must be defined in platform-specific
+@@ -115,6 +117,12 @@
+ typedef intptr_t EGLNativeDisplayType;
+ typedef intptr_t EGLNativePixmapType;
+ typedef intptr_t EGLNativeWindowType;
++
++#elif defined(__unix__) && defined(EGL_NO_X11)
++
++typedef void             *EGLNativeDisplayType;
++typedef khronos_uintptr_t EGLNativePixmapType;
++typedef khronos_uintptr_t EGLNativeWindowType;
+ 
+ #elif defined(__unix__) || defined(USE_X11)
+ 
+--- a/gfx/gl/GLContextProviderWayland.cpp
++++ b/gfx/gl/GLContextProviderWayland.cpp
+@@ -5,57 +5,40 @@
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
+ #endif
+ 
+ #include "GLContextProvider.h"
+ 
+ namespace mozilla::gl {
+ 
+-using namespace mozilla::gfx;
+ using namespace mozilla::widget;
+ 
++#ifdef MOZ_X11
+ static class GLContextProviderX11 sGLContextProviderX11;
++#endif
+ static class GLContextProviderEGL sGLContextProviderEGL;
+ 
+ already_AddRefed<GLContext> GLContextProviderWayland::CreateForCompositorWidget(
+     CompositorWidget* aCompositorWidget, bool aWebRender,
+     bool aForceAccelerated) {
+-  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+-    return sGLContextProviderX11.CreateForCompositorWidget(
+-        aCompositorWidget, aWebRender, aForceAccelerated);
+-  } else {
+     return sGLContextProviderEGL.CreateForCompositorWidget(
+         aCompositorWidget, aWebRender, aForceAccelerated);
+-  }
+ }
+ 
+ /*static*/
+ already_AddRefed<GLContext> GLContextProviderWayland::CreateHeadless(
+     const GLContextCreateDesc& desc, nsACString* const out_failureId) {
+-  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+-    return sGLContextProviderX11.CreateHeadless(desc, out_failureId);
+-  } else {
+     return sGLContextProviderEGL.CreateHeadless(desc, out_failureId);
+-  }
+ }
+ 
+ /*static*/
+ GLContext* GLContextProviderWayland::GetGlobalContext() {
+-  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+-    return sGLContextProviderX11.GetGlobalContext();
+-  } else {
+     return sGLContextProviderEGL.GetGlobalContext();
+-  }
+ }
+ 
+ /*static*/
+ void GLContextProviderWayland::Shutdown() {
+-  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+-    sGLContextProviderX11.Shutdown();
+-  } else {
+     sGLContextProviderEGL.Shutdown();
+-  }
+ }
+ 
+ }  // namespace mozilla::gl
+--- a/gfx/gl/GLContextProvider.h
++++ b/gfx/gl/GLContextProvider.h
+@@ -54,15 +54,13 @@
+ #  define GL_CONTEXT_PROVIDER_NAME GLContextProviderX11
+ #  include "GLContextProviderImpl.h"
+ #  undef GL_CONTEXT_PROVIDER_NAME
+-#  if defined(MOZ_WAYLAND)
+-#    define GL_CONTEXT_PROVIDER_NAME GLContextProviderWayland
+-#    include "GLContextProviderImpl.h"
+-#    undef GL_CONTEXT_PROVIDER_NAME
+-#    define GL_CONTEXT_PROVIDER_DEFAULT GLContextProviderWayland
+-#  endif
+-#  ifndef GL_CONTEXT_PROVIDER_DEFAULT
+-#    define GL_CONTEXT_PROVIDER_DEFAULT GLContextProviderX11
+-#  endif
++#endif
++
++#if defined(MOZ_WAYLAND)
++#  define GL_CONTEXT_PROVIDER_NAME GLContextProviderWayland
++#  include "GLContextProviderImpl.h"
++#  undef GL_CONTEXT_PROVIDER_NAME
++#  define GL_CONTEXT_PROVIDER_DEFAULT GLContextProviderWayland
+ #endif
+ 
+ #ifndef GL_CONTEXT_PROVIDER_DEFAULT
+@@ -83,12 +83,6 @@
+ #  define GL_CONTEXT_PROVIDER_DEFAULT MOZ_GL_PROVIDER
+ #endif
+ 
+-#ifdef GL_CONTEXT_PROVIDER_DEFAULT
+-typedef GL_CONTEXT_PROVIDER_DEFAULT GLContextProvider;
+-#else
+-typedef GLContextProviderNull GLContextProvider;
+-#endif
+-
+ #undef IN_GL_CONTEXT_PROVIDER_H
+ 
+ }  // namespace gl

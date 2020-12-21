@@ -11,19 +11,6 @@
  #endif
  
  #include "nsJSUtils.h"
---- a/dom/plugins/base/nsPluginHost.cpp
-+++ b/dom/plugins/base/nsPluginHost.cpp
-@@ -87,7 +87,9 @@
- #endif
- #if (MOZ_WIDGET_GTK)
- #  include <gdk/gdk.h>
--#  include <gdk/gdkx.h>
-+#  ifdef MOZ_X11
-+#     include <gdk/gdkx.h>
-+#  endif
- #endif
- 
- #include "npapi.h"
 --- a/dom/ipc/ContentChild.cpp
 +++ b/dom/ipc/ContentChild.cpp
 @@ -6,7 +6,9 @@
@@ -255,66 +242,6 @@
  #endif
  
  #ifdef MOZ_WIDGET_ANDROID
---- a/gfx/gl/GLContextProviderGLX.cpp
-+++ b/gfx/gl/GLContextProviderGLX.cpp
-@@ -5,14 +5,16 @@
- 
- #ifdef MOZ_WIDGET_GTK
- #  include <gdk/gdk.h>
--#  include <gdk/gdkx.h>
- #  define GET_NATIVE_WINDOW(aWidget) \
-     GDK_WINDOW_XID((GdkWindow*)aWidget->GetNativeData(NS_NATIVE_WINDOW))
- #endif
- 
-+#ifdef MOZ_X11
-+#include <gdk/gdkx.h>
- #include <X11/Xlib.h>
- #include <X11/Xutil.h>
- #include "X11UndefineNone.h"
-+#endif
- 
- #include "mozilla/MathAlgorithms.h"
- #include "mozilla/StaticPtr.h"
---- a/gfx/gl/GLContextProviderWayland.cpp
-+++ b/gfx/gl/GLContextProviderWayland.cpp
-@@ -5,7 +5,9 @@
- 
- #ifdef MOZ_WIDGET_GTK
- #  include <gdk/gdk.h>
--#  include <gdk/gdkx.h>
-+#  ifdef MOZ_X11
-+#    include <gdk/gdkx.h>
-+#  endif
- #endif
- 
- #include "GLContextProvider.h"
---- a/dom/plugins/ipc/PluginModuleChild.cpp
-+++ b/dom/plugins/ipc/PluginModuleChild.cpp
-@@ -14,7 +14,6 @@
- 
- #ifdef MOZ_WIDGET_GTK
- #  include <gtk/gtk.h>
--#  include <gdk/gdkx.h>
- #endif
- 
- #include "nsIFile.h"
-@@ -26,6 +25,7 @@
- #include "nsXULAppAPI.h"
- 
- #ifdef MOZ_X11
-+#  include <gdk/gdkx.h>
- #  include "nsX11ErrorHandler.h"
- #  include "mozilla/X11Util.h"
- #endif
-@@ -330,7 +330,7 @@
-   return true;
- }
- 
--#if defined(MOZ_WIDGET_GTK)
-+#if defined(MOZ_WIDGET_GTK) && defined (MOZ_X11)
- 
- typedef void (*GObjectDisposeFn)(GObject*);
- typedef gboolean (*GtkWidgetScrollEventFn)(GtkWidget*, GdkEventScroll*);
 --- a/dom/plugins/ipc/PluginInstanceChild.cpp
 +++ b/dom/plugins/ipc/PluginInstanceChild.cpp
 @@ -17,6 +17,7 @@
@@ -351,3 +278,165 @@
    if (mWsInfo.display) {
      // Already initialized
      return true;
+--- a/dom/plugins/base/nsPluginHost.cpp
++++ b/dom/plugins/base/nsPluginHost.cpp
+@@ -87,7 +87,9 @@
+ #endif
+ #if (MOZ_WIDGET_GTK)
+ #  include <gdk/gdk.h>
+-#  include <gdk/gdkx.h>
++#  ifdef MOZ_X11
++#    include <gdk/gdkx.h>
++#  endif
+ #endif
+ 
+ #include "npapi.h"
+@@ -278,7 +280,7 @@
+   }
+ 
+   bool waylandBackend = false;
+-#if MOZ_WIDGET_GTK
++#if 0
+   GdkDisplay* display = gdk_display_get_default();
+   if (display) {
+     waylandBackend = !GDK_IS_X11_DISPLAY(display);
+--- a/dom/plugins/base/nsPluginNativeWindow.cpp
++++ b/dom/plugins/base/nsPluginNativeWindow.cpp
+@@ -17,7 +17,7 @@
+   nsPluginNativeWindowImpl();
+   virtual ~nsPluginNativeWindowImpl();
+ 
+-#ifdef MOZ_WIDGET_GTK
++#if 0
+   NPSetWindowCallbackStruct mWsInfo;
+ #endif
+ };
+@@ -32,14 +32,14 @@
+   memset(&clipRect, 0, sizeof(clipRect));
+   type = NPWindowTypeWindow;
+ 
+-#ifdef MOZ_WIDGET_GTK
++#if 0
+   ws_info = &mWsInfo;
+   mWsInfo.type = 0;
+   mWsInfo.display = nullptr;
+   mWsInfo.visual = nullptr;
+   mWsInfo.colormap = 0;
+   mWsInfo.depth = 0;
+-#elif defined(XP_UNIX) && !defined(XP_MACOSX)
++#elif 0
+   ws_info = nullptr;
+ #endif
+ }
+--- a/dom/plugins/ipc/PluginModuleChild.cpp
++++ b/dom/plugins/ipc/PluginModuleChild.cpp
+@@ -12,7 +12,7 @@
+
+ #include "mozilla/ipc/MessageChannel.h"
+
+-#ifdef MOZ_WIDGET_GTK
++#if 0
+ #  include <gtk/gtk.h>
+ #  include <gdk/gdkx.h>
+ #endif
+@@ -25,7 +25,7 @@
+ #include "nsPluginsDir.h"
+ #include "nsXULAppAPI.h"
+
+-#ifdef MOZ_X11
++#if 0
+ #  include "nsX11ErrorHandler.h"
+ #  include "mozilla/X11Util.h"
+ #endif
+@@ -100,7 +100,7 @@ PluginModuleChild::PluginModuleChild(bool aIsChrome)
+ #if defined(OS_WIN) || defined(OS_MACOSX)
+       ,
+       mGetEntryPointsFunc(0)
+-#elif defined(MOZ_WIDGET_GTK)
++#elif 0
+       ,
+       mNestedLoopTimerId(0)
+ #endif
+@@ -254,7 +254,7 @@ bool PluginModuleChild::InitForChrome(const std::string& aPluginFilename,
+   // XXX quirks isn't initialized yet
+   mAsyncRenderSupport = info.fSupportsAsyncRender;
+ #endif
+-#if defined(MOZ_X11)
++#if 0
+   constexpr auto flash10Head = "Shockwave Flash 10."_ns;
+   if (StringBeginsWith(nsDependentCString(info.fDescription), flash10Head)) {
+     AddQuirk(QUIRK_FLASH_EXPOSE_COORD_TRANSLATION);
+@@ -267,7 +267,7 @@ bool PluginModuleChild::InitForChrome(const std::string& aPluginFilename,
+   mozilla::plugins::PluginUtilsOSX::SetProcessName(nameBuffer);
+ #endif
+   pluginFile.FreePluginInfo(info);
+-#if defined(MOZ_X11) || defined(XP_MACOSX)
++#if 0
+   if (!mLibrary)
+ #endif
+   {
+@@ -330,7 +330,7 @@ bool PluginModuleChild::InitForChrome(const std::string& aPluginFilename,
+   return true;
+ }
+
+-#if defined(MOZ_WIDGET_GTK)
++#if 0
+
+ typedef void (*GObjectDisposeFn)(GObject*);
+ typedef gboolean (*GtkWidgetScrollEventFn)(GtkWidget*, GdkEventScroll*);
+@@ -550,7 +550,7 @@ bool PluginModuleChild::ShouldContinueFromReplyTimeout() {
+ }
+
+ bool PluginModuleChild::InitGraphics() {
+-#if defined(MOZ_WIDGET_GTK)
++#if 0
+   // Work around plugins that don't interact well with GDK
+   // client-side windows.
+   PR_SetEnv("GDK_NATIVE_WINDOWS=1");
+@@ -588,7 +588,7 @@ bool PluginModuleChild::InitGraphics() {
+ #else
+   // may not be necessary on all platforms
+ #endif
+-#ifdef MOZ_X11
++#if 0
+   // Do this after initializing GDK, or GDK will install its own handler.
+   InstallX11ErrorHandler();
+ #endif
+@@ -596,7 +596,7 @@ bool PluginModuleChild::InitGraphics() {
+ }
+
+ void PluginModuleChild::DeinitGraphics() {
+-#if defined(MOZ_X11) && defined(NS_FREE_PERMANENT_DATA)
++#if 0
+   // We free some data off of XDisplay close hooks, ensure they're
+   // run.  Closing the display is pretty scary, so we only do it to
+   // silence leak checkers.
+@@ -1000,7 +1000,7 @@ NPError _getvalue(NPP aNPP, NPNVariable aVariable, void* aValue) {
+   switch (aVariable) {
+     // Copied from nsNPAPIPlugin.cpp
+     case NPNVToolkit:
+-#if defined(MOZ_WIDGET_GTK)
++#if 0
+       *static_cast<NPNToolkitType*>(aValue) = NPNVGtk2;
+       return NPERR_NO_ERROR;
+ #endif
+@@ -1026,7 +1026,7 @@ NPError _getvalue(NPP aNPP, NPNVariable aVariable, void* aValue) {
+     case NPNVSupportsWindowless:
+       *(NPBool*)aValue = true;
+       return NPERR_NO_ERROR;
+-#if defined(MOZ_WIDGET_GTK)
++#if 0
+     case NPNVxDisplay: {
+       if (!aNPP) {
+         return NPERR_INVALID_INSTANCE_ERROR;
+@@ -1556,8 +1556,8 @@ NPError PluginModuleChild::DoNP_Initialize(const PluginSettings& aSettings) {
+   SetEventHooks();
+ #endif
+
+-#ifdef MOZ_X11
+-#  ifdef MOZ_WIDGET_GTK
++#if 0
++#  if 0
+   if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+     // We don't support NPAPI plugins on Wayland.
+     return NPERR_GENERIC_ERROR;
