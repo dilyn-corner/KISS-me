@@ -5,8 +5,11 @@ export DESTDIR="$1"
 meson \
     --prefix=/usr \
     -Dx11=disabled \
-    -Dglx=disabled \
     -Dtls=disabled \
+    -Dglx=disabled \
+    -Degl=true \
+    -Dgles1=true \
+    -Dgles2=true \
      . build
 
 ninja -C build
