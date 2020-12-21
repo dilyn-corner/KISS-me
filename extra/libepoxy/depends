@@ -1,1 +1,2 @@
-/var/db/kiss/wyverkiss/extra/libepoxy/depends
+mesa  make
+meson make
