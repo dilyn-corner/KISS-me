@@ -1,8 +1,12 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --disable-gtk
+export DESTDIR="$1"
 
-make
-make DESTDIR="$1" install
+meson \
+    --prefix=/usr \
+    -Ddefault_library=static \
+    -Dgtk=disabled \
+    . build
+
+ninja -C build
+ninja -C build install
