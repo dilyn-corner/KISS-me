@@ -1,1 +1,2 @@
-/var/db/kiss/wyverkiss/core/llvm/files/c99
+#!/bin/sh
+exec cc -std=c99 "$@"
