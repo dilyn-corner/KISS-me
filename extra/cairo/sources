@@ -1,1 +1,2 @@
-/var/db/kiss/wyverkiss/extra/cairo/sources
+https://cairographics.org/releases/cairo-1.16.0.tar.xz
+patches/no-gl-libs.patch
