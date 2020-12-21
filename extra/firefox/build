@@ -102,6 +102,7 @@ export CXXSTDLIB=c++
     --disable-dbus \
     --disable-eme \
     --disable-necko-wifi \
+    --with-gl-provider=EGL \
     --enable-default-toolkit=cairo-gtk3-wayland
 
 gmake
