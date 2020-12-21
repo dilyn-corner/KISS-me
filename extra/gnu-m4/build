@@ -1,1 +1,9 @@
-/var/db/kiss/wyverkiss/kiss-repo/core/m4/build
+#!/bin/sh -e
+
+export CFLAGS="$CFLAGS -static"
+
+./configure \
+    --prefix=/usr
+
+make
+make DESTDIR="$1" install

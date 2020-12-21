@@ -1,1 +1,4 @@
-/var/db/kiss/wyverkiss/kiss-repo/extra/libdrm/depends
+libpciaccess
+linux-headers make
+meson         make
+pkgconf       make

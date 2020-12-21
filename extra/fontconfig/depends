@@ -1,1 +1,4 @@
-/var/db/kiss/wyverkiss/extra/fontconfig/depends
+expat
+freetype-harfbuzz
+gmake    make
+gperf    make
