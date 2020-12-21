@@ -1,12 +1,12 @@
-fontconfig
-freetype-harfbuzz
-libxkbcommon
+fontconfig        make
+freetype-harfbuzz make
+libxkbcommon      make
 linux-headers     make
 meson             make
 ncurses           make
-pixman
+pixman            make
 pkgconf           make
 python            make
 samurai           make
-wayland
+wayland           make
 wayland-protocols make
