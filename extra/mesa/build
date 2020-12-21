@@ -39,19 +39,19 @@ meson \
     --mandir=/usr/share/man \
     --localstatedir=/var \
     --buildtype=release \
-    -Db_lto=true \
+    -Dzstd=disabled \
     -Dgbm=enabled \
-    -Dgles1=disabled \
+    -Dopengl=true \
     -Dglx=disabled \
+    -Degl=enabled \
+    -Dgles1=enabled \
+    -Dgles2=enabled \
+    -Ddri3=enabled \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
     -Dplatforms=wayland \
-    -Dzstd=disabled \
     . build
-
-# Maybe later?
-    #-Dglvnd=true \
 
 ninja -C build
 ninja -C build install
