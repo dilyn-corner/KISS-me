@@ -1,8 +1,15 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --enable-static
+export DESTDIR="$1"
 
-make
-make DESTDIR="$1" install
+meson \
+    --prefix=/usr \
+    -Ddefault_library=static \
+    -Dbuildtype=release \
+    -Ddocs=false \
+    -Dtests=false \
+    -Ddeprecated=false \
+    . build
+
+ninja -C build
+ninja -C build install
