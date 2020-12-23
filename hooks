@@ -1,32 +1,23 @@
-#export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
-
 case $TYPE in
-#    pre-build)
-#        case $PKG in
-#            botan | byacc | efivar | e2fsprogs | gtk+3 | lame | libass | libressl) # lto broke
-#                export CFLAGS="$defFLAGS"
-#                export CXXFLAGS="$defFLAGS"
-#            ;;
-#            libpng | nss | mpv | pixman | python | python2 | opus | rust | util-linux) # lto broke
-#                export CFLAGS="$defFLAGS"
-#                export CXXFLAGS="$defFLAGS"
-#            ;;
-#            ffmpeg | llvm | mesa | x264) # forked
-#                export CFLAGS="$defFLAGS"
-#                export CXXFLAGS="$defFLAGS"
-#            ;;
-#            musl) # breaks
-#                export CFLAGS="$defFLAGS"
-#                export CXXFLAGS="$defFLAGS"
-#            ;;
-#            llvm) # we have a memory problem
-#                export CFLAGS="-march=native -mtune=native -O3 -pipe"
-#                export CXXFLAGS="$CFLAGS"
-#                export MAKEFLAGS=-j2
-#                export SAMUFLAGS=-j2
-#            ;;
-#        esac
-#    ;;
+    pre-build)
+        export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
+        case $PKG in
+            ffmpeg | llvm | mesa | python | x264) # forked
+                export CFLAGS="$defFLAGS"
+                export CXXFLAGS="$defFLAGS"
+            ;;
+            musl) # breaks
+                export CFLAGS="$defFLAGS"
+                export CXXFLAGS="$defFLAGS"
+            ;;
+            llvm) # we have a memory problem
+                export CFLAGS="-march=native -mtune=native -O3 -pipe"
+                export CXXFLAGS="$CFLAGS"
+                export MAKEFLAGS=-j2
+                export SAMUFLAGS=-j2
+            ;;
+        esac
+    ;;
     post-build)
         : "${DEST:?DEST is unset}"
 
