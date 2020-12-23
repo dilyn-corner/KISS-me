@@ -2,13 +2,17 @@
 
 export DESTDIR="$1"
 
+patch -p1 < static.patch
+
+CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//g')
+
 sed -i "/subdir('tests')/d"    meson.build
 sed -i "/subdir('examples')/d" meson.build
 
 meson \
     --prefix=/usr \
-    --buildtype=release \
-    -Dcairo=enabled \
+    -Ddefault_library=static \
+    -Dbuildtype=release \
     -Dgir=disabled \
     . build
 
