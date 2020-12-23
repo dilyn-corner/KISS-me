@@ -8,15 +8,17 @@ meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    -Dgir=false \
-    -Djasper=false \
+    -Dbuildtype=release \
+    -Dbuiltin_loaders=all \
+    -Ddefault_library=static \
     -Dpng=true \
-    -Ddocs=false \
+    -Dgir=false \
     -Dman=false \
+    -Dx11=false \
+    -Ddocs=false \
+    -Djasper=false \
     -Dgio_sniffing=false \
     -Dinstalled_tests=false \
-    -Dbuiltin_loaders=all \
-    -Dx11=false \
     . build
 
 ninja -C build
