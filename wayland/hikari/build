@@ -1,6 +1,11 @@
 #!/bin/sh -e
 
-patch -p1 < no-locker.patch
+# Because mesa is dynamic we can't have this
+CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//g')
+
+for patch in *.patch; do 
+    patch -p1 < "$patch"
+done
 
 make \
     PREFIX=/usr \
