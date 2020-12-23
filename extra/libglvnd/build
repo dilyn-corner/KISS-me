@@ -2,15 +2,23 @@
 
 export DESTDIR="$1"
 
+# These are... worthless? idk
+#sed -i "/subdir('tests')/d"               meson.build
+#sed -i "s/shared_library/static_library/" src/EGL/meson.build
+#sed -i "s/shared_library/static_library/" src/GLESv2/meson.build
+#sed -i "s/shared_library/static_library/" src/OpenGL/meson.build
+#sed -i "s/shared_library/static_library/" src/GLdispatch/meson.build
+
 meson \
     --prefix=/usr \
+    -Dbuiltype=release \
+    -Degl=true \
+    -Dgles2=true \
+    -Dgles1=false \
     -Dx11=disabled \
     -Dtls=disabled \
     -Dglx=disabled \
-    -Degl=true \
-    -Dgles1=true \
-    -Dgles2=true \
-     . build
+    . build
 
 ninja -C build
 ninja -C build install
