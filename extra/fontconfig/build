@@ -1,15 +1,28 @@
 #!/bin/sh -e
 
-patch -p1 < fontconfig-fix-1744377.patch
+export DESTDIR="$1"
 
-./configure \
-    AUTOMAKE=/bin/true \
+for patch in *.patch; do 
+    patch -p1 < "$patch"
+done
+
+meson \
     --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    --with-xmldir=/etc/fonts \
-    --enable-static \
-    --disable-nls
+    -Dbuildtype=release \
+    -Ddefault_library=static \
+    -Ddoc=disabled \
+    -Dnls=disabled \
+    -Dtests=disabled \
+    -Ddoc-pdf=disabled \
+    -Ddoc-man=disabled \
+    -Ddoc-txt=disabled \
+    -Ddoc-html=disabled \
+    . build
 
-gmake
-gmake DESTDIR="$1" install
+# ...Broken?
+rm install-cache.py
+
+ninja -C build
+ninja -C build install

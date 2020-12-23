@@ -1,4 +1,5 @@
 expat
 freetype-harfbuzz
-gmake    make
 gperf    make
+meson    make
+samurai  make
