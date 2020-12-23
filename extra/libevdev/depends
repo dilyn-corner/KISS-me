@@ -1,2 +1,4 @@
 linux-headers make
 python        make
+meson         make
+samurai       make

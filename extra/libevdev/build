@@ -1,10 +1,13 @@
 #!/bin/sh -e
 
-sed -i '/--no-print-directory/d' Makefile.in
+export DESTDIR="$1"
 
-./configure \
+meson \
     --prefix=/usr \
-    --disable-gcov
+    -Ddefault_library=static \
+    -Ddocumentation=disabled \
+    -Dtests=disabled \
+    . build
 
-make
-make DESTDIR="$1" install
+ninja -C build
+ninja -C build install
