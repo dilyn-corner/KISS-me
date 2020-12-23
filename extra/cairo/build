@@ -5,19 +5,23 @@ sed -i "s/BUILD_SPHINX_TRUE=/BUILD_SPHINX_TRUE='#'/"   configure
 sed -i "s/BUILD_SPHINX_FALSE='#'/BUILD_SPHINX_FALSE=/" configure
 sed -i 's/test perf//g' Makefile.in
 
+export CFLAGS="$CFLAGS -DEGL_NO_X11"
+
+# Hide a VERY obnoxious warning
 CFLAGS=-Wno-enum-conversion ./configure \
     --prefix=/usr \
-    --disable-trace \
-    --disable-valgrind \
-    --disable-gtk-doc-html \
+    --enable-tee \
+    --enable-glesv2 \
+    --disable-gl \
+    --disable-egl \
     --disable-glx \
     --disable-xlib \
+    --disable-trace \
+    --disable-shared \
     --disable-xcb-shm \
-    --disable-xlib-xrender \
-    --enable-gl \
-    --enable-egl \
-    --enable-tee \
-    --enable-glesv2
+    --disable-valgrind \
+    --disable-gtk-doc-html \
+    --disable-xlib-xrender
 
 make
 make DESTDIR="$1" install
