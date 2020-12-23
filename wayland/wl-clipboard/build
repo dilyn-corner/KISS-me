@@ -2,8 +2,11 @@
 
 export DESTDIR="$1"
 
+CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//')
+
 meson \
 	--prefix=/usr \
+    -Dshcompletiondir=no \
 	. build
 
 ninja -C build
