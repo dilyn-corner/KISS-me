@@ -12,6 +12,9 @@ export CFLAGS="$CFLAGS -fno-semantic-interposition"
 export CXXFLAGS="$CXXFLAGS -fno-semantic-interposition"
 export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//g')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//g')
+
 patch -p1 < python3-always-pip.patch
 
 ./configure \
