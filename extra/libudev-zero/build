@@ -1,4 +1,6 @@
 #!/bin/sh -e
 
-make PREFIX=/usr
+make PREFIX=/usr LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" PREFIX=/usr install
+
+rm "$1/usr/lib/libudev.so" "$1/usr/lib/libudev.so.1"
