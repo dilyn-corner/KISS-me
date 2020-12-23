@@ -7,17 +7,19 @@ pkg-config --exists libudev || {
     exit 1
 }
 
+patch -p1 < static.patch
+
 meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --libexecdir=/usr/lib \
+    -Dbuildtype=release \
     -Ddebug-gui=false \
     -Ddocumentation=false \
     -Dtests=false \
     -Dlibwacom=false \
-    -Dudev="${udev:=true}" \
-    . output
+    . build
 
-ninja -C output
-ninja -C output install
+ninja -C build
+ninja -C build install

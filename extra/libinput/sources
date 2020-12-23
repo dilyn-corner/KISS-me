@@ -1,1 +1,2 @@
 https://github.com/wayland-project/libinput/archive/1.16.4.tar.gz
+patches/static.patch
