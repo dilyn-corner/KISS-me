@@ -2,13 +2,21 @@
 
 export DESTDIR="$1"
 
+sed -i 's/libdrm = shared_/libdrm = /'             meson.build
+sed -i 's/libdrm_intel = shared_/libdrm_intel = /' intel/meson.build
+
+patch -p1 < static.patch
+
 meson \
     --prefix=/usr \
+    -Ddefault_library=both \
+    -Dbuildtype=release \
     -Dintel=true \
+    -Dlibkms=false \
+    -Dvmwgfx=false \
     -Dradeon=false \
     -Damdgpu=false \
     -Dnouveau=false \
-    -Dvmwgfx=false \
     . build
 
 ninja -C build
