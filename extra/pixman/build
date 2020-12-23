@@ -2,8 +2,11 @@
 
 export DESTDIR="$1"
 
+sed -i "s/subdir('test')//" meson.build
+
 meson \
     --prefix=/usr \
+    -Dbuildtype=release \
     -Ddefault_library=static \
     -Dgtk=disabled \
     . build
