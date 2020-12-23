@@ -1,0 +1,28 @@
+--- meson.build.old
++++ meson.build
+@@ -43,7 +43,7 @@
+ endforeach
+ 
+ if get_option('libraries')
+-	ffi_dep = dependency('libffi')
++	ffi_dep = dependency('libffi', static: true)
+ 
+ 	decls = [
+ 		{ 'header': 'sys/signalfd.h', 'symbol': 'SFD_CLOEXEC' },
+@@ -58,7 +58,7 @@
+ 	endforeach
+ endif
+ 
+-scanner_deps = [ dependency('expat') ]
++scanner_deps = [ dependency('expat', static: true) ]
+ 
+ if get_option('dtd_validation')
+ 	scanner_deps += dependency('libxml-2.0')
+@@ -83,7 +83,6 @@
+ if get_option('libraries')
+ 	subdir('cursor')
+ 	subdir('egl')
+-	subdir('tests')
+ endif
+ 
+ if get_option('documentation')

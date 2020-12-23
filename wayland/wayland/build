@@ -1,10 +1,16 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --enable-static \
-    --disable-dtd-validation \
-    --disable-documentation
+export DESTDIR="$1"
 
-gmake
-gmake DESTDIR="$1" install
+patch -p1 < static.patch
+
+meson \
+    --prefix=/usr \
+    -Ddefault_library=both \
+    -Dbuildtype=release \
+    -Ddtd_validation=false \
+    -Ddocumentation=false \
+    . build
+
+ninja -C build
+ninja -C build install
