@@ -4,7 +4,8 @@ export DESTDIR="$1"
 
 meson \
     --prefix=/usr \
-    --buildtype=release \
+    -Dbuildtype=release \
+    -Ddefault_library=static \
     -Dexamples=false \
     -Dlogind=disabled \
     -Dxcb-errors=disabled \
