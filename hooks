@@ -1,20 +1,13 @@
 case $TYPE in
     pre-build)
-        export defFLAGS="-march=native -mtune=native -O3 -fno-math-errno -pipe"
         case $PKG in
-            ffmpeg | llvm | mesa | python | x264) # forked
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
+            lame | libvpx | llvm | mesa | python | x264)
+                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            musl) # breaks
-                export CFLAGS="$defFLAGS"
-                export CXXFLAGS="$defFLAGS"
-            ;;
-            llvm) # we have a memory problem
-                export CFLAGS="-march=native -mtune=native -O3 -pipe"
-                export CXXFLAGS="$CFLAGS"
-                export MAKEFLAGS=-j2
-                export SAMUFLAGS=-j2
+            llvm | musl)
+                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
         esac
     ;;
