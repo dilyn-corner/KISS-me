@@ -4,21 +4,19 @@ patch -p1 < fix-busybox-diff.patch
 
 CC=cc CXX=c++ ./configure \
     --prefix=/usr \
+    --cpu=X86 \
+    --as=nasm \
     --enable-vp8 \
     --enable-vp9 \
     --enable-experimental \
     --enable-runtime-cpu-detect \
-    --enable-shared \
     --enable-postproc \
-    --enable-pic \
+    --disable-docs \
     --disable-tools \
     --disable-examples \
-    --disable-docs \
-    --disable-unit-tests \
     --disable-install-docs \
     --disable-install-srcs \
-    --disable-install-bins \
-    --as=nasm
+    --disable-install-bins
 
 gmake
 gmake DESTDIR="$1" install
