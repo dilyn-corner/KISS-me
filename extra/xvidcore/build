@@ -6,4 +6,6 @@ cd build/generic
     --prefix=/usr
 
 gmake
-gmake DESTDIR="$1" install
+
+install -Dm 644 =build/libxvidcore.a "$1/usr/lib/libxvidcore.a"
+install -Dm 644 ../../src/xvid.h     "$1/usr/include/xvid.h"
