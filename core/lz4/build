@@ -1,6 +1,4 @@
 #!/bin/sh -e
 
-gmake -C lib PREFIX=/usr
-gmake -C programs PREFIX=/usr lz4 lz4c
-
-gmake install PREFIX=/usr DESTDIR="$1"
+gmake PREFIX=/usr BUILD_SHARED=no LDFLAGS="$LDFLAGS -static"
+gmake PREFIX=/usr BUILD_SHARED=no DESTDIR="$1" install
