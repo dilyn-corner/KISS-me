@@ -2,21 +2,18 @@
 
 export DESTDIR="$1"
 
-CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//')
+sed -i "s/-scanner', /-scanner', static: true, /"     src/meson.build
+sed -i "s/-protocols', /-protocols', static: true, /" src/meson.build
 
 meson \
-	--prefix=/usr \
-    -Dshcompletiondir=no \
-	. build
+    --prefix=/usr \
+    -Dzshcompletiondir=no \
+    . build
 
 ninja -C build
 ninja -C build install
 
-rm -rf "$1/usr/share/zsh/"
-rm -rf "$1/usr/share/bash-completion/"
+install -Dm755 wl-clipboard-x11/src/wl-clipboard-x11 "$1/usr/bin/wl-clipboard-x11"
 
-cd wl-clipboard-x11/src
-
-install -Dm755 wl-clipboard-x11 "$1/usr/bin/wl-clipboard-x11"
-ln -s /usr/bin/wl-clipboard-x11 "$1/usr/bin/xclip"
-ln -s /usr/bin/wl-clipboard-x11 "$1/usr/bin/xsel"
+ln -s wl-clipboard-x11 "$1/usr/bin/xclip"
+ln -s wl-clipboard-x11 "$1/usr/bin/xsel"
