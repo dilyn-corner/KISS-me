@@ -1,11 +1,12 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --disable-static \
-    --enable-libwebpmux \
-    --enable-libwebpdemux \
-    --enable-libwebpdecoder
+export DESTDIR="$1"
+export CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
 
-make
-make DESTDIR="$1" install
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
