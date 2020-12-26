@@ -11,7 +11,7 @@
  
  CAIRO_CFLAGS != pkg-config --cflags cairo
  CAIRO_LIBS != pkg-config --libs cairo
-@@ -142,24 +142,56 @@
+@@ -142,24 +142,60 @@
  XKBCOMMON_CFLAGS != pkg-config --cflags xkbcommon
  XKBCOMMON_LIBS != pkg-config --libs xkbcommon
  
@@ -50,6 +50,9 @@
 +GBM_CFLAGS != pkg-config --cflags --static gbm
 +GBM_LIBS != pkg-config --libs --static gbm
 +
++ZLIB_CFLAGS != pkg-config --cflags --static zlib
++ZLIB_LIBS != pkg-config --libs --static zlib
++
  CFLAGS += \
  	${WLROOTS_CFLAGS} \
  	${PANGO_CFLAGS} \
@@ -68,11 +71,12 @@
 +	${EGL_CFLAGS} \
 +	${GLES_CFLAGS} \
 +	${DRM_CFLAGS} \
-+	${GBM_CFLAGS}
++	${GBM_CFLAGS} \
++	${ZLIB_CFLAGS}
  
  LIBS = \
  	${WLROOTS_LIBS} \
-@@ -167,9 +199,17 @@
+@@ -167,9 +203,18 @@
  	${CAIRO_LIBS} \
  	${PIXMAN_LIBS} \
  	${XKBCOMMON_LIBS} \
@@ -88,7 +92,8 @@
 +	${EGL_LIBS} \
 +	${GLES_LIBS} \
 +	${DRM_LIBS} \
-+	${GBM_LIBS}
++	${GBM_LIBS} \
++	${ZLIB_LIBS}
  
  PROTOCOL_HEADERS = xdg-shell-protocol.h
  
