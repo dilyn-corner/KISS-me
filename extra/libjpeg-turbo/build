@@ -5,9 +5,10 @@ export DESTDIR="$1"
 cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-    -DCMAKE_SHARED_LIBS=True \
     -DCMAKE_BUILD_TYPE=Release \
-    -DWITH_JPEG8=1
+    -DENABLE_SHARED=OFF \
+    -DWITH_JPEG8=1 \
+    -G Ninja
 
-cmake --build   build
-cmake --install build
+ninja -C build
+ninja -C build install
