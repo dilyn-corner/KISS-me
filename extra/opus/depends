@@ -1,1 +1,2 @@
-gmake make
+cmake   make
+samurai make

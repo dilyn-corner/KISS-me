@@ -1,9 +1,16 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --enable-custom-modes \
-    --enable-float-approx
+export DESTDIR="$1"
 
-gmake
-gmake DESTDIR="$1" install
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DOPUS_CUSTOM_MODES=ON \
+    -DOPUS_CPU_X64=ON \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_SHARED_LIBS=OFF \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
