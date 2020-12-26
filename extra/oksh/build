@@ -8,5 +8,5 @@
     --enable-ksh \
     --enable-sh
 
-make
+make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
