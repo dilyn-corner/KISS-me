@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-export CFLAGS=$(printf   %s "$CFLAGS"   | sed -s 's/-static//g')
-export CXXFLAGS=$(printf %s "$CXXFLAGS" | sed -s 's/-static//g')
-
 patch -p1 < cmake-no-execinfo.patch
 
 if kiss l cmake; then
