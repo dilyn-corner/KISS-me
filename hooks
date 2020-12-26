@@ -1,7 +1,11 @@
 case $TYPE in
     pre-build)
         case $PKG in
-            lame | libvpx | llvm | mesa | python | x264)
+            e2fsprogs | libpng | mesa | python | util-linux)
+                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+            ;;
+            lame | libvpx | x264 | x265)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
