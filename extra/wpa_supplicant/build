@@ -12,5 +12,5 @@ export CFLAGS="$CFLAGS -static -D_GNU_SOURCE -DLIBNL1_COMPAT"
 
 cd wpa_supplicant
 
-gmake LIBDIR=/usr/lib BINDIR=/usr/bin DRV_LIBS="$CFLAGS" CC="${CC:-cc}"
+gmake LIBDIR=/usr/lib BINDIR=/usr/bin DRV_LIBS="$CFLAGS" CC="${CC:-cc}" LDFLAGS="$LDFLAGS -static"
 gmake LIBDIR=/usr/lib BINDIR=/usr/bin DESTDIR="$1" install
