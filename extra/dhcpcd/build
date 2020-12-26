@@ -5,9 +5,10 @@
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
     --rundir=/run \
-    --libexecdir=/usr/lib/dhcpcd
+    --libexecdir=/usr/lib/dhcpcd \
+    --without-udev
 
-make
+make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
 
 # Install runit service.
