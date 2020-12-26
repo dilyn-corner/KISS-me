@@ -2,7 +2,7 @@
 
 sed -i '/CC.*-o/{s/$(LDFLAGS)//; s/$/ $(LDFLAGS)/}' Makefile
 
-make CC="${CC:-cc}" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS -lz"
+make CC="${CC:-cc}" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS -static -lz"
 
 install -Dm755 pigz   "$1/usr/bin/pigz"
 install -Dm755 unpigz "$1/usr/bin/unpigz"
