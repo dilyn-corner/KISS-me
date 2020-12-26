@@ -2,11 +2,13 @@
 
 export DESTDIR="$1"
 
-patch -p1 < static.patch
+sed -i "s/ffi', /ffi', static: true, /"    meson.build
+sed -i "s/expat', /expat', static: true /" meson.build
+sed -i "s/subdir('tests')//"               meson.build
 
 meson \
     --prefix=/usr \
-    -Ddefault_library=both \
+    -Ddefault_library=static \
     -Dbuildtype=release \
     -Ddtd_validation=false \
     -Ddocumentation=false \
