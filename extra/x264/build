@@ -7,8 +7,7 @@ CC=cc CXX=c++ ./configure \
     --disable-swscale \
     --enable-static \
     --enable-pic \
-    --enable-lto \
-    --enable-shared
+    --enable-lto
 
-gmake
+gmake LDFLAGS="$LDFLAGS -static"
 gmake DESTDIR="$1" install
