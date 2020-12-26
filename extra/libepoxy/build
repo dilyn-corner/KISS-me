@@ -6,8 +6,11 @@ meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    -Dhas-dlvsym=false \
+    -Ddefault_library=static \
+    -Dglx=no \
+    -Degl=yes \
     -Dx11=false \
+    -Dtests=false \
     . build
 
 ninja -C build
