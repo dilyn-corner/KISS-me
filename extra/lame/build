@@ -1,11 +1,13 @@
 #!/bin/sh -e
 
-LIBS="-lcurses -lterminfo" ./configure \
+./configure \
     --build=x86_64-linux-musl \
     --host=x86_64-linux-musl \
     --prefix=/usr \
     --enable-nasm \
-    --enable-shared
+    --enable-expopt=full \
+    --disable-gtktest \
+    --disable-shared
 
 make
 make DESTDIR="$1" install
