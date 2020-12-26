@@ -2,7 +2,8 @@
 
 ./configure \
     --prefix=/usr \
-    --enable-fontconfig
+    --enable-asm \
+    --disable-shared
 
 make
 make DESTDIR="$1" install
