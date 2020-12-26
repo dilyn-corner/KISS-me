@@ -2,9 +2,18 @@
 
 export DESTDIR="$1"
 
+sed -i 's/libgcc/libstdc++/' source/CMakeLists.txt
+
 cmake source \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_TESTS=OFF \
+    -DENABLE_SHARED=OFF \
+    -DNATIVE_BUILD=ON \
+    -DFPROFILE_USE=ON \
+    -DSTATIC_LINK_CRT=ON \
+    -DFPROFILE_GENERATE=ON \
+    -Wno-dev -G Ninja -B build
 
-cmake --build .
-cmake --install .
+ninja -C build
+ninja -C build install
