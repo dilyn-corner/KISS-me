@@ -3,8 +3,10 @@
 patch -p1 < fix-dlo.patch
 
 ./configure \
+    --prefix=/usr \
     --without-debug \
-    --prefix=/usr
+    --enable-static \
+    --disable-shared
 
-make
+make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
