@@ -30,6 +30,9 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
+# The install hangs...
+#patch -p1 < install-change.py
+
 # Install python-mako which is solely needed for mesa
 # and thus contained in this build.
 {
@@ -66,7 +69,7 @@ meson \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --localstatedir=/var \
-    -Ddefault_library=both \
+    -Ddefault_library=static \
     -Dbuildtype=release \
     -Dopengl=true \
     -Degl=enabled \
