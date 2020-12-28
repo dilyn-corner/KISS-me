@@ -1,35 +1,34 @@
 #!/bin/sh -e
 
-# Remove util-linux dependency among other things.
-cat >> Modules/Setup <<EOF
-*disabled*
-_uuid nis ossaudiodev
-EOF
-
 # Reported 20-27% performance improvements.
 # See: "PythonNoSemanticInterpositionSpeedup"
 export CFLAGS="$CFLAGS -fno-semantic-interposition"
 export CXXFLAGS="$CXXFLAGS -fno-semantic-interposition"
 export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
-CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//g')
-CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//g')
-
 patch -p1 < python3-always-pip.patch
 
 ./configure \
+    LDSHARED=" " \
+    LINKFORSHARED=" " \
+    LDFLAGS="$LDFLAGS -static" \
     --prefix=/usr \
-    --enable-shared \
+    --disable-shared \
     --with-system-expat \
     --with-system-ffi \
     --with-ensurepip=yes \
     --without-doc-strings
 
-make
+make LINKFORSHARED=" " LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
 
 ln -s python3 "$1/usr/bin/python"
 ln -s pip3    "$1/usr/bin/pip"
+
+#(
+#    export PATH="$1/usr/bin:$PATH"
+#    python get-pip.py --root="$1" --prefix=/usr
+#)
 
 # Make static library writable.
 chmod u+w "$1/usr/lib/libpython"*

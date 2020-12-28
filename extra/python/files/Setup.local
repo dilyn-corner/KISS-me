@@ -1,0 +1,79 @@
+*static*
+
+posix -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal posixmodule.c
+errno errnomodule.c
+pwd pwdmodule.c
+_sre _sre.c
+_codecs _codecsmodule.c
+_weakref _weakref.c
+_functools -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal _functoolsmodule.c
+_operator _operator.c	         
+_collections _collectionsmodule.c
+_abc _abc.c
+itertools itertoolsmodule.c
+atexit atexitmodule.c
+_signal -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal signalmodule.c
+_stat _stat.c
+time -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal timemodule.c
+_thread -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal _threadmodule.c
+_locale -DPy_BUILD_CORE_BUILTIN _localemodule.c
+_io -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal -I$(srcdir)/Modules/_io _io/_iomodule.c _io/iobase.c _io/fileio.c _io/bytesio.c _io/bufferedio.c _io/textio.c _io/stringio.c
+faulthandler faulthandler.c
+_tracemalloc _tracemalloc.c
+_peg_parser _peg_parser.c
+_symtable symtablemodule.c
+array arraymodule.c
+cmath cmathmodule.c _math.c -DPy_BUILD_CORE_MODULE -lm
+math mathmodule.c _math.c -DPy_BUILD_CORE_MODULE -lm
+_contextvars _contextvarsmodule.c
+_struct _struct.c
+_weakref _weakref.c	
+_random _randommodule.c -DPy_BUILD_CORE_MODULE
+_elementtree -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI _elementtree.c
+_pickle _pickle.c
+_datetime _datetimemodule.c
+_zoneinfo _zoneinfo.c	
+_bisect _bisectmodule.c	
+_heapq _heapqmodule.c	
+_asyncio _asynciomodule.c  
+_json -I$(srcdir)/Include/internal -DPy_BUILD_CORE_BUILTIN _json.c
+_statistics _statisticsmodule.c
+unicodedata unicodedata.c
+fcntl fcntlmodule.c
+spwd spwdmodule.c
+grp grpmodule.c
+select selectmodule.c
+mmap mmapmodule.c
+_csv _csv.c
+_socket socketmodule.c
+_ssl _ssl.c \
+	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+	-L$(SSL)/lib -lssl -lcrypto
+termios termios.c
+resource resource.c
+_posixsubprocess _posixsubprocess.c
+_md5 md5module.c
+_sha1 sha1module.c
+_sha256 sha256module.c -DPy_BUILD_CORE_BUILTIN
+_sha512 sha512module.c -DPy_BUILD_CORE_BUILTIN
+_sha3 _sha3/sha3module.c
+_blake2 _blake2/blake2module.c _blake2/blake2b_impl.c _blake2/blake2s_impl.c
+syslog syslogmodule.c
+binascii binascii.c
+parser parsermodule.c
+zlib zlibmodule.c -I$(prefix)/include -L$(exec_prefix)/lib -lz
+pyexpat expat/xmlparse.c expat/xmlrole.c expat/xmltok.c pyexpat.c -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DXML_POOR_ENTROPY -DUSE_PYEXPAT_CAPI
+_multibytecodec cjkcodecs/multibytecodec.c
+_codecs_cn cjkcodecs/_codecs_cn.c
+_codecs_hk cjkcodecs/_codecs_hk.c
+_codecs_iso2022 cjkcodecs/_codecs_iso2022.c
+_codecs_jp cjkcodecs/_codecs_jp.c
+_codecs_kr cjkcodecs/_codecs_kr.c
+_codecs_tw cjkcodecs/_codecs_tw.c
+xxsubtype xxsubtype.c
+
+_lsprof _lsprof.c rotatingtree.c
+#_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c -I${prefix}/include -L${prefix}/lib -lffi -ldl
+
+*disabled*
+_uuid nis ossaudiodev
