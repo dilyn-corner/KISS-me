@@ -10,10 +10,10 @@ cmake source \
     -DENABLE_TESTS=OFF \
     -DENABLE_SHARED=OFF \
     -DNATIVE_BUILD=ON \
-    -DFPROFILE_USE=ON \
-    -DSTATIC_LINK_CRT=ON \
-    -DFPROFILE_GENERATE=ON \
     -Wno-dev -G Ninja -B build
 
 ninja -C build
 ninja -C build install
+    #-DFPROFILE_USE=ON \
+    #-DSTATIC_LINK_CRT=ON \
+    #-DFPROFILE_GENERATE=ON \
