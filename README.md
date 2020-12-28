@@ -7,7 +7,11 @@ KISS-me - A KISS repository for forks, projects, and fun
 ________________________________________________________________________________
 
 
-This repository is for:
+The master branch is for: 
+1) A (mostly) static system
+2) A self-maintained 'fork' of [wyverkiss](https://github.com/wyvertux/wyverkiss) 
+
+Other branches are for:
 1) Staging things prior to submitting them to 
 [Community](https://github.com/kisslinux/community),
 2) for things I know will 
@@ -17,70 +21,90 @@ This repository is for:
 
 ## The structure of this repository
 
-`KISS-me/core`: kernels, compilers, utils. It also includes a compressor (`lz4`)
-and proper MacbookPro fan support (`mbpfan`)
+The BDFL of [KISS](https://github.com/kisslinux/kiss) has disappeared. After a
+month of his absence, I decided to put his theory to the test: his distro can be
+simply maintained by a single person. I'm only clocking in at ~100 packages
+installed for a full wayland-stack + web browser, but this was Dylan's baseline
+goal anyways. I'd say his project was proven a success, and I think I'll be able
+to maintain this system basically indefinitely.
 
-`KISS-me/extra`: Basically an analogue to `repo/extra`
+The master branch is very finicky and I would not recommend using it for a usual
+system; use it as a reference for building packages. As an example, many build
+scripts have been modified to make use of `meson` or `cmake` when available, as
+well as to default to statically linking libs. Currently, the only things linked
+to on my system are `libc` and `gles`, `gbm`, and `glapi`.
 
-`KISS-me/wayland`: Just `wayland` things
-
-`KISS-me/hesitation`: Things that are being tested. Loosely
-
+Other branches are used by me for things like my
+[KISS-kde](https://github.com/dilyn-corner/KISS_kde) partition. These branches
+are more suitable for everyday use.
 
 ## Thoughts
 
 In the ever-excruciating pursuit of being different for the sake of difference,
 I have switched from KISS-proper to
 [wyverkiss](https://github.com/wyvertux/wyverkiss).
+
 Additionally, Due to recent 
 [issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
-I have decided to commit to trying out `wayland`. So far, I'm really enjoying 
-it! Because the *initial* [wayland repository](https://github.com/sdsddsd1/mywayland) 
-was archived, and the [second one](https://github.com/Himmalerin/kiss-wayland)
-is more narrow in focus, I decided to just handle my own `wayland` packages.
-I've opted for `hikari` over `sway` and others. It's just enough, even perhaps 
-too much. The configuration is easy, the dependencies are small, and the 
-environment is sane!
+I have decided to commit to trying out `wayland`.
 
-As for terminal emulators; the fact that `alacritty` requires `rust` is comedic.
-So that's out. But, we're in luck! `foot` is an excellent option - it uses 
-`meson` which, while frustrating (damn dirty `python req`), provides a fast 
-and simple to configure build. The developer suggests pgo, which presented a 
-fun-looking build script. 
+Finally, inspired by [KISS-static](https://github.com/dilyn-corner/KISS-static),
+I have decided to try for as much of a static system as possible. So far, the
+results have been... Fine. The project has thus far been mostly successful aside
+from `mesa`. As far as I can gather, here is the blocker on this front:
 
-Wayland has been a pretty stupendous experience thus far. It's no heavier than
-Xorg, has far fewer dependencies to wrangle up and understand, and feels much
-more responsive - `st` would take multiple-seconds to redraw vim when resizing,
-and `foot` does not have this problem - it's almost instantaneous. Everything
-launches very quickly, device detection works just fine, etc. etc. The one
-downside is that so much work is offloaded to the compositor, so things like
-swapping caps and escape are syntactically dependent on implementation. This is,
-however, perhaps better than the Xorg way: a keyboard config file in
-`/etc/X11/xorg.conf.d/` OR `/usr/share/X11/xorg.conf.d` OR a line in `.xinitrc` 
-OR install `setxkbmap` and add a startup script OR OR OR... Here it's just a 
-single one liner in `hikari`, plainly documented. I like this.
+`shared-glapi` will be built if at least two of GL, GLES, and EGL are built.
+Because Wayland(?) requires EGL, and EGL requires OpenGL, `mesa` will *always*
+build this. Now, you could opt for having OpenGL provided by `libglvnd`, but
+`libglvnd` will likewise always provide its own shared-loader. You can peak at
+my `mesa` build script for my wonky hack (basically just a bunch of `seds`), but
+it will essentially result in being unable to launch a graphical application.
+AFAIK, `dlopen()` is used to initialize the graphics drivers, and `musl` uses a
+`dlopen()` stub for statically linked objects. This means that it won't work
+properly without some *proper* hacking on `mesa`. 
 
-This is a super minimal build - the only two X packages are `xkeyboard-config`
-and `libxkbcommon`. I'm still working on things, of course. Maybe we could drop
-`glib` at some point... 
+You could maybe technically get away with just using `gbm` from `mesa` with no
+`gl` at all, but I'm not sure how far that would go. Actually, I might test that
+soon... Probably  nothing will work, especially `firefox`. However, I'm already
+at an impass with that (I need to get `rust` working; a static `libc++` is
+posing issues - presumably all will be well if I just temporarily install a
+shared `libc++`). 
 
-`qt5` is dumb. I spent so long banging my head against a wall, and after
-spending a ridiculous amount of time exploring mkspecs and how the
-linux-clang-libc++ build system works (it basically jsut inherehits linux-clang
-and linux-g++ stuff), I eventually found a patch from 2015(!) that solves my
-issue. Genius. 
+Other sticking points:
 
-`qt5-webengine` presented surreal issues. `gn` does not link properly with an 
-`llvm` toolchain - the blame lies on exactly one flag: `--static-libstdc++`. 
-We have to coopt the `gn` bootstrap flags used during the `qt5-webengine` build 
-prior to generating a `gn` build to ensure this flag isn't set. This took many 
-many hours of troubleshooting. The next goal is merely to ensure it can link
-statically.
+`CFLAGS=-static` guarantees you will link against static libraries if available
+(usually). It WILL NOT guarantee that you (1) build a static binary, (2) don't
+create static libraries.
 
-Video playback causes the tab to crash in `falkon` and `viper-browser`. This
-error is attributed to `qt.qpa.wayland: Wayland does not support
-QWindow:requestActivate()`. Unclear what this means exactly; further
-investigation required.
+Many `meson` build systems will default to using `shared_library()` instead of the
+*upstream recommended* `library()` so that it can be toggled via
+`-Ddefault_library`. `sed` solves this problem, up until a new `meson` version
+is dropped that makes adding `version:` entries to static libraries a failure
+instead of a warning. It will be soon. 
+
+I have no idea if there's a technically canonical way of making sure `meson`
+looks for static libraries; in the meanwhile, appending `static: true` to
+relevant `dependency()` lines in the `meson.build` files ensures that `meson`
+finds the proper libraries. Otherwise, it might attempt to look for `foo.so` and
+complain, or it won't add `-lbar` to the linker flags... and complain.
+
+`cairo` was weird because I had to specify EGL_NO_X11 manually. I feel like it
+should be able to identify this itself...
+
+`llvm` is a strange one. If you want to install `libc++abi`, the bundled
+`merge-archives.py` script won't actually be able to merge the abi symbols into
+`libc++`. However, if you `-DLIBCXXABI_INSTALL_LIBRARY=OFF`, the script works
+just fine. Ultimately, there's no good reason to install `libc++abi` anyways;
+anything that cares about these symbols will be using `-lc++` and not
+`-lc++abi`!  If you need `libc++abi` for some reason, just build it separately.
+It takes five seconds.
+
+Ultimately, if things aren't building statically and you want them to, assume
+`libtool` is doing some tomfoolery. `LDFLAGS=--static` solves most problems.
+
+If you're using wyverkiss or some other `gcc`-less KISS implementation and want
+a working `qt5`, revert `9ad56f3587e572ed87a12a3a9b6641fd9812153c` to get my
+5.15.2 build.
 
 --- 
 
@@ -95,11 +119,14 @@ repository that contains a bootstrappable `ghc`.
 [KISS-kde](https://github.com/dilyn-corner/KISS-kde) - A KISS-compliant
 repository that brings the wonders of a `plasma` desktop to KISS.
 
+[KISS-static](https://github.com/dilyn-corner/KISS_static) - A KISS-compliant
+repository that provides a static KISS rootfs.
+
 [dotfiles](https://github.com/dilyn-corner/dotfiles) - Just a simple way to
 maintain my dotfiles and share screenshots. Don't use it, just marvel.
 
-
 ---
+
 
 # Useful fork-facts
 
@@ -109,25 +136,35 @@ This is more-so for me and anyone like me who is both new to Git(hub) and forks.
 
 ## Keeping up 
 
-If you want to keep your fork in-line with upstream, there's a very straightforward way of doing this!<sup>1</sup>
-Simply add the upstream repository as a remote URL for git to track, and then you will be able to pull down any changes upstream makes and merge them into your fork.
+If you want to keep your fork in-line with upstream, there's a very
+straightforward way of doing this!<sup>1</sup> Simply add the upstream
+repository as a remote URL for git to track, and then you will be able to pull
+down any changes upstream makes and merge them into your fork.
+
 ```
-git remote add upstream _upstreamURL_   # Add upstream to your remotes
-git fetch upstream                      # Fetch upstream's changes 
-git checkout master                     # Switch to master
-git merge upstream/master               # Merge upstream's master branch
+git remote add upstream $upstreamURL # Add upstream to your remotes
+git fetch upstream                   # Fetch upstream's changes 
+git checkout master                  # Switch to master
+git merge upstream/master            # Merge upstream's master branch
 ```
 
-Suppose upstream is _very_ busy while you do your work. They push a lot of changes that you wish you had while you're working on your branch. If you `merge` upstream into your branch, you'll have some hairy commit messages they won't _super_ appreciate when you make your PR. So you can rebase instead. It's very handy.
+Suppose upstream is _very_ busy while you do your work. They push a lot of
+changes that you wish you had while you're working on your branch. If you
+`merge` upstream into your branch, you'll have some hairy commit messages they
+won't _super_ appreciate when you make your PR. So you can rebase instead. It's
+very handy.
+
 ```
-git checkout -b _newBranch_
+git checkout -b $newBranch
 > You do work
 > They do work
 git fetch upstream
 git rebase upstream/master
 ```
 
-Rebasing<sup>2</sup> is essentially just a patch of the work you did based off the commit you made your fork from, that you can then simply slide into the history without making it look wonky (with a bunch of `merge` commit messages).
+Rebasing<sup>2</sup> is essentially just a patch of the work you did based off
+the commit you made your fork from, that you can then simply slide into the
+history without making it look wonky (with a bunch of `merge` commit messages).
 
 This will be edited heavily in the future maybe hopefully probably.<sup>3</sup>
 
@@ -179,7 +216,6 @@ noxlXNrfjqR5iRoG3070gU6KoOyWK/6zeIJfEPDkP5zsE6aRYeoSiNj47Frl2sHr
 /F94XrhKPeDTTmlai+XuuZrlnyXjwVdfqsEf5w8Va1pMMBQt8ux6qkUpxZzjy/ih
 3pV4BKDdGV4NQO9VKBwwQHKYi6T295rBaQ+2Z0ey0kDnCfWdb9/HHMc2YZSQflBg
 dxrnnFiK8wnADPGA3fzL/9F+fNysX9Ypg2N7pkTbvz7WOqhgDf3D+jXteVUxgq9K
-FTjDC7NBgOvvveXb5ccd
-=j6ND
+FTjDC7NBgOvvveXb5ccd=j6ND
 
 -----END PGP PUBLIC KEY BLOCK-----
