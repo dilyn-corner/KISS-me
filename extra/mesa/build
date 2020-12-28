@@ -7,9 +7,14 @@ export CFLAGS="$CFLAGS -Wno-implicit-fallthrough"
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//')
 
-## Static zlib
-sed -i "s|1.2.3', |1.2.3', static: true, |" meson.build
-#
+# Static zlib, libdrm, wayland
+sed -i "s|protocols', |protocols', static: true, |" meson.build
+sed -i "s|backend', |backend', static: true, |"     meson.build
+sed -i "s|client', |client', static: true, |"       meson.build
+sed -i "s|server', |server', static: true, |"       meson.build
+sed -i "s|1.2.3', |1.2.3', static: true, |"         meson.build
+sed -i "s|drm_ver)|drm_ver, static: true)|"         meson.build
+
 ## Static egl/gbm/glesv2/vulkan/i965/i915
 #sed -i 's|shared_library|static_library|'   src/egl/meson.build
 #sed -i 's|shared_library|static_library|'   src/gbm/meson.build
