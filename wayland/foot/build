@@ -1,12 +1,22 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-
-patch -p1 < static.patch
-
-# For static building
-export CFLAGS="$CFLAGS -static -l:libffi.a"
 export CC=/usr/bin/cc
+
+sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
+sed -i "s|-scanner',|-scanner', static: true, |"  meson.build
+sed -i "s|xkbcommon'|xkbcommon', static: true|"   meson.build
+sed -i "s|protocols'|protocols', static: true|"   meson.build
+sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
+sed -i "s|-client'|-client', static: true|"       meson.build
+sed -i "s|threads'|threads', static: true|"       meson.build
+sed -i "s|cursor'|cursor', static: true, |"       meson.build
+
+sed -i "s|fontconfig'|fontconfig', static: true|" subprojects/fcft/meson.build
+sed -i "s|freetype2'|freetype2', static: true|"   subprojects/fcft/meson.build
+sed -i "s|pixman-1'|pixman-1', static: true|"     subprojects/fcft/meson.build
+sed -i "s|harfbuzz'|harfbuzz', static: true|"     subprojects/fcft/meson.build
+sed -i "s|threads'|threads', static: true|"       subprojects/fcft/meson.build
 
 # Note to self: always make doc generation toggleable
 sed -i "s|subdir('doc')||" meson.build
@@ -15,17 +25,15 @@ sed -i "s|subdir('doc')||" meson.build
 fixHead=subprojects/fcft
 install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
 install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
+
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
-# PGO builds only work with an active wayland session, so we assume the first
-# build is from TTY.
-
-export CFLAGS="$CFLAGS -fno-plt"
-## Because fuck a werror
-export CFLAGS="$CFLAGS -Wno-error"
-## Clang specific; gcc: -Wno-missing-profile
-export CFLAGS="$CFLAGS -Wno-ignored-optimization-argument"
-export CFLAGS="$CFLAGS -Wno-profile-instr-out-of-date"
+export CFLAGS="$CFLAGS -static -l:libffi.a                \
+                       -fno-plt                           \
+                       -Wno-error                         \
+                       -Wno-ignored-optimization-argument \
+                       -Wno-profile-instr-out-of-date     \
+                       -Wno-profile-instr-unrprofiled"
 
 meson \
     --prefix=/usr \
@@ -57,6 +65,7 @@ if kiss l foot; then
     rm "${foot_tmp}"
 
 else
+    # else we generate some mediocre PGO data
     foot_tmp=$(mktemp)
     scripts/generate-alt-random-writes.py \
         --rows=67 \
