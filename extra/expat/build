@@ -6,5 +6,5 @@
     --without-tests \
     --without-examples
 
-make
+make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
