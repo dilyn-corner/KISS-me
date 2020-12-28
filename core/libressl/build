@@ -4,7 +4,7 @@
     --prefix=/usr \
     --sysconfdir=/etc
 
-make
+make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
 
 install -Dm 755 update-certdata.sh "$1/etc/ssl"
