@@ -1,0 +1,20 @@
+ffmpeg
+flex          make
+gnu-bison     make
+gnu-m4        make
+fontconfig
+freetype-harfbuzz
+gmake         make
+gperf         make
+libdrm
+libevent
+linux-headers make
+nss
+perl          make
+pkgconf       make
+python2       make
+qt5
+qt5-declarative
+qt5-webchannel
+samurai      make
+zlib

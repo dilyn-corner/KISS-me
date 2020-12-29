@@ -1,0 +1,4 @@
+perl make
+qt5
+qt5-declarative
+wayland
