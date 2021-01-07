@@ -7,7 +7,7 @@ _sre _sre.c
 _codecs _codecsmodule.c
 _weakref _weakref.c
 _functools -DPy_BUILD_CORE_BUILTIN -I$(srcdir)/Include/internal _functoolsmodule.c
-_operator _operator.c	         
+_operator _operator.c
 _collections _collectionsmodule.c
 _abc _abc.c
 itertools itertoolsmodule.c
@@ -27,15 +27,15 @@ cmath cmathmodule.c _math.c -DPy_BUILD_CORE_MODULE -lm
 math mathmodule.c _math.c -DPy_BUILD_CORE_MODULE -lm
 _contextvars _contextvarsmodule.c
 _struct _struct.c
-_weakref _weakref.c	
+_weakref _weakref.c
 _random _randommodule.c -DPy_BUILD_CORE_MODULE
 _elementtree -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI _elementtree.c
 _pickle _pickle.c
 _datetime _datetimemodule.c
-_zoneinfo _zoneinfo.c	
-_bisect _bisectmodule.c	
-_heapq _heapqmodule.c	
-_asyncio _asynciomodule.c  
+_zoneinfo _zoneinfo.c
+_bisect _bisectmodule.c
+_heapq _heapqmodule.c
+_asyncio _asynciomodule.c -I$(srcdir)/Include/internal
 _json -I$(srcdir)/Include/internal -DPy_BUILD_CORE_BUILTIN _json.c
 _statistics _statisticsmodule.c
 unicodedata unicodedata.c
@@ -62,6 +62,8 @@ syslog syslogmodule.c
 binascii binascii.c
 parser parsermodule.c
 zlib zlibmodule.c -I$(prefix)/include -L$(exec_prefix)/lib -lz
+_tkinter _tkinter.c tkappinit.c
+_curses _cursesmodule.c -lcurses -ltermcap
 pyexpat expat/xmlparse.c expat/xmlrole.c expat/xmltok.c pyexpat.c -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DXML_POOR_ENTROPY -DUSE_PYEXPAT_CAPI
 _multibytecodec cjkcodecs/multibytecodec.c
 _codecs_cn cjkcodecs/_codecs_cn.c
@@ -72,8 +74,9 @@ _codecs_kr cjkcodecs/_codecs_kr.c
 _codecs_tw cjkcodecs/_codecs_tw.c
 xxsubtype xxsubtype.c
 
-_lsprof _lsprof.c rotatingtree.c
-#_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c -I${prefix}/include -L${prefix}/lib -lffi -ldl
+_multiprocessing _multiprocessing/multiprocessing.c _multiprocessing/posixshmem.c _multiprocessing/semaphore.c
+
+_sqlite3 _tkinter _curses pyexpat
 
 *disabled*
 _uuid nis ossaudiodev
