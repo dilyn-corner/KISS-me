@@ -5,14 +5,16 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            lame | libvpx | x264 | x265)
+            nodejs | lame | libvpx | nss | x264 | x265)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            llvm | musl)
+            linux* | llvm | musl)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
+            rust | firefox)
+                export KISS_TMPDIR=
         esac
     ;;
     post-build)
