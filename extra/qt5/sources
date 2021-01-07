@@ -1,7 +1,0 @@
-https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz
-files/qt.conf
-patches/clang-socklen-match-gcc.patch
-patches/qsslsocket_openssl_cpp.patch
-patches/qsslcontext_openssl_cpp.patch
-patches/qsslsocket_openssl_symbols_p.patch
-patches/qsslsocket_openssl_symbols_cpp.patch
