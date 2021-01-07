@@ -2,8 +2,10 @@ atk
 fribidi
 gdk-pixbuf
 libepoxy
+meson             make
 pango
 pkgconf           make
 python            make
+samurai           make
 wayland
 wayland-protocols make
