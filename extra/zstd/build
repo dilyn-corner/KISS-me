@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+cmake -B zbuild \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DZSTD_BUILD_SHARED=OFF \
+    -DZSTD_USE_STATIC_RUNTIME=ON \
+    -G Ninja build/cmake
+
+ninja -C zbuild
+ninja -C zbuild install
