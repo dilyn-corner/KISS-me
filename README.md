@@ -7,51 +7,28 @@ KISS-me - A KISS repository for forks, projects, and fun
 ________________________________________________________________________________
 
 
-The master branch is for: 
-1) A (mostly) static system
-2) A self-maintained 'fork' of [wyverkiss](https://github.com/wyvertux/wyverkiss) 
+This branch is meant to stand as a record of the things I had to do to build a
+static wyverkiss system. The repository should be fully working. My best
+recommendation if you wish to use it is as follows:
 
-Other branches are for:
-1) Staging things prior to submitting them to 
-[Community](https://github.com/kisslinux/community),
-2) for things I know will 
-[never be accepted into Community](https://k1ss.org/guidestones),
-3) for forks.
+1) Don't.
+
+2) Add -static to C(XX)FLAGS
+
+3) Rebuild something. See what breaks. I recommend rebuilding small things first
+- `libinput`, for instance. Try to buid `hikari` and see where the build fails.
+  If it succeeds, `ldd /usr/bin/hikari` will tell you what shared things you
+should work on next.
+
+4) Everything here EXCEPT `mesa` can be built completely statically. Almost no
+programs here will link against `libc.so`. 
+
+5) If you want a webbrowser, my recommendation is to use the Qt stack. Odds are,
+you won't be able to build a static `qt5-webengine`, but you can most certainly
+try. Webkit is also a potential option, though I didn't bother.
 
 
-## The structure of this repository
-
-The BDFL of [KISS](https://github.com/kisslinux/kiss) has disappeared. After a
-month of his absence, I decided to put his theory to the test: his distro can be
-simply maintained by a single person. I'm only clocking in at ~100 packages
-installed for a full wayland-stack + web browser, but this was Dylan's baseline
-goal anyways. I'd say his project was proven a success, and I think I'll be able
-to maintain this system basically indefinitely.
-
-The master branch is very finicky and I would not recommend using it for a usual
-system; use it as a reference for building packages. As an example, many build
-scripts have been modified to make use of `meson` or `cmake` when available, as
-well as to default to statically linking libs. Currently, the only things linked
-to on my system are `libc` and `gles`, `gbm`, and `glapi`.
-
-Other branches are used by me for things like my
-[KISS-kde](https://github.com/dilyn-corner/KISS_kde) partition. These branches
-are more suitable for everyday use.
-
-## Thoughts
-
-In the ever-excruciating pursuit of being different for the sake of difference,
-I have switched from KISS-proper to
-[wyverkiss](https://github.com/wyvertux/wyverkiss).
-
-Additionally, Due to recent 
-[issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
-I have decided to commit to trying out `wayland`.
-
-Finally, inspired by [KISS-static](https://github.com/dilyn-corner/KISS-static),
-I have decided to try for as much of a static system as possible. So far, the
-results have been... Fine. The project has thus far been mostly successful aside
-from `mesa`. As far as I can gather, here is the blocker on this front:
+### Rationale on `mesa`:
 
 `shared-glapi` will be built if at least two of GL, GLES, and EGL are built.
 Because Wayland(?) requires EGL, and EGL requires OpenGL, `mesa` will *always*
@@ -64,13 +41,12 @@ AFAIK, `dlopen()` is used to initialize the graphics drivers, and `musl` uses a
 properly without some *proper* hacking on `mesa`. 
 
 You could maybe technically get away with just using `gbm` from `mesa` with no
-`gl` at all, but I'm not sure how far that would go. Actually, I might test that
-soon... Probably  nothing will work, especially `firefox`. However, I'm already
-at an impass with that (I need to get `rust` working; a static `libc++` is
-posing issues - presumably all will be well if I just temporarily install a
-shared `libc++`). 
+`gl` at all, but I'm not sure how far that would go.  Probably  nothing will
+work, especially `firefox`. Indeed, building `rust` presented problems. The only
+way I could get it to work was by building some shared libs from `llvm`.
 
-Other sticking points:
+
+### Other sticking points:
 
 `CFLAGS=-static` guarantees you will link against static libraries if available
 (usually). It WILL NOT guarantee that you (1) build a static binary, (2) don't
