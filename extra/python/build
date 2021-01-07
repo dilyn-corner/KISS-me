@@ -25,11 +25,6 @@ make DESTDIR="$1" install
 ln -s python3 "$1/usr/bin/python"
 ln -s pip3    "$1/usr/bin/pip"
 
-#(
-#    export PATH="$1/usr/bin:$PATH"
-#    python get-pip.py --root="$1" --prefix=/usr
-#)
-
 # Make static library writable.
 chmod u+w "$1/usr/lib/libpython"*
 

@@ -1,4 +1,3 @@
 https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
-https://bootstrap.pypa.io/get-pip.py
 patches/python3-always-pip.patch
 files/Setup.local Modules/
