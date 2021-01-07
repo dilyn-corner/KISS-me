@@ -1,0 +1,79 @@
+--- a/dom/plugins/test/moz.build
++++ b/dom/plugins/test/moz.build
+@@ -4,7 +4,8 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-DIRS += ["testplugin"]
++if CONFIG["MOZ_X11"]:
++    DIRS += ["testplugin"]
+ 
+ XPCSHELL_TESTS_MANIFESTS += ["unit/xpcshell.ini"]
+ 
+--- a/toolkit/components/remote/moz.build
++++ b/toolkit/components/remote/moz.build
+@@ -13,10 +13,7 @@
+ 
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk":
+     SOURCES += [
+-        "nsGTKRemoteServer.cpp",
+         "nsUnixRemoteServer.cpp",
+-        "nsXRemoteClient.cpp",
+-        "nsXRemoteServer.cpp",
+         "RemoteUtils.cpp",
+     ]
+     if CONFIG["MOZ_ENABLE_DBUS"]:
+@@ -30,6 +27,13 @@
+             "RemoteUtils.h",
+         ]
+     CXXFLAGS += CONFIG["TK_CFLAGS"]
++
++    if CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk" and CONFIG['MOZ_X11']:
++        SOURCES += [
++        "nsGTKRemoteServer.cpp",
++        "nsXRemoteClient.cpp",
++        "nsXRemoteServer.cpp",
++        ]
+ 
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] == "windows":
+     SOURCES += [
+--- a/widget/gtk/moz.build
++++ b/widget/gtk/moz.build
+@@ -101,6 +101,13 @@
+         "WindowSurfaceProvider.h",
+     ]
+ 
++if CONFIG["MOZ_X11"]:
++    UNIFIED_SOURCES += [
++        "WindowSurfaceX11.cpp",
++        "WindowSurfaceX11Image.cpp",
++        "WindowSurfaceXRender.cpp",
++    ]
++
+ if CONFIG["MOZ_WAYLAND"]:
+     UNIFIED_SOURCES += [
+         "DMABufLibWrapper.cpp",
+--- a/widget/gtk/mozgtk/moz.build
++++ b/widget/gtk/mozgtk/moz.build
+@@ -4,4 +4,7 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-DIRS += ["stub", "gtk2", "gtk3"]
++DIRS += ["stub", "gtk3"]
++
++if CONFIG["MOZ_X11"]:
++    DIRS += ["gtk2"]
+--- a/widget/moz.build
++++ b/widget/moz.build
+@@ -270,6 +270,10 @@
+     DIRS += ["x11"]
+     SOURCES += [
+         "GfxInfoX11.cpp",
++    ]
++
++    if CONFIG["MOZ_X11"]:
++        SOURCES += [
+         "nsShmImage.cpp",
+         "WindowSurfaceX11SHM.cpp",
+     ]
