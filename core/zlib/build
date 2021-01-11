@@ -5,7 +5,7 @@ export CFLAGS="$CFLAGS -fPIC"
 ./configure \
     --prefix=/usr \
     --libdir=/usr/lib \
-    --static
+    --shared
 
 make
 make DESTDIR="$1" install
