@@ -4,10 +4,6 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-#sed -i 's/5add36bcf8dd824ee0f5018b2efab1a2747125b3e374ac5f58568edb431f2805/9e4a28d752a2dc9d8cc0474403b4d57e398186e1b4d7657db0a8541fe18c8414/' third_party/rust/gfx-backend-vulkan/.cargo-checksum.json
-#
-#sed -i 's/9e4a28d752a2dc9d8cc0474403b4d57e398186e1b4d7657db0a8541fe18c8414/5add36bcf8dd824ee0f5018b2efab1a2747125b3e374ac5f58568edb431f2805/' third_party/rust/gfx-backend-vulkan/.cargo-checksum.json
-
 sed -i '/#if defined(LINUX)/a #include <net/if.h>' \
 dom/media/webrtc/transport/third_party/nICEr/src/stun/addrs-netlink.c
 
@@ -52,8 +48,8 @@ export PATH=$PWD/junk/bin:$PATH
 mkdir -p build && cd build
 
 # Override ccache.
-#export CC="${CC:-/usr/bin/cc}"
-#export CXX="${CXX:-/usr/bin/c++}"
+export CC="${CC:-/usr/bin/cc}"
+export CXX="${CXX:-/usr/bin/c++}"
 
 export LDFLAGS="$LDFLAGS -Wl,-rpath=/usr/lib/firefox"
 export RUSTFLAGS="$RUSTFLAGS -Cdebuginfo=0"
@@ -69,42 +65,41 @@ export MACH_USE_SYSTEM_PYTHON=1
     ../mach configure \
     --prefix=/usr \
     --libdir=/usr/lib \
-    --enable-optimize="$CFLAGS -w" \
-    --enable-official-branding \
-    --enable-install-strip \
-    --enable-strip \
-    --enable-rust-simd \
-    --enable-application=browser \
-    --enable-release \
-    --enable-alsa \
-    --without-system-nspr \
-    --without-system-nss \
-    --without-system-libvpx \
+    --with-system-ffi \
+    --with-system-png \
     --with-system-jpeg \
     --with-system-zlib \
-    --without-system-png \
     --with-system-pixman \
-    --with-system-ffi \
-    --disable-profiling \
-    --disable-accessibility \
-    --disable-tests \
-    --disable-system-extension-dirs \
-    --disable-parental-controls \
-    --disable-debug-symbols \
-    --disable-callgrind \
-    --disable-vtune \
-    --disable-elf-hack \
+    --without-system-nss \
+    --without-system-nspr \
+    --without-system-libvpx \
+    --disable-eme \
+    --disable-dbus \
     --disable-gold \
+    --disable-tests \
+    --disable-vtune \
+    --disable-webrtc \
+    --disable-updater \
+    --disable-elf-hack \
     --disable-jemalloc \
+    --disable-profiling \
+    --disable-necko-wifi \
+    --disable-callgrind \
     --disable-pulseaudio \
     --disable-crashreporter \
-    --disable-updater \
-    --disable-dbus \
-    --disable-eme \
-    --disable-necko-wifi \
-    --disable-webrtc \
-    --with-ccache \
+    --disable-accessibility \
+    --disable-debug-symbols \
+    --disable-parental-controls \
+    --disable-system-extension-dirs \
+    --enable-alsa \
+    --enable-strip \
+    --enable-release \
+    --enable-rust-simd \
     --enable-linker=lld \
+    --enable-install-strip \
+    --enable-official-branding \
+    --enable-application=browser \
+    --enable-optimize="$CFLAGS -w" \
     --enable-default-toolkit=cairo-gtk3-wayland
 
 ../mach build
