@@ -6,7 +6,6 @@ cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_SHARED=OFF \
     -DWITH_JPEG8=1 \
     -G Ninja
 
