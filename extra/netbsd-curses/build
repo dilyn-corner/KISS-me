@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gmake DESTDIR="$1" PREFIX=/usr all-static install-static LDFLAGS="$LDFLAGS -static"
+gmake DESTDIR="$1" PREFIX=/usr install
 
 # ncurses-compatible script
 install -Dm755 ncurses5-config "$1/usr/bin/ncurses5-config"
