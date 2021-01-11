@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+
+sed -i '/^go/d' go.mod
+
+go build \
+    -trimpath \
+    -modcacherw \
+    -o gotop ./cmd/gotop
+
+install -Dm755 gotop "$1/usr/bin/gotop"
