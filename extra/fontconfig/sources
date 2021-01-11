@@ -1,3 +1,2 @@
 https://freedesktop.org/software/fontconfig/release/fontconfig-2.13.93.tar.xz
-patches/static.patch
 patches/no-scripts.patch
