@@ -17,7 +17,6 @@ CFLAGS=-Wno-enum-conversion ./configure \
     --disable-glx \
     --disable-xlib \
     --disable-trace \
-    --disable-shared \
     --disable-xcb-shm \
     --disable-valgrind \
     --disable-gtk-doc-html \
