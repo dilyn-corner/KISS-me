@@ -2,11 +2,9 @@
 
 export DESTDIR="$1"
 
-patch -p1 < static.patch
-
 meson \
     --prefix=/usr \
-    -Ddefault_library=static \
+    -Ddefault_library=both \
     -Dbuildtype=release \
     -Denable-docs=false \
     -Denable-wayland=true \
