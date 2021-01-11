@@ -3,40 +3,9 @@
 # Hide a very obnoxious warning
 export CFLAGS="$CFLAGS -Wno-implicit-fallthrough"
 
-# Strip static flags, you monster.
-CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//')
-CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//')
-
-# Static zlib, libdrm, wayland
-sed -i "s|protocols', |protocols', static: true, |" meson.build
-sed -i "s|backend', |backend', static: true, |"     meson.build
-sed -i "s|client', |client', static: true, |"       meson.build
-sed -i "s|server', |server', static: true, |"       meson.build
-sed -i "s|1.2.3', |1.2.3', static: true, |"         meson.build
-sed -i "s|drm_ver)|drm_ver, static: true)|"         meson.build
-
-## Static egl/gbm/glesv2/vulkan/i965/i915
-#sed -i 's|shared_library|static_library|'   src/egl/meson.build
-#sed -i 's|shared_library|static_library|'   src/gbm/meson.build
-#sed -i 's|shared_library|static_library|'   src/mapi/es2api/meson.build
-#sed -i 's|shared_library|static_library|'   src/intel/vulkan/meson.build
-#sed -i 's|shared_library|static_library|'   src/mesa/drivers/dri/meson.build
-#sed -i 's|shared_library|static_library|'   src/mapi/shared-glapi/meson.build
-#sed -i 's|shared_library|static_library|'   src/gallium/drivers/i915/meson.build
-#sed -i 's|shared_library|static_library|'   src/gallium/targets/dri/meson.build
-#
-## Adjust dumb default generated lib suffixes
-#sed -i "s|'so'|'a'|"                        src/mesa/drivers/dri/meson.build
-#sed -i 's|dri.so|dri.a|g'                   src/mesa/drivers/dri/meson.build
-#sed -i "s|'so'|'a'|"                        src/gallium/targets/dri/meson.build
-#sed -i 's|dri.so|dri.a|g'                   src/gallium/targets/dri/meson.build
-
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
-
-# The install hangs...
-#patch -p1 < install-change.py
 
 # Install python-mako which is solely needed for mesa
 # and thus contained in this build.
@@ -74,7 +43,6 @@ meson \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --localstatedir=/var \
-    -Ddefault_library=static \
     -Dbuildtype=release \
     -Dopengl=true \
     -Degl=enabled \
@@ -84,11 +52,10 @@ meson \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
+    -Dgallium-xa=disabled \
     -Dglx=disabled \
     -Dzstd=disabled \
     -Dgles1=disabled \
-    -Dgallium-xa=disabled \
-    -Dshared-llvm=disabled \
     . build
 
 ninja -C build
