@@ -6,7 +6,7 @@ meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    -Ddefault_library=static \
+    -Ddefault_library=both \
     -Dglx=no \
     -Degl=yes \
     -Dx11=false \
