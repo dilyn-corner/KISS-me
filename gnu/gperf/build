@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//g')
-CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//g')
-
 ./configure \
     --prefix=/usr
 
