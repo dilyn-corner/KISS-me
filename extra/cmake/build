@@ -1,13 +1,5 @@
 #!/bin/sh -e
 
-CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-static//g')
-CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-static//g')
-
-CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//g')
-CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//g')
-
-echo $CFLAGS
-
 patch -p1 < cmake-no-execinfo.patch
 
 if kiss l cmake; then
@@ -20,7 +12,6 @@ if kiss l cmake; then
         -DCMAKE_USE_SYSTEM_EXPAT=True \
         -DCMAKE_USE_SYSTEM_ZLIB=True \
         -DCMAKE_USE_SYSTEM_BZIP2=True \
-        -DOPENSSL_USE_STATIC_LIBS=TRUE
 
     cmake --build   build
     cmake --install build
@@ -31,8 +22,7 @@ else
         --system-curl \
         --system-expat \
         --system-zlib \
-        --system-bzip2 -- \
-        -DOPENSSL_USE_STATIC_LIBS=TRUE
+        --system-bzip2
 
     make
     make DESTDIR="$1" install
