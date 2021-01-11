@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-# Because mesa is dynamic we can't have this
-CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//g')
-
 for patch in *.patch; do 
     patch -p1 < "$patch"
 done
@@ -14,4 +11,8 @@ make \
     WITH_LAYERSHELL=YES \
     WITH_SCREENCOPY=YES
 
-make PREFIX=/usr ETC_PREFIX=/ DESTDIR="$1" install
+make \
+    PREFIX=/usr \
+    ETC_PREFIX=/ \
+    DESTDIR="$1" \
+    install
