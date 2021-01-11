@@ -4,5 +4,5 @@
     --prefix=/usr \
     --disable-nls
 
-make LDFLAGS="$LDFLAGS --static"
+make
 make DESTDIR="$1" install
