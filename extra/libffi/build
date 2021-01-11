@@ -1,10 +1,11 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -fPIC"
+
 sed -i '/assembler-with-cpp/s%\$<%$(top_srcdir)/libffi.map.in%' Makefile.in
 
 ./configure \
-    --prefix=/usr \
-    --disable-shared
+    --prefix=/usr
 
 make
 make DESTDIR="$1" install
