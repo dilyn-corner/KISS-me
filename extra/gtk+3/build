@@ -2,25 +2,10 @@
 
 export DESTDIR="$1"
 
-# mesa is shared
-CFLAGS=$(printf %s "$CFLAGS" | sed 's/-static//g')
-
-sed -i "s/gobject-2.0', /gobject-2.0', static: true, /" meson.build
-sed -i "s/pixbuf-2.0', v/pixbuf-2.0', static: true, v/" meson.build
-sed -i "s/freetype2', v/freetype2', static: true, v/"   meson.build
-sed -i "s/harfbuzz', v/harfbuzz', static: true, v/"     meson.build
-sed -i "s/unix-2.0', v/unix-2.0', static: true, v/"     meson.build
-sed -i "s/fribidi', v/fribidi', static: true, v/"       meson.build
-sed -i "s/glib-2.0', /glib-2.0', static: true, /"       meson.build
-sed -i "s/cairo', v/cairo', static: true, v/"           meson.build
-sed -i "s/epoxy', v/epoxy', static: true, v/"           meson.build
-sed -i "s/pango', v/pango', static: true, v/"           meson.build
-sed -i "s/atk', v/atk', static: true, v/"               meson.build
-
 meson \
     --prefix=/usr \
     -Dbuildtype=release \
-    -Ddefault_library=static \
+    -Ddefault_library=shared \
     -Dx11_backend=false \
     -Dwayland_backend=true \
     -Dxinerama=no \
@@ -29,7 +14,7 @@ meson \
     -Ddemos=false \
     -Dexamples=false \
     -Dtests=false \
-    -Dbuiltin_immodules=yes \
+    -Dbuiltin_immodules=no \
     . build
 
 ninja -C build
