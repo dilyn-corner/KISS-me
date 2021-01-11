@@ -9,7 +9,7 @@ meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    -Ddefault_library=static \
+    -Ddefault_library=both \
     -Ddocs=false \
     -Dintrospection=false \
     . build
