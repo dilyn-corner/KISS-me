@@ -8,8 +8,13 @@ ________________________________________________________________________________
 
 
 The master branch is for: 
-1) A (mostly) static system
-2) A self-maintained 'fork' of [wyverkiss](https://github.com/wyvertux/wyverkiss) 
+1) A self-maintained 'fork' of [wyverkiss](https://github.com/wyvertux/wyverkiss) 
+2) NonGNU experimentation
+
+The wyverkiss-static branch is for:
+1) A (mostly) completely static system
+2) Experimenting with minimalism
+3) NonGNU experimentation
 
 Other branches are for:
 1) Staging things prior to submitting them to 
@@ -30,13 +35,13 @@ to maintain this system basically indefinitely.
 
 The master branch is very finicky and I would not recommend using it for a usual
 system; use it as a reference for building packages. As an example, many build
-scripts have been modified to make use of `meson` or `cmake` when available, as
-well as to default to statically linking libs. Currently, the only things linked
-to on my system are `libc` and `gles`, `gbm`, and `glapi`.
+scripts have been modified to make use of `meson` or `cmake` when available,
+leaving perhaps a large amount of overhead in the build system. Not to mention
+the fact that it is intended for wyverkiss.
 
 Other branches are used by me for things like my
 [KISS-kde](https://github.com/dilyn-corner/KISS_kde) partition. These branches
-are more suitable for everyday use.
+are more suitable for everyday KISS use.
 
 ## Thoughts
 
@@ -47,60 +52,6 @@ I have switched from KISS-proper to
 Additionally, Due to recent 
 [issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
 I have decided to commit to trying out `wayland`.
-
-Finally, inspired by [KISS-static](https://github.com/dilyn-corner/KISS-static),
-I have decided to try for as much of a static system as possible. So far, the
-results have been... Fine. The project has thus far been mostly successful aside
-from `mesa`. As far as I can gather, here is the blocker on this front:
-
-`shared-glapi` will be built if at least two of GL, GLES, and EGL are built.
-Because Wayland(?) requires EGL, and EGL requires OpenGL, `mesa` will *always*
-build this. Now, you could opt for having OpenGL provided by `libglvnd`, but
-`libglvnd` will likewise always provide its own shared-loader. You can peak at
-my `mesa` build script for my wonky hack (basically just a bunch of `seds`), but
-it will essentially result in being unable to launch a graphical application.
-AFAIK, `dlopen()` is used to initialize the graphics drivers, and `musl` uses a
-`dlopen()` stub for statically linked objects. This means that it won't work
-properly without some *proper* hacking on `mesa`. 
-
-You could maybe technically get away with just using `gbm` from `mesa` with no
-`gl` at all, but I'm not sure how far that would go. Actually, I might test that
-soon... Probably  nothing will work, especially `firefox`. However, I'm already
-at an impass with that (I need to get `rust` working; a static `libc++` is
-posing issues - presumably all will be well if I just temporarily install a
-shared `libc++`). 
-
-Other sticking points:
-
-`CFLAGS=-static` guarantees you will link against static libraries if available
-(usually). It WILL NOT guarantee that you (1) build a static binary, (2) don't
-create static libraries.
-
-Many `meson` build systems will default to using `shared_library()` instead of the
-*upstream recommended* `library()` so that it can be toggled via
-`-Ddefault_library`. `sed` solves this problem, up until a new `meson` version
-is dropped that makes adding `version:` entries to static libraries a failure
-instead of a warning. It will be soon. 
-
-I have no idea if there's a technically canonical way of making sure `meson`
-looks for static libraries; in the meanwhile, appending `static: true` to
-relevant `dependency()` lines in the `meson.build` files ensures that `meson`
-finds the proper libraries. Otherwise, it might attempt to look for `foo.so` and
-complain, or it won't add `-lbar` to the linker flags... and complain.
-
-`cairo` was weird because I had to specify EGL_NO_X11 manually. I feel like it
-should be able to identify this itself...
-
-`llvm` is a strange one. If you want to install `libc++abi`, the bundled
-`merge-archives.py` script won't actually be able to merge the abi symbols into
-`libc++`. However, if you `-DLIBCXXABI_INSTALL_LIBRARY=OFF`, the script works
-just fine. Ultimately, there's no good reason to install `libc++abi` anyways;
-anything that cares about these symbols will be using `-lc++` and not
-`-lc++abi`!  If you need `libc++abi` for some reason, just build it separately.
-It takes five seconds.
-
-Ultimately, if things aren't building statically and you want them to, assume
-`libtool` is doing some tomfoolery. `LDFLAGS=--static` solves most problems.
 
 If you're using wyverkiss or some other `gcc`-less KISS implementation and want
 a working `qt5`, revert `9ad56f3587e572ed87a12a3a9b6641fd9812153c` to get my
