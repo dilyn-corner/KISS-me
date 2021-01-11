@@ -2,9 +2,8 @@
 
 ./configure \
     --prefix=/usr \
-    --disable-shared \
     --without-tests \
     --without-examples
 
-make LDFLAGS="$LDFLAGS --static"
+make
 make DESTDIR="$1" install
