@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+gmake 
+
+install -Dm755 bin/gh "$1/usr/bin/gh"
+install -Dm644 LICENSE "$1/usr/share/licenses/github-cli"
