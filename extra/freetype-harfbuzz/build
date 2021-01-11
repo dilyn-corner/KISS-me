@@ -4,17 +4,14 @@ build_freetype() (
 
     cd freetype
 
-    export DESTDIR="$1"
+    CFLAGS="$CFLAGS -DDEFAULT_TT_INTERPRETER_VERSION=TT_INTERPRETER_VERSION_40" \
+    ./configure \
+        --prefix=/usr \
+        --enable-freetype-config \
+        --with-harfbuzz="$2"
 
-    cmake -B build \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=lib \
-        -DFT_WITH_PNG=ON \
-        -DFT_WITH_HARFBUZZ="$2" \
-        -Wno-dev -G Ninja
-    
-    ninja -C build
-    ninja -C build install
+    gmake
+    gmake DESTDIR="$1" install
 )
 
 build_harfbuzz() (
@@ -28,14 +25,10 @@ build_harfbuzz() (
 
     cd harfbuzz
 
-    patch -p1 < ../static.patch
-
-        #-Ddefault_library=static \
     meson \
         --prefix=/usr \
         -Dpkg_config_path="$1/usr/lib/pkgconfig" \
         -Dbuildtype=release \
-        -Ddefault_library=static \
         -Dfreetype=enabled \
         -Dcairo=disabled \
         -Dglib=disabled \
