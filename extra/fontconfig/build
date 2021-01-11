@@ -2,16 +2,14 @@
 
 export DESTDIR="$1"
 
-for patch in *.patch; do 
-    patch -p1 < "$patch"
-done
+patch -p1 < no-scripts.patch
 
 meson \
     --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
     -Dbuildtype=release \
-    -Ddefault_library=static \
+    -Ddefault_library=both \
     -Ddoc=disabled \
     -Dnls=disabled \
     -Dtests=disabled \
@@ -20,9 +18,6 @@ meson \
     -Ddoc-txt=disabled \
     -Ddoc-html=disabled \
     . build
-
-# ...Broken?
-rm install-cache.py
 
 ninja -C build
 ninja -C build install
