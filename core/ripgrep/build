@@ -1,0 +1,43 @@
+#!/bin/sh -e
+
+# jemalloc will fail to build when `make` isn't gmake, but there's no
+# environment variable we can override smh
+
+mkdir -p bin
+ln -s /usr/bin/gmake bin/make
+export PATH="$PWD/bin:$PATH"
+
+export CARGO_HOME="$PWD"
+
+(
+    cd vendor
+
+    for crate in *.crate; do
+        tar xf "$crate"
+
+        # Strip the filename form the sha256sum output
+        sha256=$(sha256sum "$crate")
+        sha256=${sha256%% *}
+
+        printf '{"package":"%s","files":{}}\n' "$sha256" \
+            > "${crate%.crate}/.cargo-checksum.json"
+        done
+)
+
+mkdir -p .cargo
+
+cat > .cargo/config << EOF
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+EOF
+
+cargo build \
+    --frozen \
+    --release
+
+install -Dm755 target/release/rg "$1/usr/bin/rg"
+ln -s rg "$1/usr/bin/grep"
+ln -s rg "$1/usr/bin/egrep"
