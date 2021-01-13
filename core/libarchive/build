@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --disable-cpio \
+    --disable-bsdcat \
+    --without-xml2 \
+    --without-expat \
+    --without-nettle \
+    --without-openssl
+
+make
+make DESTDIR="$1" install
+
+ln -s bsdtar  "$1/usr/bin/tar"
