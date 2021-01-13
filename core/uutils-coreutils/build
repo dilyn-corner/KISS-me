@@ -38,12 +38,17 @@ cargo build \
 
 install -Dm755 target/release/coreutils "$1/usr/bin/coreutils"
 
-# We'll go ahead and add our symlinks because we created a monolithic binary.
+# We'll go ahead and add our symlinks because we created a monolithic binary
 while read util; do
     ln -s coreutils "$1/usr/bin/$util"
 done < feat-list
 
 # These functions were replaced by hashsum, but we should symlink just in case
 for bin in md5 sha1 sha224 sha256 sha384 sha512; do
-    ln -sv coreutils "$1/usr/bin/${bin}sum"
+    ln -s coreutils "$1/usr/bin/${bin}sum"
 done
+
+# Unlink ls because -t is broken. Use an alias for everything else
+unlink "$1/usr/bin/ls"
+# tr is also broken, somehow??
+unlink "$1/usr/bin/tr"
