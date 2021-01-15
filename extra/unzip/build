@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+make -f unix/Makefile \
+    prefix=/usr generic
+
+make -f unix/Makefile \
+    MANDIR="$1/usr/share/man/man1" \
+    prefix="$1/usr" install
