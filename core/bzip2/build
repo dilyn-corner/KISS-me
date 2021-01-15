@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-make CC="${CC:-cc} $CFLAGS -fPIC $LDFLAGS" -f Makefile-libbbz2_so
+make CC="${CC:-cc} $CFLAGS -fPIC $LDFLAGS" -f Makefile-libbz2_so
 make CC="${CC:-cc} $CFLAGS -fPIC $LDFLAGS"
 
 for bin in bzip2 bzdiff bzgrep bzip2recover bzmore; do
