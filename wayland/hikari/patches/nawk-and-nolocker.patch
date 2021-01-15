@@ -1,5 +1,5 @@
---- a/Makefile
-+++ b/Makefile
+--- a/Makefile	2021-01-13 21:45:15.163317878 -0500
++++ b/Makefile	2021-01-13 21:49:09.339593978 -0500
 @@ -177,7 +177,7 @@
  PROTOCOL_HEADERS += wlr-layer-shell-unstable-v1-protocol.h
  .endif
@@ -19,59 +19,65 @@
  clean-doc:
  	@test -e _darcs && echo "cleaning manpage" ||:
  	@test -e _darcs && rm share/man/man1/hikari.1 2> /dev/null ||:
-@@ -206,7 +203,6 @@
- 	@rm ${OBJS} 2> /dev/null ||:
- 	@echo "cleaning executables"
- 	@rm hikari 2> /dev/null ||:
--	@rm hikari-unlocker 2> /dev/null ||:
+@@ -214,34 +211,7 @@
  
- share/man/man1/hikari.1:
- 	pandoc -M title:"HIKARI(1) ${VERSION} | hikari - Wayland Compositor" -s \
-@@ -219,7 +215,6 @@
- 	@tar -s "#^#hikari-${VERSION}/#" -czf hikari-${VERSION}.tar.gz \
- 		version.h \
- 		main.c \
+ doc: share/man/man1/hikari.1
+ 
+-hikari-${VERSION}.tar.gz: version.h share/man/man1/hikari.1
+-	@darcs revert
+-	@tar -s "#^#hikari-${VERSION}/#" -czf hikari-${VERSION}.tar.gz \
+-		version.h \
+-		main.c \
 -		hikari_unlocker.c \
- 		include/hikari/*.h \
- 		src/*.c \
- 		protocol/*.xml \
-@@ -232,8 +227,7 @@
- 		share/man/man1/hikari.1 \
- 		share/backgrounds/hikari/hikari_wallpaper.png \
- 		share/wayland-sessions/hikari.desktop \
+-		include/hikari/*.h \
+-		src/*.c \
+-		protocol/*.xml \
+-		Makefile \
+-		LICENSE \
+-		README.md \
+-		CoC.md \
+-		CHANGELOG.md \
+-		share/man/man1/hikari.md \
+-		share/man/man1/hikari.1 \
+-		share/backgrounds/hikari/hikari_wallpaper.png \
+-		share/wayland-sessions/hikari.desktop \
 -		etc/hikari/hikari.conf \
 -		etc/pam.d/hikari-unlocker.*
-+		etc/hikari/hikari.conf
- 
- distclean: clean-doc
- 	@test -e _darcs && echo "cleaning version.h" ||:
-@@ -241,29 +235,24 @@
- 
- dist: distclean hikari-${VERSION}.tar.gz
- 
+-
+-distclean: clean-doc
+-	@test -e _darcs && echo "cleaning version.h" ||:
+-	@test -e _darcs && rm version.h ||:
+-
+-dist: distclean hikari-${VERSION}.tar.gz
+-
 -install: hikari hikari-unlocker share/man/man1/hikari.1
 +install: hikari share/man/man1/hikari.1
  	mkdir -p ${DESTDIR}/${PREFIX}/bin
  	mkdir -p ${DESTDIR}/${PREFIX}/share/man/man1
  	mkdir -p ${DESTDIR}/${PREFIX}/share/backgrounds/hikari
+@@ -248,6 +218,5 @@
  	mkdir -p ${DESTDIR}/${PREFIX}/share/wayland-sessions
  	mkdir -p ${DESTDIR}/${ETC_PREFIX}/etc/hikari
 -	mkdir -p ${DESTDIR}/${ETC_PREFIX}/etc/pam.d
  	sed "s,PREFIX,${PREFIX}," etc/hikari/hikari.conf > ${DESTDIR}/${ETC_PREFIX}/etc/hikari/hikari.conf
  	chmod 644 ${DESTDIR}/${ETC_PREFIX}/etc/hikari/hikari.conf
  	install -m ${PERMS} hikari ${DESTDIR}/${PREFIX}/bin
+@@ -254,4 +223,3 @@
 -	install -m 4555 hikari-unlocker ${DESTDIR}/${PREFIX}/bin
  	install -m 644 share/man/man1/hikari.1 ${DESTDIR}/${PREFIX}/share/man/man1
  	install -m 644 share/backgrounds/hikari/hikari_wallpaper.png ${DESTDIR}/${PREFIX}/share/backgrounds/hikari/hikari_wallpaper.png
  	install -m 644 share/wayland-sessions/hikari.desktop ${DESTDIR}/${PREFIX}/share/wayland-sessions/hikari.desktop
+@@ -258,4 +226,3 @@
 -	install -m 644 etc/pam.d/hikari-unlocker.${OS} ${DESTDIR}/${ETC_PREFIX}/etc/pam.d/hikari-unlocker
  
  uninstall:
  	-rm ${DESTDIR}/${PREFIX}/bin/hikari
+@@ -262,4 +229,3 @@
 -	-rm ${DESTDIR}/${PREFIX}/bin/hikari-unlocker
  	-rm ${DESTDIR}/${PREFIX}/share/man/man1/hikari.1
  	-rm ${DESTDIR}/${PREFIX}/share/backgrounds/hikari/hikari_wallpaper.png
  	-rm ${DESTDIR}/${PREFIX}/share/wayland-sessions/hikari.desktop
+@@ -266,4 +232,3 @@
 -	-rm ${DESTDIR}/${ETC_PREFIX}/etc/pam.d/hikari-unlocker
  	-rm ${DESTDIR}/${ETC_PREFIX}/etc/hikari/hikari.conf
  	-rmdir ${DESTDIR}/${ETC_PREFIX}/etc/hikari
