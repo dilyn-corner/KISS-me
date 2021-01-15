@@ -39,7 +39,7 @@ CONFIG_DATE=y
 CONFIG_DF=y
 # CONFIG_DIRNAME is not set
 # CONFIG_DU is not set
-# CONFIG_ECHO is not set
+CONFIG_ECHO=y
 # CONFIG_ENV is not set
 # CONFIG_EXPAND is not set
 # CONFIG_FALSE is not set
