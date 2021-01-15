@@ -6,8 +6,7 @@
     --prefix=/usr \
     --enable-nasm \
     --enable-expopt=full \
-    --disable-gtktest \
-    --disable-shared
+    --disable-gtktest
 
-make LDFLAGS="$LDFLAGS --static"
+make
 make DESTDIR="$1" install
