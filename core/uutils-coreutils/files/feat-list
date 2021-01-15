@@ -13,7 +13,6 @@ cut
 dircolors
 dirname
 du
-echo
 env
 expand
 factor
