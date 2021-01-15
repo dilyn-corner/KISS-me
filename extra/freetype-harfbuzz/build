@@ -28,6 +28,7 @@ build_harfbuzz() (
     meson \
         --prefix=/usr \
         -Dpkg_config_path="$1/usr/lib/pkgconfig" \
+        -Ddefault_library=both \
         -Dbuildtype=release \
         -Dfreetype=enabled \
         -Dcairo=disabled \
