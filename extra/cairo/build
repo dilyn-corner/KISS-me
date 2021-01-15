@@ -1,26 +1,17 @@
 #!/bin/sh -e
 
-# Disable building 'cairo-sphinx'.
-sed -i "s/BUILD_SPHINX_TRUE=/BUILD_SPHINX_TRUE='#'/"   configure
-sed -i "s/BUILD_SPHINX_FALSE='#'/BUILD_SPHINX_FALSE=/" configure
-sed -i 's/test perf//g' Makefile.in
+export DESTDIR="$1"
 
-export CFLAGS="$CFLAGS -DEGL_NO_X11"
-
-# Hide a VERY obnoxious warning
-CFLAGS=-Wno-enum-conversion ./configure \
+meson \
     --prefix=/usr \
-    --enable-tee \
-    --enable-glesv2 \
-    --disable-gl \
-    --disable-egl \
-    --disable-glx \
-    --disable-xlib \
-    --disable-trace \
-    --disable-xcb-shm \
-    --disable-valgrind \
-    --disable-gtk-doc-html \
-    --disable-xlib-xrender
+    -Dbuildtype=release \
+    -Ddefault_library=both \
+    -Dps=enabled \
+    -Dtee=enabled \
+    -Dtests=disabled \
+    -Dtrace=disabled \
+    -Dgl-backend=glesv2 \
+    . build
 
-make
-make DESTDIR="$1" install
+ninja -C build
+ninja -C build install
