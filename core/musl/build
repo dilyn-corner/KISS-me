@@ -21,3 +21,6 @@ install -Dm 755 tree.h  "$1/usr/include/sys/tree.h"
 # Install getconf.
 cc getconf.c -o "$1/usr/bin/getconf"
 cc getent.c  -o "$1/usr/bin/getent"
+
+# Install the license
+install -Dm755 COPYRIGHT "$1/usr/share/LICENSES/musl.license"
