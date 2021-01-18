@@ -12,5 +12,8 @@ sed -i '/\$(edit)\|\.\(service\|rules\)/d' alsaucm/Makefile.in
     --disable-xmlto \
     --disable-nls
 
-make
+make LDFLAGS="$LDFLAGS -lcurses"
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/alsa-utils.license"
