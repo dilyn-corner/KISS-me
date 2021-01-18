@@ -67,6 +67,153 @@ If you're using wyverkiss or some other `gcc`-less KISS implementation and want
 a working `qt5`, revert `9ad56f3587e572ed87a12a3a9b6641fd9812153c` to get my
 5.15.2 build.
 
+## For the curious
+
+Here is a roughly current list of all the licenses each package in this
+repository uses. Dropping GPL *entirely* doesn't seem super possible, but we can
+get there for the most part! The real question is how one feels about
+GPL-compatible (what I would think of as semi-GPL) licenses (PSF, MPL).
+
+Finally, the list doesn't go into the nuances of several licenses. Big examples
+are things like `mesa` or `llvm` - projects which inherit extra licenses because
+of code blobs they borrow. In general, I am semi-fine with this (if not wholly
+forced to accept it).
+
+-CORE
+  |- `byacc` --------------> Public Domain
+  |- `bzip2` --------------> bzip2
+  |- `curl` ---------------> MIT
+  |- `flex` ---------------> BSD 2-Clause
+  |- `git` ----------------> LGPLv2.1
+  |- `hummingbird` --------> MIT
+  |- `kiss` ---------------> MIT
+  |- `libarchive` ---------> BSD {2,3}-Clause, Public Domain
+  |- `libressl` -----------> BSD/Apache-1.0/ISC
+  |- `linux` --------------> GPLv2
+  |- `llvm` ---------------> Apache-2.0
+  |- `lz4` ----------------> BSD 2-Clause
+  |- `m4` -----------------> BSD/ISC
+  |- `make` ---------------> BSD 2-Clause
+  |- `musl` ---------------> MIT
+  |- `nawk` ---------------> MIT
+  |- `openntpd` -----------> ISC
+  |- `pigz` ---------------> zlib
+  |- `ripgrep` ------------> UNLICENSE/MIT
+  |- `rust` ---------------> APACHE/MIT
+  |- `sbase` --------------> MIT
+  |- `sysmgr` -------------> GPLv3
+  |- `toybox` -------------> 0BSD
+  |- `ubase` --------------> MIT
+  |- `uutils-coreutils` ---> MIT
+  |- `xz` -----------------> LGPLv2.1
+  |- `zlib` ---------------> zlib
+-EXTRA
+  |- `R-blis` -------------> GPLv2
+  |- `acpid` --------------> GPLv2
+  |- `alsa-lib` -----------> GPLv2.1
+  |- `alsa-utils` ---------> GPLv2
+  |- `atk` ----------------> GPLv2
+  |- `blis` ---------------> BSD 3-Clause
+  |- `botan` --------------> Simplified BSD
+  |- `brightnessctl` ------> MIT
+  |- `broadcom-wl` --------> shrug
+  |- `cairo` --------------> MPLv1.1
+  |- `cbindgen` -----------> MPLv2
+  |- `ccache` -------------> GPLv3
+  |- `cmake` --------------> BSD 3-Clause
+  |- `cozette-font` -------> MIT
+  |- `dash` ---------------> BSD
+  |- `dhcpcd` -------------> BSD
+  |- `dosfstools` ---------> GPLv3
+  |- `e2fsprogs` ----------> GPLv2
+  |- `efibootmgr` ---------> GPLv2
+  |- `efivar` -------------> GPLv2.1
+  |- `expat` --------------> MIT
+  |- `ffmpeg` -------------> GPLv2.1
+  |- `firefox` ------------> MPLv2/Assorted
+  |- `fontconfig` ---------> MIT
+  |- `freetype-harfbuzz` --> BSD+advertising clause
+  |- `fribidi` ------------> GPLv2.1
+  |- `gdk-pixbuf` ---------> GPLv2.1
+  |- `github-cli` ---------> MIT
+  |- `glib` ---------------> GPLv2.1
+  |- `gnupg1` -------------> GPLv3
+  |- `go` -----------------> BSD 3-Clause
+  |- `gotop` --------------> MIT
+  |- `gtk+3` --------------> GPLv2
+  |- `hicolor-icon-theme` -> GPLv2
+  |- `htop` ---------------> GPLv2
+  |- `iosevka-nerd-fonts` -> MIT
+  |- `lame` ---------------> LGPLv2
+  |- `libass` -------------> ISC
+  |- `libcap-ng` ----------> GPLv2
+  |- `libdrm` -------------> MIT
+  |- `libelf` -------------> GPLv3
+  |- `libepoxy` -----------> MIT
+  |- `libevdev` -----------> MIT
+  |- `libffi` -------------> MIT
+  |- `libglvnd` -----------> BSD-like
+  |- `libinput` -----------> X11
+  |- `libjpeg-turbo` ------> IJG/BSD 3-Clause/zlib
+  |- `libogg` -------------> BSD
+  |- `libpciaccess` -------> X11
+  |- `libpng` -------------> libpngv2
+  |- `libucl` -------------> BSD 2-Clause
+  |- `libudev-zero` -------> ISC
+  |- `libvorbis` ----------> BSD 3-Clause
+  |- `libvpx` -------------> BSD 3-Clause
+  |- `libwebp` ------------> BSD 3-Clause
+  |- `mbpfan` -------------> GPLv3
+  |- `mesa` ---------------> MIT
+  |- `meson` --------------> Apache-2.0
+  |- `mpv` ----------------> GPLv2 .GPL
+  |- `mtdev` --------------> MIT
+  |- `nasm` ---------------> BSD 2-Clause
+  |- `ncurses` ------------> MIT
+  |- `netbsd-curses` ------> BSD 2-Clause
+  |- `nodejs` -------------> MIT
+  |- `nss` ----------------> MPLv2
+  |- `oksh` ---------------> Public Domain
+  |- `opus` ---------------> BSD 3-Clause
+  |- `paleta` -------------> MIT
+  |- `pango` --------------> LGPLv2.1
+  |- `pash` ---------------> MIT
+  |- `perl` ---------------> GPLv1
+  |- `pfetch` -------------> MIT
+  |- `pixman` -------------> MIT
+  |- `pkgconf` ------------> ISC
+  |- `procps-ng` ----------> GPLv2
+  |- `python` -------------> PSFv2
+  |- `rnp` ----------------> BSD 2-Clause
+  |- `samurai` ------------> Apache-2.0
+  |- `sls` ----------------> GPLv3
+  |- `sqlite` -------------> Public Domain
+  |- `tzdata` -------------> Public Domain
+  |- `uksmd` --------------> GPLv3
+  |- `unzip` --------------> Info-ZIP
+  |- `util-linux` ---------> GPLv2
+  |- `vim` ----------------> Vim
+  |- `wpa_supplicant` -----> BSD
+  |- `x264` ---------------> GPLv2
+  |- `x265` ---------------> GPLv2
+  |- `xvidcore` -----------> GPLv2
+  |- `yaml` ---------------> MIT
+  |- `zip` ----------------> Info-ZIP
+  |- `zstd` ---------------> BSD 3-Clause
+-WAYLAND
+  |- `bemenu` -------------> {L}GPLv3
+  |- `foot` ---------------> MIT
+  |- `grim` ---------------> MIT
+  |- `hikari` -------------> BSD 2-Clause
+  |- `libxkcommon` --------> MIT
+  |- `wayland` ------------> MIT
+  |- `wayland-protocols` --> MIT
+  |- `wbg` ----------------> MIT
+  |- `wl-clipboard` -------> GPLv3
+  |- `wlroots` ------------> MIT
+  |- `xkeyboard-config` ---> MIT
+  |- `yambar` -------------> MIT
+
 --- 
 
 

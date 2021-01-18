@@ -50,3 +50,7 @@ export HARFBUZZ_CFLAGS="-I$PWD/harfbuzz/src"
 export HARFBUZZ_LIBS="-L$PWD/harfbuzz/build/src -lharfbuzz"
 
 build_freetype "$1" ON
+
+# Install the license
+install -Dm755 harfbuzz/COPYING          "$1/usr/share/LICENSES/harfbuzz.license"
+install -Dm755 freetype/docs/LICENSE.TXT "$1/usr/share/LICENSES/freetype.license"

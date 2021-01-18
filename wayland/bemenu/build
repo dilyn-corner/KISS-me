@@ -6,3 +6,7 @@ export CXXFLAGS="$CFLAGS"
 gmake clients wayland PREFIX=/usr
 
 gmake PREFIX=/usr DESTDIR="$1" install
+
+# Install the license
+install -Dm755 LICENSE-LIB    "$1/usr/share/LICENSES/bemenu-lgplv3.license"
+install -Dm755 LICENSE-CLIENT "$1/usr/share/LICENSES/bemenu-gplv3.license"

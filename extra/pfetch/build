@@ -1,3 +1,6 @@
 #!/bin/sh -e
 
 install -Dm 755 pfetch "$1/usr/bin/pfetch"
+
+# Install the license
+install -Dm755 LICENSE.md "$1/usr/share/LICENSES/pfetch.license"

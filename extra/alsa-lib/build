@@ -10,3 +10,6 @@ patch -p1 < fix-dlo.patch
 
 make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/alsa-lib.license"

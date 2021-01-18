@@ -14,3 +14,6 @@ cd wpa_supplicant
 
 gmake LIBDIR=/usr/lib BINDIR=/usr/bin DRV_LIBS="$CFLAGS" CC="${CC:-cc}" LDFLAGS="$LDFLAGS -static"
 gmake LIBDIR=/usr/lib BINDIR=/usr/bin DESTDIR="$1" install
+
+# Install the license
+install -Dm755 ../COPYING "$1/usr/share/LICENSES/wpa_supplicant.license"

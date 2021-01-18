@@ -29,3 +29,6 @@ gmake -C libelf DESTDIR="$1" install
 
 mkdir -p "$1/usr/lib/pkgconfig"
 cp -f config/libelf.pc "$1/usr/lib/pkgconfig/libelf.pc"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/libelf.license"

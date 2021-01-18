@@ -17,3 +17,6 @@ ninja -C build install
     #-DFPROFILE_USE=ON \
     #-DSTATIC_LINK_CRT=ON \
     #-DFPROFILE_GENERATE=ON \
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/x265.license"

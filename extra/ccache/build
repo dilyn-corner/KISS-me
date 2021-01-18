@@ -27,3 +27,7 @@ for link in \
 do
     ln -sf /usr/bin/ccache "$1/usr/lib/ccache/bin/$link"
 done
+
+# Install the license
+install -Dm755 GPL-3.0.txt  "$1/usr/share/LICENSES/ccache-gplv3.license"
+install -Dm755 LICENSE.adoc "$1/usr/share/LICENSES/ccache.license"

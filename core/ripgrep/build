@@ -39,5 +39,7 @@ cargo build \
     --release
 
 install -Dm755 target/release/rg "$1/usr/bin/rg"
-ln -s rg "$1/usr/bin/grep"
-ln -s rg "$1/usr/bin/egrep"
+
+# Install the license
+install -Dm755 UNLICENSE   "$1/usr/share/LICENSES/ripgrep.unlicense"
+install -Dm755 LICENSE-MIT "$1/usr/share/LICENSES/ripgrep.license"

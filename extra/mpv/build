@@ -10,3 +10,6 @@ python waf configure \
 
 python waf build
 python waf install --destdir="$1"
+
+# Install the license
+install -Dm755 LICENSE.GPL "$1/usr/share/LICENSES/mpv.license"

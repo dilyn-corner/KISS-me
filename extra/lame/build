@@ -4,9 +4,13 @@
     --build=x86_64-linux-musl \
     --host=x86_64-linux-musl \
     --prefix=/usr \
+    --disable-shared \
+    --disable-gtktest \
     --enable-nasm \
-    --enable-expopt=full \
-    --disable-gtktest
+    --enable-expopt=full
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/lame.license"

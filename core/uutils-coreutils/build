@@ -52,3 +52,6 @@ done
 unlink "$1/usr/bin/ls"
 # tr is also broken, somehow??
 unlink "$1/usr/bin/tr"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/uutils-coreutils.license"

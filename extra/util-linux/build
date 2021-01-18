@@ -25,3 +25,6 @@ make DESTDIR="$1" install
 # Fix broken --sbindir.
 mv -f "$1/usr/sbin/"* "$1/usr/bin"
 rmdir "$1/usr/sbin"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/util-linux.license"

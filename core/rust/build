@@ -17,8 +17,6 @@
 patch -p1 < llvm-clang.patch
 patch -p1 < libressl.patch
 
-sed -i 's/crt_static_default = true/crt_static_default = false/' compiler/rustc_target/src/spec/linux_musl_base.rs
-
 # We modified vendored files here.
 sed -i 's/\("files":{\)[^}]*/\1/' vendor/openssl-sys/.cargo-checksum.json
 
@@ -37,6 +35,7 @@ vendor          = true
 sanitizers      = false
 profiler        = false
 full-bootstrap  = false
+cargo-native-static = true
 
 [install]
 prefix = "/usr"
@@ -49,11 +48,14 @@ debuginfo-level = 0
 backtrace       = false
 jemalloc        = false
 codegen-tests   = false
+llvm-tools      = true
 llvm-libunwind  = "system"
 
 [target.x86_64-unknown-linux-musl]
 llvm-config = "/usr/bin/llvm-config"
-crt-static  = false
+crt-static  = true
+musl-root   = /usr
+musl-libdir = /usr/lib
 EOF
 
 python3 ./x.py build -j "$(nproc)"
@@ -61,3 +63,7 @@ DESTDIR="$1" python3 ./x.py install
 
 rm -rf "$1/usr/lib/rustlib/src/"
 rm -f  "$1/usr/lib/rustlib/uninstall.sh"
+
+# Install the license
+install -Dm755 LICENSE-MIT    "$1/usr/share/LICENSES/rust-mit.license"
+install -Dm755 LICENSE-APACHE "$1/usr/share/LICENSES/rust-apache.license"

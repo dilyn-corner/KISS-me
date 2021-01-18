@@ -13,3 +13,6 @@ _cc="${CC:-$(readlink /usr/bin/cc)}"
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 license.txt "$1/usr/share/LICENSES/botan.license"

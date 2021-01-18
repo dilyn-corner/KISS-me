@@ -5,3 +5,6 @@ python setup.py install \
     --root="$1" \
     --optimize=1 \
     --skip-build
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/meson.license"

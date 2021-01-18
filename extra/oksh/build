@@ -9,3 +9,6 @@
 
 make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 LEGAL "$1/usr/share/LICENSES/oksh.license"
