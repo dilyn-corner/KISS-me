@@ -1,0 +1,18 @@
+--- a/meson.build	2020-12-21 09:58:25.000000000 -0500
++++ b/meson.build	2021-01-16 13:57:31.558093176 -0500
+@@ -185,15 +185,6 @@
+   version,
+   install: true)
+ 
+-tic = find_program('tic', native: true)
+-custom_target(
+-  'terminfo',
+-  output: 'f',
+-  input: 'foot.info',
+-  command: [tic, '-x', '-o', '@OUTDIR@', '-e', 'foot,foot-direct', '@INPUT@'],
+-  install: true,
+-  install_dir: join_paths(get_option('datadir'), 'terminfo'))
+-
+ install_data(
+   'LICENSE', 'README.md', 'CHANGELOG.md',
+   install_dir: join_paths(get_option('datadir'), 'doc', 'foot'))
