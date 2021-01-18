@@ -1,8 +1,12 @@
 #!/bin/sh -e
 
+# Do we really *need* terminfo?
+patch -p1 < netbsd-curses.patch
+
 export DESTDIR="$1"
 export CC=/usr/bin/cc
 
+# Build me statically baybee
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
 sed -i "s|-scanner',|-scanner', static: true, |"  meson.build
 sed -i "s|xkbcommon'|xkbcommon', static: true|"   meson.build
@@ -11,7 +15,6 @@ sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
 sed -i "s|-client'|-client', static: true|"       meson.build
 sed -i "s|threads'|threads', static: true|"       meson.build
 sed -i "s|cursor'|cursor', static: true, |"       meson.build
-
 sed -i "s|fontconfig'|fontconfig', static: true|" subprojects/fcft/meson.build
 sed -i "s|freetype2'|freetype2', static: true|"   subprojects/fcft/meson.build
 sed -i "s|pixman-1'|pixman-1', static: true|"     subprojects/fcft/meson.build
@@ -28,13 +31,14 @@ install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
 
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
-export CFLAGS="$CFLAGS -static -l:libffi.a                \
-                       -fno-plt                           \
+export CFLAGS="$CFLAGS -fno-plt                           \
                        -Wno-error                         \
-                       -Wno-ignored-optimization-argument \
+                       -static -l:libffi.a                \
+                       -Wno-profile-instr-unprofiled      \
                        -Wno-profile-instr-out-of-date     \
-                       -Wno-profile-instr-unrprofiled"
-
+                       -Wno-unused-command-line-argument  \
+                       -Wno-ignored-optimization-argument"
+                       
 meson \
     --prefix=/usr \
     -Dbuildtype=release \
@@ -97,3 +101,10 @@ meson configure -Db_pgo=use build
 
 ninja -C build
 ninja -C build install
+
+# Install terminfo
+install -Dm644 foot        "$1/usr/share/terminfo/f/foot"
+install -Dm644 foot-direct "$1/usr/share/terminfo/f/foot-direct"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/foot.license"
