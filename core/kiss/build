@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+patch -p1 < kiss-grep.patch
+
 mkdir -p "$1/usr/bin"
 
 # Install kiss utilities.
@@ -18,3 +20,6 @@ rm -f "$1/usr/share/doc/kiss/wiki/README.txt" \
       "$1/usr/share/doc/kiss/news.txt" \
       "$1/usr/share/doc/kiss/blog.txt" \
       "$1/usr/share/doc/kiss/screenshots.txt"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/kiss.license"
