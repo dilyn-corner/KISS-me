@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib \
+    --disable-nls
+
+make CFLAGS="$CFLAGS -static -Wl,--allow-multiple-definition" LDFLAGS="$LDFLAGS -static"
+make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/gnupg1.license"
