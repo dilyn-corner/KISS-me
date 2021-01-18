@@ -56,3 +56,6 @@ cargo build \
     --frozen
 
 install -Dm755 target/release/cbindgen "$1/usr/bin/cbindgen"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/cbindgen.license"

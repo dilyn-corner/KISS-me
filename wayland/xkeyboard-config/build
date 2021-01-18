@@ -14,3 +14,6 @@ sed -i 's/perl //;s/xml2lst\.pl/xml2lst/' rules/Makefile.in
 
 gmake
 gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/xkeyboard-config.license"

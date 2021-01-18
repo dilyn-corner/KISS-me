@@ -41,3 +41,6 @@ find "$1" -name \*.0 -type f -exec rm -f {} +
 
 # Fix permissions.
 find "$1/usr/lib" -type f -exec chmod 644 {} \;
+
+# Install the license
+install -Dm755 Copying "$1/usr/share/LICENSES/perl.license"

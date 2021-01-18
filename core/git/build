@@ -25,3 +25,7 @@ EOF
 
 gmake LIBS="$(curl-config --static-libs) libgit.a xdiff/lib.a -lz"
 gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING  "$1/usr/share/LICENSES/git.license"
+install -Dm755 LGPL-2.1 "$1/usr/share/LICENSES/git.lgpl-2.1.license"

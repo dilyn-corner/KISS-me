@@ -73,3 +73,6 @@ ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 echo "Installing kernel..."
 
 install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-nitrous.efi"
+# Install the license
+
+install -Dm755 LICENSE $1/usr/share/LICENSES/linux-nitrous.license

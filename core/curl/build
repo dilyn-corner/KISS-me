@@ -18,3 +18,6 @@
 
 make curl_LDFLAGS=-all-static
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/curl.license"

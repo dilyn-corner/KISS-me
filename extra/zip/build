@@ -9,3 +9,6 @@ make -B \
     prefix="$1/usr" \
     MANDIR="$1/usr/share/man/man1" \
     -f unix/Makefile install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/zip.license"

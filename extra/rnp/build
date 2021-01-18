@@ -13,3 +13,6 @@ cmake -B build \
 
 ninja -C build
 ninja -C build install
+
+# Install the license
+install -Dm755 LICENSE.md "$1/usr/share/LICENSES/rnp.license"

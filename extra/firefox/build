@@ -115,3 +115,6 @@ rm -f  "$1/usr/lib/firefox/browser/features/screenshots@mozilla.org.xpi"
 rm -f  "$1/usr/lib/firefox/browser/features/webcompat-reporter@mozilla.org.xpi"
 rm -f  "$1/usr/lib/firefox/browser/features/webcompat@mozilla.org.xpi"
 rm -f  "$1/usr/lib/firefox/browser/features/doh-rollout@mozilla.org.xpi"
+
+# Install the license
+install -Dm755 license.html "$1/usr/share/LICENSES/firefox.license"

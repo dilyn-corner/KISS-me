@@ -15,3 +15,6 @@ ninja -C build install
 
 # Sample config
 install -Dm755 examples/laptop.conf "$1/etc/yambar/config.yml"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/yambar.license"

@@ -2,3 +2,7 @@
 
 make
 make PREFIX=/usr DESTDIR="$1" install
+
+
+# Install the license
+install -Dm755 COPYING $1/usr/share/LICENSES/uksmd.license

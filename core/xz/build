@@ -6,3 +6,7 @@
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING.GPLv2    "$1/usr/share/LICENSES/xz-gplv2.license"
+install -Dm755 COPYING.LGPLv2.1 "$1/usr/share/LICENSES/xz-lgplv2.1.license"

@@ -68,3 +68,6 @@ find . -type d -a -name testdata |
     while read -r dir; do
         rm -rf "$dir"
     done
+
+# Install the license
+install -Dm755 "$GOROOT/LICENSE" "$1/usr/share/LICENSES/go.license"

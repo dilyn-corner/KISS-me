@@ -11,3 +11,6 @@ cmake -B zbuild \
 
 ninja -C zbuild
 ninja -C zbuild install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/zstd.license"

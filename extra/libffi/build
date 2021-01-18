@@ -11,3 +11,6 @@ make
 make DESTDIR="$1" install
 
 rm -rf "$1/usr/share/info"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/libffi.license"

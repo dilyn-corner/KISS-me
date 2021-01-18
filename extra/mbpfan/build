@@ -4,3 +4,6 @@ gmake LDFLAGS="$LDFLAGS -static"
 gmake DESTDIR="$1" install
 
 install -Dm755 mbpfan.run "$1/etc/sv/mbpfan/run"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/mbpfan.license"

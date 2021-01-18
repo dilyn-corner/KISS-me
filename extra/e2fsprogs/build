@@ -44,3 +44,6 @@ rm -rf \
     "$1/usr/lib/libblkid.a" \
     "$1/usr/include/blkid" \
     "$1/usr/include/uuid"
+
+# Install the license
+install -Dm755 NOTICE "$1/usr/share/LICENSES/e2fsprogs.license"

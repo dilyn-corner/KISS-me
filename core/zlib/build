@@ -9,3 +9,6 @@ export CFLAGS="$CFLAGS -fPIC"
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 README "$1/usr/share/LICENSES/zlib.license"

@@ -49,3 +49,6 @@ EOF
 install -Dm755 src/efivar-static "$1/usr/bin/efivar"
 install -Dm644 src/libefivar.a   "$1/usr/lib/libefivar.a"
 install -Dm644 src/libefiboot.a  "$1/usr/lib/libefiboot.a"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/efivar.license"

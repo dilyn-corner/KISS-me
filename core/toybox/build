@@ -5,3 +5,6 @@ LDFLAGS="$LDFLAGS --static" gmake
 gmake PREFIX="$1/usr/bin" install_flat
 
 chmod +s "$1/usr/bin/toybox"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/toybox.license"

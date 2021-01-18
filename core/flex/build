@@ -11,3 +11,6 @@ make
 make DESTDIR="$1" install
 
 ln -s flex "$1/usr/bin/lex"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/flex.license"

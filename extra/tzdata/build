@@ -11,3 +11,7 @@ set -- africa asia australasia europe northamerica southamerica
 ./zic -d "$pkg_dir/usr/share/zoneinfo/posix" "$@"
 ./zic -d "$pkg_dir/usr/share/zoneinfo/right" -L leapseconds "$@"
 ./zic -d "$pkg_dir/usr/share/zoneinfo" -p America/New_York
+
+
+# Install the license
+install -Dm755 COPYING $1/usr/share/LICENSES/tzdata.license

@@ -20,3 +20,6 @@ CC=cc CXX=c++ ./configure \
 
 gmake
 gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/libvpx.license"

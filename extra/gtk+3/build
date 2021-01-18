@@ -24,3 +24,6 @@ ninja -C build install
 # utility solely causing compiler errors for some
 # packages. It has no use at all.
 rm -f "$1/usr/bin/gtk-encode-symbolic-svg"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/gtk+3.license"

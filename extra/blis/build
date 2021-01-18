@@ -9,3 +9,6 @@ sed -i 's/perl -pe/sed -e/g' configure
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/blis.license"

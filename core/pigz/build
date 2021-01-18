@@ -13,3 +13,6 @@ ln -s pigz   "$1/usr/bin/gzip"
 ln -s pigz   "$1/usr/bin/zcat"
 ln -s unpigz "$1/usr/bin/gunzip"
 ln -s pigz.1 "$1/usr/share/man/man1/gzip.1"
+
+# Install the license
+install -Dm755 README "$1/usr/share/LICENSES/pigz.license"

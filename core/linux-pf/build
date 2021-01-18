@@ -64,3 +64,6 @@ mkdir -p "$1/usr/src"
 ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
 install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz-pf.efi"
+# Install the license
+
+install -Dm755 LICENSE $1/usr/share/LICENSES/linux-pf.license

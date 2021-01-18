@@ -5,3 +5,6 @@
 
 gmake
 gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 License "$1/usr/share/LICENSES/yaml.license"
