@@ -1,0 +1,28 @@
+diff --git a/makefile b/makefile
+index 9ceaaad..91107c8 100644
+--- a/makefile
++++ b/makefile
+@@ -31,12 +31,12 @@ CFLAGS = -O2
+ #CC = gcc -Wall -g -Wwrite-strings
+ #CC = gcc -O4 -Wall -pedantic -fno-strict-aliasing
+ #CC = gcc -fprofile-arcs -ftest-coverage # then gcov f1.c; cat f1.c.gcov
+-HOSTCC = gcc -g -Wall -pedantic -Wcast-qual
++HOSTCC = cc -g -Wall -pedantic -Wcast-qual
+ CC = $(HOSTCC)  # change this is cross-compiling.
+ 
+ # By fiat, to make our lives easier, yacc is now defined to be bison.
+ # If you want something else, you're on your own.
+-YACC = bison -d
++YACC = byacc
+ 
+ OFILES = b.o main.o parse.o proctab.o tran.o lib.o run.o lex.o
+ 
+@@ -55,7 +55,7 @@ a.out:	awkgram.tab.o $(OFILES)
+ $(OFILES):	awk.h awkgram.tab.h proto.h
+ 
+ awkgram.tab.c awkgram.tab.h:	awk.h proto.h awkgram.y
+-	$(YACC) $(YFLAGS) awkgram.y
++	$(YACC) $(YFLAGS) -d -o awkgram.tab.c awkgram.y
+ 
+ proctab.c:	maketab
+ 	./maketab awkgram.tab.h >proctab.c
