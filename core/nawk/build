@@ -1,9 +1,11 @@
 #!/bin/sh -e
 
-sed -i 's/= gcc/= cc/g' makefile
+patch -p1 < yacc.patch
 
 make CFLAGS="$CFLAGS -static"
 
-install -Dm755 "a.out" "$1/usr/bin/nawk"
+install -Dm755 "a.out"       "$1/usr/bin/nawk"
+ln      -s     /usr/bin/nawk "$1/usr/bin/awk"
 
-ln -s /usr/bin/nawk "$1/usr/bin/awk"
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/nawk.license"
