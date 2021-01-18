@@ -1,4 +1,0 @@
-gmake         make
-linux-headers make
-netbsd-curses
-python        make
