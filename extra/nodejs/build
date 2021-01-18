@@ -27,3 +27,6 @@ tools/install.py install "$1" /usr
 rm -rf "$1/usr/include/node/openssl"
 rm -rf "$1/usr/lib/node_modules/npm/scripts"
 rm -f  "$1/usr/lib/node_modules/npm/configure"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/nodejs.license"
