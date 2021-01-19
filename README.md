@@ -94,7 +94,7 @@ forced to accept it).
   | libressl           | ISC           | xkeyboard-config   | MIT           |  
   | llvm               | Apache-2.0    | yambar             | MIT           |  
   | lz4                | BSD 2-Clause  +--------------------+---------------+  
-  | m4                 | BSD/ISC       | EXTRA              |               |  
+  | m4                 | BSD/ISC       | EXTRA              | LICENSE       |  
   | make               | BSD 2-Clause  +--------------------+---------------+  
   | musl               | MIT           | blis               | BSD 3-Clause  |  
   | nawk               | MIT           | botan              | BSD 2-Clause  |  
