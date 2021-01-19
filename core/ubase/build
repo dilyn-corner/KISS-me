@@ -16,5 +16,8 @@ make DESTDIR="$1" PREFIX=/usr ubase-box-install
 unlink "$1/usr/bin/su"
 unlink "$1/usr/bin/stat"
 
+# clear provided by netbsd-curses
+unlink "$1/usr/bin/clear"
+
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/ubase.license"
