@@ -59,7 +59,7 @@ In the ever-excruciating pursuit of being different for the sake of difference,
 I have switched from KISS-proper to
 [wyverkiss](https://github.com/wyvertux/wyverkiss).
 
-Additionally, Due to recent 
+Additionally, due to recent 
 [issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
 I have decided to commit to trying out `wayland`.
 
