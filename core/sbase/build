@@ -9,21 +9,17 @@ make DESTDIR="$1" PREFIX=/usr   sbase-box-install
 # Unlink sed, because '-i' is widey used
 unlink "$1/usr/bin/sed"
 
+# tar/getconf/strings from libarchive/musl/llvm
+unlink "$1/usr/bin/tar"
+unlink "$1/usr/bin/getconf"
+unlink "$1/usr/bin/strings"
+
 # Toybox doesn't build with sbase sort
 unlink "$1/usr/bin/sort"
 
-# Two common greps requested by configures
-cat >> "$1/usr/bin/egrep" << EOF
-#!/bin/sh
-
-/usr/bin/sbase-box grep -E "$@"
-EOF
-
-cat >> "$1/usr/bin/fgrep" << EOF
-#!/bin/sh
-
-/usr/bin/sbase-box grep -f "$@"
-EOF
+# Two common greps we should include
+install -Dm755 egrep "$1/usr/bin/egrep"
+install -Dm755 fgrep "$1/usr/bin/fgrep"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/sbase.license"
