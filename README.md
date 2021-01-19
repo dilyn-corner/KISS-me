@@ -50,7 +50,7 @@ in the core, runtime system. Of course, concessions will have to be made for
 certain things. But we take what we get, and we get what we can.
 
 Other branches are used by me for things like my
-[KISS-kde](https://github.com/dilyn-corner/KISS_kde) partition. These branches
+[KISS-kde](https://github.com/dilyn-corner/KISS-kde) partition. These branches
 are more suitable for everyday KISS use.
 
 ## Thoughts
@@ -175,7 +175,7 @@ repository that contains a bootstrappable `ghc`.
 [KISS-kde](https://github.com/dilyn-corner/KISS-kde) - A KISS-compliant
 repository that brings the wonders of a `plasma` desktop to KISS.
 
-[KISS-static](https://github.com/dilyn-corner/KISS_static) - A KISS-compliant
+[KISS-static](https://github.com/dilyn-corner/KISS-static) - A KISS-compliant
 repository that provides a static KISS rootfs.
 
 [dotfiles](https://github.com/dilyn-corner/dotfiles) - Just a simple way to
