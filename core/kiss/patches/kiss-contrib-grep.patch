@@ -1,0 +1,17 @@
+--- a/contrib/kiss-revdepends	2020-11-26 23:23:19.000000000 -0500
++++ b/contrib/kiss-revdepends	2021-01-19 09:49:34.940905679 -0500
+@@ -5,4 +5,4 @@
+ 
+ cd "$KISS_ROOT/var/db/kiss/installed"
+ 
+-grep "^$1" -- */depends
++"${KISS_GREP:-grep}" "^$1" -- */depends
+--- a/contrib/kiss-orphans	2020-11-26 23:23:19.000000000 -0500
++++ b/contrib/kiss-orphans	2021-01-19 09:50:06.955903951 -0500
+@@ -12,5 +12,5 @@
+             continue
+     esac
+ 
+-    grep -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
++    "${KISS_GREP:-grep}" -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
+ done

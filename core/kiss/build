@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
-patch -p1 < kiss-grep.patch
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
 
 mkdir -p "$1/usr/bin"
 
