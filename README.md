@@ -79,6 +79,7 @@ are things like `mesa` or `llvm` - projects which inherit extra licenses because
 of code blobs they borrow. In general, I am semi-fine with this (if not wholly
 forced to accept it).
 
+```
   +--------------------+---------------+--------------------+---------------+   
   | CORE               | LICENSE       | WAYLAND            | LICENSE       |  
   +--------------------+---------------+--------------------+---------------+  
@@ -159,6 +160,7 @@ forced to accept it).
   | xvidcore           | GPLv2         |   
   | xz                 | LGPLv2.1      |  
   +------------------------------------+  
+```
 
 --- 
 
