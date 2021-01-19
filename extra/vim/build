@@ -26,3 +26,6 @@ rm -rf "$1/usr/share/vim/vim82/vim16*"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/vim.license"
+
+# Use vim as a pager...
+ln -s /usr/share/vim/vim82/macros/less.sh "$1/usr/bin/less"
