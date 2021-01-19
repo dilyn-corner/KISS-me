@@ -1,7 +1,0 @@
-cairo
-gmake             make
-pango
-pkgconf           make
-libxkbcommon      make
-wayland
-wayland-protocols make
