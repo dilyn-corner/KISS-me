@@ -6,16 +6,27 @@ patch -p1 < tar-dash-remove.patch
 make LDFLAGS="$LDFLAGS -static" sbase-box
 make DESTDIR="$1" PREFIX=/usr   sbase-box-install
 
-# Unlink sed, because '-i' is widey used
-unlink "$1/usr/bin/sed"
-
 # tar/getconf/strings from libarchive/musl/llvm
-unlink "$1/usr/bin/tar"
-unlink "$1/usr/bin/getconf"
-unlink "$1/usr/bin/strings"
+# toybox doesn't build with sbase sort
+# sed -i is too good
+# the rest are overlaps
 
-# Toybox doesn't build with sbase sort
-unlink "$1/usr/bin/sort"
+for bin in  cat chgrp chmod chown chroot    \
+            cksum comm cut dirname du env   \
+            expand false fold getconf head  \
+            hostname join kill link ln      \
+            logname md5sum mkdir mkfifo     \
+            mknod mktemp mv nice nl nohup   \
+            paste pathchk printenv pwd      \
+            readlink rm rmdir seq sed       \
+            sha1sum sha224sum sha256sum     \
+            sha384sum sha512sum sleep sort  \
+            strings sync tar tee touch true \
+            tsort tty uname unexpand uniq   \
+            unlink wc whoami yes 
+do
+        unlink "$1/usr/bin/$bin"
+done
 
 # Two common greps we should include
 install -Dm755 egrep "$1/usr/bin/egrep"
