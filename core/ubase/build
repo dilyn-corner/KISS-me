@@ -12,12 +12,10 @@ sed -i \
 make ubase-box
 make DESTDIR="$1" PREFIX=/usr ubase-box-install
 
-# Unlink su which doesn't support '-c'
-unlink "$1/usr/bin/su"
-unlink "$1/usr/bin/stat"
-
-# clear provided by netbsd-curses
-unlink "$1/usr/bin/clear"
+# Unlink overlaps, su doesn't support -c
+for bin in clear dd id mknod respawn su stat truncate; do
+    unlink "$1/usr/bin/$bin"
+done
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/ubase.license"
