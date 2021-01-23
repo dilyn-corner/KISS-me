@@ -2238,4 +2238,15 @@ index e758ab3b9265..695fbc71b2e5 100644
  # GL Provider
  # ==============================================================
  option("--with-gl-provider", nargs=1, help="Set GL provider backend type")
+--- a/toolkit/components/remote/nsRemoteService.cpp
++++ b/toolkit/components/remote/nsRemoteService.cpp
+@@ -12,6 +12,9 @@
 
+ #ifdef MOZ_WIDGET_GTK
+ #  include <gdk/gdk.h>
++#  ifdef MOZ_WAYLAND
++#    include "nsRemoteClient.h"
++#  endif
+ #  ifdef MOZ_X11
+ #    include <gdk/gdkx.h>
+ #    include "nsGTKRemoteServer.h"
