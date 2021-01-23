@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # ToyBox version: KCONFIG_VERSION
-# Tue Jan 19 02:22:27 2021
+# Wed Jan 20 22:32:30 2021
 #
 CONFIG_TOYBOX_CONTAINER=y
 CONFIG_TOYBOX_FIFREEZE=y
@@ -130,7 +130,7 @@ CONFIG_FDISK=y
 CONFIG_FSCK=y
 CONFIG_GETFATTR=y
 # CONFIG_GETOPT is not set
-# CONFIG_GETTY is not set
+CONFIG_GETTY=y
 CONFIG_GROUPADD=y
 CONFIG_GROUPDEL=y
 CONFIG_HOST=y
