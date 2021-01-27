@@ -1,4 +1,2 @@
-cmake   make
 libjpeg-turbo
 libpng
-samurai make

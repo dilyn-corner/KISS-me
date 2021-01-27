@@ -9,7 +9,7 @@ cmake -B build \
     -DOPUS_CUSTOM_MODES=ON \
     -DOPUS_CPU_X64=ON \
     -DBUILD_TESTING=OFF \
-    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_SHARED_LIBS=ON \
     -G Ninja
 
 ninja -C build

@@ -8,7 +8,7 @@ cmake source \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_TESTS=OFF \
-    -DENABLE_SHARED=OFF \
+    -DENABLE_SHARED=ON \
     -DNATIVE_BUILD=ON \
     -Wno-dev -G Ninja -B build
 

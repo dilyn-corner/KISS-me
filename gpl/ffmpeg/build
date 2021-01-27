@@ -8,6 +8,7 @@
     --x86asmexe=nasm \
     --enable-gpl \
     --enable-lto \
+    --enable-shared \
     --enable-libass \
     --enable-libdrm \
     --enable-libvpx \
@@ -23,7 +24,6 @@
     --enable-libmp3lame \
     --disable-doc \
     --disable-debug \
-    --disable-shared \
     --disable-libxml2 \
     --disable-manpages \
     --disable-podpages \

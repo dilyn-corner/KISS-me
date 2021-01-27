@@ -8,6 +8,7 @@ CC=cc CXX=c++ ./configure \
     --as=nasm \
     --enable-vp8 \
     --enable-vp9 \
+    --enable-shared \
     --enable-experimental \
     --enable-runtime-cpu-detect \
     --enable-postproc \
