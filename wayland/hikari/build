@@ -1,21 +1,18 @@
 #!/bin/sh -e
 
-for patch in *.patch; do 
-    patch -p1 < "$patch"
-done
+# Don't build hikari-unlocker
+sed -i 's/hikari hikari-unlocker/hikari/g'  Makefile
 
-make
-    PREFIX=/usr \
-    ETC_PREFIX=/ \
-    WITH_POSIX_C_SOURCE=YES \
-    WITH_LAYERSHELL=YES \
-    WITH_SCREENCOPY=YES
+# Make sure we have all of our static libs
+export CFLAGS="$CFLAGS $(pkg-config --cflags --static pangocairo)"
+export LDFLAGS="$LDFLAGS $(pkg-config --libs --static pangocairo)"
 
 make \
     PREFIX=/usr \
     ETC_PREFIX=/ \
-    DESTDIR="$1" \
-    install
+    WITH_POSIX_C_SOURCE=YES
+
+install -Dm755 hikari "$1/usr/bin/hikari"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/hikari.license"
