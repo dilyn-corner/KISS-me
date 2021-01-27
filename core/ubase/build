@@ -13,7 +13,7 @@ make ubase-box
 make DESTDIR="$1" PREFIX=/usr ubase-box-install
 
 # Unlink overlaps, su doesn't support -c
-for bin in clear dd id mknod respawn su stat truncate; do
+for bin in clear dd getty id mknod respawn su stat truncate; do
     unlink "$1/usr/bin/$bin"
 done
 
