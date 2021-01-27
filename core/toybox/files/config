@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # ToyBox version: KCONFIG_VERSION
-# Wed Jan 20 22:32:30 2021
+# Sat Jan 23 13:06:54 2021
 #
 CONFIG_TOYBOX_CONTAINER=y
 CONFIG_TOYBOX_FIFREEZE=y
@@ -44,7 +44,7 @@ CONFIG_CPIO=y
 # CONFIG_EXPAND is not set
 # CONFIG_FALSE is not set
 CONFIG_FILE=y
-# CONFIG_FIND is not set
+CONFIG_FIND=y
 # CONFIG_GETCONF is not set
 # CONFIG_GREP is not set
 # CONFIG_EGREP is not set
@@ -187,7 +187,7 @@ CONFIG_USERDEL=y
 #
 # Other commands
 #
-# CONFIG_ACPI is not set
+CONFIG_ACPI=y
 CONFIG_ASCII=y
 # CONFIG_BASE64 is not set
 # CONFIG_BASE32 is not set
@@ -198,7 +198,7 @@ CONFIG_BLOCKDEV=y
 # CONFIG_BUNZIP2 is not set
 # CONFIG_BZCAT is not set
 # CONFIG_CHCON is not set
-# CONFIG_CHROOT is not set
+CONFIG_CHROOT=y
 CONFIG_CHRT=y
 # CONFIG_CHVT is not set
 # CONFIG_CLEAR is not set
@@ -223,24 +223,24 @@ CONFIG_I2CDUMP=y
 CONFIG_I2CGET=y
 CONFIG_I2CSET=y
 CONFIG_INOTIFYD=y
-# CONFIG_INSMOD is not set
+CONFIG_INSMOD=y
 CONFIG_IONICE=y
 CONFIG_IORENICE=y
 # CONFIG_LOGIN is not set
 CONFIG_LOSETUP=y
 # CONFIG_LSATTR is not set
 # CONFIG_CHATTR is not set
-# CONFIG_LSMOD is not set
+CONFIG_LSMOD=y
 CONFIG_LSPCI=y
 CONFIG_LSPCI_TEXT=y
-# CONFIG_LSUSB is not set
+CONFIG_LSUSB=y
 CONFIG_MAKEDEVS=y
 CONFIG_MCOOKIE=y
 CONFIG_MIX=y
 CONFIG_MKPASSWD=y
-# CONFIG_MKSWAP is not set
+CONFIG_MKSWAP=y
 CONFIG_MODINFO=y
-# CONFIG_MOUNTPOINT is not set
+CONFIG_MOUNTPOINT=y
 CONFIG_NBD_CLIENT=y
 # CONFIG_UNSHARE is not set
 CONFIG_NSENTER=y
@@ -257,15 +257,15 @@ CONFIG_PWGEN=y
 # CONFIG_REBOOT is not set
 # CONFIG_RESET is not set
 # CONFIG_REV is not set
-# CONFIG_RMMOD is not set
+CONFIG_RMMOD=y
 CONFIG_RTCWAKE=y
 CONFIG_SETFATTR=y
 # CONFIG_SETSID is not set
 # CONFIG_SHA3SUM is not set
 # CONFIG_SHRED is not set
 # CONFIG_STAT is not set
-# CONFIG_SWAPOFF is not set
-# CONFIG_SWAPON is not set
+CONFIG_SWAPOFF=y
+CONFIG_SWAPON=y
 # CONFIG_SWITCH_ROOT is not set
 # CONFIG_SYSCTL is not set
 # CONFIG_TAC is not set
@@ -319,14 +319,14 @@ CONFIG_KILLALL=y
 # CONFIG_MKNOD is not set
 # CONFIG_MKNOD_Z is not set
 # CONFIG_MKTEMP is not set
-# CONFIG_MOUNT is not set
+CONFIG_MOUNT=y
 # CONFIG_PASSWD is not set
 # CONFIG_PASSWD_SAD is not set
 # CONFIG_PIDOF is not set
 # CONFIG_SEQ is not set
 CONFIG_SU=y
 # CONFIG_SYNC is not set
-# CONFIG_UMOUNT is not set
+CONFIG_UMOUNT=y
 
 #
 # Example commands
