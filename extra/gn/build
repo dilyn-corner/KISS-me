@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+echo 0.$(git rev-list --count initial-commit..).$(git rev-parse --short HEAD)
+
+./build/gen.py
+ninja -C out
+
+install -Dm755 out/gn "$1/usr/bin/gn"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/gn.license"
