@@ -7,12 +7,13 @@ sed -i '/\$(edit)\|\.\(service\|rules\)/d' alsaucm/Makefile.in
     --prefix=/usr \
     --sbindir=/usr/bin \
     --with-udev-rules-dir=/usr/lib/udev/rules.d \
-    --disable-alsaconf \
     --disable-bat \
+    --disable-nls \
     --disable-xmlto \
-    --disable-nls
+    --disable-alsaconf \
+    --disable-alsamixer
 
-make LDFLAGS="$LDFLAGS -lcurses"
+make
 make DESTDIR="$1" install
 
 # Install the license
