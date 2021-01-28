@@ -188,3 +188,6 @@ install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium"
 for stuff in bin pak; do
     install -Dm644 out/Release/*.$stuff "$1/usr/lib/chromium"
 done
+
+# Install the license
+install -Dm644 LIENSE "$1/usr/share/LICENSES/chromium.license"
