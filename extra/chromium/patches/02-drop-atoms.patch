@@ -1,0 +1,22 @@
+--- a/build/config/linux/BUILD.gn
++++ b/build/config/linux/BUILD.gn
+@@ -31,7 +31,7 @@
+   if ((!(is_chromeos || chromeos_is_browser_only) ||
+        default_toolchain != "//build/toolchain/cros:target") &&
+       (!use_custom_libcxx || current_cpu == "mipsel")) {
+-    libs = [ "atomic" ]
++    libs = [ "" ]
+   }
+ }
+ 
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -1295,7 +1295,7 @@
+   if (!use_sysroot &&
+       (is_android || ((is_linux || is_chromeos) && !is_chromecast)) &&
+       host_toolchain != "//build/toolchain/cros:host") {
+-    libs += [ "atomic" ]
++    libs += [ "" ]
+   }
+ 
+   if (use_allocator_shim) {
