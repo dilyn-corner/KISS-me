@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+mk() {
+    gmake \
+        CC="${CC:-cc}" \
+        OPT="$CFLAGS -fPIC" \
+        ZLIB=yes \
+        PREFIX=/usr \
+        SBINDIR=/usr/bin \
+        SHAREDIR=/usr/share/hwdata \
+        "$@"
+}
+
+
+for shared in yes no; do (
+    cd "$shared"
+
+    mk SHARED="$shared"
+    mk SHARED="$shared" DESTDIR="$1" install install-lib
+) done
+
+# Install the license
+install -Dm644 no/COPYING "$1/usr/share/LICENSES/pciutils.patch"
