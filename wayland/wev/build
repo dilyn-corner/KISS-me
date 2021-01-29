@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+sed -i 's/wev wev.1/wev/' Makefile
+
+gmake PREFIX=/usr
+
+install -Dm755 wev "$1/usr/bin/wev"
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/wev.license"
