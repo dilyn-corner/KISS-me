@@ -1,5 +1,5 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.9.10.tar.xz
-https://kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9.1-rt20.patch.xz
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.10.8.tar.xz
+https://kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.8-rt24.patch.xz
 files/config
 patches/27-march-native-support.patch
 patches/28-no-perl.patch
