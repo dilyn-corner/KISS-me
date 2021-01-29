@@ -8,6 +8,7 @@ flac
 fontconfig
 freetype-harfbuzz
 glib
+gn                 make
 gperf              make
 libdrm
 libevent
