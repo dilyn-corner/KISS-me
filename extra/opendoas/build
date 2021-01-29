@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+sed -i '/chown/d' GNUmakefile
+
+./configure \
+    --prefix=/usr \
+    --enable-static \
+    --with-shadow \
+    --with-timestamp \
+    --without-pam
+
+gmake
+gmake DESTDIR="$1" install
+
+install -Dm600 doas.conf "$1/etc/doas.conf"
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/opendoas.license"
