@@ -15,4 +15,4 @@ gmake DESTDIR="$1" install
 install -Dm600 doas.conf "$1/etc/doas.conf"
 
 # Install the license
-install -Dm644 LICENSE "$1/usr/share/LICENSES/opendoas.license"
+install -Dm755 LICENSE "$1/usr/share/LICENSES/opendoas.license"
