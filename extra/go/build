@@ -59,10 +59,10 @@ rm -rf "$1/usr/lib/go/pkg/obj"
 cd "$1/usr/lib/go/src"
 
 # Remove tests.
-find . -type f -a -name \*_test.go -delete
-find . -type f -a -name \*.bash    -delete
-find . -type f -a -name \*.bat     -delete
-find . -type f -a -name \*.rc      -delete
+find . -type f -a -name \*_test.go -exec rm -rf {} \;
+find . -type f -a -name \*.bash    -exec rm -rf {} \;
+find . -type f -a -name \*.bat     -exec rm -rf {} \;
+find . -type f -a -name \*.rc      -exec rm -rf {} \;
 
 find . -type d -a -name testdata |
     while read -r dir; do
