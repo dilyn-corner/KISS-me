@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+gmake
+
+install -Dm755 github-release "$1/usr/bin/github-release"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/github-release.license"
