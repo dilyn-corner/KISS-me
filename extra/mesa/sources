@@ -1,4 +1,4 @@
-https://mesa.freedesktop.org/archive/mesa-20.3.3.tar.xz
+https://mesa.freedesktop.org/archive/mesa-20.3.4.tar.xz
 https://files.pythonhosted.org/packages/source/M/Mako/Mako-1.1.1.tar.gz mako
 patches/byacc.patch
 patches/sha1_intel_fix.patch
