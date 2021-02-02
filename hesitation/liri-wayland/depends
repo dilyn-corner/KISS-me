@@ -1,6 +1,0 @@
-cmake make
-cmake-shared make
-qt5
-qt5-declarative
-qt5-wayland
-wayland-protocols make
