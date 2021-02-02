@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-make
-make DESTDIR="$1" PREFIX=/usr install
-
-# Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/sls.license"
