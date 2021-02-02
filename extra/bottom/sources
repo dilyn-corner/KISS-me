@@ -1,4 +1,4 @@
-https://github.com/ClementTsang/bottom/archive/0.5.6.tar.gz
+https://github.com/ClementTsang/bottom/archive/0.5.7.tar.gz
 https://static.crates.io/crates/addr2line/addr2line-0.14.0.crate vendor
 https://static.crates.io/crates/adler/adler-0.2.3.crate vendor
 https://static.crates.io/crates/aho-corasick/aho-corasick-0.7.15.crate vendor
@@ -108,7 +108,7 @@ https://static.crates.io/crates/pin-project-internal/pin-project-internal-1.0.2.
 https://static.crates.io/crates/pin-project-lite/pin-project-lite-0.1.11.crate vendor
 https://static.crates.io/crates/pin-utils/pin-utils-0.1.0.crate vendor
 https://static.crates.io/crates/polling/polling-2.0.2.crate vendor
-https://static.crates.io/crates/predicates/predicates-1.0.5.crate vendor
+https://static.crates.io/crates/predicates/predicates-1.0.6.crate vendor
 https://static.crates.io/crates/predicates-core/predicates-core-1.0.0.crate vendor
 https://static.crates.io/crates/predicates-tree/predicates-tree-1.0.0.crate vendor
 https://static.crates.io/crates/proc-macro-hack/proc-macro-hack-0.5.19.crate vendor
