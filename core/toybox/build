@@ -6,5 +6,8 @@ gmake PREFIX="$1/usr/bin" install_flat
 
 chmod +s "$1/usr/bin/toybox"
 
+# less is actually more
+ln -s "$1/usr/bin/more" "$1/usr/bin/less"
+
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/toybox.license"
