@@ -1,11 +1,11 @@
---- /usr/bin/kiss	2020-12-23 19:57:58.092340336 -0500
-+++ kiss	2021-01-17 22:36:03.590750396 -0500
+--- a/kiss	2020-12-23 19:57:58.092340336 -0500
++++ b/kiss	2021-01-17 22:36:03.590750396 -0500
 @@ -66,7 +66,7 @@
      [ "$3" ] ||
          set -- "$1" "$2" "$sys_db"/*/manifest
  
 -    pkg_owner=$(grep "$@")
-+    pkg_owner=$($GREP "$@")
++    pkg_owner=$("$GREP" "$@")
      pkg_owner=${pkg_owner%/*}
      pkg_owner=${pkg_owner##*/}
  
@@ -14,14 +14,14 @@
      # information multiple times. Storing things in the cache dir allows
      # us to be lazy as they'll be automatically removed on script end.
 -    grep -Fxf "$mak_dir/$pid-m" -- "$@" 2>/dev/null > "$mak_dir/$pid-c" ||:
-+    $GREP -Fxf "$mak_dir/$pid-m" -- "$@" 2>/dev/null > "$mak_dir/$pid-c" ||:
++    "$GREP" -Fxf "$mak_dir/$pid-m" -- "$@" 2>/dev/null > "$mak_dir/$pid-c" ||:
  
      # Enable alternatives automatically if it is safe to do so.
      # This checks to see that the package that is about to be installed
 @@ -852,5 +852,5 @@
      # doesn't overwrite anything it shouldn't in '/var/db/kiss/installed'.
 -    grep -q ":/var/db/kiss/installed/" "$mak_dir/$pid-c" || choice_auto=1
-+    $GREP -q ":/var/db/kiss/installed/" "$mak_dir/$pid-c" || choice_auto=1
++    "$GREP" -q ":/var/db/kiss/installed/" "$mak_dir/$pid-c" || choice_auto=1
  
      if [ "$KISS_CHOICE" != 0  ] &&
         [ "$choice_auto"  = 1  ] &&
@@ -30,7 +30,7 @@
          # another package's. Print the full path to the manifest file which
          # contains the match to our search.
 -        pkg_owns=$(set +f; grep -lFx "$2" "$sys_db/"*/manifest) ||:
-+        pkg_owns=$(set +f; $GREP -lFx "$2" "$sys_db/"*/manifest) ||:
++        pkg_owns=$(set +f; "$GREP" -lFx "$2" "$sys_db/"*/manifest) ||:
  
          # Extract the package name from the path above.
          pkg_owns=${pkg_owns%/*}
@@ -39,7 +39,7 @@
          case $file in /etc/?*[!/])
              sum_sys=$(sh256 "$KISS_ROOT/$file")
 -            sum_old=$(grep -F "$sum_sys" "$mak_dir/c")
-+            sum_old=$($GREP -F "$sum_sys" "$mak_dir/c")
++            sum_old=$("$GREP" -F "$sum_sys" "$mak_dir/c")
  
              [ "$sum_sys" = "$sum_old" ] || {
                  printf 'Skipping %s (modified)\n' "$file"
@@ -48,7 +48,7 @@
          log "$1" "Checking for reverse dependencies"
  
 -        (cd "$sys_db"; set +f; grep -lFx "$1" -- */depends) &&
-+        (cd "$sys_db"; set +f; $GREP -lFx "$1" -- */depends) &&
++        (cd "$sys_db"; set +f; "$GREP" -lFx "$1" -- */depends) &&
              die "$1" "Can't remove package, others depend on it"
      }
  
@@ -57,7 +57,7 @@
      # Files in /etc/ are skipped entirely as they'll be handled via a 3-way
      # checksum system due to the nature of their existence.
 -    grep -vFxf "$sys_db/$pkg_name/manifest" "$mak_dir/m" 2>/dev/null |
-+    $GREP -vFxf "$sys_db/$pkg_name/manifest" "$mak_dir/m" 2>/dev/null |
++    "$GREP" -vFxf "$sys_db/$pkg_name/manifest" "$mak_dir/m" 2>/dev/null |
      pkg_remove_files
  
      # Install the package's files a second time to fix any mess caused by the
@@ -70,4 +70,56 @@
 +
      # Define some paths which we will then use throughout the script.
      sys_db=$KISS_ROOT/${pkg_db:=var/db/kiss/installed}
+--- a/contrib/kiss-owns	2020-11-26 23:23:19.000000000 -0500
++++ b/contrib/kiss-owns	2021-02-05 19:49:02.029072293 -0500
+@@ -1,6 +1,8 @@
+ #!/bin/sh -e
+ # Check which package owns a file
  
++GREP=${KISS_GREP:-grep}
++
+ # Follow symlinks to any paths.
+ case $1 in
+     /*)
+@@ -23,7 +25,7 @@
+ 
+ # Print the full path to the manifest file which contains
+ # the match to our search.
+-pkg_owns=$(grep -lFx \
++pkg_owns=$("$GREP" -lFx \
+     "$PWD/${1##*/}" \
+     "$KISS_ROOT/var/db/kiss/installed/"*/manifest)
+ 
+--- a/contrib/kiss-revdepends	2020-11-26 23:23:19.000000000 -0500
++++ b/contrib/kiss-revdepends	2021-02-05 19:49:35.894219290 -0500
+@@ -1,6 +1,8 @@
+ #!/bin/sh -e
+ # Display packages which depend on package
+ 
++GREP=${KISS_GREP:-grep}
++
+ [ "$1" ] || set -- "${PWD##*/}"
+ 
+ cd "$KISS_ROOT/var/db/kiss/installed"
+@@ -7,2 +9,2 @@
+ 
+-grep "^$1" -- */depends
++"$GREP" "^$1" -- */depends
+--- a/contrib/kiss-orphans	2020-11-26 23:23:19.000000000 -0500
++++ b/contrib/kiss-orphans	2021-02-05 19:50:18.831609496 -0500
+@@ -1,6 +1,8 @@
+ #!/bin/sh -e
+ # List orphaned packages
+ 
++GREP=${KISS_GREP:-grep}
++
+ cd "$KISS_ROOT/var/db/kiss/installed/"
+ 
+ for pkg in *; do
+@@ -12,5 +14,5 @@
+             continue
+     esac
+ 
+-    grep -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
++    "$GREP" -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
+ done
