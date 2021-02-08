@@ -1,16 +1,16 @@
 #!/bin/sh -e
 
-patch -p1 < x264-no-bash.patch
-
 CC=cc CXX=c++ ./configure \
     --prefix=/usr \
-    --disable-swscale \
+    --enable-lto \
+    --enable-pic \
+    --enable-strip \
     --enable-shared \
     --enable-static \
-    --enable-pic \
-    --enable-lto
+    --disable-opencl \
+    --disable-swscale
 
-gmake LDFLAGS="$LDFLAGS -static"
+gmake
 gmake DESTDIR="$1" install
 
 # Install the license
