@@ -11,18 +11,18 @@ make DESTDIR="$1" PREFIX=/usr   sbase-box-install
 # sed -i is too good
 # the rest are overlaps
 
-for bin in  cat chgrp chmod chown chroot    \
-            cksum comm cut dirname du env   \
-            expand false fold getconf head  \
-            hostname join kill link ln      \
-            logname md5sum mkdir mkfifo     \
-            mknod mktemp mv nice nl nohup   \
-            paste pathchk printenv pwd      \
-            readlink rm rmdir seq sed       \
-            sha1sum sha224sum sha256sum     \
-            sha384sum sha512sum sleep sort  \
-            strings sync tar tee touch true \
-            tsort tty uname unexpand uniq   \
+for bin in  basename cat chgrp chmod chown   \
+            chroot cksum comm cut dirname    \
+            du env expand false find fold    \
+            getconf head hostname join kill  \
+            link ln logname md5sum mkdir     \
+            mkfifo mknod mktemp mv nice nl   \
+            nohup paste pathchk printenv pwd \
+            readlink rm rmdir seq sed        \
+            sha1sum sha224sum sha256sum      \
+            sha384sum sha512sum sleep sort   \
+            strings sync tar tee touch true  \
+            tsort tty uname unexpand uniq    \
             unlink wc whoami yes 
 do
         unlink "$1/usr/bin/$bin"
