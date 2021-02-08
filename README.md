@@ -119,40 +119,41 @@ forced to accept it).
   | ccache        | GPLv3         | libass             | ISC           |
   | dosfstools    | GPLv3         | libdrm             | MIT           |
   | e2fsprogs     | GPLv2         | libevdev           | MIT           |
-  | efibootmgr    | GPLv2         | libffi             | MIT           |
-  | efivar        | GPLv2.1       | libinput           | X11           |
-  | ffmpeg        | GPLv2.1       | libjpeg-turbo      | IJG           |
-  | findutils     | GPLv3         | libogg             | BSD           |
-  | fribidi       | GPLv2.1       | libpciaccess       | X11           |
-  | git           | LGPLv2.1      | libpng             | libpngv2      |
-  | glib          | GPLv2.1       | libucl             | BSD 2-Clause  |
-  | gmake         | GPLv3         | libudev-zero       | ISC           |
-  | gnu-as        | GPLv2         | libvorbis          | BSD 3-Clause  |
-  | gnu-m4        | GPLv3         | libvpx             | BSD 3-Clause  |
-  | gnupg1        | GPLv3         | libwebp            | BSD 3-Clause  |
-  | gperf         | GPLv3         | mesa               | MIT           |
-  | lame          | LGPLv2        | meson              | Apache-2.0    |
-  | libelf        | GPLv3         | mtdev              | MIT           |
-  | libexif       | GPLv2.1       | nasm               | BSD 2-Clause  |
-  | libgcrypt     | GPLv2         | nss                | MPLv2         |
-  | libgpg-error  | GPLv2         | opendoas           | BSD           |
-  | linux         | GPLv2         | opus               | BSD 3-Clause  |
-  | linux-headers | GPLv2         | paleta             | MIT           |
-  | linux-rt      | GPLv2         | pash               | MIT           |
-  | linux-nitrous | GPLv2         | pfetch             | MIT           |
-  | mbpfan        | GPLv3         | pixman             | MIT           |
-  | mpv           | GPLv2         | pkgconf            | ISC           |
-  | pango         | LGPLv2.1      | python             | PSFv2         |
-  | patch         | GPLv3         | python2            | PSFv2         |
-  | pciutils      | GPLv2         | ripgrep            | UNLICENSE/MIT |
-  | perl          | GPLv1         | rnp                | BSD 2-Clause  |
-  | sysmgr        | GPLv3         | sqlite             | Public Domain |
-  | wl-clipboard  | GPLv3         | tzdata             | Public Domain |
-  | x264          | GPLv2         | vim                | Vim           |
-  | x265          | GPLv2         | wpa_supplicant     | BSD           |
-  | xvidcore      | GPLv2         | yaml               | MIT           |
-  | xz            | LGPLv2.1      | zstd               | BSD 3-Clause  |
-  +---------------+---------------+--------------------+---------------+
+  | efibootmgr    | GPLv2         | libevent           | BSD 3-Clause  |
+  | efivar        | GPLv2.1       | libffi             | MIT           |
+  | ffmpeg        | GPLv2.1       | libinput           | X11           |
+  | findutils     | GPLv3         | libjpeg-turbo      | IJG           |
+  | fribidi       | GPLv2.1       | libogg             | BSD           |
+  | git           | LGPLv2.1      | libpciaccess       | X11           |
+  | glib          | GPLv2.1       | libpng             | libpngv2      |
+  | gmake         | GPLv3         | libucl             | BSD 2-Clause  |
+  | gnu-as        | GPLv2         | libudev-zero       | ISC           |
+  | gnu-m4        | GPLv3         | libvorbis          | BSD 3-Clause  |
+  | gnupg1        | GPLv3         | libvpx             | BSD 3-Clause  |
+  | gperf         | GPLv3         | libwebp            | BSD 3-Clause  |
+  | lame          | LGPLv2        | mesa               | MIT           |
+  | libelf        | GPLv3         | meson              | Apache-2.0    |
+  | libexif       | GPLv2.1       | mtdev              | MIT           |
+  | libgcrypt     | GPLv2         | nasm               | BSD 2-Clause  |
+  | libgpg-error  | GPLv2         | nss                | MPLv2         |
+  | linux         | GPLv2         | opendoas           | BSD           |
+  | linux-headers | GPLv2         | opus               | BSD 3-Clause  |
+  | linux-rt      | GPLv2         | paleta             | MIT           |
+  | linux-nitrous | GPLv2         | pash               | MIT           |
+  | mbpfan        | GPLv3         | pfetch             | MIT           |
+  | mpv           | GPLv2         | pixman             | MIT           |
+  | pango         | LGPLv2.1      | pkgconf            | ISC           |
+  | patch         | GPLv3         | python             | PSFv2         |
+  | pciutils      | GPLv2         | python2            | PSFv2         |
+  | perl          | GPLv1         | ripgrep            | UNLICENSE/MIT |
+  | sysmgr        | GPLv3         | rnp                | BSD 2-Clause  |
+  | wl-clipboard  | GPLv3         | sqlite             | Public Domain |
+  | x264          | GPLv2         | tzdata             | Public Domain |
+  | x265          | GPLv2         | vim                | Vim           |
+  | xvidcore      | GPLv2         | wpa_supplicant     | BSD           |
+  | xz            | LGPLv2.1      | yaml               | MIT           |
+  +---------------+---------------+ zstd               | BSD 3-Clause  |
+                                  +--------------------+---------------+
 ```
 --- 
 
