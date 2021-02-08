@@ -14,6 +14,8 @@ export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
 patch -p1 < python3-always-pip.patch
 
+# Python fails to detect endianness with sbase grep??
+GREP="rg" EGREP="rg -e" \
 ./configure \
     --prefix=/usr \
     --enable-shared \
