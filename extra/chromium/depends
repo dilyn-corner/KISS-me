@@ -18,7 +18,7 @@ libjpeg-turbo
 libwebp
 libxkbcommon
 mesa
-nasm
+nasm               make
 nodejs             make
 nss
 opus
