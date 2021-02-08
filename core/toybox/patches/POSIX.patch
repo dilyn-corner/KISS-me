@@ -1,0 +1,728 @@
+diff --git a/configure b/configure
+index 0b6501fc..23dd687d 100755
+--- a/configure
++++ b/configure
+@@ -1,10 +1,10 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # This sets environment variables used by scripts/make.sh
+ 
+ # People run ./configure out of habit, so do "defconfig" for them.
+ 
+-if [ "$(basename "$0")" == configure ]
++if [ "${0##*/}" = configure ]
+ then
+   echo "Assuming you want 'make defconfig', but you should probably check the README."
+   make defconfig
+diff --git a/scripts/bloatcheck b/scripts/bloatcheck
+index fff4690f..30492c64 100755
+--- a/scripts/bloatcheck
++++ b/scripts/bloatcheck
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ if [ $# -ne 2 ]
+ then
+@@ -40,7 +40,7 @@ do_bloatcheck()
+     fi
+ 
+     SIZE=$(printf "%d" "0x$b")
+-    if [ "$a" == "-" ]
++    if [ "$a" = "-" ]
+     then
+       OLD=$(($OLD+$SIZE))
+       SIZE=$((-1*$SIZE))
+diff --git a/scripts/change.sh b/scripts/change.sh
+index 99dcfde9..b1fa62a0 100755
+--- a/scripts/change.sh
++++ b/scripts/change.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # build each command as a standalone executable
+ 
+@@ -14,8 +14,8 @@ mkdir -p "$PREFIX" || exit 1
+ 
+ for i in $(generated/instlist | egrep -vw "sh|help")
+ do
+-  echo -n " $i" &&
++  printf ' %s' "$i" &&
+   scripts/single.sh $i > /dev/null 2>$PREFIX/${i}.bad &&
+-    rm $PREFIX/${i}.bad || echo -n '*'
++    rm $PREFIX/${i}.bad || printf '*'
+ done
+ echo
+diff --git a/scripts/findglobals.sh b/scripts/findglobals.sh
+index 2c63164b..9455bc61 100755
+--- a/scripts/findglobals.sh
++++ b/scripts/findglobals.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Quick and dirty check to see if anybody's leaked global variables.
+ # We should have this, toy_list, toybuf, and toys.
+diff --git a/scripts/genconfig.sh b/scripts/genconfig.sh
+index 955c82cd..b5cff559 100755
+--- a/scripts/genconfig.sh
++++ b/scripts/genconfig.sh
+@@ -1,11 +1,11 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # This has to be a separate file from scripts/make.sh so it can be called
+ # before menuconfig.  (It's called again from scripts/make.sh just to be sure.)
+ 
+ mkdir -p generated
+ 
+-source scripts/portability.sh
++. scripts/portability.sh
+ 
+ probecc()
+ {
+@@ -18,8 +18,8 @@ probesymbol()
+ {
+   probecc $2 2>/dev/null && DEFAULT=y || DEFAULT=n
+   rm a.out 2>/dev/null
+-  echo -e "config $1\n\tbool" || exit 1
+-  echo -e "\tdefault $DEFAULT\n" || exit 1
++  printf 'config %s\n\tbool' || exit 1
++  printf '\tdefault %s\n\n' || exit 1
+ }
+ 
+ probeconfig()
+@@ -28,7 +28,7 @@ probeconfig()
+   # llvm produces its own really stupid warnings about things that aren't wrong,
+   # and although you can turn the warning off, gcc reacts badly to command line
+   # arguments it doesn't understand. So probe.
+-  [ -z "$(probecc -Wno-string-plus-int <<< \#warn warn 2>&1 | grep string-plus-int)" ] &&
++  [ -z "$(echo '#warn' | probecc -Wno-string-plus-int warn 2>&1 | grep string-plus-int)" ] &&
+     echo -Wno-string-plus-int >> generated/cflags
+ 
+   # Probe for container support on target
+@@ -92,7 +92,7 @@ EOF
+     #include <unistd.h>
+     int main(int argc, char *argv[]) { return fork(); }
+ EOF
+-  echo -e '\tdepends on !TOYBOX_FORCE_NOMMU'
++  printf '\tdepends on !TOYBOX_FORCE_NOMMU\n'
+ 
+   probesymbol TOYBOX_PRLIMIT << EOF
+     #include <sys/types.h>
+@@ -155,17 +155,18 @@ PENDING=
+ toys toys/*/*.c | (
+ while IFS=":" read FILE NAME
+ do
+-  [ "$NAME" == help ] && continue
+-  [ "$NAME" == install ] && continue
+-  [ "$NAME" == sh ] && FILE="toys/*/*.c"
+-  echo -e "$NAME: $FILE *.[ch] lib/*.[ch]\n\tscripts/single.sh $NAME\n"
+-  echo -e "test_$NAME:\n\tscripts/test.sh $NAME\n"
+-  [ "${FILE/pending//}" != "$FILE" ] &&
++  [ "$NAME" = help ] && continue
++  [ "$NAME" = install ] && continue
++  [ "$NAME" = sh ] && FILE="toys/*/*.c"
++  printf '%s: %s *.[ch] lib/*.[ch]\n\tscripts/single.sh %s\n\n' \
++      "$NAME" "$FILE" "$NAME"
++  printf 'test_%s:\n\tscripts/test.sh \n\n' "$NAME" "$NAME"
++  [ "${FILE#*pending}" != "$FILE" ] &&
+     PENDING="$PENDING $NAME" ||
+     WORKING="$WORKING $NAME"
+ done &&
+-echo -e "clean::\n\t@rm -f $WORKING $PENDING" &&
+-echo -e "list:\n\t@echo $(echo $WORKING | tr ' ' '\n' | sort | xargs)" &&
+-echo -e "list_pending:\n\t@echo $(echo $PENDING | tr ' ' '\n' | sort | xargs)" &&
+-echo -e ".PHONY: $WORKING $PENDING" | $SED 's/ \([^ ]\)/ test_\1/g'
++printf 'clean::\n\t@rm -f %s %s\n' "$WORKING" "$PENDING" &&
++printf 'list:\n\t@echo %s\n' "$(echo $WORKING | tr ' ' '\n' | sort | xargs)" &&
++printf 'list_pending:\n\t@echo %s\n' "$(echo $PENDING | tr ' ' '\n' | sort | xargs)" &&
++echo ".PHONY: $WORKING $PENDING" | $SED 's/ \([^ ]\)/ test_\1/g'
+ ) > .singlemake
+diff --git a/scripts/install.sh b/scripts/install.sh
+index 648a2411..0ee232cd 100755
+--- a/scripts/install.sh
++++ b/scripts/install.sh
+@@ -1,8 +1,8 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Grab default values for $CFLAGS and such.
+ 
+-source ./configure
++. ./configure
+ 
+ [ -z "$PREFIX" ] && PREFIX="/usr/toybox"
+ 
+@@ -12,19 +12,19 @@ LONG_PATH=""
+ while [ ! -z "$1" ]
+ do
+   # Create symlinks instead of hardlinks?
+-  [ "$1" == "--symlink" ] && LINK_TYPE="-s"
++  [ "$1" = "--symlink" ] && LINK_TYPE="-s"
+ 
+   # Uninstall?
+-  [ "$1" == "--uninstall" ] && UNINSTALL=Uninstall
++  [ "$1" = "--uninstall" ] && UNINSTALL=Uninstall
+ 
+   # Delete destination command if it exists?
+-  [ "$1" == "--force" ] && DO_FORCE="-f"
++  [ "$1" = "--force" ] && DO_FORCE="-f"
+ 
+   # Use {,usr}/{bin,sbin} paths instead of all files in one directory?
+-  [ "$1" == "--long" ] && LONG_PATH="bin/"
++  [ "$1" = "--long" ] && LONG_PATH="bin/"
+ 
+   # Symlink host toolchain binaries to destination to create cross compile $PATH
+-  [ "$1" == "--airlock" ] && AIRLOCK=1
++  [ "$1" = "--airlock" ] && AIRLOCK=1
+ 
+   shift
+ done
+@@ -131,7 +131,7 @@ do
+       fi
+ 
+       X=$[$X+1]
+-      FALLBACK="$PREFIX/fallback-$X"
++      FALLBACK="$PREFIX/fallback-$((X += 1))"
+     done
+ 
+     if [ ! -f "$PREFIX/$i" ]
+diff --git a/scripts/make.sh b/scripts/make.sh
+index 5b2d5d81..68fcbc2d 100755
+--- a/scripts/make.sh
++++ b/scripts/make.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Grab default values for $CFLAGS and such.
+ 
+@@ -16,8 +16,7 @@ fi
+ 
+ export LANG=c
+ export LC_ALL=C
+-set -o pipefail
+-source scripts/portability.sh
++. scripts/portability.sh
+ 
+ [ -z "$KCONFIG_CONFIG" ] && KCONFIG_CONFIG=.config
+ [ -z "$OUTNAME" ] && OUTNAME=toybox"${TARGET:+-$TARGET}"
+@@ -31,7 +30,7 @@ UNSTRIPPED="generated/unstripped/$(basename "$OUTNAME")"
+ DOTPROG=
+ do_loudly()
+ {
+-  [ ! -z "$V" ] && echo "$@" || echo -n "$DOTPROG"
++  [ ! -z "$V" ] && echo "$@" || printf '%s' "$DOTPROG"
+   "$@"
+ }
+ 
+@@ -60,7 +59,7 @@ fi
+ 
+ if isnewer generated/newtoys.h toys
+ then
+-  echo -n "generated/newtoys.h "
++  printf 'generated/newtoys.h '
+ 
+   echo "USE_TOYBOX(NEWTOY(toybox, NULL, TOYFLAG_STAYROOT))" > generated/newtoys.h
+   $SED -n -e 's/^USE_[A-Z0-9_]*(/&/p' toys/*/*.c \
+@@ -83,9 +82,9 @@ BUILD="$(echo ${CROSS_COMPILE}${CC} $CFLAGS -I . $OPTIMIZE $GITHASH)"
+ LIBFILES="$(ls lib/*.c | grep -v lib/help.c)"
+ TOYFILES="lib/help.c main.c $TOYFILES"
+ 
+-if [ "${TOYFILES/pending//}" != "$TOYFILES" ]
++if [ "${TOYFILES#*pending}" != "$TOYFILES" ]
+ then
+-  echo -e "\n\033[1;31mwarning: using unfinished code from toys/pending\033[0m"
++  printf '\n\033[1;31mwarning: using unfinished code from toys/pending\033[0m\n'
+ fi
+ 
+ genbuildsh()
+@@ -106,10 +105,10 @@ genbuildsh()
+   echo '$BUILD $FILES $LINK'
+ }
+ 
+-if ! cmp -s <(genbuildsh 2>/dev/null | head -n 6 ; echo LINK="'"$LDOPTIMIZE $LDFLAGS) \
+-          <(head -n 7 generated/build.sh 2>/dev/null | $SED '7s/ -o .*//')
++if [ "$(genbuildsh 2>/dev/null | head -n 6 ; echo LINK="'"$LDOPTIMIZE $LDFLAGS)" != \
++          "$(head -n 7 generated/build.sh 2>/dev/null | $SED '7s/ -o .*//')" ]
+ then
+-  echo -n "Library probe"
++  printf 'Library probe'
+ 
+   # We trust --as-needed to remove each library if we don't use any symbols
+   # out of it, this loop is because the compiler has no way to ignore a library
+@@ -122,7 +121,7 @@ then
+     echo "int main(int argc, char *argv[]) {return 0;}" | \
+     ${CROSS_COMPILE}${CC} $CFLAGS $LDFLAGS -xc - -o generated/libprobe $LDASNEEDED -l$i > /dev/null 2>/dev/null &&
+     echo -l$i >> generated/optlibs.dat
+-    echo -n .
++    printf .
+   done
+   rm -f generated/libprobe
+   echo
+@@ -185,7 +184,7 @@ make_flagsh()
+ 
+     echo "#define NEWTOY(aa,bb,cc) aa $I bb"
+     echo '#define OLDTOY(...)'
+-    if [ "$I" == A ]
++    if [ "$I" = A ]
+     then
+       cat generated/config.h
+     else
+@@ -215,13 +214,13 @@ make_flagsh()
+ 
+ if isnewer generated/flags.h toys "$KCONFIG_CONFIG"
+ then
+-  echo -n "generated/flags.h "
++  printf 'generated/flags.h '
+   make_flagsh
+ fi
+ 
+ # Extract global structure definitions and flag definitions from toys/*/*.c
+ 
+-function getglobals()
++getglobals()
+ {
+   for i in toys/*/*.c
+   do
+@@ -230,13 +229,13 @@ function getglobals()
+             -e 's/^GLOBALS(/struct '"$NAME"'_data {/' \
+             -e 's/^)/};/' -e 'p' $i)"
+ 
+-    [ ! -z "$DATA" ] && echo -e "// $i\n\n$DATA\n"
++    [ ! -z "$DATA" ] && printf '// %s\n\n%s\n\n' "$i" "$DATA"
+   done
+ }
+ 
+ if isnewer generated/globals.h toys
+ then
+-  echo -n "generated/globals.h "
++  printf 'generated/globals.h '
+   GLOBSTRUCT="$(getglobals)"
+   (
+     echo "$GLOBSTRUCT"
+@@ -255,7 +254,7 @@ fi
+ 
+ if isnewer generated/tags.h toys
+ then
+-  echo -n "generated/tags.h "
++  printf 'generated/tags.h '
+ 
+   $SED -n '/TAGGED_ARRAY(/,/^)/{s/.*TAGGED_ARRAY[(]\([^,]*\),/\1/;p}' \
+     toys/*/*.c lib/*.c | generated/mktags > generated/tags.h
+@@ -273,7 +272,7 @@ fi
+ 
+ [ ! -z "$NOBUILD" ] && exit 0
+ 
+-echo -n "Compile $OUTNAME"
++printf 'Compile $OUTNAME'
+ [ ! -z "$V" ] && echo
+ DOTPROG=.
+ 
+@@ -286,7 +285,7 @@ if [ ! -e "$X" ] || [ ! -z "$(find toys -name "*.h" -newer "$X")" ]
+ then
+   rm -rf generated/obj && mkdir -p generated/obj || exit 1
+ else
+-  rm -f generated/obj/{main,lib_help}.o || exit 1
++  rm -f generated/obj/main.o generated/obj/lib_help.o || exit 1
+ fi
+ 
+ # build each generated/obj/*.o file in parallel
+@@ -299,9 +298,10 @@ CLICK=
+ 
+ for i in $LIBFILES click $TOYFILES
+ do
+-  [ "$i" == click ] && CLICK=1 && continue
++  [ "$i" = click ] && CLICK=1 && continue
+ 
+-  X=${i/lib\//lib_}
++  X="$i"
++  [ "${X#*lib/}" = "$X" ] || X="${X%%lib/*}lib_${X#*lib/}"
+   X=${X##*/}
+   OUT="generated/obj/${X%%.c}.o"
+   LNKFILES="$LNKFILES $OUT"
+@@ -309,8 +309,9 @@ do
+   # $LIBFILES doesn't need to be rebuilt if older than .config, $TOYFILES does
+   # ($TOYFILES contents can depend on CONFIG symbols, lib/*.c never should.)
+ 
+-  [ "$OUT" -nt "$i" ] && [ -z "$CLICK" -o "$OUT" -nt "$KCONFIG_CONFIG" ] &&
+-    continue
++  [ -n "$(find "$OUT" -newer "$i" 2>/dev/null)" ] &&
++      { [ -z "$CLICK" ] || [ -n "$(find "$OUT" -newer "$KCONFIG_CONFIG" 2>/dev/null)" ]; } &&
++      continue
+ 
+   do_loudly $BUILD -c $i -o $OUT &
+   PENDING="$PENDING $!"
+diff --git a/scripts/mcm-buildall.sh b/scripts/mcm-buildall.sh
+index cac41372..4075872f 100755
+--- a/scripts/mcm-buildall.sh
++++ b/scripts/mcm-buildall.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Script to build all cross and native compilers supported by musl-libc.
+ # This isn't directly used by toybox, but is useful for testing.
+@@ -22,7 +22,7 @@ BOOTSTRAP=i686-linux-musl
+ 
+ [ -z "$OUTPUT" ] && OUTPUT="$PWD/ccc"
+ 
+-if [ "$1" == clean ]
++if [ "$1" = clean ]
+ then
+   rm -rf "$OUTPUT" host-* *.log
+   make clean
+@@ -38,7 +38,7 @@ make_toolchain()
+     OUTPUT="$PWD/host-$TARGET"
+     EXTRASUB=y
+   else
+-    if [ "$TYPE" == static ]
++    if [ "$TYPE" = static ]
+     then
+       HOST=$BOOTSTRAP
+       [ "$TARGET" = "$HOST" ] && LP="$PWD/host-$HOST/bin:$LP"
+@@ -53,7 +53,9 @@ make_toolchain()
+          echo "no $TARGET-cc in $LP" && return
+     fi
+     COMMON_CONFIG="CC=\"$HOST-gcc -static --static\" CXX=\"$HOST-g++ -static --static\""
+-    export -n HOST
++    _HOST="$HOST"
++    unset HOST
++    HOST="$_HOST"
+     OUTPUT="$OUTPUT/${RENAME:-$TARGET}-$TYPE"
+   fi
+ 
+@@ -66,7 +68,7 @@ make_toolchain()
+   # Change title bar to say what we're currently building
+ 
+   echo === building $TARGET-$TYPE
+-  echo -en "\033]2;$TARGET-$TYPE\007"
++  printf '\033]2;$TARGET-$TYPE\007' "$TARGET" "$TYPE"
+ 
+   rm -rf build/"$TARGET" "$OUTPUT" &&
+   [ -z "$CPUS" ] && CPUS=$(($(nproc)+1))
+@@ -76,10 +78,10 @@ make_toolchain()
+     COMMON_CONFIG="CFLAGS=\"$CFLAGS -g0 -Os\" CXXFLAGS=\"$CXXFLAGS -g0 -Os\" LDFLAGS=\"$LDFLAGS -s\" $COMMON_CONFIG" \
+     install -j$CPUS || exit 1
+   set +x
+-  echo -e '#ifndef __MUSL__\n#define __MUSL__ 1\n#endif' \
++  printf '#ifndef __MUSL__\n#define __MUSL__ 1\n#endif\n' \
+     >> "$OUTPUT/${EXTRASUB:+$TARGET/}include/features.h"
+ 
+-  if [ ! -z "$RENAME" ] && [ "$TYPE" == cross ]
++  if [ ! -z "$RENAME" ] && [ "$TYPE" = cross ]
+   then
+     CONTEXT="output/$RENAME-cross/bin"
+     for i in "$CONTEXT/$TARGET-"*
+@@ -93,7 +95,7 @@ make_toolchain()
+   # $BOOTSTRAP arch
+   [ -z "$TYPE" ] && make clean
+ 
+-  if [ "$TYPE" == native ]
++  if [ "$TYPE" = native ]
+   then
+     # gcc looks in "../usr/include" but not "/bin/../include" (relative to the
+     # executable). That means /usr/bin/gcc looks in /usr/usr/include, so that's
+@@ -108,14 +110,14 @@ make_toolchain()
+ # Expand compressed target into binutils/gcc "tuple" and call make_toolchain
+ make_tuple()
+ {
+-  PART1=${1/:*/}
+-  PART3=${1/*:/}
+-  PART2=${1:$((${#PART1}+1)):$((${#1}-${#PART3}-${#PART1}-2))}
++  PART1=${1%%:*}
++  PART3=${1##*:}
++  PART2=${1#${PART1}:} PART2+${PART2%:${PART3}}
+ 
+   # Do we need to rename this toolchain after building it?
+-  RENAME=${PART1/*@/}
+-  [ "$RENAME" == "$PART1" ] && RENAME=
+-  PART1=${PART1/@*/}
++  RENAME=${PART1##*@}
++  [ "$RENAME" = "$PART1" ] && RENAME=
++  PART1=${PART1%%@*}
+   TARGET=${PART1}-linux-musl${PART2} 
+ 
+   [ -z "$NOCLEAN" ] && rm -rf build
+diff --git a/scripts/mkroot.sh b/scripts/mkroot.sh
+index 0953f419..692473ad 100755
+--- a/scripts/mkroot.sh
++++ b/scripts/mkroot.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Clear environment variables by restarting script w/bare minimum passed through
+ [ -z "$NOCLEAR" ] && exec env -i NOCLEAR=1 HOME="$HOME" PATH="$PATH" \
+@@ -6,13 +6,13 @@
+ 
+ # assign command line NAME=VALUE args to env vars, keeping rest as packages
+ while [ $# -ne 0 ]; do
+-  [ "${1/=/}" != "$1" ] && eval "export ${1/=*/}=\"\${1#*=}\"" ||
++  [ "${1#*=}" != "$1" ] && eval "export ${1%%=*}=\"\${1#*=}\"" ||
+     { [ "$1" != '--' ] && PKG="${PKG:-plumbing} $1"; }
+   shift
+ done
+ 
+ die() { echo "$@" >&2; exit 1; }
+-announce() { echo -e "\033]2;$CROSS $*\007\n=== $*"; }
++announce() { printf '\033]2;%s %s\007\n=== %s\n' "$CROSS" "$*"; }
+ 
+ # Create target-independent working directories (cmdline can change locations)
+ TOP="$PWD/root"
+@@ -22,13 +22,13 @@ mkdir -p ${BUILD:=$TOP/build} ${AIRLOCK:=$TOP/airlock} ${LOG:=$TOP/log} ||exit 1
+ if [ ! -z "$CROSS" ]; then
+   [ ! -d "${CCC:=$PWD/ccc}" ] && die "No ccc symlink to compiler directory."
+   CROSS_COMPILE="$(echo "$CCC/$CROSS"-*cross/bin/"$CROSS"*-cc | sed 's/cc$//')"
+-  if [ "${CROSS::3}" == all ]; then
++  if [ "${CROSS::3}" = all ]; then
+     for i in $(ls "$CCC" | sed -n 's/-.*//p' | sort -u | xargs); do
+-      { rm -f "$LOG/$i-log".{failed,success}
+-        "$0" "$@" CROSS=$i ; [ $? -eq 0 ] && mv "$LOG/$i".{txt,success}
+-      } |& tee "$LOG/$i.txt"
++      { rm -f "$LOG/$i-logfailed" "$LOG/$i-log.success"
++        "$0" "$@" CROSS=$i ; [ $? -eq 0 ] && mv "$LOG/$i.txt" "$LOG/$i.success"
++      } 2>&1 | tee "$LOG/$i.txt"
+       [ ! -e "$LOG/$i.success" ] &&
+-        { mv "$LOG/$i".{txt,failed};[ "$CROSS" != allnonstop ] && exit 1; }
++        { mv "$LOG/$i.txt" "$LOG/$i.failed";[ "$CROSS" != allnonstop ] && exit 1; }
+     done
+     exit
+   elif [ ! -e "${CROSS_COMPILE}cc" ]; then
+@@ -37,14 +37,15 @@ if [ ! -z "$CROSS" ]; then
+   fi
+ fi
+ 
+-${CROSS_COMPILE}cc --static -xc - -o /dev/null <<< "int main(void){return 0;}"||
+-  die "${CROSS_COMPILE}cc can't create static binaries"
++! echo 'int main(void) {return 0;}' | cc --static -cx - -o /dev/null ||
++    die "Warning: host compiler can't create static binaries." >&2; sleep 3
++
+ 
+ # Parse and sanity check $CROSS_COMPILE (if any)
+ if [ ! -z "$CROSS_COMPILE" ]; then
+   CROSS_PATH="$(dirname "$(which "${CROSS_COMPILE}cc")")"
+   [ -z "$CROSS_PATH" ] && die "no ${CROSS_COMPILE}cc in path"
+-  : ${CROSS_BASE:=$(basename "$CROSS_COMPILE")} ${CROSS:=${CROSS_BASE/-*/}}
++  : ${CROSS_BASE:=$(basename "$CROSS_COMPILE")} ${CROSS:=${CROSS_BASE/%%-*/}}
+ fi
+ echo "Building for ${CROSS:=host}"
+ 
+@@ -65,8 +66,10 @@ if [ ! -z "$CROSS_COMPILE" ]; then
+ fi
+ 
+ # Create new root filesystem's directory layout
+-mkdir -p "$ROOT"/{etc,tmp,proc,sys,dev,home,mnt,root,usr/{bin,sbin,lib},var} &&
+-chmod a+rwxt "$ROOT"/tmp && ln -s usr/{bin,sbin,lib} "$ROOT" || exit 1
++mkdir -p "$ROOT/etc" "$ROOT/tmp" "$ROOT/proc" "$ROOT/sys" "$ROOT/dev" \
++    "$ROOT/home" "$ROOT/mnt" "$ROOT/root" "$ROOT/usr/bin" "$ROOT/usr/sbin" \
++    "$ROOT/usr/lib" "$ROOT/var" 
++chmod a+rwxt "$ROOT"/tmp && ln -s usr/bin usr/sbin usr/lib "$ROOT" || exit 1
+ 
+ # Write init script. Runs as pid 1 from initramfs to set up and hand off system.
+ cat > "$ROOT"/init << 'EOF' &&
+@@ -114,7 +117,7 @@ root:x:0:0:root:/root:/bin/sh
+ guest:x:500:500:guest:/home/guest:/bin/sh
+ nobody:x:65534:65534:nobody:/proc/self:/dev/null
+ EOF
+-echo -e 'root:x:0:\nguest:x:500:\nnobody:x:65534:' > "$ROOT"/etc/group || exit 1
++printf 'root:x:0:\nguest:x:500:\nnobody:x:65534:\n' > "$ROOT"/etc/group || exit 1
+ 
+ # Build static toybox with existing .config if there is one, else defconfig+sh
+ announce toybox
+@@ -133,13 +136,13 @@ if [ -z "$LINUX" ] || [ ! -d "$LINUX/kernel" ]; then
+ else
+   # Which architecture are we building a kernel for?
+   LINUX="$(realpath "$LINUX")"
+-  [ -z "$TARGET" ] && TARGET="${CROSS_BASE/-*/}"
++  [ -z "$TARGET" ] && TARGET="${CROSS_BASE%%-*/}"
+   [ -z "$TARGET" ] && TARGET="$(uname -m)"
+ 
+   # Target-specific info in an (alphabetical order) if/else staircase
+   # Each target needs board config, serial console, RTC, ethernet, block device.
+ 
+-  if [ "$TARGET" == armv5l ]; then
++  if [ "$TARGET" = armv5l ]; then
+     # This could use the same VIRT board as armv7, but let's demonstrate a
+     # different one requiring a separate device tree binary.
+     QEMU="arm -M versatilepb -net nic,model=rtl8139 -net user"
+@@ -147,8 +150,8 @@ else
+     KCONF=CPU_ARM926T,MMU,VFP,ARM_THUMB,AEABI,ARCH_VERSATILE,ATAGS,DEPRECATED_PARAM_STRUCT,ARM_ATAG_DTB_COMPAT,ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND,SERIAL_AMBA_PL011,SERIAL_AMBA_PL011_CONSOLE,RTC_CLASS,RTC_DRV_PL031,RTC_HCTOSYS,PCI,PCI_VERSATILE,BLK_DEV_SD,SCSI,SCSI_LOWLEVEL,SCSI_SYM53C8XX_2,SCSI_SYM53C8XX_MMIO,NET_VENDOR_REALTEK,8139CP
+     KERNEL_CONFIG="CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE=0"
+     DTB=arch/arm/boot/dts/versatile-pb.dtb
+-  elif [ "$TARGET" == armv7l ] || [ "$TARGET" == aarch64 ]; then
+-    if [ "$TARGET" == aarch64 ]; then
++  elif [ "$TARGET" = armv7l ] || [ "$TARGET" = aarch64 ]; then
++    if [ "$TARGET" = aarch64 ]; then
+       QEMU="aarch64 -M virt -cpu cortex-a57"
+       KARCH=arm64 VMLINUX=arch/arm64/boot/Image
+     else
+@@ -156,41 +159,41 @@ else
+     fi
+     KARGS=ttyAMA0
+     KCONF=MMU,ARCH_MULTI_V7,ARCH_VIRT,SOC_DRA7XX,ARCH_OMAP2PLUS_TYPICAL,ARCH_ALPINE,ARM_THUMB,VDSO,CPU_IDLE,ARM_CPUIDLE,KERNEL_MODE_NEON,SERIAL_AMBA_PL011,SERIAL_AMBA_PL011_CONSOLE,RTC_CLASS,RTC_HCTOSYS,RTC_DRV_PL031,NET_CORE,VIRTIO_MENU,VIRTIO_NET,PCI,PCI_HOST_GENERIC,VIRTIO_BLK,VIRTIO_PCI,VIRTIO_MMIO,ATA,ATA_SFF,ATA_BMDMA,ATA_PIIX,PATA_PLATFORM,PATA_OF_PLATFORM,ATA_GENERIC
+-  elif [ "$TARGET" == i486 ] || [ "$TARGET" == i686 ] ||
+-       [ "$TARGET" == x86_64 ] || [ "$TARGET" == x32 ]; then
+-    if [ "$TARGET" == i486 ]; then
++  elif [ "$TARGET" = i486 ] || [ "$TARGET" = i686 ] ||
++       [ "$TARGET" = x86_64 ] || [ "$TARGET" = x32 ]; then
++    if [ "$TARGET" = i486 ]; then
+       QEMU="i386 -cpu 486 -global fw_cfg.dma_enabled=false" KCONF=M486
+-    elif [ "$TARGET" == i686 ]; then
++    elif [ "$TARGET" = i686 ]; then
+       QEMU="i386 -cpu pentium3" KCONF=MPENTIUMII
+     else
+       QEMU=x86_64 KCONF=64BIT
+-      [ "$TARGET" == x32 ] && KCONF=X86_X32
++      [ "$TARGET" = x32 ] && KCONF=X86_X32
+     fi
+     KARCH=x86 KARGS=ttyS0 VMLINUX=arch/x86/boot/bzImage
+     KCONF=$KCONF,UNWINDER_FRAME_POINTER,PCI,BLK_DEV_SD,ATA,ATA_SFF,ATA_BMDMA,ATA_PIIX,NET_VENDOR_INTEL,E1000,SERIAL_8250,SERIAL_8250_CONSOLE,RTC_CLASS
+-  elif [ "$TARGET" == m68k ]; then
++  elif [ "$TARGET" = m68k ]; then
+     QEMU="m68k -M q800" KARCH=m68k KARGS=ttyS0 VMLINUX=vmlinux
+     KCONF=MMU,M68040,M68KFPU_EMU,MAC,SCSI_MAC_ESP,MACINTOSH_DRIVERS,ADB,ADB_MACII,NET_CORE,MACSONIC,SERIAL_PMACZILOG,SERIAL_PMACZILOG_TTYS,SERIAL_PMACZILOG_CONSOLE
+-  elif [ "$TARGET" == mips ] || [ "$TARGET" == mipsel ]; then
++  elif [ "$TARGET" = mips ] || [ "$TARGET" = mipsel ]; then
+     QEMU="mips -M malta" KARCH=mips KARGS=ttyS0 VMLINUX=vmlinux
+     KCONF=MIPS_MALTA,CPU_MIPS32_R2,SERIAL_8250,SERIAL_8250_CONSOLE,PCI,BLK_DEV_SD,ATA,ATA_SFF,ATA_BMDMA,ATA_PIIX,NET_VENDOR_AMD,PCNET32,POWER_RESET,POWER_RESET_SYSCON
+-    [ "$TARGET" == mipsel ] && KCONF=$KCONF,CPU_LITTLE_ENDIAN &&
++    [ "$TARGET" = mipsel ] && KCONF=$KCONF,CPU_LITTLE_ENDIAN &&
+       QEMU="mipsel -M malta"
+-  elif [ "$TARGET" == powerpc ]; then
++  elif [ "$TARGET" = powerpc ]; then
+     KARCH=powerpc QEMU="ppc -M g3beige" KARGS=ttyS0 VMLINUX=vmlinux
+     KCONF=ALTIVEC,PPC_PMAC,PPC_OF_BOOT_TRAMPOLINE,IDE,IDE_GD,IDE_GD_ATA,BLK_DEV_IDE_PMAC,BLK_DEV_IDE_PMAC_ATA100FIRST,MACINTOSH_DRIVERS,ADB,ADB_CUDA,NET_VENDOR_NATSEMI,NET_VENDOR_8390,NE2K_PCI,SERIO,SERIAL_PMACZILOG,SERIAL_PMACZILOG_TTYS,SERIAL_PMACZILOG_CONSOLE,BOOTX_TEXT
+-  elif [ "$TARGET" == powerpc64le ]; then
++  elif [ "$TARGET" = powerpc64le ]; then
+     KARCH=powerpc QEMU="ppc64 -M pseries -vga none" KARGS=/dev/hvc0
+     VMLINUX=vmlinux
+     KCONF=PPC64,PPC_PSERIES,CPU_LITTLE_ENDIAN,PPC_OF_BOOT_TRAMPOLINE,BLK_DEV_SD,SCSI_LOWLEVEL,SCSI_IBMVSCSI,ATA,NET_VENDOR_IBM,IBMVETH,HVC_CONSOLE,PPC_TRANSACTIONAL_MEM,PPC_DISABLE_WERROR,SECTION_MISMATCH_WARN_ONLY
+   elif [ "$TARGET" = s390x ]; then
+     QEMU="s390x" KARCH=s390 VMLINUX=arch/s390/boot/bzImage
+     KCONF=MARCH_Z900,PACK_STACK,NET_CORE,VIRTIO_NET,VIRTIO_BLK,SCLP_TTY,SCLP_CONSOLE,SCLP_VT220_TTY,SCLP_VT220_CONSOLE,S390_GUEST
+-  elif [ "$TARGET" == sh2eb ]; then
++  elif [ "$TARGET" = sh2eb ]; then
+     KARCH=sh VMLINUX=vmlinux KERNEL_CONFIG='CONFIG_MEMORY_START=0x10000000
+ CONFIG_CMDLINE="console=ttyUL0 earlycon"' BUILTIN=1
+     KCONF=CPU_SUBTYPE_J2,CPU_BIG_ENDIAN,SH_JCORE_SOC,SMP,BINFMT_ELF_FDPIC,JCORE_EMAC,SERIAL_UARTLITE,SERIAL_UARTLITE_CONSOLE,HZ_100,CMDLINE_OVERWRITE,SPI,SPI_JCORE,MMC,PWRSEQ_SIMPLE,MMC_BLOCK,MMC_SPI
+-  elif [ "$TARGET" == sh4 ]; then
++  elif [ "$TARGET" = sh4 ]; then
+     QEMU="sh4 -M r2d -serial null -serial mon:stdio" KARCH=sh
+     KARGS="ttySC1 noiotrap" VMLINUX=arch/sh/boot/zImage
+     KERNEL_CONFIG="CONFIG_MEMORY_START=0x0c000000"
+@@ -205,24 +208,25 @@ CONFIG_CMDLINE="console=ttyUL0 earlycon"' BUILTIN=1
+     echo qemu-system-"$QEMU" '"$@"' $QEMU_MORE -nographic -no-reboot -m 256 \
+          -kernel $(basename $VMLINUX) $INITRD \
+          "-append \"panic=1 HOST=$TARGET console=$KARGS \$KARGS\"" \
+-         ${DTB:+-dtb "$(basename "$DTB")"} ";echo -e '\e[?7h'" \
++         ${DTB:+-dtb "$(basename "$DTB")"} ";printf  '\033[?7h\n'" \
+          > "$OUTPUT/qemu-$TARGET.sh" &&
+     chmod +x "$OUTPUT/qemu-$TARGET.sh" || exit 1
+   fi
+ 
+   announce "linux-$KARCH"
+-  pushd "$LINUX" && make distclean && popd &&
+-  cp -sfR "$LINUX" "$MYBUILD/linux" && pushd "$MYBUILD/linux" &&
++  dir="$PWD"
++  cd "$LINUX" && make distclean && cd "$dir" &&
++  cp -sfR "$LINUX" "$MYBUILD/linux" && cd "$MYBUILD/linux" &&
+ 
+   # Write miniconfig
+   { echo "# make ARCH=$KARCH allnoconfig KCONFIG_ALLCONFIG=$TARGET.miniconf"
+-    echo -e "# make ARCH=$KARCH -j \$(nproc)\n# boot $VMLINUX\n\n"
++    printf "# make ARCH=%s -j \$(nproc)\n# boot %s\n\n\n" "$KARCH" "$VMLINUX"
+     echo "# CONFIG_EMBEDDED is not set"
+ 
+     # Expand list of =y symbols, first generic then architecture-specific
+     for i in BINFMT_ELF,BINFMT_SCRIPT,NO_HZ,HIGH_RES_TIMERS,BLK_DEV,BLK_DEV_INITRD,RD_GZIP,BLK_DEV_LOOP,EXT4_FS,EXT4_USE_FOR_EXT2,VFAT_FS,FAT_DEFAULT_UTF8,MISC_FILESYSTEMS,SQUASHFS,SQUASHFS_XATTR,SQUASHFS_ZLIB,DEVTMPFS,DEVTMPFS_MOUNT,TMPFS,TMPFS_POSIX_ACL,NET,PACKET,UNIX,INET,IPV6,NETDEVICES,NET_CORE,NETCONSOLE,ETHERNET,COMPAT_32BIT_TIME,EARLY_PRINTK,IKCONFIG,IKCONFIG_PROC $KCONF ; do
+       echo "# architecture ${X:-independent}"
+-      sed -E '/^$/d;s/([^,]*)($|,)/CONFIG_\1=y\n/g' <<< "$i"
++      echo "$i" | sed -E '/^$/d;s/([^,]*)($|,)/CONFIG_\1=y\n/g'
+       X=specific
+     done
+     [ ! -z "$BUILTIN" ] && echo -e CONFIG_INITRAMFS_SOURCE="\"$OUTPUT/fs\""
+@@ -232,16 +236,17 @@ CONFIG_CMDLINE="console=ttyUL0 earlycon"' BUILTIN=1
+ 
+   # Second config pass to remove stupid kernel defaults
+   # See http://lkml.iu.edu/hypermail/linux/kernel/1912.3/03493.html
+-  sed -e 's/# CONFIG_EXPERT .*/CONFIG_EXPERT=y/' -e "$(sed -E -e '/^$/d' \
+-    -e 's@([^,]*)($|,)@/^CONFIG_\1=y/d;$a# CONFIG_\1 is not set/\n@g' \
+-       <<< VT,SCHED_DEBUG,DEBUG_MISC,X86_DEBUG_FPU)" -i .config &&
++    sed -e 's/# CONFIG_EXPERT .*/CONFIG_EXPERT=y/' -e "$(echo \
++    'VT,SCHED_DEBUG,DEBUG_MISC,X86_DEBUG_FPU' | sed -E -e '/^$/d' \
++    -e 's@([^,]*)($|,)@/^CONFIG_\1=y/d;$a# CONFIG_\1 is not set/\n@g')" \
++    -i .config &&
+   yes "" | make ARCH=$KARCH oldconfig > /dev/null &&
+ 
+   # Build kernel. Copy config, device tree binary, and kernel binary to output
+   make ARCH=$KARCH CROSS_COMPILE="$CROSS_COMPILE" -j $(nproc) &&
+   cp .config "$OUTPUT/linux-fullconfig" || exit 1
+   [ ! -z "$DTB" ] && { cp "$DTB" "$OUTPUT" || exit 1 ;}
+-  cp "$VMLINUX" "$OUTPUT" && cd .. && rm -rf linux && popd || exit 1
++  cp "$VMLINUX" "$OUTPUT" && cd .. && rm -rf linux && cd "$dir" || exit 1
+ fi
+ 
+ # clean up and package root filesystem for initramfs.
+diff --git a/scripts/portability.sh b/scripts/portability.sh
+index 618022c7..63dee932 100644
+--- a/scripts/portability.sh
++++ b/scripts/portability.sh
+@@ -1,6 +1,6 @@
+ # sourced to find alternate names for things
+ 
+-source configure
++. ./configure
+ 
+ if [ -z "$(command -v "${CROSS_COMPILE}${CC}")" ]
+ then
+diff --git a/scripts/record-commands b/scripts/record-commands
+index 8410966b..f49bcff9 100755
+--- a/scripts/record-commands
++++ b/scripts/record-commands
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Set up command recording wrapper
+ 
+diff --git a/scripts/single.sh b/scripts/single.sh
+index c40c6bcf..473bbdd4 100755
+--- a/scripts/single.sh
++++ b/scripts/single.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ # Build a standalone toybox command
+ 
+@@ -9,7 +9,7 @@ then
+ fi
+ 
+ # Add trailing / to PREFIX when it's set but hasn't got one
+-[ "$PREFIX" == "${PREFIX%/}" ] && PREFIX="${PREFIX:+$PREFIX/}"
++[ "$PREFIX" = "${PREFIX%/}" ] && PREFIX="${PREFIX:+$PREFIX/}"
+ 
+ # Harvest TOYBOX_* symbols from .config
+ if [ ! -e .config ]
+@@ -24,7 +24,7 @@ touch -c .config
+ export KCONFIG_CONFIG=.singleconfig
+ for i in "$@"
+ do
+-  echo -n "$i:"
++  printf '%s:' "$i"
+   TOYFILE="$(egrep -l "TOY[(]($i)[ ,]" toys/*/*.c)"
+ 
+   if [ -z "$TOYFILE" ]
+@@ -37,7 +37,7 @@ do
+ 
+   DEPENDS=
+   MPDEL=
+-  if [ "$i" == sh ]
++  if [ "$i" = sh ]
+   then
+     DEPENDS="$(sed -n 's/USE_\([^(]*\)(NEWTOY([^,]*,.*TOYFLAG_MAYFORK.*/\1/p' toys/*/*.c)"
+   else
