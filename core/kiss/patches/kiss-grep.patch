@@ -1,5 +1,5 @@
---- a/kiss	2020-12-23 19:57:58.092340336 -0500
-+++ b/kiss	2021-01-17 22:36:03.590750396 -0500
+--- a/kiss
++++ b/kiss
 @@ -66,7 +66,7 @@
      [ "$3" ] ||
          set -- "$1" "$2" "$sys_db"/*/manifest
@@ -70,8 +70,9 @@
 +
      # Define some paths which we will then use throughout the script.
      sys_db=$KISS_ROOT/${pkg_db:=var/db/kiss/installed}
---- a/contrib/kiss-owns	2020-11-26 23:23:19.000000000 -0500
-+++ b/contrib/kiss-owns	2021-02-05 19:49:02.029072293 -0500
+
+--- a/contrib/kiss-owns
++++ b/contrib/kiss-owns
 @@ -1,6 +1,8 @@
  #!/bin/sh -e
  # Check which package owns a file
@@ -90,8 +91,8 @@
      "$PWD/${1##*/}" \
      "$KISS_ROOT/var/db/kiss/installed/"*/manifest)
  
---- a/contrib/kiss-revdepends	2020-11-26 23:23:19.000000000 -0500
-+++ b/contrib/kiss-revdepends	2021-02-05 19:49:35.894219290 -0500
+--- a/contrib/kiss-revdepends
++++ b/contrib/kiss-revdepends
 @@ -1,6 +1,8 @@
  #!/bin/sh -e
  # Display packages which depend on package
@@ -105,8 +106,8 @@
  
 -grep "^$1" -- */depends
 +"$GREP" "^$1" -- */depends
---- a/contrib/kiss-orphans	2020-11-26 23:23:19.000000000 -0500
-+++ b/contrib/kiss-orphans	2021-02-05 19:50:18.831609496 -0500
+--- a/contrib/kiss-orphans
++++ b/contrib/kiss-orphans
 @@ -1,6 +1,8 @@
  #!/bin/sh -e
  # List orphaned packages
@@ -116,10 +117,18 @@
  cd "$KISS_ROOT/var/db/kiss/installed/"
  
  for pkg in *; do
-@@ -12,5 +14,5 @@
+@@ -7,8 +9,8 @@
+     case $pkg in
+         # Exemptions for orphans which aren't really
+         # orphans. Exclude them from the list.
+-        baseinit|baselayout|gcc|e2fsprogs|musl|\
+-        make|busybox|bzip2|grub|kiss|git)
++        baselayout|bzip2|e2fsprogs|git|kiss|hummingbird|\
++        libarchive|llvm|make|musl|nawk|sbase|toybox|ubase|uutils)
              continue
      esac
  
+@@ -15,2 +17,2 @@
 -    grep -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
 +    "$GREP" -q "^$pkg$" ./*/depends || printf '%s\n' "$pkg"
  done
