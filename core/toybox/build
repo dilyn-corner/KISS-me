@@ -1,13 +1,17 @@
 #!/bin/sh -e
 
-mv config .config
-LDFLAGS="$LDFLAGS --static" gmake
+patch -p1 < POSIX.patch
+
+gmake LDFLAGS="$LDFLAGS --static" 
 gmake PREFIX="$1/usr/bin" install_flat
 
 chmod +s "$1/usr/bin/toybox"
 
 # less is actually more
-ln -s "$1/usr/bin/more" "$1/usr/bin/less"
+ln -s more "$1/usr/bin/less"
+
+# mdev.conf for our devices! 
+install -Dm644 mdev.conf "$1/etc/mdev.conf"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/toybox.license"
