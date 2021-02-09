@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-patch -p1 < kiss-grep.patch
+patch -p1 < tweaks.patch
 
 mkdir -p "$1/usr/bin"
 
