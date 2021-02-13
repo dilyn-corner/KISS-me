@@ -1,0 +1,9 @@
+libdrm
+libinput
+libudev-zero
+libxkbcommon
+linux-headers     make
+pixman
+wayland
+wayland-protocols make
+wld

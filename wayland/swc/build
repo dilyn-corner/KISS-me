@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+gmake \
+    PREFIX=/usr \
+    ENABLE_XWAYLAND=0 \
+    ENABLE_DEBUG=0
+
+gmake \
+    PREFIX=/usr \
+    ENABLE_XWAYLAND=0 \
+    ENABLE_DEBUG=0 \
+    DESTDIR="$1" install
