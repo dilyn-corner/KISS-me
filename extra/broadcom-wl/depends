@@ -1,3 +1,2 @@
 byacc         make
-gnu-as        make
 linux-headers make
