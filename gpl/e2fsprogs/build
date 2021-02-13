@@ -2,8 +2,6 @@
 
 export LDFLAGS="$LDFLAGS -static"
 
-patch -p1 < musl-qsort.patch
-
 ./configure \
     --prefix=/usr \
     --sbindir=/usr/bin \
