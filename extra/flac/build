@@ -12,4 +12,4 @@ make
 make DESTDIR="$1" install
 
 # Install the license
-install -Dm644 COPYING.Xiph "$1/usr/share/LICENSES/flac.license"
+install -Dm755 COPYING.Xiph "$1/usr/share/LICENSES/flac.license"
