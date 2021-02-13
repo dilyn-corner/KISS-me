@@ -1,22 +1,17 @@
 alsa-lib
 byacc              make
-bzip2
 expat
 ffmpeg
-findutils          make
 flac
 fontconfig
 freetype-harfbuzz
 glib
-gn                 make
 gperf              make
 libdrm
-libevent
-libexif
-libgcrypt
 libjpeg-turbo
 libwebp
 libxkbcommon
+linux-headers      make
 mesa
 nasm               make
 nodejs             make
