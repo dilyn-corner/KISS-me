@@ -1,3 +1,7 @@
+This patch is the work of E5ten; Landley doesn't want toybox to be POSIX because
+he's writing his own sh (toysh), and somehow that means the build system
+shouldn't be buildable outside of toybox bootstrapping itself. 
+https://github.com/landley/toybox/pull/182
 diff --git a/configure b/configure
 index 0b6501fc..23dd687d 100755
 --- a/configure

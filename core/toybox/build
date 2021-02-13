@@ -7,9 +7,6 @@ gmake PREFIX="$1/usr/bin" install_flat
 
 chmod +s "$1/usr/bin/toybox"
 
-# less is actually more
-ln -s more "$1/usr/bin/less"
-
 # mdev.conf for our devices! 
 install -Dm644 mdev.conf "$1/etc/mdev.conf"
 

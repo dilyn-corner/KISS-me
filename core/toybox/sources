@@ -1,4 +1,3 @@
 git+https://github.com/landley/toybox@8828d9cf77ec57604925753eeac45d0463a5b74f
 files/.config
-files/mdev.conf
 patches/POSIX.patch
