@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --enable-static-libc
+
+gmake
+gmake DESTDIR="$1" install
+
+# Install the config file
+install -Dm644 mdev.conf "$1/etc/mdev.conf"
+
+# Symlink for startup
+ln -sv /usr/bin/mdevd "$1/usr/bin/mdev"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/mdevd.license"
