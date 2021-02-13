@@ -20,4 +20,4 @@ for shared in yes no; do (
 ) done
 
 # Install the license
-install -Dm644 no/COPYING "$1/usr/share/LICENSES/pciutils.patch"
+install -Dm755 no/COPYING "$1/usr/share/LICENSES/pciutils.patch"
