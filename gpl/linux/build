@@ -9,7 +9,11 @@ done
 
 # Set the kernel up for success!
 cp config .config
-gmake YACC=yacc LLVM=1 olddefconfig
+gmake \
+    YACC=yacc \
+    LLVM=1 \
+    LLVM_IAS=1 \
+    olddefconfig
 
 # Useful variables
 modulesdir="$1/usr/lib/modules/$2"
@@ -17,10 +21,18 @@ builddir="$modulesdir/build"
 
 # Make that bad boy!
 echo "Making linux-$2"
-gmake YACC=yacc LLVM=1
+gmake \
+    YACC=yacc \
+    LLVM=1 \
+    LLVM_IAS=1
 
 echo "Installing modules..."
-gmake YACC=yacc LLVM=1 INSTALL_MOD_PATH="$1/usr" INSTALL_MOD_STRIP=1 modules_install
+gmake \
+    YACC=yacc \
+    LLVM=1 \
+    LLVM_IAS=1 \
+    INSTALL_MOD_PATH="$1/usr" \
+    INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
 rm "$modulesdir/build" "$modulesdir/source"
@@ -41,20 +53,24 @@ cp -a arch/x86/include "$builddir/arch/x86/include"
 
 find . -name "Kconfig*" -exec install -Dm644 {} "$builddir/{}" \;
 
-chmod -Rc u=rwX,go=rX "$1"
+#chmod -Rc u=rwX,go=rX "$1"
 
 echo "Removing cruft..."
-rm -r "$builddir/Documentation"
+#rm -r "$builddir/Documentation"
 find -L "$builddir" -type l             -exec rm -rf {} +
 find    "$builddir" -type f -name "*.o" -exec rm -rf {} +
 
-for arch in alpha,arc,arm,arm64,c6x,csky,h8300,hexagon,ia64,m68k,microblaze,mips,nds32,nios2,openrisc,parisc,powerpc,riscv,s390,sh,sparc,um,unicore32,xtensa; do 
+for arch in alpha arc arm arm64 c6x csky h8300 hexagon \
+            ia64 m68k microblaze mips nds32 nios2      \
+            openrisc parisc powerpc riscv s390 sh      \
+            sparc um unicore32 xtensa; 
+do 
     rm -rf $arch
 done
 
 echo "Laying trap..."
 mkdir -p "$1/usr/src"
-ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
+#ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
 install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz.efi"
 
