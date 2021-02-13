@@ -1,0 +1,23 @@
+Previous versions only used qsort, so I am basically reverting this change
+so that it works in Musl. qsort_r isn't defined in Musl.
+
+Cem Keylan
+
+--- a/e2fsck/rehash.c	2021-01-29 17:02:31.000000000 -0500
++++ b/e2fsck/rehash.c	2021-02-10 09:06:32.579704076 -0500
+@@ -1048,11 +1048,11 @@
+ 	/* Sort the list */
+ resort:
+ 	if (fd.compress && fd.num_array > 1)
+-		qsort_r(fd.harray+2, fd.num_array-2, sizeof(struct hash_entry),
+-			hash_cmp, &name_cmp_ctx);
++		qsort(fd.harray+2, fd.num_array-2, sizeof(struct hash_entry),
++			hash_cmp);
+ 	else
+-		qsort_r(fd.harray, fd.num_array, sizeof(struct hash_entry),
+-			hash_cmp, &name_cmp_ctx);
++		qsort(fd.harray, fd.num_array, sizeof(struct hash_entry),
++			hash_cmp);
+ 
+ 	/*
+ 	 * Look for duplicates
