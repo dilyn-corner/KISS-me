@@ -21,9 +21,6 @@ sed -i "s|threads'|threads', static: true|"       subprojects/fcft/meson.build
 # Note to self: always make doc generation toggleable
 sed -i "s|subdir('doc')||" meson.build
 
-# Ignore finding tic
-sed -i "s|'tic'|'foo'|" meson.build
-
 # These headers are never in the right spot
 fixHead=subprojects/fcft
 install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
@@ -43,7 +40,7 @@ meson \
     --prefix=/usr \
     -Dbuildtype=release \
     -Db_lto=true \
-    -Dterminfo=false \
+    -Dterminfo=disabled \
     . build
 
 # First, we generate a PGO build
