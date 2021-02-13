@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+gmake \
+    PREFIX=/usr \
+    CC=cc \
+    ENABLE_DEBUG=0
+
+gmake \
+    PREFIX=/usr \
+    CC=cc \
+    DESTDIR="$1" install
