@@ -1,0 +1,4 @@
+gmake make
+libdrm
+pixman
+wayland
