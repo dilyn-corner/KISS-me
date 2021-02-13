@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+gmake \
+    PREFIX=/usr \
+    CC=cc \
+    DRM_DRIVERS=intel
+
+gmake \
+    PREFIX=/usr \
+    DRM_DRIVERS=intel \
+    DESTDIR="$1" install
