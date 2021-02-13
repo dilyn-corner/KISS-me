@@ -1,0 +1,4 @@
+execline
+gmake make
+s6
+skalibs
