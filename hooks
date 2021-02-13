@@ -5,11 +5,11 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            e2fsprogs | ffmpeg | github-cli | lame | libpng)
+            chromium | e2fsprogs | ffmpeg | github-cli | lame)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            libvpx | mesa | nss | x265 | util-linux)
+            libpng | libvpx | mesa | nss | x265 | util-linux)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
@@ -17,7 +17,7 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            rust | firefox)
+            chromium | rust)
                 export KISS_TMPDIR=
         esac
     ;;
