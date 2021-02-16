@@ -8,9 +8,5 @@
 gmake
 gmake DESTDIR="$1" install
 
-# Install the service files
-install -Dm755 s6.boot       "$1/etc/rc.d/s6.boot"
-install -Dm755 s6-svscanboot "$1/usr/lib/s6/s6-svscanboot"
-
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/s6.license" 
