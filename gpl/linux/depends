@@ -1,7 +1,6 @@
 byacc  make
 flex   make
 gmake  make
-libelf
 libressl
 lz4
 m4     make
