@@ -1,0 +1,5 @@
+linux-headers make
+llvm
+python        make
+samurai       make
+zlib
