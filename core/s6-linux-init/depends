@@ -1,3 +1,7 @@
 execline
+gmake         make
+linux-headers make
+mdevd
 s6
+s6-rc
 skalibs
