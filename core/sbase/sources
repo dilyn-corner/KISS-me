@@ -1,4 +1,1 @@
 git+git://git.suckless.org/sbase
-files/egrep
-files/fgrep
-patches/tar-dash-remove.patch
