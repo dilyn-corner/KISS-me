@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-# Make sbase tar accept arguments without dash
-patch -p1 < tar-dash-remove.patch
-
 make LDFLAGS="$LDFLAGS -static" sbase-box
 make DESTDIR="$1" PREFIX=/usr   sbase-box-install
 
@@ -11,26 +8,23 @@ make DESTDIR="$1" PREFIX=/usr   sbase-box-install
 # sed -i is too good
 # the rest are overlaps
 
-for bin in  basename cat chgrp chmod chown   \
-            chroot cksum comm cut dirname    \
-            du env expand false find fold    \
-            getconf head hostname join kill  \
-            link ln logname md5sum mkdir     \
-            mkfifo mknod mktemp mv nice nl   \
-            nohup paste pathchk printenv pwd \
-            readlink rm rmdir seq sed        \
-            sha1sum sha224sum sha256sum      \
-            sha384sum sha512sum sleep sort   \
-            strings sync tar tee touch true  \
-            tsort tty uname unexpand uniq    \
-            unlink wc whoami yes 
+for bin in  basename cat chgrp chmod chown  \
+            chroot cksum comm cut dirname   \
+            du env expand false find fold   \
+            getconf grep head hostname join \
+            kill link ln logname md5sum     \
+            mkdir mkfifo mknod mktemp mv    \
+            nice nl nohup paste pathchk     \
+            printenv pwd readlink rm rmdir  \
+            sed seq sha1sum sha224sum       \
+            sha256sum sha384sum sha512sum   \
+            sha512-256sum sha512-224sum     \
+            sleep sort strings sync tar tee \
+            touch true tsort tty uname      \
+            unexpand uniq unlink wc whoami yes 
 do
         unlink "$1/usr/bin/$bin"
 done
-
-# Two common greps we should include
-install -Dm755 egrep "$1/usr/bin/egrep"
-install -Dm755 fgrep "$1/usr/bin/fgrep"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/sbase.license"
