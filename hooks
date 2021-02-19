@@ -27,10 +27,6 @@ case $TYPE in
         case $PKG in
             kiss) # ensure we keep docs
             ;;
-            libudev-zero) # install our helper script
-                cc contrib/helper.c -o helper
-                install -Dm755 helper "$DEST/usr/bin/helper"
-            ;;
             *)
                 rm -rf "$DEST/usr/share/bash-completions"
                 rm -rf "$DEST/etc/bash_completions.d"
