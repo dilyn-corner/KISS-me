@@ -134,20 +134,21 @@ forced to accept it).
   | gnupg1        | GPLv3         | libvorbis          | BSD 3-Clause  |
   | gperf         | GPLv3         | libvpx             | BSD 3-Clause  |
   | lame          | LGPLv2        | libwebp            | BSD 3-Clause  |
-  | libelf        | GPLv3         | mesa               | MIT           |
-  | linux         | GPLv2         | meson              | Apache-2.0    |
-  | linux-headers | GPLv2         | mtdev              | MIT           |
-  | mbpfan        | GPLv3         | nasm               | BSD 2-Clause  |
-  | mpv           | GPLv2         | netbsd-curses      | BSD 3-Clause  |
-  | pango         | LGPLv2.1      | nss                | MPLv2         |
-  | patch         | GPLv3         | opendoas           | BSD           |
-  | pciutils      | GPLv2         | opus               | BSD 3-Clause  |
-  | perl          | GPLv1         | pash               | MIT           |
-  | x264          | GPLv2         | pixman             | MIT           |
-  | x265          | GPLv2         | pkgconf            | ISC           |
-  | xvidcore      | GPLv2         | python             | PSFv2         |
-  | xz            | LGPLv2.1      | python2            | PSFv2         |
-  +---------------+---------------+ ripgrep            | UNLICENSE/MIT |
+  | linux         | GPLv2         | mesa               | MIT           |
+  | linux-headers | GPLv2         | meson              | Apache-2.0    |
+  | pango         | LGPLv2.1      | mtdev              | MIT           |
+  | perl          | GPLv1         | nasm               | BSD 2-Clause  |
+  | x264          | GPLv2         | netbsd-curses      | BSD 3-Clause  |
+  | x265          | GPLv2         | nodejs             | MIT           |
+  | xvidcore      | GPLv2         | nss                | MPLv2         |
+  | xz            | LGPLv2.1      | opendoas           | BSD           |
+  +---------------+---------------+ opus               | BSD 3-Clause  |
+                                  | pash               | MIT           |
+                                  | pixman             | MIT           |
+                                  | pkgconf            | ISC           |
+                                  | python             | PSFv2         |
+                                  | python2            | PSFv2         |
+                                  | ripgrep            | UNLICENSE/MIT |
                                   | rnp                | BSD 2-Clause  |
                                   | sqlite             | Public Domain |
                                   | tzdata             | Public Domain |
