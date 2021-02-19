@@ -1,33 +1,28 @@
 #!/bin/sh -e
 
-patch --version >/dev/null 2>&1 || {
-    printf "/usr/bin/patch must be owned by GNU patch\n"
-    exit 1
-}
+# Apply musl patches
+for patch in musl-*.patch; do
+    patch -p0 < "$patch"
+done
 
-# Don't apply musl patches on any other libc
-kiss list musl && {
-    for patch in musl-*.patch; do
-        patch -p0 < "$patch"
-    done
-}
-
+# Apply some fun chromium patches
 for patch in chromium-*.patch; do
     patch -p1 < "$patch"
 done
 
-# My own patches
-for patch in 0*.patch; do
+# Patches for wyverkiss
+for patch in wyverkiss-*.patch; do
+    patch -p1 < "$patch"
+done
+
+# Ungoogled-Chromium patches
+for patch in 00*.patch; do
     patch -p1 < "$patch"
 done
 
 printf "Pruning binaries\n"
 python3 ungoogled-chromium/utils/prune_binaries.py \
     ./ ungoogled-chromium/pruning.list
-
-printf "Applying ungoogled patchset\n"
-python3 ungoogled-chromium/utils/patches.py apply \
-    ./ ungoogled-chromium/patches
 
 printf "Applying domain substitution\n"
 python3 ungoogled-chromium/utils/domain_substitution.py apply \
@@ -93,74 +88,87 @@ python2 third_party/libaddressinput/chromium/tools/update-strings.py
 
 kiss list libva && vaapi=true
 
+sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
+    tools/generate_shim_headers/generate_shim_headers.py
+
 conf="
     is_cfi=false
+    use_lld=true
     is_clang=true
     is_debug=false
-    is_component_build=false
+    use_thin_lto=true
+    use_custom_libcxx=false
     clang_use_plugins=false
+    is_official_build=false
+    is_component_build=false
+    exclude_unwind_tables=true
     clang_use_chrome_plugins=false
+    is_unsafe_developer_build=false
     blink_symbol_level=0
-    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
-    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    enable_profiling=true
+    enable_stripping=true
     fatal_linker_warnings=false
     treat_warnings_as_errors=false
-    use_allocator=\"none\"
-    use_allocator_shim=false
+    thin_lto_enable_optimizations=true
+    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
     use_atk=false
     use_cups=false
-    use_custom_libcxx=false
+    use_gtk=false
+    use_x11=false
     use_dbus=false
     use_glib=false
-    use_gnome_keyring=false
     use_gold=false
-    use_gtk=false
-    use_kerberos=false
-    use_lld=true
-    use_pulseaudio=false
+    use_udev=false
+    use_libpci=false
     use_sysroot=false
+    use_xkbcommon=true
+    use_kerberos=false
+    use_pulseaudio=false
+    use_allocator=\"none\"
+    use_allocator_shim=false
+    use_gnome_keyring=false
+    use_vaapi=${vaapi:-false}
+    use_pangocairo=false
+    use_system_zlib=true
+    use_intel_minigbm=true
+    use_system_libdrm=true
+    use_system_minigbm=true
+    use_webaudio_ffmpeg=true
     use_system_freetype=true
     use_system_harfbuzz=true
-    use_udev=false
-    use_vaapi=${vaapi:-false}
-    use_x11=false
-    use_xkbcommon=true
-    use_system_minigbm=true
-    use_system_libdrm=true
     use_system_libwayland=true
     use_system_wayland_scanner=true
-    use_system_zlib=true
     enable_widevine=false
+    proprietary_codecs=false
     ffmpeg_branding=\"Chromium\"
     link_pulseaudio=false
     use_ozone=true
     ozone_platform_x11=false
     ozone_platform_wayland=true
-    proprietary_codecs=false
     rtc_use_pipewire=false
     symbol_level=0
-    chrome_pgo_phase=0
-    enable_hangout_services_extension=false
-    enable_js_type_check=false
+    enable_vr=false
     enable_mdns=false
-    enable_mse_mpeg2ts_stream_parser=true
     enable_nacl=false
-    enable_nacl_nonsfi=false
-    enable_one_click_signin=false
-    enable_reading_list=false
     enable_remoting=false
     enable_reporting=false
+    enable_nacl_nonsfi=false
+    enable_reading_list=false
     enable_service_discovery=false
-    exclude_unwind_tables=true
-    fieldtrial_testing_like_official_build=true
-    build_dawn_tests=false
-    enable_perfetto_unittests=false
-    enable_vr=false
+    enable_js_type_check=false
+    enable_hangout_services_extension=false
+    enable_mse_mpeg2ts_stream_parser=true
+    enable_one_click_signin=false
     safe_browsing_mode=0
+    rtc_build_tools=false
+    build_dawn_tests=false
+    pdf_is_complete_lib=true
+    v8_enable_i18n_support=false
+    enable_perfetto_unittests=false
+    fieldtrial_testing_like_official_build=true
     use_official_google_api_keys=false
     use_unofficial_version_number=false
-    use_pangocairo=false
-    v8_enable_i18n_support=false
     google_api_key=\"\"
     google_default_client_id=\"\"
     google_default_client_secret=\"\"

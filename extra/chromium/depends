@@ -5,7 +5,6 @@ ffmpeg
 flac
 fontconfig
 freetype-harfbuzz
-glib
 gperf              make
 libdrm
 libjpeg-turbo
@@ -17,8 +16,6 @@ nasm               make
 nodejs             make
 nss
 opus
-patch              make
-pciutils           make
 perl               make
 pkgconf            make
 python             make
