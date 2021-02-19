@@ -9,8 +9,7 @@ biggest blocker. If the Linux version of OSS weren't GPL'd, we could try it over
 
 `x264`, `x265`, and `lame` are probably super useful to `chromium`. Sigh. 
 
-That `mpv` and `xz` is GPL'd is very disheartening. Though I could do without
-`mpv`. 
+That `xz` is GPL'd is very disheartening.
 
 `gnupg1` could theoretically be replaced with `botan` if I found a way to make
 `git` use it for signing commits. 
@@ -18,18 +17,20 @@ That `mpv` and `xz` is GPL'd is very disheartening. Though I could do without
 `gmake` could go away if we just decided to never build things which require
 it!
 
+
 ### Things we cannot get rid of
+
 `git` - I mean, come on
 
 `linux*` - for obvious reasons
-
-`mbpfan` - I need my fan
 
 `perl` - make dep for llvm
 
 `xz` - maybe there's a replacement?
 
+
 ### Things we only need once
+
 `dosfstools` - Only need on *host* during installation
 
 `e2fsprogs` - Only need if we opt for ext4...
@@ -38,7 +39,9 @@ it!
 
 `efivar` - `efibootmgr`
 
+
 ### Things we would like to replace
+
 `alsa-libs` - OSS would be GREAT! If it were not GPL on Linux.
 
 `alsa-utils` - We need a way to adjust volumes
@@ -49,18 +52,18 @@ it!
 
 `gmake` - required for many things to build :'( 
 
+
 ### Things we don't need
+
 `ccache` - don't technically need it
 
+
 ### Things we need for chromium
+
 `gperf` - make dep
 
-`patch` - definitely need, make dep
-
-`pciutils` - make dep
 
 ### Things we could do without
-`mpv` - Could use something else to play music/videos
 
 `ffmpeg` - only if we enable gpl
 
@@ -74,7 +77,9 @@ it!
 
 `fribidi` - `pango` (want to eliminate), `libass` (don't need?)
 
+
 ### Things we would like to kill
-`glib` - required by `chromium`
+
+`glib` - required by `chromium`, `pango`
 
 `pango` - will have to abandon `hikari`
