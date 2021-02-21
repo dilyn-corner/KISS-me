@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --localstatedir=/var \
+    --bindir=/usr/bin \
+    --sbindir=/usr/bin \
+    --libdir=/usr/lib \
+    --enable-agetty \
+    --enable-zramctl \
+    --enable-libuuid \
+    --enable-libblkid \
+    --enable-libsmartcols \
+    --enable-static-programs=fdisk \
+    --disable-rpath \
+    --disable-assert \
+    --disable-shared \
+    --disable-all-programs \
+    --disable-makeinstall-chown \
+    --without-udev \
+    --without-python \
+    --without-systemd
+
+make LDFLAGS="$LDFLAGS --static"
+make DESTDIR="$1" install
+
+rmdir "$1/usr/sbin"
