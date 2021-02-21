@@ -2,6 +2,6 @@
 
 patch -p1 < remove-get_fs-set_fs.patch
 
-gmake CC=cc LLVM_IAS=1 -C "/usr/lib/modules/$(uname -r)/build" M="$PWD" -j1
+gmake CC=cc LLVM_IAS=1 -C "/usr/lib/modules/$(uname -r)/build" M="$PWD"
 
 install -Dm644 wl.ko "$1/usr/lib/modules/$(uname -r)/kernel/drivers/net/wireless/wl.ko"
