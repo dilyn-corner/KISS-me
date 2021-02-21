@@ -1,5 +1,6 @@
-gmake         make
+gmake             make
 libxkbcommon
-linux-headers make
-pkgconf       make
+linux-headers     make
+pkgconf           make
 wayland
+wayland protocols make
