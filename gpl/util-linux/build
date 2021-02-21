@@ -25,3 +25,6 @@ make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
 
 rmdir "$1/usr/sbin"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/util-linux.license"
