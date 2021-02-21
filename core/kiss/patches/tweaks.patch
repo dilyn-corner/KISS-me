@@ -123,8 +123,8 @@
          # orphans. Exclude them from the list.
 -        baseinit|baselayout|gcc|e2fsprogs|musl|\
 -        make|busybox|bzip2|grub|kiss|git)
-+        baselayout|bzip2|e2fsprogs|git|kiss|hummingbird|\
-+        libarchive|llvm|make|musl|nawk|sbase|toybox|ubase|uutils)
++        baselayout|bzip2|e2fsprogs|git|kiss|s6-linux-init|\
++        libarchive|llvm|make|musl|nawk|toybox|uutils)
              continue
      esac
  
