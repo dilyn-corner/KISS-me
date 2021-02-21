@@ -17,8 +17,6 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            chromium | rust)
-                export KISS_TMPDIR=
         esac
     ;;
     post-build)
@@ -42,24 +40,6 @@ case $TYPE in
                 rm -rf "$DEST/usr/share/doc"
                 rm -rf "$DEST/usr/share/man"
                 rm -rf "$DEST/usr/share/zsh"
-            ;;
-        esac
-    ;;
-    pre-install)
-        case $PKG in
-            linux*) 
-                mount /dev/nvme0n1p1 /boot
-            ;;
-        esac
-    ;;
-    post-install)
-        case $PKG in
-            linux*)
-                umount /boot
-            ;;
-            sls)
-                chown root:dilyn /usr/bin/sls
-                chmod gu+s       /usr/bin/sls
             ;;
         esac
     ;;
