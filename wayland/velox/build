@@ -9,3 +9,6 @@ gmake \
     PREFIX=/usr \
     CC=cc \
     DESTDIR="$1" install
+
+# Install a sample conf
+install -Dm755 velox.conf.sample "$1/etc/velox.conf"
