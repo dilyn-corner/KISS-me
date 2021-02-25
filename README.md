@@ -141,6 +141,7 @@ forced to accept it).
   | xvidcore      | GPLv2         | nodejs             | MIT           | 
   | xz            | LGPLv2.1      | nss                | MPLv2         | 
   +---------------+---------------+ opendoas           | BSD           | 
+                                  | openssh            | BSD           |
                                   | opus               | BSD 3-Clause  | 
                                   | pash               | MIT           | 
                                   | pixman             | MIT           | 
