@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --datadir=/usr/share/openssh \
+    --sysconfdir=/etc/ssh \
+    --sbindir=/usr/bin \
+    --libexecdir=/usr/lib/openssh \
+    --without-selinux \
+    --with-privsep-user=nobody \
+    --with-mantype=doc \
+    --without-rpath \
+    --disable-strip \
+    --with-ssl-engine \
+    --with-pid-dir=/run \
+    --disable-wtmp \
+    --disable-utmp
+
+make
+make DESTDIR="$1" install
+
+install -m755 contrib/ssh-copy-id   "$1/usr/bin/ssh-copy-id"
+install -m644 contrib/ssh-copy-id.1 "$1/usr/share/man/man8/ssh-copy-id.1"
+
+install -Dm755 sshd.run "$1/etc/s6-rc/scripts/sshd.boot"
+
+# Install the license
+install -Dm755 LICENCE "$1/usr/share/LICENSES/openssh.license"
