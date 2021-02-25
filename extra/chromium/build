@@ -15,7 +15,7 @@ for patch in wyverkiss-*.patch; do
     patch -p1 < "$patch"
 done
 
-# Ungoogled-Chromium patches
+# Ungoogled-Chromium patches - inefficient
 for patch in 00*.patch; do
     patch -p1 < "$patch"
 done
@@ -30,9 +30,6 @@ python3 ungoogled-chromium/utils/domain_substitution.py apply \
     -f ungoogled-chromium/domain_substitution.list \
     -c domainsubcache.tar.gz ./
 
-# Avoid falling back to preprocessor mode when sources contain time macros
-kiss list ccache && export CCACHE_SLOPPINESS=time_macros
-
 # Force script incompatible with Python 3 to use /usr/bin/python2
 sed -i "1s|python$|&2|" third_party/dom_distiller_js/protoc_plugins/*.py
 
@@ -44,8 +41,8 @@ export CXX=clang++
 export AR=llvm-ar
 export NM=llvm-nm
 
-# compile gn earl, so it can be used to generate gni stuff
-# Explicitly include the things libstdc++ is expected to have
+# compile gn early, so it can be used to generate gni stuff
+# Explicitly include things for llvm toolchains
 LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind" \
     python2 tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles
 
@@ -79,7 +76,6 @@ for LIB in "$system" libjpeg_turbo; do
         \! -name '*.py' \
         -exec rm -rf {} +
 done
-        #\! -regex '.*\.\(gn\|gni\|isolate\|py\)' \
 
 # switch to system provided dependencies
 # shellcheck disable=2086
@@ -96,7 +92,6 @@ conf="
     use_lld=true
     is_clang=true
     is_debug=false
-    use_thin_lto=true
     use_custom_libcxx=false
     clang_use_plugins=false
     is_official_build=false
@@ -105,11 +100,8 @@ conf="
     clang_use_chrome_plugins=false
     is_unsafe_developer_build=false
     blink_symbol_level=0
-    enable_profiling=true
-    enable_stripping=true
     fatal_linker_warnings=false
     treat_warnings_as_errors=false
-    thin_lto_enable_optimizations=true
     host_toolchain=\"//build/toolchain/linux/unbundle:default\"
     custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
     use_atk=false
@@ -134,14 +126,13 @@ conf="
     use_intel_minigbm=true
     use_system_libdrm=true
     use_system_minigbm=true
-    use_webaudio_ffmpeg=true
     use_system_freetype=true
     use_system_harfbuzz=true
     use_system_libwayland=true
     use_system_wayland_scanner=true
     enable_widevine=false
-    proprietary_codecs=false
-    ffmpeg_branding=\"Chromium\"
+    proprietary_codecs=true
+    ffmpeg_branding=\"Chrome\"
     link_pulseaudio=false
     use_ozone=true
     ozone_platform_x11=false
@@ -155,11 +146,11 @@ conf="
     enable_reporting=false
     enable_nacl_nonsfi=false
     enable_reading_list=false
-    enable_service_discovery=false
     enable_js_type_check=false
-    enable_hangout_services_extension=false
-    enable_mse_mpeg2ts_stream_parser=true
     enable_one_click_signin=false
+    enable_service_discovery=false
+    enable_mse_mpeg2ts_stream_parser=true
+    enable_hangout_services_extension=false
     safe_browsing_mode=0
     rtc_build_tools=false
     build_dawn_tests=false
@@ -195,7 +186,7 @@ install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium"
 install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium"
 
 for stuff in bin pak; do
-    install -Dm644 out/Release/*.$stuff "$1/usr/lib/chromium"
+    install -Dm644 "out/Release/*.$stuff" "$1/usr/lib/chromium"
 done
 
 # Install the license
