@@ -6,12 +6,12 @@ meson \
     --prefix=/usr \
     -Ddefault_library=both \
     -Dbuildtype=release \
+    -Denable-x11=false \
     -Denable-docs=false \
     -Denable-wayland=true \
-    -Denable-x11=false \
+    -Denable-xkbregistry=false \
     -Dxkb-config-root=/usr/share/X11/xkb \
     -Dx-locale-root=/usr/share/X11/locale \
-    -Denable-xkbregistry=false \
     . build
 
 ninja -C build
