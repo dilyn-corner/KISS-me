@@ -1,13 +1,15 @@
 #!/bin/sh -e
 
-# We have an alternative system, use "ksh" and "sh" as binary names. 
 ./configure \
     --prefix=/usr \
     --bindir=/usr/bin \
     --mandir=/usr/share/man \
-    --enable-ksh
+    --enable-sh \
+    --enable-ksh \
+    --enable-lto \
+    --enable-static
 
-make LDFLAGS="$LDFLAGS -static"
+make
 make DESTDIR="$1" install
 
 # Install the license
