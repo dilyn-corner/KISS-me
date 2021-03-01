@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
-patch -p1 < tweaks.patch
+patch -p1 < grep.patch
+sed -i 's/chroot/chroot --/' contrib/kiss-chroot
 
 mkdir -p "$1/usr/bin"
 
