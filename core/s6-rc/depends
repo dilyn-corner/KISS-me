@@ -1,4 +1,4 @@
 execline
-gmake make
+gmake   make
 s6
-skalibs
+skalibs make
