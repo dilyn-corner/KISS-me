@@ -1,3 +1,3 @@
-git+https://github.com/landley/toybox
+https://github.com/landley/toybox/archive/50f604f415d77b3679df1f8d9d3856f9840998be.tar.gz
 files/.config
 patches/POSIX.patch
