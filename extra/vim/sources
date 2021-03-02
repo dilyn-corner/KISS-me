@@ -1,2 +1,2 @@
-git+https://github.com/vim/vim
+https://github.com/vim/vim/archive/v8.2.2560.tar.gz
 patches/feature-h.patch
