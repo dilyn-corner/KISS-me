@@ -3,7 +3,6 @@
 gmake 
 
 install -Dm755 bin/gh "$1/usr/bin/gh"
-install -Dm644 LICENSE "$1/usr/share/licenses/github-cli"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/github-cli.license"
