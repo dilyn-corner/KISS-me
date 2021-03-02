@@ -173,21 +173,18 @@ ulimit -n 4096
 
 ninja -C out/Release chrome
 
-# Package
-mkdir -p                        "$1/usr/lib/chromium/locales"
-mkdir -p                        "$1/usr/lib/chromium/swiftshader"
-cp out/Release/locales/*.pak    "$1/usr/lib/chromium/locales"
-cp out/Release/swiftshader/*.so "$1/usr/lib/chromium/swiftshader"
+# Package -> This is the minimum required for #ME# to run chromium. 
+# If you need e.g. Angle, you will need EGL and GLESv2 in out/Release.
+# Just use the community build.
 
-install -Dm755 chromium.sh                          "$1/usr/bin/chromium"
-install -Dm755 out/Release/chrome                   "$1/usr/lib/chromium/chromium"
-install -Dm644 out/Release/icudtl.dat               "$1/usr/lib/chromium"
-install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium"
-install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium"
-
-for stuff in bin pak; do
-    install -Dm644 "out/Release/*.$stuff" "$1/usr/lib/chromium"
-done
+install -Dm755 chromium.sh                         "$1/usr/bin/chromium"
+install -Dm755 out/Release/chrome                  "$1/usr/lib/chromium/chromium"
+install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium/icudtl.dat"
+install -Dm644 out/Release/resources.pak           "$1/usr/lib/chromium/resources.pak"
+install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/en-US.pak"
+install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
+install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
+install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
