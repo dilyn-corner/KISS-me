@@ -1,5 +1,5 @@
 |/  
-|\ISS Repo                                                      https://k1ss.org  
+|\ISS Repo                                                 https://k1sslinux.org
 ________________________________________________________________________________
 
 
@@ -8,7 +8,7 @@ ________________________________________________________________________________
 
 
 The master branch is for: 
-1) A self-maintained 'fork' of [wyverkiss](https://github.com/wyvertux/wyverkiss) 
+1) A self-maintained 'fork' of wyverkiss https://github.com/wyvertux/wyverkiss
 2) NonGNU experimentation
 
 The wyverkiss-static branch is for:
@@ -17,31 +17,29 @@ The wyverkiss-static branch is for:
 3) NonGNU experimentation
 
 Other branches are for:
-1) Staging things prior to submitting them to 
-[Community](https://github.com/kisslinux/community),
-2) for things I know will 
-[never be accepted into Community](https://k1ss.org/guidestones),
-3) for forks.
+1) Staging things prior to submitting them to Community
+2) for things I know will never be accepted to Community
+3) for forks
 
 
 ## The structure of this repository
 
-The BDFL of [KISS](https://github.com/kisslinux/kiss) has disappeared. After a
-month of his absence, I decided to put his theory to the test: his distro can be
-simply maintained by a single person. I'm only clocking in at ~100 packages
-installed for a full wayland-stack + web browser, but this was Dylan's baseline
-goal anyways. I'd say his project was proven a success, and I think I'll be able
-to maintain this system basically indefinitely.
+The BDFL of KISS has disappeared. After a month of his absence, I decided to put
+his theory to the test: his distro can be simply maintained by a single person.
+I'm only clocking in at ~100 packages installed for a full wayland-stack + web
+browser, but this was Dylan's baseline goal anyways. I'd say his project was
+proven a success, and I think I'll be able to maintain this system basically
+indefinitely.
 
 The master branch is very finicky and I would not recommend using it for a usual
 system; use it as a reference for building packages. As an example, many build
-scripts have been modified to make use of `meson` or `cmake` when available,
+scripts have been modified to make use of meson or cmake when available,
 leaving perhaps a large amount of overhead in the build system. Not to mention
 the fact that it is intended for wyverkiss. Additionally, due to my distaste for
-GPL, much of the core system has changed to include `toybox`, `sbase`, `ubase`,
-`ripgrep`, `uutils-coreutils`, `nawk`, and `libarchive`. As a result, core has
-been extended to include `rust`. A lot of utilities are gone because of dropping
-`busybox` (still available in gpl if need be), but I would like to assume that
+GPL, much of the core system has changed to include toybox, sbase, ubase,
+ripgrep, uutils-coreutils, nawk, and libarchive. As a result, core has
+been extended to include rust. A lot of utilities are gone because of dropping
+busybox (still available in gpl if need be), but I would like to assume that
 I'll be just fine. We will see. 
 
 Any packages that use a GPL license will end up in the gpl directory, regardless
@@ -49,22 +47,20 @@ of their position in the system hierarchy. Ideally, there will be almost no GPL
 in the core, runtime system. Of course, concessions will have to be made for
 certain things. But we take what we get, and we get what we can.
 
-Other branches are used by me for things like my
-[KISS-kde](https://github.com/dilyn-corner/KISS-kde) partition. These branches
-are more suitable for everyday KISS use.
+Other branches are used by me for things like my KISS-kde partition. These
+branches are more suitable for everyday KISS use.
 
 ## Thoughts
 
 In the ever-excruciating pursuit of being different for the sake of difference,
-I have switched from KISS-proper to
-[wyverkiss](https://github.com/wyvertux/wyverkiss).
+I have switched from KISS-proper to wyverkiss.
 
-Additionally, due to recent 
-[issues with Xorg](https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), 
-I have decided to commit to trying out `wayland`.
+Additionally, due to recent issues with Xorg (see
+https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), I have decided to
+commit to trying out wayland.
 
-If you're using wyverkiss or some other `gcc`-less KISS implementation and want
-a working `qt5`, revert `9ad56f3587e572ed87a12a3a9b6641fd9812153c` to get my
+If you're using wyverkiss or some other gcc-less KISS implementation and want
+a working qt5, revert 9ad56f3587e572ed87a12a3a9b6641fd9812153c to get my
 5.15.2 build.
 
 ## For the curious
@@ -75,7 +71,7 @@ get there for the most part! The real question is how one feels about
 GPL-compatible (what I would think of as semi-GPL) licenses (PSF, MPL).
 
 Finally, the list doesn't go into the nuances of several licenses. Big examples
-are things like `mesa` or `llvm` - projects which inherit extra licenses because
+are things like mesa or llvm - projects which inherit extra licenses because
 of code blobs they borrow. In general, I am semi-fine with this (if not wholly
 forced to accept it).
 
@@ -163,17 +159,20 @@ forced to accept it).
 
 I am the maintainer of a couple other repositories:
 
-[KISS-haskell](https://github.com/dilyn-corner/KISS-haskell) - a KISS-compliant
-repository that contains a bootstrappable `ghc`. 
+KISS-haskell https://github.com/dilyn-corner/KISS-haskell - a KISS-compliant
+repository that contains a bootstrappable ghc. 
 
-[KISS-kde](https://github.com/dilyn-corner/KISS-kde) - A KISS-compliant
-repository that brings the wonders of a `plasma` desktop to KISS.
+KISS-kde https://github.com/dilyn-corner/KISS-kde - A KISS-compliant
+repository that brings the wonders of a plasma desktop to KISS.
 
-[KISS-static](https://github.com/dilyn-corner/KISS-static) - A KISS-compliant
+KISS-static https://github.com/dilyn-corner/KISS-static - A KISS-compliant
 repository that provides a static KISS rootfs.
 
-[dotfiles](https://github.com/dilyn-corner/dotfiles) - Just a simple way to
+dotfiles https://github.com/dilyn-corner/dotfiles - Just a simple way to
 maintain my dotfiles and share screenshots. Don't use it, just marvel.
+
+
+Also, I am the BDFL of KISS Linux :)
 
 ---
 
@@ -191,43 +190,40 @@ straightforward way of doing this!<sup>1</sup> Simply add the upstream
 repository as a remote URL for git to track, and then you will be able to pull
 down any changes upstream makes and merge them into your fork.
 
-```
 git remote add upstream $upstreamURL # Add upstream to your remotes
 git fetch upstream                   # Fetch upstream's changes 
 git checkout master                  # Switch to master
 git merge upstream/master            # Merge upstream's master branch
-```
 
 Suppose upstream is _very_ busy while you do your work. They push a lot of
 changes that you wish you had while you're working on your branch. If you
-`merge` upstream into your branch, you'll have some hairy commit messages they
+merge upstream into your branch, you'll have some hairy commit messages they
 won't _super_ appreciate when you make your PR. So you can rebase instead. It's
 very handy.
 
-```
 git checkout -b $newBranch
 > You do work
 > They do work
 git fetch upstream
 git rebase upstream/master
-```
 
 Rebasing<sup>2</sup> is essentially just a patch of the work you did based off
 the commit you made your fork from, that you can then simply slide into the
-history without making it look wonky (with a bunch of `merge` commit messages).
+history without making it look wonky (with a bunch of merge commit messages).
 
 This will be edited heavily in the future maybe hopefully probably.<sup>3</sup>
 
-<sup>1</sup>[Syncing a fork with upstream](https://www.atlassian.com/git/tutorials/git-forks-and-upstreams)
+1. https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
 
-<sup>2</sup>[Rebasing](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
+2. https://git-scm.com/book/en/v2/Git-Branching-Rebasing
 
-<sup>3</sup>[Cleaning commits](https://medium.com/@catalinaturlea/clean-git-history-a-step-by-step-guide-eefc0ad8696d)
+3. https://medium.com/@catalinaturlea/clean-git-history-a-step-by-step-guide-eefc0ad8696d
 
 ---
 
 # Repository trust
-All commits signed with my own GPG key.
+
+All commits signed with my own GPG key. Save this key to a file and import it.
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
