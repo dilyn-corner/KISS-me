@@ -33,14 +33,13 @@ indefinitely.
 
 The master branch is very finicky and I would not recommend using it for a usual
 system; use it as a reference for building packages. As an example, many build
-scripts have been modified to make use of meson or cmake when available,
-leaving perhaps a large amount of overhead in the build system. Not to mention
-the fact that it is intended for wyverkiss. Additionally, due to my distaste for
-GPL, much of the core system has changed to include toybox, sbase, ubase,
-ripgrep, uutils-coreutils, nawk, and libarchive. As a result, core has
-been extended to include rust. A lot of utilities are gone because of dropping
-busybox (still available in gpl if need be), but I would like to assume that
-I'll be just fine. We will see. 
+scripts have been modified to make use of meson or cmake when available, leaving
+perhaps a large amount of overhead in the build system. Not to mention the fact
+that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
+much of the core system has changed to include toybox, uutils-coreutils, nawk,
+and libarchive. As a result, core has been extended to include rust. A lot of
+utilities are gone because of dropping busybox (still available in gpl if need
+be), but I would like to assume that I'll be just fine.  We will see. 
 
 Any packages that use a GPL license will end up in the gpl directory, regardless
 of their position in the system hierarchy. Ideally, there will be almost no GPL
