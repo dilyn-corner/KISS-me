@@ -9,13 +9,15 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            libpng | libvpx | mesa | nss | x265 | util-linux)
+            libpng | libvpx | mesa | nss | opus | x265 | util-linux)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
             libressl | linux* | musl)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+            s6*)
+                CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
             ;;
         esac
     ;;
