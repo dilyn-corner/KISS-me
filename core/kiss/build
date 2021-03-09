@@ -1,7 +1,10 @@
 #!/bin/sh -e
 
-patch -p1 < grep.patch
-sed -i 's/chroot/chroot --/' contrib/kiss-chroot
+# Some shells think the env flags go to chroot
+# Some shells don't
+# Mine does, so this is what I do :v 
+
+sed -i 's/chroot "$1"/chroot "$1" --/' contrib/kiss-chroot
 
 mkdir -p "$1/usr/bin"
 
