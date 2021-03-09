@@ -16,6 +16,7 @@ case $TYPE in
             libressl | linux* | musl)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+            ;;
             s6*)
                 CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
             ;;
