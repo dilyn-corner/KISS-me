@@ -33,25 +33,20 @@ EOF
 cargo build \
     --frozen \
     --release \
-    --features "$(cat feat-list)" \
-    --no-default-features
+    --features "$(cat feat-list)"
 
-install -Dm755 target/release/coreutils "$1/usr/bin/coreutils"
+install -Dm755 target/release/coreutils "$1/usr/bin/uutils"
 
 # We'll go ahead and add our symlinks because we created a monolithic binary
 while read util; do
-    ln -s coreutils "$1/usr/bin/$util"
+    ln -s uutils "$1/usr/bin/$util"
 done < feat-list
 
 # These functions were replaced by hashsum, but we should symlink just in case
 for bin in md5 sha1 sha224 sha256 sha384 sha512; do
-    ln -s coreutils "$1/usr/bin/${bin}sum"
+    ln -s uutils "$1/usr/bin/${bin}sum"
 done
 
-# Unlink ls because -t is broken. Use an alias for everything else
-unlink "$1/usr/bin/ls"
-# tr is also broken, somehow??
-unlink "$1/usr/bin/tr"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/uutils-coreutils.license"
