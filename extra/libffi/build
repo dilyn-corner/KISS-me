@@ -7,6 +7,10 @@ sed -i '/assembler-with-cpp/s%\$<%$(top_srcdir)/libffi.map.in%' Makefile.in
 ./configure \
     --prefix=/usr
 
+# tail -[0-9] works for say, toybox tail
+# but not for uutils tail
+sed -i 's/tail -1/tail -n1/g' Makefile
+
 make
 make DESTDIR="$1" install
 
