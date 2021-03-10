@@ -1,5 +1,4 @@
 cmake   make
-perl    make
 python  make
 samurai make
 zlib
