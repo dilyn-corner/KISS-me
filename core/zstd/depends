@@ -1,0 +1,4 @@
+meson   make
+samurai make
+xz      make
+zlib    make

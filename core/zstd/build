@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+cd build/meson
+
+sed -i "s|liblzma', |liblzma', static: true, |" meson.build
+sed -i "s|zlib', |zlib', static: true, |"       meson.build
+
+meson \
+    --prefix=/usr \
+    -Ddefault_library=static \
+    -Dbuildtype=release \
+    -Dlzma=enabled \
+    -Dzlib=enabled \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Symlink for all the things we built in
+for bin in gzip lz4 lzma xz zcat ungz unlz4 unlzma unxz; do
+    ln -s zstd "$1/usr/bin/$bin"
+done
+
+# Install the license
+install -Dm755 ../../LICENSE "$1/usr/share/LICENSES/zstd.license"
