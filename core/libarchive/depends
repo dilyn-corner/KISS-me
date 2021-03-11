@@ -1,3 +1,4 @@
-bzip2
-xz
-zlib
+bzip2 make
+xz    make
+zlib  make
+zstd
