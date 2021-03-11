@@ -4,12 +4,14 @@
     --prefix=/usr \
     --disable-cpio \
     --disable-bsdcat \
+    --disable-shared \
+    --enable-bsdtar=static \
     --without-xml2 \
     --without-expat \
     --without-nettle \
     --without-openssl
 
-make
+make LDFLAGS="$LDFLAGS --static"
 make DESTDIR="$1" install
 
 ln -s bsdtar  "$1/usr/bin/tar"
