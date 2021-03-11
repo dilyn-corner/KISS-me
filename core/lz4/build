@@ -1,8 +1,0 @@
-#!/bin/sh -e
-
-gmake PREFIX=/usr BUILD_SHARED=no LDFLAGS="$LDFLAGS -static"
-gmake PREFIX=/usr BUILD_SHARED=no DESTDIR="$1" install
-
-# Install the license
-install -Dm755 lib/LICENSE      "$1/usr/share/LICENSES/lz4-libs.license"
-install -Dm755 programs/COPYING "$1/usr/share/LICENSES/lz4-programs.license"
