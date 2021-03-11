@@ -1,22 +1,39 @@
+diff --git a/build/config/ui.gni b/build/config/ui.gni
+index 3d23eff..a51d2aa 100644
+--- a/build/config/ui.gni
++++ b/build/config/ui.gni
+@@ -47,8 +47,10 @@ declare_args() {
+ # Make sure glib is not used if building for ChromeOS/Chromecast
+ assert(!use_glib || (is_linux && !is_chromecast))
+ 
+-# Whether to use atk, the Accessibility ToolKit library
+-use_atk = is_linux && !is_chromecast && use_glib
++declare_args() {
++  # Whether to use atk, the Accessibility ToolKit library
++  use_atk = is_linux && !is_chromecast && use_glib
++}
+ 
+ # Whether using Xvfb to provide a display server for a test might be
+ # necessary.
 diff --git a/chrome/browser/chrome_browser_main_linux.cc b/chrome/browser/chrome_browser_main_linux.cc
-index f6ce26c..271ac75 100644
+index 441a46a..2593c2e 100644
 --- a/chrome/browser/chrome_browser_main_linux.cc
 +++ b/chrome/browser/chrome_browser_main_linux.cc
-@@ -101,7 +101,7 @@ void ChromeBrowserMainPartsLinux::PostProfileInit() {
+@@ -102,7 +102,7 @@ void ChromeBrowserMainPartsLinux::PostProfileInit() {
  }
  
  void ChromeBrowserMainPartsLinux::PostMainMessageLoopStart() {
--#if !defined(OS_CHROMEOS)
-+#if !defined(OS_CHROMEOS) && defined(USE_DBUS)
+-#if !BUILDFLAG(IS_CHROMEOS_ASH)
++#if !BUILDFLAG(IS_CHROMEOS_ASH) && defined(USE_DBUS)
    bluez::BluezDBusManager::Initialize(nullptr /* system_bus */);
  #endif
  
-@@ -109,7 +109,7 @@ void ChromeBrowserMainPartsLinux::PostMainMessageLoopStart() {
+@@ -110,7 +110,7 @@ void ChromeBrowserMainPartsLinux::PostMainMessageLoopStart() {
  }
  
  void ChromeBrowserMainPartsLinux::PostDestroyThreads() {
--#if !defined(OS_CHROMEOS)
-+#if !defined(OS_CHROMEOS) && defined(USE_DBUS)
+-#if !BUILDFLAG(IS_CHROMEOS_ASH)
++#if !BUILDFLAG(IS_CHROMEOS_ASH) && defined(USE_DBUS)
    bluez::BluezDBusManager::Shutdown();
    bluez::BluezDBusThreadManager::Shutdown();
  #endif
@@ -93,10 +110,10 @@ index cbe3372..cfbfbc2 100644
  
  void OpenExternal(Profile* profile, const GURL& url) {
 diff --git a/device/bluetooth/bluetooth_adapter_factory.cc b/device/bluetooth/bluetooth_adapter_factory.cc
-index cd43370..ac04015 100644
+index 2fa8e06..329fa52 100644
 --- a/device/bluetooth/bluetooth_adapter_factory.cc
 +++ b/device/bluetooth/bluetooth_adapter_factory.cc
-@@ -45,7 +45,7 @@ bool BluetoothAdapterFactory::IsBluetoothSupported() {
+@@ -46,7 +46,7 @@ bool BluetoothAdapterFactory::IsBluetoothSupported() {
    // instance even on platforms that would otherwise not support it.
    if (Get()->adapter_)
      return true;
@@ -105,7 +122,7 @@ index cd43370..ac04015 100644
      defined(OS_CHROMEOS) || defined(OS_MAC)
    return true;
  #else
-@@ -68,7 +68,7 @@ bool BluetoothAdapterFactory::IsLowEnergySupported() {
+@@ -69,7 +69,7 @@ bool BluetoothAdapterFactory::IsLowEnergySupported() {
    return base::win::GetVersion() >= base::win::Version::WIN10;
  #elif defined(OS_MAC)
    return true;
@@ -115,10 +132,10 @@ index cd43370..ac04015 100644
  #else
    return false;
 diff --git a/extensions/browser/api/bluetooth_low_energy/bluetooth_low_energy_api.cc b/extensions/browser/api/bluetooth_low_energy/bluetooth_low_energy_api.cc
-index 728ac8e..a4259a8 100644
+index 776abf0..4e15678 100644
 --- a/extensions/browser/api/bluetooth_low_energy/bluetooth_low_energy_api.cc
 +++ b/extensions/browser/api/bluetooth_low_energy/bluetooth_low_energy_api.cc
-@@ -1335,7 +1335,7 @@ void BluetoothLowEnergyCreateServiceFunction::DoWork() {
+@@ -1339,7 +1339,7 @@ void BluetoothLowEnergyCreateServiceFunction::DoWork() {
  // TODO: Ideally this should be handled by our feature system, so that this
  // code doesn't even compile on OSes it isn't being used on, but currently this
  // is not possible.
@@ -127,7 +144,7 @@ index 728ac8e..a4259a8 100644
    base::WeakPtr<device::BluetoothLocalGattService> service =
        device::BluetoothLocalGattService::Create(
            event_router_->adapter(),
-@@ -1364,6 +1364,7 @@ bool BluetoothLowEnergyCreateCharacteristicFunction::ParseParams() {
+@@ -1368,6 +1368,7 @@ bool BluetoothLowEnergyCreateCharacteristicFunction::ParseParams() {
  }
  
  void BluetoothLowEnergyCreateCharacteristicFunction::DoWork() {
@@ -135,7 +152,7 @@ index 728ac8e..a4259a8 100644
    device::BluetoothLocalGattService* service =
        event_router_->adapter()->GetGattService(params_->service_id);
    if (!service) {
-@@ -1384,6 +1385,9 @@ void BluetoothLowEnergyCreateCharacteristicFunction::DoWork() {
+@@ -1388,6 +1389,9 @@ void BluetoothLowEnergyCreateCharacteristicFunction::DoWork() {
  
    Respond(ArgumentList(apibtle::CreateCharacteristic::Results::Create(
        characteristic->GetIdentifier())));
@@ -145,7 +162,7 @@ index 728ac8e..a4259a8 100644
  }
  
  // createDescriptor:
-@@ -1400,6 +1404,7 @@ bool BluetoothLowEnergyCreateDescriptorFunction::ParseParams() {
+@@ -1404,6 +1408,7 @@ bool BluetoothLowEnergyCreateDescriptorFunction::ParseParams() {
  }
  
  void BluetoothLowEnergyCreateDescriptorFunction::DoWork() {
@@ -153,7 +170,7 @@ index 728ac8e..a4259a8 100644
    device::BluetoothLocalGattCharacteristic* characteristic =
        event_router_->GetLocalCharacteristic(params_->characteristic_id);
    if (!characteristic) {
-@@ -1415,6 +1420,9 @@ void BluetoothLowEnergyCreateDescriptorFunction::DoWork() {
+@@ -1419,6 +1424,9 @@ void BluetoothLowEnergyCreateDescriptorFunction::DoWork() {
  
    Respond(ArgumentList(
        apibtle::CreateDescriptor::Results::Create(descriptor->GetIdentifier())));
@@ -181,10 +198,10 @@ index 3526876..dbaa872 100644
    DISALLOW_COPY_AND_ASSIGN(BatteryStatusManagerDefault);
  };
 diff --git a/services/device/wake_lock/power_save_blocker/BUILD.gn b/services/device/wake_lock/power_save_blocker/BUILD.gn
-index 16468a2..311b9e7 100644
+index 8ca1d4d..5326d82 100644
 --- a/services/device/wake_lock/power_save_blocker/BUILD.gn
 +++ b/services/device/wake_lock/power_save_blocker/BUILD.gn
-@@ -77,6 +77,9 @@ if (is_android) {
+@@ -83,6 +83,9 @@ if (is_android) {
      visibility = [ ":power_save_blocker" ]
      sources = java_sources_needing_jni
    }
