@@ -4,6 +4,12 @@
     --prefix=/usr \
     --disable-nls
 
+# xz is Public Domain without GNU getopt. 
+# Configure checks for getopt.h, but I want
+# to make sure it isn't built.
+# If the make errors, you need GNU getopt.
+rm -r lib
+
 make
 make DESTDIR="$1" install
 
