@@ -88,25 +88,25 @@ forced to accept it).
   | libarchive    | BSD-2-Clause  | wayland-protocols  | MIT           |
   | libressl      | ISC           | wev                | MIT           |
   | llvm          | Apache-2.0    | wl-clipboard-rs    | MIT           |
-  | lz4           | BSD 2-Clause  | wld                | MIT           |
-  | m4            | BSD/ISC       | wlroots            | MIT           |
-  | make          | BSD 2-Clause  | xkeyboard-config   | MIT           |
-  | mdevd         | ISC           +--------------------+---------------+
-  | musl          | MIT           | EXTRA              | LICENSE       |
-  | nawk          | MIT           +--------------------+---------------+
-  | oksh          | Public Domain | botan              | BSD 2-Clause  |
-  | openntpd      | ISC           | bottom             | MIT           |
-  | pigz          | zlib          | brightnessctl      | MIT           |
-  | rust          | APACHE/MIT    | broadcom-wl        | shrug         |
-  | s6            | ISC           | cairo              | MPLv1.1       |
-  | s6-rc         | ISC           | chromium           | BSD 3-Clause  |
-  | s6-linux-init | ISC           | cozette-font       | MIT           |
-  | samurai       | Apache-2.0    | dash               | BSD           |
-  | skalibs       | ISC           | dhcpcd             | BSD           |
-  | toybox        | 0BSD          | dust               | Apache-2.0    |
-  | uutils        | MIT           | expat              | MIT           |
-  | xz            | Public Domain | flac               | BSD 3-Clause  |
-  | zlib          | zlib          | fossil             | BSD 2-Clause  |
+  | m4            | BSD/ISC       | wld                | MIT           |
+  | make          | BSD 2-Clause  | wlroots            | MIT           |
+  | mdevd         | ISC           | xkeyboard-config   | MIT           |
+  | musl          | MIT           +--------------------+---------------+
+  | nawk          | MIT           | EXTRA              | LICENSE       |
+  | oksh          | Public Domain +--------------------+---------------+
+  | openntpd      | ISC           | botan              | BSD 2-Clause  |
+  | pigz          | zlib          | bottom             | MIT           |
+  | rust          | APACHE/MIT    | brightnessctl      | MIT           |
+  | s6            | ISC           | broadcom-wl        | shrug         |
+  | s6-rc         | ISC           | cairo              | MPLv1.1       |
+  | s6-linux-init | ISC           | chromium           | BSD 3-Clause  |
+  | samurai       | Apache-2.0    | cozette-font       | MIT           |
+  | skalibs       | ISC           | dash               | BSD           |
+  | toybox        | 0BSD          | dhcpcd             | BSD           |
+  | uutils        | MIT           | dust               | Apache-2.0    |
+  | xz            | Public Domain | expat              | MIT           |
+  | zlib          | zlib          | flac               | BSD 3-Clause  |
+  | zstd          | BSD 3-Clause  | fossil             | BSD 2-Clause  |
   +---------------+---------------+ fontconfig         | MIT           |
   | GPL           | LICENSE       | freetype-harfbuzz  | BSD           |
   +---------------+---------------+ github-cli         | MIT           |
@@ -149,7 +149,6 @@ forced to accept it).
                                   | tzdata             | Public Domain |
                                   | vim                | Vim           |
                                   | wpa_supplicant     | BSD           |
-                                  | zstd               | BSD 3-Clause  |
                                   +--------------------+---------------+
 --- 
 
