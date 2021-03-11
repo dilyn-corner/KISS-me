@@ -105,52 +105,52 @@ forced to accept it).
   | skalibs       | ISC           | dhcpcd             | BSD           |
   | toybox        | 0BSD          | dust               | Apache-2.0    |
   | uutils        | MIT           | expat              | MIT           |
-  | zlib          | zlib          | flac               | BSD 3-Clause  |
-  +---------------+---------------+ fossil             | BSD 2-Clause  |
-  | GPL           | LICENSE       | fontconfig         | MIT           |
-  +---------------+---------------+ freetype-harfbuzz  | BSD           |
-  | alsa-lib      | GPLv2.1       | github-cli         | MIT           |
-  | alsa-utils    | GPLv2         | github-release     | MIT           |
-  | busybox       | GPLv2         | gitui              | MIT           |
-  | ccache        | GPLv3         | go                 | BSD 3-Clause  |
-  | dosfstools    | GPLv3         | iosevka-nerd-fonts | MIT           |
-  | e2fsprogs     | GPLv2         | libass             | ISC           |
-  | efibootmgr    | GPLv2         | libdrm             | MIT           |
-  | efivar        | GPLv2.1       | libevdev           | MIT           |
-  | ffmpeg        | GPLv2.1       | libffi             | MIT           |
-  | fribidi       | GPLv2.1       | libinput           | X11           |
-  | git           | LGPLv2.1      | libjpeg-turbo      | IJG           |
-  | glib          | GPLv2.1       | libogg             | BSD           |
-  | gmake         | GPLv3         | libpciaccess       | X11           |
-  | gnupg1        | GPLv3         | libpng             | libpngv2      |
-  | gperf         | GPLv3         | libucl             | BSD 2-Clause  |
-  | lame          | LGPLv2        | libudev-zero       | ISC           |
-  | linux         | GPLv2         | libvorbis          | BSD 3-Clause  |
-  | linux-headers | GPLv2         | libvpx             | BSD 3-Clause  |
-  | pango         | LGPLv2.1      | libwebp            | BSD 3-Clause  |
-  | perl          | GPLv1         | mesa               | MIT           |
-  | util-linux    | GPLv2         | meson              | Apache-2.0    |
-  | x264          | GPLv2         | mtdev              | MIT           |
-  | x265          | GPLv2         | nasm               | BSD 2-Clause  | 
-  | xvidcore      | GPLv2         | netbsd-curses      | BSD 3-Clause  | 
-  | xz            | LGPLv2.1      | nodejs             | MIT           | 
-  +---------------+---------------+ nss                | MPLv2         | 
-                                  | opendoas           | BSD           | 
+  | xz            | Public Domain | flac               | BSD 3-Clause  |
+  | zlib          | zlib          | fossil             | BSD 2-Clause  |
+  +---------------+---------------+ fontconfig         | MIT           |
+  | GPL           | LICENSE       | freetype-harfbuzz  | BSD           |
+  +---------------+---------------+ github-cli         | MIT           |
+  | alsa-lib      | GPLv2.1       | github-release     | MIT           |
+  | alsa-utils    | GPLv2         | gitui              | MIT           |
+  | busybox       | GPLv2         | go                 | BSD 3-Clause  |
+  | ccache        | GPLv3         | iosevka-nerd-fonts | MIT           |
+  | dosfstools    | GPLv3         | libass             | ISC           |
+  | e2fsprogs     | GPLv2         | libdrm             | MIT           |
+  | efibootmgr    | GPLv2         | libevdev           | MIT           |
+  | efivar        | GPLv2.1       | libffi             | MIT           |
+  | ffmpeg        | GPLv2.1       | libinput           | X11           |
+  | fribidi       | GPLv2.1       | libjpeg-turbo      | IJG           |
+  | git           | LGPLv2.1      | libogg             | BSD           |
+  | glib          | GPLv2.1       | libpciaccess       | X11           |
+  | gmake         | GPLv3         | libpng             | libpngv2      |
+  | gnupg1        | GPLv3         | libucl             | BSD 2-Clause  |
+  | gperf         | GPLv3         | libudev-zero       | ISC           |
+  | lame          | LGPLv2        | libvorbis          | BSD 3-Clause  |
+  | linux         | GPLv2         | libvpx             | BSD 3-Clause  |
+  | linux-headers | GPLv2         | libwebp            | BSD 3-Clause  |
+  | pango         | LGPLv2.1      | mesa               | MIT           |
+  | perl          | GPLv1         | meson              | Apache-2.0    |
+  | util-linux    | GPLv2         | mtdev              | MIT           |
+  | x264          | GPLv2         | nasm               | BSD 2-Clause  |
+  | x265          | GPLv2         | netbsd-curses      | BSD 3-Clause  |
+  | xvidcore      | GPLv2         | nodejs             | MIT           |
+  +---------------+---------------+ nss                | MPLv2         |
+                                  | opendoas           | BSD           |
                                   | openssh            | BSD           |
-                                  | opus               | BSD 3-Clause  | 
-                                  | pash               | MIT           | 
-                                  | pixman             | MIT           | 
-                                  | pkgconf            | ISC           | 
-                                  | python             | PSFv2         | 
-                                  | python2            | PSFv2         | 
-                                  | ripgrep            | UNLICENSE/MIT | 
-                                  | rnp                | BSD 2-Clause  | 
-                                  | sqlite             | Public Domain | 
-                                  | tzdata             | Public Domain | 
-                                  | vim                | Vim           | 
-                                  | wpa_supplicant     | BSD           | 
-                                  | zstd               | BSD 3-Clause  | 
-                                  +--------------------+---------------+ 
+                                  | opus               | BSD 3-Clause  |
+                                  | pash               | MIT           |
+                                  | pixman             | MIT           |
+                                  | pkgconf            | ISC           |
+                                  | python             | PSFv2         |
+                                  | python2            | PSFv2         |
+                                  | ripgrep            | UNLICENSE/MIT |
+                                  | rnp                | BSD 2-Clause  |
+                                  | sqlite             | Public Domain |
+                                  | tzdata             | Public Domain |
+                                  | vim                | Vim           |
+                                  | wpa_supplicant     | BSD           |
+                                  | zstd               | BSD 3-Clause  |
+                                  +--------------------+---------------+
 --- 
 
 
