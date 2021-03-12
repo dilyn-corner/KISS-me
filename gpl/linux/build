@@ -4,11 +4,7 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-# We could make this script check for llvm {later}
-# Instead I'll just assume you aren't blindly following this
-
 # Set the kernel up for success!
-cp config .config
 gmake \
     YACC=yacc \
     LLVM=1 \
@@ -26,25 +22,37 @@ gmake \
     LLVM=1 \
     LLVM_IAS=1
 
-echo "Installing modules..."
-gmake \
-    YACC=yacc \
-    LLVM=1 \
-    LLVM_IAS=1 \
-    INSTALL_MOD_PATH="$1/usr" \
-    INSTALL_MOD_STRIP=1 modules_install
+#echo "Installing modules..."
+#gmake \
+#    YACC=yacc \
+#    LLVM=1 \
+#    LLVM_IAS=1 \
+#    INSTALL_MOD_PATH="$1/usr" \
+#    INSTALL_MOD_STRIP=1 modules_install
 
 echo "Cleaning up..."
-rm "$modulesdir/build" "$modulesdir/source"
+#rm "$modulesdir/build" "$modulesdir/source"
 
 echo "Copying files to build external modules..."
-install -Dt "$builddir"                 -m644 .config Makefile \
-                                              Module.symvers System.map vmlinux
-install -Dt "$builddir/kernel"          -m644 kernel/Makefile
-install -Dt "$builddir/arch/x86"        -m644 arch/x86/Makefile
-install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
-install -Dt "$builddir/drivers/md"      -m644 drivers/md/*.h
-install -Dt "$builddir/net/mac80211"    -m644 net/mac80211/*.h
+mkdir -p "$builddir/kernel"
+mkdir -p "$builddir/arch/x86/kernel"
+mkdir -p "$builddir/drivers/md"
+mkdir -p "$builddir/net/mac80211"
+
+cp .config Makefile Module.symvers System.map vmlinux "$builddir"
+cp kernel/Makefile "$builddir/Makefile"
+cp arch/x86/Makefile "$builddir/arch/x86/Makefile"
+cp arch/x86/kernel/asm-offsets.s "$builddir/arch/x86/kernel"
+cp drivers/md/*.h "$builddir/drivers/md/"
+cp net/mac80211/*.h "$builddir/net/mac80211/"
+#install -Dt "$builddir"                 -m644 .config Makefile \
+#                                              Module.symvers System.map vmlinux
+#install -Dt "$builddir/kernel"          -m644 kernel/Makefile
+#install -Dt "$builddir/arch/x86"        -m644 arch/x86/Makefile
+#install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+#install -Dt "$builddir/drivers/md"      -m644 drivers/md/*.h
+#install -Dt "$builddir/net/mac80211"    -m644 net/mac80211/*.h
+# If you opt for objtool/orc unwinder/libelf
 #install -Dt "$builddir/tools/objtool"         tools/objtool/objtool
 
 cp -a scripts          "$builddir/scripts"
@@ -65,11 +73,11 @@ for arch in alpha arc arm arm64 c6x csky h8300 hexagon \
             openrisc parisc powerpc riscv s390 sh      \
             sparc um unicore32 xtensa; 
 do 
-    rm -rf $arch
+    rm -rf "$arch"
 done
 
-echo "Laying trap..."
-mkdir -p "$1/usr/src"
+#echo "Laying trap..."
+#mkdir -p "$1/usr/src"
 #ln -sv "/usr/lib/modules/$2/build" "$1/usr/src/linux"
 
 install -Dm644 "arch/x86/boot/bzImage" "$1/boot/efi/KISS/vmlinuz.efi"

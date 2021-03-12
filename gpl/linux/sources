@@ -1,5 +1,5 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.tar.xz
-files/config
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.6.tar.xz
+files/.config
 patches/26-byacc.patch
 patches/27-no-perl.patch
 patches/28-march-native-support.patch
