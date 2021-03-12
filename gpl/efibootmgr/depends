@@ -1,4 +1,0 @@
-efivar
-gmake         make
-linux-headers make
-pkgconf       make
