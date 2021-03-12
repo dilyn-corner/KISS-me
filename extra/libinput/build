@@ -7,12 +7,12 @@ pkg-config --exists libudev || {
     exit 1
 }
 
-sed -i "s/libevdev', /libevdev', static: true, /" meson.build
-sed -i "s/libudev', /libudev', static: true, /"   meson.build
-sed -i "s/mtdev', /mtdev', static: true, /"       meson.build
-sed -i "s/shared_library/static_library/"         meson.build
-sed -i "/^version_flag = /d"                      meson.build
-sed -i "/link_args :/d"                           meson.build
+sed -i "s/libevdev'/libevdev', static: true/" meson.build
+sed -i "s/libudev'/libudev', static: true/"   meson.build
+sed -i "s/mtdev', /mtdev', static: true, /"   meson.build
+sed -i "s/shared_library/static_library/"     meson.build
+sed -i "/^version_flag = /d"                  meson.build
+sed -i "/link_args :/d"                       meson.build
 
 meson \
     --prefix=/usr \
