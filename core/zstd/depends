@@ -1,4 +1,4 @@
-meson   make
-samurai make
+gmake   make
+pkgconf make
 xz      make
 zlib    make
