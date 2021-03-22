@@ -6,11 +6,11 @@ meson \
     --prefix=/usr \
     -Ddefault_library=both \
     -Dbuildtype=release \
-    -Dintel=true \
+    -Damdgpu=true \
+    -Dradeon=true \
+    -Dintel=false \
     -Dlibkms=false \
     -Dvmwgfx=false \
-    -Dradeon=false \
-    -Damdgpu=false \
     -Dnouveau=false \
     . build
 
