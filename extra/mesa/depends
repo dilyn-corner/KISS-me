@@ -1,6 +1,7 @@
 byacc             make
 flex              make
 libdrm
+libelf
 #libglvnd
 linux-headers     make
 m4                make
