@@ -47,14 +47,14 @@ meson \
     -Dopengl=true \
     -Degl=enabled \
     -Dgbm=enabled \
+    -Dzstd=enabled \
     -Dgles2=enabled \
     -Dplatforms=wayland \
-    -Ddri-drivers=i965 \
-    -Dvulkan-drivers=intel \
-    -Dgallium-drivers=i915 \
+    -Ddri-drivers=r200 \
+    -Dvulkan-drivers=amd \
+    -Dgallium-drivers=radeonsi \
     -Dgallium-xa=disabled \
     -Dglx=disabled \
-    -Dzstd=disabled \
     -Dgles1=disabled \
     . build
 
