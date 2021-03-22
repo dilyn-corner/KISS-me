@@ -1,7 +1,7 @@
 case $TYPE in
     pre-build)
         case $PKG in
-            cmake | llvm | nodejs | python)
+            cmake | llvm | nodejs | python*)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
