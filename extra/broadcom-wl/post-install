@@ -1,9 +1,0 @@
-#!/bin/sh
-
-cat << EOF 
-This module is incompatible with ssb, bcma, b43, brcmsmac, etc. 
-Make sure that you (potentially re)install this package (post-kernel update), and run
-# depmod \$(uname -r) 
-# modprobe wl 
-to ensure that the module is properly loaded. 
-EOF
