@@ -10,5 +10,9 @@ install -Dm755 dist/kiss/*           "$1/usr/lib/hummingbird"
 
 ln -s hummingbird "$1/usr/bin/init"
 
+install -Dm644 dhcpcd.boot    "$1/etc/rc.d/dhcpcd.boot" 
+install -Dm644 openntpd.boot  "$1/etc/rc.d/openntpd.boot" 
+install -Dm644 scheduler.boot "$1/etc/rc.d/scheduler.boot" 
+
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/hummingbird.license"
