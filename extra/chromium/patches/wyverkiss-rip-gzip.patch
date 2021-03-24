@@ -1,0 +1,12 @@
+--- a/tools/grit/grit/format/gzip_string.py
++++ b/tools/grit/grit/format/gzip_string.py
+@@ -18,8 +18,7 @@
+   # Instead, --rsyncable breaks the file into small chunks, so that one doesn't
+   # affect the other in compression, and then only that chunk will have to be
+   # updated.
+-  gzip_proc = subprocess.Popen(['gzip', '--stdout', '--rsyncable',
+-                                '--best', '--no-name'],
++  gzip_proc = subprocess.Popen(['gzip', '--rsyncable'],
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
