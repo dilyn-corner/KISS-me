@@ -20,10 +20,6 @@ while read -r patch; do
     patch -p1 < "ungoogled-chromium/patches/$patch"
 done < ungoogled-chromium/patches/series
 
-# Some extra Ungoogled stuff
-python3 ungoogled-chromium/utils/prune_binaries.py \
-    ./ ungoogled-chromium/pruning.list
-
 python3 ungoogled-chromium/utils/domain_substitution.py apply \
     -r ungoogled-chromium/domain_regex.list \
     -f ungoogled-chromium/domain_substitution.list \
@@ -50,16 +46,16 @@ LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind" \
 
 # libpng: KISS builds with APNG patch (https://crbug.com/752403#c10)
 # zlib: KISS builds without minizip
-    #ffmpeg
-    #flac
-    #libwebp
-    #opus
 system="
+    ffmpeg
+    flac
     fontconfig
     freetype
     harfbuzz-ng
+    libwebp
     libdrm
     libjpeg
+    opus
 "
 
 # remove build scripts for system provided dependencies - basically does the
@@ -81,13 +77,13 @@ done
 
 # switch to system provided dependencies
 # shellcheck disable=2086
-python2 build/linux/unbundle/replace_gn_files.py --system-libraries $system
-python2 third_party/libaddressinput/chromium/tools/update-strings.py
+./build/linux/unbundle/replace_gn_files.py --system-libraries $system
+./third_party/libaddressinput/chromium/tools/update-strings.py
 
 kiss list libva && vaapi=true
 
-sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
-    tools/generate_shim_headers/generate_shim_headers.py
+#sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
+#    tools/generate_shim_headers/generate_shim_headers.py
 
 conf="
     is_cfi=false
@@ -125,7 +121,6 @@ conf="
     use_vaapi=${vaapi:-false}
     use_pangocairo=false
     use_system_zlib=true
-    use_intel_minigbm=true
     use_system_libdrm=true
     use_system_minigbm=true
     use_system_freetype=true
@@ -156,7 +151,6 @@ conf="
     safe_browsing_mode=0
     rtc_build_tools=false
     build_dawn_tests=false
-    pdf_is_complete_lib=true
     v8_enable_i18n_support=false
     enable_perfetto_unittests=false
     fieldtrial_testing_like_official_build=true
@@ -179,14 +173,16 @@ ninja -C out/Release chrome
 # If you need e.g. Angle, you will need EGL and GLESv2 in out/Release.
 # Just use the community build.
 
-install -Dm755 chromium.sh                         "$1/usr/bin/chromium"
-install -Dm755 out/Release/chrome                  "$1/usr/lib/chromium/chromium"
-install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium/icudtl.dat"
-install -Dm644 out/Release/resources.pak           "$1/usr/lib/chromium/resources.pak"
-install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/en-US.pak"
-install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
-install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
-install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
+install -Dm755 chromium.sh                          "$1/usr/bin/chromium"
+install -Dm755 out/Release/chrome                   "$1/usr/lib/chromium/chromium"
+install -Dm644 out/Release/icudtl.dat               "$1/usr/lib/chromium/icudtl.dat"
+install -Dm644 out/Release/resources.pak            "$1/usr/lib/chromium/resources.pak"
+install -Dm644 out/Release/locales/en-US.pak        "$1/usr/lib/chromium/locales/en-US.pak"
+install -Dm644 out/Release/chrome_100_percent.pak   "$1/usr/lib/chromium/chrome_100_percent.pak"
+install -Dm644 out/Release/chrome_200_percent.pak   "$1/usr/lib/chromium/chrome_200_percent.pak"
+install -Dm644 out/Release/v8_context_snapshot.bin  "$1/usr/lib/chromium/v8_context_snapshot.bin"
+install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium/swift/shader/libEGL.so"
+install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium/swiftshader/libGLESv2.so"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
