@@ -1,9 +1,0 @@
-#!/bin/sh 
-
-cat << EOF
-A set of sample scripts and services have been installed to /etc/s6-rc.
-Make sure you start s6-rc at boot in the proper way, modify the services and
-scripts as necessary for your system and needs, and run:
-s6-rc-compile /etc/s6-rc/current /etc/s6-rc/source
-To have the services start!
-EOF
