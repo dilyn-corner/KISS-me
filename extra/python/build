@@ -14,9 +14,10 @@ export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
 patch -p1 < python3-always-pip.patch
 
+# python expects ggrep during configure to determine endianness.
+ax_cv_c_float_words_bigendian=no \
 ./configure \
     --prefix=/usr \
-    --enable-shared \
     --with-system-expat \
     --with-system-ffi \
     --with-ensurepip=yes \
