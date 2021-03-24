@@ -22,14 +22,9 @@ Other branches are for:
 3) for forks
 
 
-## The structure of this repository
+The structure of this repository
+________________________________________________________________________________
 
-The BDFL of KISS has disappeared. After a month of his absence, I decided to put
-his theory to the test: his distro can be simply maintained by a single person.
-I'm only clocking in at ~100 packages installed for a full wayland-stack + web
-browser, but this was Dylan's baseline goal anyways. I'd say his project was
-proven a success, and I think I'll be able to maintain this system basically
-indefinitely.
 
 The master branch is very finicky and I would not recommend using it for a usual
 system; use it as a reference for building packages. As an example, many build
@@ -38,8 +33,12 @@ perhaps a large amount of overhead in the build system. Not to mention the fact
 that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
 much of the core system has changed to include toybox, uutils-coreutils, nawk,
 and libarchive. As a result, core has been extended to include rust. A lot of
-utilities are gone because of dropping busybox (still available in gpl if need
-be), but I would like to assume that I'll be just fine.  We will see. 
+utilities are gone because of dropping busybox, but I would like to assume that
+I'll be just fine.  We will see. Some current issues: 
+
+* toybox install is wonky. 
+* python expects ggrep; endianness must be specified. 
+* nawk seems to generate some files incorrectly? see libffi/build.
 
 Any packages that use a GPL license will end up in the gpl directory, regardless
 of their position in the system hierarchy. Ideally, there will be almost no GPL
@@ -49,7 +48,10 @@ certain things. But we take what we get, and we get what we can.
 Other branches are used by me for things like my KISS-kde partition. These
 branches are more suitable for everyday KISS use.
 
-## Thoughts
+
+Thoughts
+________________________________________________________________________________
+
 
 In the ever-excruciating pursuit of being different for the sake of difference,
 I have switched from KISS-proper to wyverkiss.
@@ -62,7 +64,10 @@ If you're using wyverkiss or some other gcc-less KISS implementation and want
 a working qt5, revert 9ad56f3587e572ed87a12a3a9b6641fd9812153c to get my
 5.15.2 build.
 
-## For the curious
+
+For the curious
+________________________________________________________________________________
+
 
 Here is a roughly current list of all the licenses each package in this
 repository uses. Dropping GPL *entirely* doesn't seem super possible, but we can
@@ -80,65 +85,57 @@ forced to accept it).
   +-------------------+---------------+--------------------+---------------+
   | byacc             | Public Domain | botan              | BSD 2-Clause  |
   | bzip2             | bzip2         | bottom             | MIT           |
-  | cmake             | BSD 3-Clause  | cairo              | MPLv1.1       |  
+  | cmake             | BSD 3-Clause  | cairo              | MPLv1.1       |
   | curl              | MIT           | chromium           | BSD 3-Clause  |
-  | execline          | ISC           | cozette-font       | MIT           |
-  | flex              | BSD 2-Clause  | dash               | BSD           |
-  | kiss              | MIT           | dhcpcd             | BSD           |
+  | flex              | BSD 2-Clause  | cozette-font       | MIT           |
+  | kiss              | MIT           | dash               | BSD           |
+  | hummingbird       | MIT           | dhcpcd             | BSD           |
   | libarchive        | BSD-2-Clause  | expat              | MIT           |
   | libressl          | ISC           | flac               | BSD 3-Clause  |
-  | llvm              | Apache-2.0    | fossil             | BSD 2-Clause  |
-  | m4                | BSD/ISC       | fontconfig         | MIT           |
+  | llvm              | Apache-2.0    | fontconfig         | MIT           |
+  | m4                | BSD/ISC       | fossil             | BSD 2-Clause  |
   | make              | BSD 2-Clause  | freetype-harfbuzz  | BSD           |
-  | mdevd             | ISC           | github-cli         | MIT           |
-  | musl              | MIT           | go                 | BSD 3-Clause  |
-  | nawk              | MIT           | iosevka-nerd-fonts | MIT           |
-  | oksh              | Public Domain | libass             | ISC           |
-  | openntpd          | ISC           | libdrm             | MIT           |
-  | rust              | APACHE/MIT    | libevdev           | MIT           |
-  | s6                | ISC           | libffi             | MIT           |
-  | s6-rc             | ISC           | libinput           | X11           |
-  | s6-linux-init     | ISC           | libjpeg-turbo      | IJG           |
-  | samurai           | Apache-2.0    | libogg             | BSD           |
-  | skalibs           | ISC           | libpciaccess       | X11           |
-  | toybox            | 0BSD          | libpng             | libpngv2      |
-  | uutils            | MIT           | libucl             | BSD 2-Clause  |
-  | xz                | Public Domain | libudev-zero       | ISC           |
-  | zlib              | zlib          | libvorbis          | BSD 3-Clause  |
-  | zstd              | BSD 3-Clause  | libvpx             | BSD 3-Clause  |
-  +-------------------+---------------+ libwebp            | BSD 3-Clause  |
-  | WAYLAND           | LICENSE       | mesa               | MIT           |
-  +-------------------+---------------+ meson              | Apache-2.0    |
-  | foot              | MIT           | mtdev              | MIT           |
-  | grim              | MIT           | nasm               | BSD 2-Clause  |
-  | hikari            | BSD 2-Clause  | netbsd-curses      | BSD 3-Clause  |
-  | libxkcommon       | MIT           | nodejs             | MIT           |
-  | swc               | MIT           | nss                | MPLv2         |
-  | velox             | MIT           | opendoas           | BSD           |
-  | wayland           | MIT           | openssh            | BSD           |
-  | wayland-protocols | MIT           | opus               | BSD 3-Clause  |
-  | wev               | MIT           | pash               | MIT           |
-  | wl-clipboard-rs   | MIT           | pixman             | MIT           |
-  | wld               | MIT           | pkgconf            | ISC           |
-  | wlroots           | MIT           | python             | PSFv2         |
-  | xkeyboard-config  | MIT           | python2            | PSFv2         |
-  +-------------------+---------------+ ripgrep            | UNLICENSE/MIT |
-  | GPL               | LICENSE       | rnp                | BSD 2-Clause  |
-  +-------------------+---------------+ sqlite             | Public Domain |
-  | alsa-lib          | GPLv2.1       | tzdata             | Public Domain |
-  | alsa-utils        | GPLv2         | vim                | Vim           |
-  | ccache            | GPLv3         | wpa_supplicant     | BSD           |
-  | ffmpeg            | GPLv2.1       +--------------------+---------------+
-  | fribidi           | GPLv2.1       |
-  | git               | LGPLv2.1      |
-  | glib              | GPLv2.1       | 
-  | gmake             | GPLv3         | 
-  | gnupg1            | GPLv3         |
-  | gperf             | GPLv3         |
-  | lame              | LGPLv2        |
-  | libelf            | GPLv3         |
-  | linux             | GPLv2         |
-  | linux-headers     | GPLv2         |
+  | musl              | MIT           | github-cli         | MIT           |
+  | nawk              | MIT           | go                 | BSD 3-Clause  |
+  | oksh              | Public Domain | iana-etc           | Public Domain |
+  | openntpd          | ISC           | iosevka-nerd-fonts | MIT           |
+  | rust              | APACHE/MIT    | json-c             | MIT           |
+  | samurai           | Apache-2.0    | libass             | ISC           |
+  | toybox            | 0BSD          | libdrm             | MIT           |
+  | uutils            | MIT           | libevdev           | MIT           |
+  | xz                | Public Domain | libffi             | MIT           |
+  | zlib              | zlib          | libinput           | X11           |
+  | zstd              | BSD 3-Clause  | libjpeg-turbo      | IJG           |
+  +-------------------+---------------+ libogg             | BSD           |
+  | WAYLAND           | LICENSE       | libpciaccess       | X11           |
+  +-------------------+---------------+ libpng             | libpngv2      |
+  | foot              | MIT           | libucl             | BSD 2-Clause  |
+  | grim              | MIT           | libudev-zero       | ISC           |
+  | hikari            | BSD 2-Clause  | libva              | MIT           |
+  | libxkcommon       | MIT           | libvorbis          | BSD 3-Clause  |
+  | wayland           | MIT           | libvpx             | BSD 3-Clause  |
+  | wayland-protocols | MIT           | libwebp            | BSD 3-Clause  |
+  | wev               | MIT           | mesa               | MIT           |
+  | wl-clipboard-rs   | MIT           | meson              | Apache-2.0    |
+  | wlroots           | MIT           | mtdev              | MIT           |
+  | xkeyboard-config  | MIT           | nasm               | BSD 2-Clause  |
+  +-------------------+---------------+ netbsd-curses      | BSD 3-Clause  |
+  | GPL               | LICENSE       | nodejs             | MIT           |
+  +-------------------+---------------+ nss                | MPLv2         |
+  | alsa-lib          | GPLv2.1       | opendoas           | BSD           |
+  | alsa-utils        | GPLv2         | openssh            | BSD           |
+  | ccache            | GPLv3         | opus               | BSD 3-Clause  |
+  | ffmpeg            | GPLv2.1       | pash               | MIT           |
+  | fribidi           | GPLv2.1       | pixman             | MIT           |
+  | git               | LGPLv2.1      | pkgconf            | ISC           |
+  | glib              | GPLv2.1       | python             | PSFv2         |
+  | gmake             | GPLv3         | python2            | PSFv2         |
+  | gnupg1            | GPLv3         | rnp                | BSD 2-Clause  |
+  | gperf             | GPLv3         | sqlite             | Public Domain |
+  | lame              | LGPLv2        | tinyalsa           | BSD 3-Clause  |
+  | libelf            | GPLv3         | tzdata             | Public Domain |
+  | linux             | GPLv2         | vim                | Vim           |
+  | linux-headers     | GPLv2         +--------------------+---------------+
   | pango             | LGPLv2.1      |
   | perl              | GPLv1         |
   | util-linux        | GPLv2         |
@@ -146,15 +143,18 @@ forced to accept it).
   | x265              | GPLv2         |
   | xvidcore          | GPLv2         |
   +-------------------+---------------+
+
 --- 
 
 
-## My other stuff
+My other stuff
+________________________________________________________________________________
+
 
 I am the maintainer of a couple other repositories:
 
 KISS-haskell https://github.com/dilyn-corner/KISS-haskell - a KISS-compliant
-repository that contains a bootstrappable ghc. 
+repository that contains a bootstrappable ghc.
 
 KISS-kde https://github.com/dilyn-corner/KISS-kde - A KISS-compliant
 repository that brings the wonders of a plasma desktop to KISS.
@@ -168,19 +168,26 @@ maintain my dotfiles and share screenshots. Don't use it, just marvel.
 
 Also, I am the BDFL of KISS Linux :)
 
+
 ---
 
 
-# Useful fork-facts
+Useful fork-facts
+________________________________________________________________________________
 
-## So you made a fork
+
+So you made a fork
+________________________________________________________________________________
+
 
 This is more-so for me and anyone like me who is both new to Git(hub) and forks. 
 
-## Keeping up 
+Keeping up 
+________________________________________________________________________________
+
 
 If you want to keep your fork in-line with upstream, there's a very
-straightforward way of doing this!<sup>1</sup> Simply add the upstream
+straightforward way of doing this! [1] Simply add the upstream
 repository as a remote URL for git to track, and then you will be able to pull
 down any changes upstream makes and merge them into your fork.
 
@@ -197,15 +204,18 @@ very handy.
 
 git checkout -b $newBranch
 > You do work
+> You commit your work
 > They do work
+> They push their work
+> You want their work
 git fetch upstream
 git rebase upstream/master
 
-Rebasing<sup>2</sup> is essentially just a patch of the work you did based off
+Rebasing [2] is essentially just a patch of the work you did based off
 the commit you made your fork from, that you can then simply slide into the
 history without making it look wonky (with a bunch of merge commit messages).
 
-This will be edited heavily in the future maybe hopefully probably.<sup>3</sup>
+This will be edited heavily in the future maybe hopefully probably. [3]
 
 1. https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
 
@@ -215,7 +225,9 @@ This will be edited heavily in the future maybe hopefully probably.<sup>3</sup>
 
 ---
 
-# Repository trust
+Repository trust
+________________________________________________________________________________
+
 
 All commits signed with my own GPG key. Save this key to a file and import it.
 
