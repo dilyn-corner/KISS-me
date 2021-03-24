@@ -6,7 +6,11 @@ cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF
+    -DBUILD_TESTING=OFF \
+    -G Ninja
 
-cmake --build   build
-cmake --install build
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/json-c.license"
