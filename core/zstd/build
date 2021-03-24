@@ -11,8 +11,14 @@ build_zstd() (
     export CFLAGS="$CFLAGS -static -pthread"
     export LDFLAGS="$LDFLAGS -static"
     
-    CC=clang gmake zstd-pgo
-    gmake PREFIX=/usr DESTDIR="$1" install
+    gmake \
+        CC=clang \
+        zstd-pgo
+
+    gmake \
+        PREFIX=/usr \
+        DESTDIR="$1" \
+        install
 
     # Symlink for all the things we built in
     for bin in gzip lzma xz zcat ungz unlzma unxz; do
@@ -32,6 +38,7 @@ build_libzstd() (
                            -Wno-ignored-optimization-argument"
 
     gmake \
+        PREFIX=/usr \
         libzstd.a \
         libzstd.pc
 
