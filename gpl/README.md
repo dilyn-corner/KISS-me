@@ -19,19 +19,18 @@ it!
 ### Things we cannot get rid of
 
 `linux*` - for obvious reasons
+    By extension I include `libelf` and `util-linux`
 
 
 ### Things we would like to replace
 
-`alsa-libs` - OSS would be GREAT! If it were not GPL on Linux.
-
-`alsa-utils` - We need a way to adjust volumes
+`alsa-{libs,utils}` - `tinyalsa` would be hella cool
 
 `gnupg1` - `rnp` would be a sick replacement
 
-`gmake` - required for many things to build :'( 
+`gmake` - required for many things to build :'(
 
-`perl` - just a make dep for a few things. But things I like.
+`perl` - just a make dep for `chromium`
 
 
 ### Things we don't need
