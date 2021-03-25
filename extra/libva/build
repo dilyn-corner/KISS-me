@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --mandir=/usr/share/man \
+    -Dbuildtype=release \
+    -Ddocs=false \
+    -Dwith_glx=no \
+    -Dwith_x11=no \
+    -Dwith_wayland=yes \
+    -Dintrospection=false \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/libva.license"
