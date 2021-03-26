@@ -1,21 +1,16 @@
 alsa-lib
 byacc              make
 expat
-ffmpeg
-flac
 fontconfig
 freetype-harfbuzz
 gperf              make
 libdrm
-libjpeg-turbo
-libwebp
 libxkbcommon
 linux-headers      make
 mesa
 nasm               make
 nodejs             make
 nss
-opus
 perl               make
 pkgconf            make
 python             make
