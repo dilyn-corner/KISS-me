@@ -19,3 +19,4 @@ patches/musl-v8-monotonic-pthread-cont_timedwait.patch
 patches/wyverkiss-drop-atoms.patch
 patches/wyverkiss-optional-clang-plugins.patch
 patches/wyverkiss-rip-gzip.patch
+patches/fix-libva-redef.patch
