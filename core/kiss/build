@@ -1,10 +1,28 @@
 #!/bin/sh -e
 
-# Some shells think the env flags go to chroot
-# Some shells don't
+# Some chroots think the env flags go to chroot
+# Some chroots don't
 # Mine does, so this is what I do :v 
 
 sed -i 's/chroot "$1"/chroot "$1" --/' contrib/kiss-chroot
+
+cat >> different-orphans.patch << EOF
+--- a/contrib/kiss-orphans
++++ b/contrib/kiss-orphans
+@@ -7,8 +7,8 @@
+     case $pkg in
+         # Exemptions for orphans which aren't really
+         # orphans. Exclude them from the list.
+-        baseinit|baselayout|gcc|e2fsprogs|musl|\\
+-        make|busybox|bzip2|grub|kiss|git)
++        baseinit|baselayout|bzip2|dash|kiss|libarchive|\\
++        make|musl|nawk|openntpd|toybox|uutils|zstd)
+             continue
+     esac
+ 
+EOF
+
+patch -p1 < different-orphans.patch
 
 mkdir -p "$1/usr/bin"
 
