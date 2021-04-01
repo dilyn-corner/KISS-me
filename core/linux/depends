@@ -2,5 +2,7 @@ bison  make
 flex   make
 libelf
 libressl
-lz4
 m4     make
+tinyramfs
+zfs
+zstd
