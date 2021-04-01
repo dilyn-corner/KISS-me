@@ -2,13 +2,20 @@
 
 export DESTDIR="$1"
 
+#sed -i "s/pciaccess', /pciaccess', static: true, /" meson.build
+#sed -i "s/shared_library/library/"                  meson.build
+#sed -i "s/shared_library/library/"                  intel/meson.build
+
+    #-Ddefault_library=static \
 meson \
     --prefix=/usr \
+    -Dbuildtype=release \
     -Dintel=true \
-    -Dradeon=false \
     -Damdgpu=false \
-    -Dnouveau=false \
+    -Dlibkms=false \
+    -Dradeon=false \
     -Dvmwgfx=false \
+    -Dnouveau=false \
     . build
 
 ninja -C build
