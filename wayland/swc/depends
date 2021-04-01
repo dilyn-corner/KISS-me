@@ -1,0 +1,10 @@
+libdrm
+libinput
+libxkbcommon
+libxcb
+linux-headers     make
+pixman
+wayland
+wayland-protocols make
+wld
+xcb-util-wm

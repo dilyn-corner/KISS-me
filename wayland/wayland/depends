@@ -1,4 +1,6 @@
-expat
+expat   
 flex    make
-libffi
+libffi  
+meson   make
 pkgconf make
+samurai make

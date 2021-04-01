@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+#        ENABLE_SHARED=0 \
+mk() {
+    make \
+        PREFIX=/usr \
+        ENABLE_DEBUG=0 \
+        DRM_DRIVERS=intel \
+        "$@"
+}
+
+mk
+mk DESTDIR="$1" install

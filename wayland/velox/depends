@@ -1,0 +1,6 @@
+linux-headers     make
+pixman
+swc
+wayland
+wayland-protocols make
+wld

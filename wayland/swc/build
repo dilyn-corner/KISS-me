@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+#        ENABLE_SHARED=0 \
+#        ENABLE_XWAYLAND=0 \
+mk() {
+    make \
+        PREFIX=/usr \
+        ENABLE_DEBUG=0 \
+        "$@"
+}
+
+mk
+mk DESTDIR="$1" install

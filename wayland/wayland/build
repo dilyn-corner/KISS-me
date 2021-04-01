@@ -1,10 +1,19 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --enable-static \
-    --disable-dtd-validation \
-    --disable-documentation
+export DESTDIR="$1"
 
-make
-make DESTDIR="$1" install
+#sed -i "s/expat'/expat', static: true/" meson.build
+#sed -i "s/ffi'/ffi', static: true, /"   meson.build
+#sed -i "s/subdir('tests')//"            meson.build
+
+
+#    -Ddefault_library=static \
+meson \
+    --prefix=/usr \
+    -Dbuildtype=release \
+    -Ddocumentation=false \
+    -Ddtd_validation=false \
+    . build
+
+ninja -C build
+ninja -C build install

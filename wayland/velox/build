@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+make PREFIX=/usr ENABLE_DEBUG=0
+make PREFIX=/usr ENABLE_DEBUG=0 DESTDIR="$1" install
+
+install -Dm755 velox.conf.sample "$1/etc/velox.conf"

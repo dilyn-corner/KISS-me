@@ -1,0 +1,4 @@
+libdrm        make
+linux-headers make
+pixman        make
+wayland       make
