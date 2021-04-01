@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --sbindir=/usr/bin \
+    --with-mounthelperdir=/usr/bin \
+    --disable-nls \
+    --disable-pam \
+    --disable-shared \
+    --disable-systemd \
+    --disable-sysvinit \
+    --with-config=user
+
+make LDFLAGS="$LDFLAGS --static"
+make DESTDIR="$1" install
+
+# Remove some useless directories
+rm -rf "$1/usr/lib/dracut"
+rm -rf "$1/usr/share/zfs"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/zfs.license"
