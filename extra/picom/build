@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+# Segfault...
+export CFLAGS=
+
+meson \
+    --prefix=/usr \
+    -Ddbus=false \
+    -Dregex=false \
+    . build
+
+ninja -C build
+ninja -C build install
