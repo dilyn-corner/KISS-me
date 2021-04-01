@@ -1,7 +1,0 @@
-#/bin/sh -e
-
-cat << EOF
-Make sure you have both the applesmc and coretemp kernel modules loaded, and
-optionally (preferably) enabled at startup. 
-This package does not explicitly support systemd, although the dev does. 
-EOF
