@@ -39,17 +39,14 @@ meson \
     --buildtype=release \
     -Db_lto=true \
     -Dgbm=enabled \
+    -Dzstd=enabled \
     -Dgles1=disabled \
     -Dglx=dri \
+    -Dplatforms=x11 \
     -Ddri-drivers=i965 \
     -Dvulkan-drivers=intel \
     -Dgallium-drivers=i915 \
-    -Dplatforms=x11,wayland \
-    -Dzstd=disabled \
     . build
-
-# Maybe later?
-    #-Dglvnd=true \
 
 ninja -C build
 ninja -C build install
