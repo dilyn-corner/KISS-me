@@ -1,24 +1,104 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export CC=/usr/bin/cc
 
+# Build me statically baybee
+sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
+sed -i "s|-scanner',|-scanner', static: true, |"  meson.build
+sed -i "s|xkbcommon'|xkbcommon', static: true|"   meson.build
+sed -i "s|protocols'|protocols', static: true|"   meson.build
+sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
+sed -i "s|-client'|-client', static: true|"       meson.build
+sed -i "s|threads'|threads', static: true|"       meson.build
+sed -i "s|cursor'|cursor', static: true, |"       meson.build
+sed -i "s|fontconfig'|fontconfig', static: true|" subprojects/fcft/meson.build
+sed -i "s|freetype2'|freetype2', static: true|"   subprojects/fcft/meson.build
+sed -i "s|pixman-1'|pixman-1', static: true|"     subprojects/fcft/meson.build
+sed -i "s|harfbuzz'|harfbuzz', static: true|"     subprojects/fcft/meson.build
+sed -i "s|threads'|threads', static: true|"       subprojects/fcft/meson.build
+
+# Note to self: always make doc generation toggleable
+sed -i "s|subdir('doc')||" meson.build
+
+# These headers are never in the right spot
 fixHead=subprojects/fcft
 install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
 install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
 
-# Note to self: always make doc generation toggleable
-sed -i "/subdir('doc')/d" meson.build
-
+# The author *insists* we optimize the ever-living-fuck out of this package.
+# So let's indulge them! LLVM makes this tricky, but here's how you do it.
+export CFLAGS="$CFLAGS -fno-plt                           \
+                       -Wno-error                         \
+                       -static -l:libffi.a                \
+                       -Wno-profile-instr-unprofiled      \
+                       -Wno-profile-instr-out-of-date     \
+                       -Wno-unused-command-line-argument  \
+                       -Wno-ignored-optimization-argument"
+                       
 meson \
     --prefix=/usr \
-    --buildtype=debug \
+    -Dbuildtype=release \
+    -Db_lto=true \
+    -Dterminfo=disabled \
     . build
+
+# First, we generate a PGO build
+meson configure -Db_pgo=generate build
+ninja -C build
+
+# We branch here; if foot is already installed we just assume we're running in a
+# wayland session (a bit presumptuous but it works); if not we build with
+# partial PGO and if yes then full-blown PGO. 
+
+if kiss l foot; then
+    # Then we generate some PGO data
+    foot_tmp=$(mktemp)
+    ./build/foot --config=/dev/null \
+        --term=xterm \
+        sh -c \
+        scripts/generate-alt-random-writes.py \
+        --scroll \
+        --scroll-region \
+        --colors-regular \
+        --colors-bright \
+        --colors-rgb \
+        ${foot_tmp} && cat ${foot_tmp}
+    rm "${foot_tmp}"
+
+else
+    # else we generate some mediocre PGO data
+    foot_tmp=$(mktemp)
+    scripts/generate-alt-random-writes.py \
+        --rows=67 \
+        --cols=135 \
+        --scroll \
+        --scroll-region \
+        --colors-regular \
+        --colors-bright \
+        --colors-rgb \
+        --attr-bold \
+        --attr-italic \
+        --attr-underline \
+        --sixel \
+        ${foot_tmp}
+    
+    ./build/pgo ${foot_tmp} ${foot_tmp} ${foot_tmp}
+    rm ${foot_tmp}
+
+fi
+
+# This is required for llvm
+llvm-profdata merge default_*profraw --output=default.profdata
+# Make sure it's in the right directory
+mv *.profdata build
+
+# Now we should *use* the PGO data
+# Note: we will get a hash mismatch because of this
+meson configure -Db_pgo=use build
 
 ninja -C build
 ninja -C build install
 
-# Install terminfo because duh
-mkdir -p "$1/usr/share/terminfo/f"
-
-cp build/f/foot        "$1/usr/share/terminfo/f/foot"
-cp build/f/foot-direct "$1/usr/share/terminfo/f/foot-direct"
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/foot.license"
