@@ -1,0 +1,23 @@
+--- a/lib/init/rc.shutdown
++++ b/lib/init/rc.shutdown
+@@ -16,10 +16,6 @@
+     sv force-shutdown /var/service/* >/dev/null 2>&1
+ }
+ 
+-log "Saving random seed..."; {
+-    random_seed save
+-}
+-
+ log "Sending TERM signal to all processes..."; {
+     kall 15
+     sleep 2
+@@ -29,8 +25,7 @@
+     kall 9
+ }
+ 
+-log "Unmounting filesystems and disabling swap..."; {
+-    swapoff -a
++log "Unmounting filesystems..."; {
+ 
+     # Skip unmounting pseudo filesystems as they may be
+     # needed below for encryption and user shutdown scripts.
