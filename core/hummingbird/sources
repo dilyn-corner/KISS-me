@@ -1,4 +1,0 @@
-git+https://github.com/Sweets/hummingbird
-files/dhcpcd.boot
-files/openntpd.boot
-files/scheduler.boot
