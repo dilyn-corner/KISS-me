@@ -1,2 +1,2 @@
-meson   make
-samurai make
+linux-headers make
+meson         make
