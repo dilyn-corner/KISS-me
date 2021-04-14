@@ -3,9 +3,7 @@
 # Hide a very obnoxious warning
 export CFLAGS="$CFLAGS -Wno-implicit-fallthrough"
 
-for patch in *.patch; do
-    patch -p1 < "$patch"
-done
+patch -p1 < byacc.patch
 
 # Install python-mako which is solely needed for mesa
 # and thus contained in this build.
