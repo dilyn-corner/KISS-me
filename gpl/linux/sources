@@ -1,5 +1,0 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.11.14.tar.xz
-files/.config
-patches/byacc.patch
-patches/no-perl.patch
-patches/march-native-support.patch
