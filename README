@@ -60,14 +60,9 @@ Additionally, due to recent issues with Xorg (see
 https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), I have decided to
 commit to trying out wayland.
 
-If you're using wyverkiss or some other gcc-less KISS implementation and want
-a working qt5, revert 9ad56f3587e572ed87a12a3a9b6641fd9812153c to get my
-5.15.2 build.
-
 
 For the curious
 ________________________________________________________________________________
-
 
 Here is a roughly current list of all the licenses each package in this
 repository uses. Dropping GPL *entirely* doesn't seem super possible, but we can
@@ -83,26 +78,24 @@ forced to accept it).
   +-------------------+---------------+--------------------+---------------+
   | CORE              | LICENSE       | EXTRA              | LICENSE       |
   +-------------------+---------------+--------------------+---------------+
-  | byacc             | Public Domain | botan              | BSD 2-Clause  |
-  | bzip2             | bzip2         | bottom             | MIT           |
-  | cmake             | BSD 3-Clause  | cairo              | MPLv1.1       |
-  | curl              | MIT           | chromium           | BSD 3-Clause  |
-  | flex              | BSD 2-Clause  | cozette-font       | MIT           |
-  | kiss              | MIT           | dash               | BSD           |
-  | hummingbird       | MIT           | dhcpcd             | BSD           |
+  | baseinit          | MIT           | botan              | BSD 2-Clause  |
+  | byacc             | Public Domain | bottom             | MIT           |
+  | bzip2             | bzip2         | cairo              | MPLv1.1       |
+  | cmake             | BSD 3-Clause  | chromium           | BSD 3-Clause  |
+  | curl              | MIT           | cozette-font       | MIT           |
+  | flex              | BSD 2-Clause  | dash               | BSD           |
+  | kiss              | MIT           | dhcpcd             | BSD           |
   | libarchive        | BSD-2-Clause  | expat              | MIT           |
-  | libressl          | ISC           | flac               | BSD 3-Clause  |
-  | llvm              | Apache-2.0    | fontconfig         | MIT           |
-  | m4                | BSD/ISC       | fossil             | BSD 2-Clause  |
-  | make              | BSD 2-Clause  | freetype-harfbuzz  | BSD           |
-  | musl              | MIT           | github-cli         | MIT           |
-  | nawk              | MIT           | go                 | BSD 3-Clause  |
-  | oksh              | Public Domain | iana-etc           | Public Domain |
-  | openntpd          | ISC           | iosevka-nerd-fonts | MIT           |
-  | rust              | APACHE/MIT    | json-c             | MIT           |
-  | samurai           | Apache-2.0    | libass             | ISC           |
-  | toybox            | 0BSD          | libdrm             | MIT           |
-  | uutils            | MIT           | libevdev           | MIT           |
+  | libressl          | ISC           | fontconfig         | MIT           |
+  | llvm              | Apache-2.0    | fossil             | BSD 2-Clause  |
+  | m4                | BSD/ISC       | freetype-harfbuzz  | BSD           |
+  | make              | BSD 2-Clause  | github-cli         | MIT           |
+  | musl              | MIT           | go                 | BSD 3-Clause  |
+  | nawk              | MIT           | iana-etc           | Public Domain |
+  | oksh              | Public Domain | json-c             | MIT           |
+  | openntpd          | ISC           | libass             | ISC           |
+  | samurai           | Apache-2.0    | libdrm             | MIT           |
+  | toybox            | 0BSD          | libevdev           | MIT           |
   | xz                | Public Domain | libffi             | MIT           |
   | zlib              | zlib          | libinput           | X11           |
   | zstd              | BSD 3-Clause  | libjpeg-turbo      | IJG           |
@@ -124,26 +117,18 @@ forced to accept it).
   +-------------------+---------------+ nss                | MPLv2         |
   | alsa-lib          | GPLv2.1       | opendoas           | BSD           |
   | alsa-utils        | GPLv2         | openssh            | BSD           |
-  | ccache            | GPLv3         | opus               | BSD 3-Clause  |
-  | ffmpeg            | GPLv2.1       | pash               | MIT           |
-  | fribidi           | GPLv2.1       | pixman             | MIT           |
-  | git               | LGPLv2.1      | pkgconf            | ISC           |
-  | glib              | GPLv2.1       | python             | PSFv2         |
-  | gmake             | GPLv3         | python2            | PSFv2         |
-  | gnupg1            | GPLv3         | rnp                | BSD 2-Clause  |
-  | gperf             | GPLv3         | sqlite             | Public Domain |
-  | lame              | LGPLv2        | tinyalsa           | BSD 3-Clause  |
-  | libelf            | GPLv3         | tzdata             | Public Domain |
-  | linux             | GPLv2         | vim                | Vim           |
-  | linux-headers     | GPLv2         +--------------------+---------------+
-  | pango             | LGPLv2.1      |
-  | perl              | GPLv1         |
-  | util-linux        | GPLv2         |
-  | x264              | GPLv2         |
-  | x265              | GPLv2         |
-  | xvidcore          | GPLv2         |
-  +-------------------+---------------+
-
+  | fribidi           | GPLv2.1       | opus               | BSD 3-Clause  |
+  | git               | LGPLv2.1      | pash               | MIT           |
+  | glib              | GPLv2.1       | pixman             | MIT           |
+  | gmake             | GPLv3         | pkgconf            | ISC           |
+  | gnupg1            | GPLv3         | python             | PSFv2         |
+  | gperf             | GPLv3         | python2            | PSFv2         |
+  | libelf            | GPLv3         | rnp                | BSD 2-Clause  |
+  | linux-headers     | GPLv2         | rust               | APACHE/MIT    |
+  | pango             | LGPLv2.1      | sqlite             | Public Domain |
+  | perl              | GPLv1         | tzdata             | Public Domain |
+  | util-linux        | GPLv2         | vim                | Vim           |
+  +-------------------+---------------+--------------------+---------------+
 --- 
 
 
@@ -251,23 +236,33 @@ OZ6IAkov2YnfUqEBjok979V1M2X2BcKNi/ojDB/dy9DusHNJLsX4RH5PEt3N0W1a
 H2fRPQaiSQA/XL3QGgh+C+BYwdCxCHPsX41EvadnT27ms0SxeSk6RCpAwB26tA8O
 ueHYEEVRSRJCakOsidP4uomJAxYlPj35zvvYAfEcyMYc3ts3Xd/6FjpGHRYBhNv9
 BuIPvKvQaDepnd4MLXiddhNkMxOa38VxX3Y1xyi5QTAdEfyzMvuftUYS7q4xL/P1
-TYE2sdI3LG36TDx6qrkBjQRciFDEAQwAyC8EcDVfoxQB4UBYXJltSwsLe2azNaZq
-w+fQbk4jJKv9bNwwm+QFxGrcSLsacqStbkETO8QKC1Qv/9MDDC/2qklD4joyzcGF
-KnOUFncOcvemf1cwoEgYSebPZH8VPmZj7e8jLo170IOR0qr44rd0tP0PElM3IFXB
-+Z6YFR1Z/nV5gLLf4igZpcgFcKIhLW0/jLoykix+fW091SlyL2VopLJJrrVMJa19
-eoUdOt9OQ2z3Vl+oTkQ6RWD0ZNrP6Ty8I6+2FUxVQuRjb0n9JLHmN6mkzlm3Fxuz
-MpmqZH7ylxQ16pkOUODRAkpUAnAmVTfIFiKhfPm46pHKuuY8g11ju2AJG5wvjwU4
-pLPnoR0BsNMPofh+158wF3d/fs2rfmb+taZeRixKsSZ8lLps6lyM905tFpZpc2oG
-5p4rrqTY86Q5tS3IwrYydDfh5aUQz6J8Yqdz/fo0iTkrzAkstdHQv5xBiZBOuq0l
-kNQOVrovk8L+yLmloP4VucElkbzmGbK7ABEBAAGJAZ8EGAEKAAkFglyIUMQCmwwA
-CgkQ2kq3MdTD8T0qWQv9Gv5rGHL/gcVW199YZB1LikIDNmjxmV177BV4Lgx+ac+E
-VEamLWcpbqHmpGn9K/UPg3KqxpQmxjOcBdR0l9UcioVtfj7y7/vgRi866g3/OuUH
-+vmNpLhAK8krURCOX04La3geybyAXIZT6blQa1KylE2KLeqjsJUkjoVPv9uZIoTn
-IEaY8LCshsQzUmBgq20ZuhsVyVyxmbBeMePkhR1trf5JTi3mI1X66AdGLHFHczhR
-noxlXNrfjqR5iRoG3070gU6KoOyWK/6zeIJfEPDkP5zsE6aRYeoSiNj47Frl2sHr
-/F94XrhKPeDTTmlai+XuuZrlnyXjwVdfqsEf5w8Va1pMMBQt8ux6qkUpxZzjy/ih
-3pV4BKDdGV4NQO9VKBwwQHKYi6T295rBaQ+2Z0ey0kDnCfWdb9/HHMc2YZSQflBg
-dxrnnFiK8wnADPGA3fzL/9F+fNysX9Ypg2N7pkTbvz7WOqhgDf3D+jXteVUxgq9K
-FTjDC7NBgOvvveXb5ccd=j6ND
-
+TYE2sdI3LG36TDx6qrQpRGlseW4gQ29ybmVyIDxkaWx5bi5jb3JuZXJAazFzc2xp
+bnV4Lm9yZz6JAbgEEwECACIFAmB5tAgCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4B
+AheAAAoJENpKtzHUw/E9qKMMALIWkHafXs1aaDAM2sXXfYUPQVrFWmRiaM/eAKBY
+l2KBJw124Wa8SQzRDu/IHxQffDqVn8ShURocUWqXpJepjOnBGb1y5FViUME9hSRS
+cxn+14xPHquRQMUCUvCHU48HjcDFOTXBzmA8oezuRO/pzqWJhVFaHWl+M/j15l1C
+I5k/hZ/Kv9Mja9lSoMYGHZ/v2+OzLWtXR9qfdQn81AkWNgj8cuR+VuHgxD0g51i+
+hsTXJ35vQ6Wghoh7LXNlj3RShsR+dU5E/6HJlpYVsPve/x7CUWGENO7FAQYN0eFr
+rrXg6uq8dT1SzHR276yUcienm7YkEoKhEhYOhPc0EYQswCoDrDvMTWMNsT7cZ8fP
+S+sbtIiZNAs/Qz4UFzZKVjq/i7LCItqQjJNAHgd8lUQik3J7P0K5v3xicmjM3ri0
+MlPVshcnIc8GF6H54Fq6mcQ8biI7oPzKG62NuMi8GqLTYWVxP+f0yICobyQmB8dx
+zSZA7mZTlgG0TVyPxOyqUv+7mbkBjQRciFDEAQwAyC8EcDVfoxQB4UBYXJltSwsL
+e2azNaZqw+fQbk4jJKv9bNwwm+QFxGrcSLsacqStbkETO8QKC1Qv/9MDDC/2qklD
+4joyzcGFKnOUFncOcvemf1cwoEgYSebPZH8VPmZj7e8jLo170IOR0qr44rd0tP0P
+ElM3IFXB+Z6YFR1Z/nV5gLLf4igZpcgFcKIhLW0/jLoykix+fW091SlyL2VopLJJ
+rrVMJa19eoUdOt9OQ2z3Vl+oTkQ6RWD0ZNrP6Ty8I6+2FUxVQuRjb0n9JLHmN6mk
+zlm3FxuzMpmqZH7ylxQ16pkOUODRAkpUAnAmVTfIFiKhfPm46pHKuuY8g11ju2AJ
+G5wvjwU4pLPnoR0BsNMPofh+158wF3d/fs2rfmb+taZeRixKsSZ8lLps6lyM905t
+FpZpc2oG5p4rrqTY86Q5tS3IwrYydDfh5aUQz6J8Yqdz/fo0iTkrzAkstdHQv5xB
+iZBOuq0lkNQOVrovk8L+yLmloP4VucElkbzmGbK7ABEBAAGJAZ8EGAEKAAkFglyI
+UMQCmwwACgkQ2kq3MdTD8T0qWQv9Gv5rGHL/gcVW199YZB1LikIDNmjxmV177BV4
+Lgx+ac+EVEamLWcpbqHmpGn9K/UPg3KqxpQmxjOcBdR0l9UcioVtfj7y7/vgRi86
+6g3/OuUH+vmNpLhAK8krURCOX04La3geybyAXIZT6blQa1KylE2KLeqjsJUkjoVP
+v9uZIoTnIEaY8LCshsQzUmBgq20ZuhsVyVyxmbBeMePkhR1trf5JTi3mI1X66AdG
+LHFHczhRnoxlXNrfjqR5iRoG3070gU6KoOyWK/6zeIJfEPDkP5zsE6aRYeoSiNj4
+7Frl2sHr/F94XrhKPeDTTmlai+XuuZrlnyXjwVdfqsEf5w8Va1pMMBQt8ux6qkUp
+xZzjy/ih3pV4BKDdGV4NQO9VKBwwQHKYi6T295rBaQ+2Z0ey0kDnCfWdb9/HHMc2
+YZSQflBgdxrnnFiK8wnADPGA3fzL/9F+fNysX9Ypg2N7pkTbvz7WOqhgDf3D+jXt
+eVUxgq9KFTjDC7NBgOvvveXb5ccd
+=ERKU
 -----END PGP PUBLIC KEY BLOCK-----
