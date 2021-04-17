@@ -1,20 +1,24 @@
 alsa-lib
 byacc              make
-expat
+bzip2
 fontconfig
 freetype-harfbuzz
 gperf              make
 libdrm
+libjpeg-turbo
 libxkbcommon
+libwebp
 linux-headers      make
 mesa
 nasm               make
 nodejs             make
 nss
+opus
 perl               make
 pkgconf            make
 python             make
 python2            make
 samurai            make
 wayland
+wayland-protocols  make
 zlib
