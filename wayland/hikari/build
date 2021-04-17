@@ -6,7 +6,9 @@ sed -i 's/hikari hikari-unlocker/hikari/g'  Makefile
 make \
     PREFIX=/usr \
     ETC_PREFIX=/ \
-    with_SCREEN_COPY=YES \
+    WITH_SCREENCOPY=YES \
+    WITH_LAYERSHELL=YES \
+    WITH_VIRTUAL_INPUT=YES \
     WITH_POSIX_C_SOURCE=YES \
     PKG_CONFIG="pkg-config --static"
 
