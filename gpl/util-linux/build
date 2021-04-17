@@ -6,24 +6,21 @@
     --bindir=/usr/bin \
     --sbindir=/usr/bin \
     --libdir=/usr/lib \
-    --enable-agetty \
-    --enable-zramctl \
     --enable-libuuid \
     --enable-libblkid \
-    --enable-libsmartcols \
-    --enable-static-programs=fdisk \
-    --disable-rpath \
-    --disable-assert \
-    --disable-shared \
-    --disable-all-programs \
+    --enable-fsck \
     --disable-makeinstall-chown \
+    --disable-rpath \
+    --disable-more \
     --without-udev \
     --without-python \
     --without-systemd
 
-make LDFLAGS="$LDFLAGS --static"
+make
 make DESTDIR="$1" install
 
+# Fix broken --sbindir.
+mv -f "$1/usr/sbin/"* "$1/usr/bin"
 rmdir "$1/usr/sbin"
 
 # Install the license
