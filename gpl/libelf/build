@@ -35,4 +35,4 @@ cp -f config/libelf.pc "$1/usr/lib/pkgconfig/libelf.pc"
 # Install the licenses
 install -Dm755 COPYING        "$1/usr/share/LICENSES/libelf-gpl3.license"
 install -Dm755 COPYING-GPLV2  "$1/usr/share/LICENSES/libelf-gpl2.license"
-install -Dm755 COPYING-LGPLV2 "$1/usr/share/LICENSES/libelf-lgpl3.license"
+install -Dm755 COPYING-LGPLV3 "$1/usr/share/LICENSES/libelf-lgpl3.license"
