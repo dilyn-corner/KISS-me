@@ -1,6 +1,0 @@
-byacc  make
-flex   make
-gmake  make
-libressl
-m4     make
-zstd
