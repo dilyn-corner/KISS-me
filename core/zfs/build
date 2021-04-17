@@ -1,0 +1,49 @@
+#!/bin/sh -e
+
+# Bundle libtirpc
+(
+    cd libtirpc
+
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --disable-shared \
+        --disable-gssapi
+
+    make
+    make DESTDIR="$PWD/../tirp" install
+)
+
+export CFLAGS="$CFLAGS -I$PWD/tirp/usr/include/tirpc"
+export CXXFLAGS="$CXXFLAGS -I$PWD/tirp/usr/include/tirpc"
+export LDFLAGS="$LDFLAGS -L$PWD/tirp/usr/lib"
+
+
+# toybox doesn't support these options
+sed -i -- 's/--in-place/-i/g' configure
+sed -i -- 's/rm -R/rm -r/g'   configure
+
+./configure \
+    PKG_CONFIG_LIBDIR="$PWD/tirp/usr/lib/pkgconfig" \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libdir=/usr/lib \
+    --sbindir=/usr/bin \
+    --with-mounthelperdir=/usr/bin \
+    --disable-nls \
+    --disable-pam \
+    --disable-shared \
+    --disable-systemd \
+    --disable-sysvinit \
+    --with-config=user
+
+gmake LDFLAGS="$LDFLAGS --static"
+gmake DESTDIR="$1" install
+
+# Remove some useless directories
+rm -rf "$1/etc/sudoers.d"
+rm -rf "$1/usr/share/zfs"
+rm -rf "$1/usr/lib/dracut"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/zfs.license"
