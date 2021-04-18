@@ -1,11 +1,5 @@
 #!/bin/sh -e
 
-# Some chroots think the env flags go to chroot
-# Some chroots don't
-# Mine does, so this is what I do :v 
-
-sed -i 's/chroot "$1"/chroot "$1" --/' contrib/kiss-chroot
-
 cat >> different-orphans.patch << EOF
 --- a/contrib/kiss-orphans
 +++ b/contrib/kiss-orphans
