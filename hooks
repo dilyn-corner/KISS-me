@@ -1,24 +1,17 @@
 case $TYPE in
     pre-build)
         case $PKG in
-            cmake | llvm | nodejs | python*)
+            cmake|libressl|llvm|musl|nodejs|python*)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            chromium | e2fsprogs | ffmpeg | github-cli | lame)
+            chromium|e2fsprogs|github-cli|libpng)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            libpng | libvpx | mesa | nss | opus | x265 | util-linux)
+            libvpx|mesa|nss|opus|util-linux)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-            ;;
-            libressl | linux* | musl)
-                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
-                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-            ;;
-            s6*)
-                CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
             ;;
         esac
     ;;
