@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export CC=/usr/bin/cc
+export CC="${CC:-cc}"
 
 # Build me statically baybee
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
@@ -28,11 +28,9 @@ install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
 
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
-export CFLAGS="$CFLAGS -fno-plt                           \
+export CFLAGS="$CFLAGS -O3 -fno-plt                       \
                        -Wno-error                         \
                        -static -l:libffi.a                \
-                       -Wno-profile-instr-unprofiled      \
-                       -Wno-profile-instr-out-of-date     \
                        -Wno-unused-command-line-argument  \
                        -Wno-ignored-optimization-argument"
                        
@@ -47,27 +45,28 @@ meson \
 meson configure -Db_pgo=generate build
 ninja -C build
 
-# We branch here; if foot is already installed we just assume we're running in a
-# wayland session (a bit presumptuous but it works); if not we build with
-# partial PGO and if yes then full-blown PGO. 
-
-if kiss l foot; then
-    # Then we generate some PGO data
-    foot_tmp=$(mktemp)
+# We check to see if a wayland lock file exists in the runtime directory.
+# If it exists, assume we're in a wayland session and build with full PGO.
+# If it doesn't exist, assume we're not and build with partial PGO.
+if [ -e "$XDG_RUNTIME_DIR/wayland-0.lock" ]; then
+    ./build/footclient --version
+    foot_tmp_file=$(mktemp)
     ./build/foot --config=/dev/null \
-        --term=xterm \
-        sh -c \
-        scripts/generate-alt-random-writes.py \
+        --term=xterm sh -c \
+        "scripts/generate-alt-random-writes.py \
         --scroll \
         --scroll-region \
         --colors-regular \
         --colors-bright \
+        --colors-256 \
         --colors-rgb \
-        ${foot_tmp} && cat ${foot_tmp}
-    rm "${foot_tmp}"
-
+        --attr-bold \
+        --attr-italic \
+        --attr-underline \
+        --sixel \
+        ${foot_tmp_file} && cat ${foot_tmp_file}"
+    rm ${foot_tmp_file}
 else
-    # else we generate some mediocre PGO data
     foot_tmp=$(mktemp)
     scripts/generate-alt-random-writes.py \
         --rows=67 \
@@ -85,20 +84,18 @@ else
     
     ./build/pgo ${foot_tmp} ${foot_tmp} ${foot_tmp}
     rm ${foot_tmp}
-
 fi
 
 # This is required for llvm
-llvm-profdata merge default_*profraw --output=default.profdata
-# Make sure it's in the right directory
-mv *.profdata build
+llvm-profdata merge default_*profraw --output=build/default.profdata
 
 # Now we should *use* the PGO data
-# Note: we will get a hash mismatch because of this
 meson configure -Db_pgo=use build
 
 ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/foot.license"
+install -Dm755 LICENSE                    "$1/usr/share/LICENSES/foot.license"
+install -Dm755 subprojects/fcft/LICENSE   "$1/usr/share/LICENSES/fcft.license"
+install -Dm755 subprojects/tllist/LICENSE "$1/usr/share/LICENSES/tllist.license"
