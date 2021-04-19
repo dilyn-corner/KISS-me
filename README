@@ -6,7 +6,6 @@ ________________________________________________________________________________
 KISS-me - A KISS repository for forks, projects, and fun
 ________________________________________________________________________________
 
-
 The master branch is for: 
 1) A self-maintained 'fork' of wyverkiss https://github.com/wyvertux/wyverkiss
 2) NonGNU experimentation
@@ -25,16 +24,14 @@ Other branches are for:
 The structure of this repository
 ________________________________________________________________________________
 
-
 The master branch is very finicky and I would not recommend using it for a usual
 system; use it as a reference for building packages. As an example, many build
 scripts have been modified to make use of meson or cmake when available, leaving
 perhaps a large amount of overhead in the build system. Not to mention the fact
 that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
-much of the core system has changed to include toybox, uutils-coreutils, nawk,
-and libarchive. As a result, core has been extended to include rust. A lot of
-utilities are gone because of dropping busybox, but I would like to assume that
-I'll be just fine.  We will see. Some current issues: 
+much of the core system has changed to include toybox, nawk, and libarchive. A
+lot of utilities are gone because of dropping busybox, but I would like to
+assume that I'll be just fine.  We will see. Some current issues: 
 
 * toybox install is wonky. 
 * python expects ggrep; endianness must be specified. 
@@ -52,13 +49,15 @@ branches are more suitable for everyday KISS use.
 Thoughts
 ________________________________________________________________________________
 
-
 In the ever-excruciating pursuit of being different for the sake of difference,
 I have switched from KISS-proper to wyverkiss.
 
 Additionally, due to recent issues with Xorg (see
 https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), I have decided to
 commit to trying out wayland.
+
+I am on the hunt for a nonGPL floating window manager for Wayland, that doesn't
+require pango. If you find one, let me know!
 
 
 For the curious
@@ -74,69 +73,70 @@ are things like mesa or llvm - projects which inherit extra licenses because
 of code blobs they borrow. In general, I am semi-fine with this (if not wholly
 forced to accept it).
 
+NOTE: chromium is built using some bundled libs and programs, the biggest being
+ffmpeg and x264. This makes chromium de facto GPL. 
 
-  +-------------------+---------------+--------------------+---------------+
-  | CORE              | LICENSE       | EXTRA              | LICENSE       |
-  +-------------------+---------------+--------------------+---------------+
-  | baseinit          | MIT           | botan              | BSD 2-Clause  |
-  | byacc             | Public Domain | bottom             | MIT           |
-  | bzip2             | bzip2         | cairo              | MPLv1.1       |
-  | cmake             | BSD 3-Clause  | chromium           | BSD 3-Clause  |
-  | curl              | MIT           | cozette-font       | MIT           |
-  | flex              | BSD 2-Clause  | dash               | BSD           |
-  | kiss              | MIT           | dhcpcd             | BSD           |
-  | libarchive        | BSD 2-Clause  | expat              | MIT           |
-  | libressl          | ISC           | fontconfig         | MIT           |
-  | llvm              | Apache-2.0    | fossil             | BSD 2-Clause  | 
-  | m4                | BSD/ISC       | freetype-harfbuzz  | BSD           | 
-  | make              | BSD 2-Clause  | github-cli         | MIT           | 
-  | musl              | MIT           | go                 | BSD 3-Clause  | 
-  | nawk              | MIT           | iana-etc           | Public Domain | 
-  | oksh              | Public Domain | json-c             | MIT           | 
-  | openntpd          | ISC           | libass             | ISC           | 
-  | samurai           | Apache-2.0    | libdrm             | MIT           | 
-  | toybox            | 0BSD          | libevdev           | MIT           | 
-  | xz                | Public Domain | libffi             | MIT           | 
-  | zfs               | CDDL          | libinput           | X11           |
-  | zlib              | zlib          | libjpeg-turbo      | IJG           |
-  | zstd              | BSD 3-Clause  | libogg             | BSD           |
-  +-------------------+---------------+ libpciaccess       | X11           |
-  | WAYLAND           | LICENSE       | libpng             | libpngv2      |
-  +-------------------+---------------+ libucl             | BSD 2-Clause  |
-  | foot              | MIT           | libudev-zero       | ISC           |
-  | grim              | MIT           | libva              | MIT           |
-  | hikari            | BSD 2-Clause  | libvorbis          | BSD 3-Clause  |
-  | libxkcommon       | MIT           | libvpx             | BSD 3-Clause  |
-  | wayland           | MIT           | libwebp            | BSD 3-Clause  |
-  | wayland-protocols | MIT           | mesa               | MIT           |
-  | wev               | MIT           | meson              | Apache-2.0    |
-  | wl-clipboard-rs   | MIT           | mtdev              | MIT           |
-  | wlroots           | MIT           | nasm               | BSD 2-Clause  |
-  | xkeyboard-config  | MIT           | netbsd-curses      | BSD 3-Clause  |
-  +-------------------+---------------+ nodejs             | MIT           |
-  | GPL               | LICENSE       | nss                | MPLv2         |
-  +-------------------+---------------+ opendoas           | BSD           |
-  | alsa-lib          | GPLv2.1       | openssh            | BSD           |
-  | alsa-utils        | GPLv2         | opus               | BSD 3-Clause  |
-  | fribidi           | GPLv2.1       | pash               | MIT           |
-  | git               | LGPLv2.1      | pixman             | MIT           |
-  | glib              | GPLv2.1       | pkgconf            | ISC           |
-  | gmake             | GPLv3         | python             | PSFv2         |
-  | gnupg1            | GPLv3         | python2            | PSFv2         |
-  | gperf             | GPLv3         | rnp                | BSD 2-Clause  |
-  | libelf            | GPLv3         | rust               | APACHE/MIT    |
-  | linux-headers     | GPLv2         | sqlite             | Public Domain |
-  | pango             | LGPLv2.1      | tzdata             | Public Domain |
-  | perl              | GPLv1         | vim                | Vim           |
-  | util-linux        | GPLv2         +--------------------+---------------+
-  +-------------------+---------------+
-  
+
+   +-------------------+---------------+-------------------+---------------+
+   | CORE              | LICENSE       | EXTRA             | LICENSE       |
+   +-------------------+---------------+-------------------+---------------+
+   | baseinit          | MIT           | botan             | BSD 2-Clause  |
+   | byacc             | Public Domain | bottom            | MIT           |
+   | bzip2             | bzip2         | cairo             | MPLv1.1       |
+   | cmake             | BSD 3-Clause  | chromium          | BSD 3-Clause  |
+   | curl              | MIT           | cozette-font      | MIT           |
+   | flex              | BSD 2-Clause  | dash              | BSD           |
+   | kiss              | MIT           | dhcpcd            | BSD           |
+   | libarchive        | BSD 2-Clause  | expat             | MIT           |
+   | libressl          | ISC           | fontconfig        | MIT           |
+   | llvm              | Apache-2.0    | fossil            | BSD 2-Clause  | 
+   | m4                | BSD/ISC       | freetype-harfbuzz | BSD           | 
+   | make              | BSD 2-Clause  | github-cli        | MIT           | 
+   | musl              | MIT           | go                | BSD 3-Clause  | 
+   | nawk              | MIT           | iana-etc          | Public Domain | 
+   | oksh              | Public Domain | json-c            | MIT           | 
+   | openntpd          | ISC           | libdrm            | MIT           | 
+   | samurai           | Apache-2.0    | libevdev          | MIT           | 
+   | toybox            | 0BSD          | libffi            | MIT           | 
+   | xz                | Public Domain | libinput          | X11           |
+   | zfs               | CDDL          | libpciaccess      | X11           |
+   | zlib              | zlib          | libpng            | libpngv2      |
+   | zstd              | BSD 3-Clause  | libucl            | BSD 2-Clause  |
+   +-------------------+---------------+ libudev-zero      | ISC           |
+   | WAYLAND           | LICENSE       | libva             | MIT           |
+   +-------------------+---------------+ libwebp           | BSD 3-Clause  |
+   | foot              | MIT           | mesa              | MIT           |
+   | grim              | MIT           | meson             | Apache-2.0    |
+   | hikari            | BSD 2-Clause  | mtdev             | MIT           |
+   | libxkcommon       | MIT           | nasm              | BSD 2-Clause  |
+   | wayland           | MIT           | netbsd-curses     | BSD 3-Clause  |
+   | wayland-protocols | MIT           | nodejs            | MIT           |
+   | wev               | MIT           | nss               | MPLv2         |
+   | wl-clipboard-rs   | MIT           | opendoas          | BSD           |
+   | wlroots           | MIT           | openssh           | BSD           |
+   | xkeyboard-config  | MIT           | opus              | BSD 3-Clause  |
+   +-------------------+---------------+ pash              | MIT           |
+   | GPL               | LICENSE       | pixman            | MIT           |
+   +-------------------+---------------+ pkgconf           | ISC           |
+   | alsa-lib          | GPLv2.1       | python            | PSFv2         |
+   | alsa-utils        | GPLv2         | python2           | PSFv2         |
+   | fribidi           | GPLv2.1       | rnp               | BSD 2-Clause  |
+   | git               | LGPLv2.1      | rust              | APACHE/MIT    |
+   | glib              | GPLv2.1       | sqlite            | Public Domain |
+   | gmake             | GPLv3         | tzdata            | Public Domain |
+   | gnupg1            | GPLv3         | vim               | Vim           |
+   | gperf             | GPLv3         +-------------------+---------------+
+   | libelf            | GPLv3         |
+   | linux-headers     | GPLv2         |
+   | pango             | LGPLv2.1      |
+   | perl              | GPLv1         |
+   | util-linux        | GPLv2         |
+   +-------------------+---------------+
 --- 
 
 
 My other stuff
 ________________________________________________________________________________
-
 
 I am the maintainer of a couple other repositories:
 
@@ -157,7 +157,6 @@ Also, I am the BDFL of KISS Linux :)
 
 
 ---
-
 
 Useful fork-facts
 ________________________________________________________________________________
@@ -214,7 +213,6 @@ This will be edited heavily in the future maybe hopefully probably. [3]
 
 Repository trust
 ________________________________________________________________________________
-
 
 All commits signed with my own GPG key. Save this key to a file and import it.
 
