@@ -1,6 +1,7 @@
 cairo
 libinput
 libucl
+libudev-zero
 libxkbcommon
 linux-headers     make
 pango
