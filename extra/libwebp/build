@@ -2,7 +2,6 @@
 
 ./configure \
     --prefix=/usr \
-    --disable-static \
     --enable-libwebpmux \
     --enable-libwebpdemux \
     --enable-libwebpdecoder
