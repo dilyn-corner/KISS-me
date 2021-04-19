@@ -52,7 +52,6 @@ system="
     freetype
     harfbuzz-ng
     libdrm
-    libjpeg
     libwebp
     opus
 "
@@ -63,7 +62,7 @@ kiss list libva && vaapi=true
 # remove build scripts for system provided dependencies - basically does the
 # same as the bundled script to remove bundled libs, but this way we don't
 # have to list the remaining libs
-for LIB in "$system" libjpeg_turbo; do
+for LIB in "$system"; do
     find . -type f -path "*third_party/$LIB/*" \
         \! -path "*third_party/$LIB/chromium/*" \
         \! -path "*third_party/$LIB/google/*" \

@@ -5,7 +5,6 @@ fontconfig
 freetype-harfbuzz
 gperf              make
 libdrm
-libjpeg-turbo
 libxkbcommon
 libwebp
 linux-headers      make
