@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+make 
+make DESTDIR="$1" install
+
+install -Dm755 extra/jji "$1/usr/bin/jji"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/jj.license"
