@@ -1,4 +1,3 @@
 linux-headers make
-pkgconf       make
 util-linux    make
 zlib          make
