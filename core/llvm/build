@@ -12,11 +12,13 @@ sed -i 's/base, _LIBCPP_GET_C_LOCALE/base/g' \
 sed -i 's/SANITIZER_COMMON TRUE/SANITIZER_COMMON FALSE/' \
     compiler-rt/cmake/config-ix.cmake
 
+    #-DLLVM_PROFDATA_FILE=profdata.prof \
 cmake -B build \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_ENABLE_LTO=Thin \
     -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;libunwind;libcxxabi;libcxx;lld" \
     -DLLVM_HOST_TRIPLE="$(clang -dumpmachine)" \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU" \
