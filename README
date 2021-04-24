@@ -85,34 +85,34 @@ ffmpeg and x264. This makes chromium de facto GPL.
     | bzip2             | bzip2         | bottom            | MIT           |
     | cmake             | BSD 3-Clause  | cairo             | MPLv1.1       |
     | curl              | MIT           | chromium          | BSD 3-Clause  |
-    | flex              | BSD 2-Clause  | cozette-font      | MIT           |
-    | kiss              | MIT           | dash              | BSD           |
-    | libarchive        | BSD 2-Clause  | dhcpcd            | BSD           |
-    | libressl          | ISC           | expat             | MIT           |
-    | llvm              | Apache-2.0    | fontconfig        | MIT           |
-    | m4                | BSD/ISC       | fossil            | BSD 2-Clause  | 
-    | make              | BSD 2-Clause  | freetype-harfbuzz | BSD           | 
-    | musl              | MIT           | github-cli        | MIT           | 
-    | nawk              | MIT           | go                | BSD 3-Clause  | 
-    | oksh              | Public Domain | iana-etc          | Public Domain | 
-    | openntpd          | ISC           | json-c            | MIT           | 
-    | samurai           | Apache-2.0    | libdrm            | MIT           | 
-    | toybox            | 0BSD          | libevdev          | MIT           | 
-    | xz                | Public Domain | libffi            | MIT           | 
-    | zfs               | CDDL          | libinput          | X11           |
-    | zlib              | zlib          | libpciaccess      | X11           |
-    | zstd              | BSD 3-Clause  | libpng            | libpngv2      |
-    +-------------------+---------------+ libucl            | BSD 2-Clause  |
-    | WAYLAND           | LICENSE       | libudev-zero      | ISC           |
-    +-------------------+---------------+ libva             | MIT           |
-    | foot              | MIT           | libwebp           | BSD 3-Clause  |
-    | grim              | MIT           | mesa              | MIT           |
-    | hikari            | BSD 2-Clause  | meson             | Apache-2.0    |
-    | libxkcommon       | MIT           | mtdev             | MIT           |
-    | wayland           | MIT           | nasm              | BSD 2-Clause  |
-    | wayland-protocols | MIT           | netbsd-curses     | BSD 3-Clause  |
-    | wev               | MIT           | nodejs            | MIT           |
-    | wl-clipboard-rs   | MIT           | nss               | MPLv2         |
+    | dash              | BSD           | cozette-font      | MIT           |
+    | flex              | BSD 2-Clause  | dhcpcd            | BSD           |
+    | kiss              | MIT           | expat             | MIT           |
+    | libarchive        | BSD 2-Clause  | fontconfig        | MIT           |
+    | libressl          | ISC           | fossil            | BSD 2-Clause  |
+    | llvm              | Apache-2.0    | freetype-harfbuzz | BSD           |
+    | m4                | BSD/ISC       | github-cli        | MIT           |
+    | make              | BSD 2-Clause  | go                | BSD 3-Clause  |
+    | musl              | MIT           | iana-etc          | Public Domain |
+    | nawk              | MIT           | json-c            | MIT           |
+    | openntpd          | ISC           | libdrm            | MIT           |
+    | samurai           | Apache-2.0    | libevdev          | MIT           |
+    | toybox            | 0BSD          | libffi            | MIT           |
+    | xz                | Public Domain | libinput          | X11           |
+    | zfs               | CDDL          | libpciaccess      | X11           |
+    | zlib              | zlib          | libpng            | libpngv2      |
+    | zstd              | BSD 3-Clause  | libucl            | BSD 2-Clause  |
+    +-------------------+---------------+ libudev-zero      | ISC           |
+    | WAYLAND           | LICENSE       | libva             | MIT           |
+    +-------------------+---------------+ libwebp           | BSD 3-Clause  |
+    | foot              | MIT           | mesa              | MIT           |
+    | grim              | MIT           | meson             | Apache-2.0    |
+    | hikari            | BSD 2-Clause  | mtdev             | MIT           |
+    | libxkcommon       | MIT           | nasm              | BSD 2-Clause  |
+    | wayland           | MIT           | netbsd-curses     | BSD 3-Clause  |
+    | wayland-protocols | MIT           | nodejs            | MIT           |
+    | wev               | MIT           | nss               | MPLv2         |
+    | wl-clipboard-rs   | MIT           | oksh              | Public Domain |
     | wlroots           | MIT           | opendoas          | BSD           |
     | xkeyboard-config  | MIT           | openssh           | BSD           |
     +-------------------+---------------+ opus              | BSD 3-Clause  |
@@ -132,7 +132,6 @@ ffmpeg and x264. This makes chromium de facto GPL.
     | perl              | GPLv1         |
     | util-linux        | GPLv2         |
     +-------------------+---------------+
-   
 --- 
 
 
