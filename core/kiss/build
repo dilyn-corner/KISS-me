@@ -9,8 +9,8 @@ cat >> different-orphans.patch << EOF
          # orphans. Exclude them from the list.
 -        baseinit|baselayout|gcc|e2fsprogs|musl|\\
 -        make|busybox|bzip2|grub|kiss|git)
-+        baseinit|baselayout|bzip2|dash|kiss|libarchive|\\
-+        make|musl|nawk|openntpd|toybox|uutils|zstd)
++        baseinit|baselayout|dash|kiss|libarchive|\\
++        llvm|make|musl|nawk|openntpd|toybox|zfs|zstd)
              continue
      esac
  
