@@ -18,7 +18,6 @@ export CFLAGS="$CFLAGS -I$PWD/tirp/usr/include/tirpc"
 export CXXFLAGS="$CXXFLAGS -I$PWD/tirp/usr/include/tirpc"
 export LDFLAGS="$LDFLAGS -L$PWD/tirp/usr/lib"
 
-
 # toybox doesn't support these options
 sed -i -- 's/--in-place/-i/g' configure
 sed -i -- 's/rm -R/rm -r/g'   configure
@@ -37,12 +36,14 @@ sed -i -- 's/rm -R/rm -r/g'   configure
     --disable-sysvinit \
     --with-config=user
 
-gmake LDFLAGS="$LDFLAGS --static"
-gmake DESTDIR="$1" install
+gmake \
+    LDFLAGS="$LDFLAGS --static" \
+    DESTDIR="$1" \
+    install
 
 # Remove some useless directories
 rm -rf "$1/etc/sudoers.d"
-rm -rf "$1/usr/share/zfs"
+rm -rf "$1/usr/lib/udev"
 rm -rf "$1/usr/lib/dracut"
 
 # Install the license
