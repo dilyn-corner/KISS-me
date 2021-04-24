@@ -5,11 +5,7 @@ case $TYPE in
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
-            chromium|e2fsprogs|github-cli|libpng)
-                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
-                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-            ;;
-            libvpx|mesa|nss|opus|util-linux)
+            chromium|github-cli|libpng|mesa|nss|opus|util-linux)
                 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
                 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
             ;;
