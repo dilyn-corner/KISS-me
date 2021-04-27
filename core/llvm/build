@@ -18,7 +18,7 @@ cmake -B build \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DLLVM_ENABLE_LTO=Thin \
+    -DLLVM_ENABLE_LTO=FULL \
     -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;libunwind;libcxxabi;libcxx;lld" \
     -DLLVM_HOST_TRIPLE="$(clang -dumpmachine)" \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU" \
