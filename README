@@ -33,7 +33,7 @@ much of the core system has changed to include toybox, nawk, and libarchive. A
 lot of utilities are gone because of dropping busybox, but I would like to
 assume that I'll be just fine.  We will see. Some current issues: 
 
-* toybox install is wonky. 
+* toybox mdev does NOT work. Use something else, or handle /dev perms manually.
 * python expects ggrep; endianness must be specified. 
 * nawk seems to generate some files incorrectly? see libffi/build.
 
