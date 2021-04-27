@@ -2,11 +2,18 @@
 
 export DESTDIR="$1"
 
+# Werror be damned.
+sed -i 's/Werror/Wno-error/g' meson.build
+
 meson \
     --prefix=/usr \
-    -Ddefault_library=both \
+    -Ddefault_library=static \
     -Dbuildtype=release \
-    -Dgir=disabled \
+    -Dgtk_doc=false \
+    -Dxft=disabled \
+    -Dlibthai=disabled \
+    -Dintrospection=disabled \
+    --wrap-mode=nodownload \
     . build
 
 ninja -C build
