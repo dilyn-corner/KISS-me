@@ -1,13 +1,15 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -fcommon"
 
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --libexecdir=/usr/lib \
-    --disable-nls
+    --disable-nls \
+    LIBS="-lssl -lcrypto -lzstd -lz"
 
-make CFLAGS="$CFLAGS -static -Wl,--allow-multiple-definition" LDFLAGS="$LDFLAGS -static"
+make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
 
 # Install the license
