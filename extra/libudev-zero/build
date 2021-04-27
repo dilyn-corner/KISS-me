@@ -1,9 +1,9 @@
-#!/bin/sh -e
+#!/bin/sh -e 
 
-make PREFIX=/usr LDFLAGS="$LDFLAGS -static"
-make DESTDIR="$1" PREFIX=/usr install
+make PREFIX=/usr libudev.pc libudev.a 
 
-rm "$1/usr/lib/libudev.so" "$1/usr/lib/libudev.so.1"
+install -Dm644 libudev.a  "$1/usr/lib/libudev.a"
+install -Dm644 libudev.pc "$1/usr/lib/pkgconfig/libudev.pc"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/libudev-zero.license"
