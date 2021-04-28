@@ -1,10 +1,27 @@
 #!/bin/sh -e
 
+(
+    export DESTDIR="$PWD/garbo"
+    
+    sed -i 's/-Werror//' test/CMakeLists.txt
+    
+    cmake -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release
+    
+    gmake -C build
+    
+    mkdir -p "$PWD/garbo/usr/include" 
+    cp    -r glm "$PWD/garbo/usr/include/glm"
+    install -Dm644 glm.pc "$PWD/garbo/usr/lib/pkgconfig/glm.pc"
+)
+
 export DESTDIR="$1"
 
 meson \
     --prefix=/usr \
     --buildtype=release \
+    -Ddefault_library=static \
     -Dtests=disabled \
     . build
 
