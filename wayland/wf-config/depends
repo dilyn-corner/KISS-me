@@ -1,0 +1,5 @@
+glm
+libevdev
+libxml2
+meson   make
+samurai make
