@@ -94,44 +94,51 @@ ffmpeg and x264. This makes chromium de facto GPL.
     | m4                | BSD/ISC       | github-cli        | MIT           |
     | make              | BSD 2-Clause  | go                | BSD 3-Clause  |
     | musl              | MIT           | iana-etc          | Public Domain |
-    | nawk              | MIT           | json-c            | MIT           |
-    | openntpd          | ISC           | libdrm            | MIT           |
-    | samurai           | Apache-2.0    | libevdev          | MIT           |
-    | toybox            | 0BSD          | libffi            | MIT           |
-    | xz                | Public Domain | libinput          | X11           |
-    | zfs               | CDDL          | libpciaccess      | X11           |
-    | zlib              | zlib          | libpng            | libpngv2      |
-    | zstd              | BSD 3-Clause  | libucl            | BSD 2-Clause  |
+    | nawk              | MIT           | jj                | MIT           |
+    | openntpd          | ISC           | json-c            | MIT           |
+    | samurai           | Apache-2.0    | libdrm            | MIT           |
+    | toybox            | 0BSD          | libevdev          | MIT           |
+    | xz                | Public Domain | libffi            | MIT           |
+    | zfs               | CDDL          | libinput          | X11           |
+    | zlib              | zlib          | libpciaccess      | X11           |
+    | zstd              | BSD 3-Clause  | libpng            | libpngv2      |
     +-------------------+---------------+ libudev-zero      | ISC           |
     | WAYLAND           | LICENSE       | libva             | MIT           |
     +-------------------+---------------+ libwebp           | BSD 3-Clause  |
-    | foot              | MIT           | mesa              | MIT           |
-    | grim              | MIT           | meson             | Apache-2.0    |
-    | hikari            | BSD 2-Clause  | mtdev             | MIT           |
-    | libxkcommon       | MIT           | nasm              | BSD 2-Clause  |
+    | foot              | MIT           | libxml2           | MIT           |
+    | grim              | MIT           | mesa              | MIT           |
+    | kanshi            | MIT           | meson             | Apache-2.0    |
+    | libxkcommon       | MIT           | mtdev             | MIT           |
+    | wayfire           | MIT           | nasm              | BSD 2-Clause  |
     | wayland           | MIT           | netbsd-curses     | BSD 3-Clause  |
     | wayland-protocols | MIT           | nodejs            | MIT           |
-    | wev               | MIT           | nss               | MPLv2         |
-    | wl-clipboard-rs   | MIT           | oksh              | Public Domain |
-    | wlroots           | MIT           | opendoas          | BSD           |
-    | xkeyboard-config  | MIT           | openssh           | BSD           |
-    +-------------------+---------------+ opus              | BSD 3-Clause  |
-    | GPL               | LICENSE       | pash              | MIT           |
-    +-------------------+---------------+ pixman            | MIT           |
-    | alsa-lib          | GPLv2.1       | pkgconf           | ISC           |
-    | alsa-utils        | GPLv2         | python            | PSFv2         |
-    | fribidi           | GPLv2.1       | python2           | PSFv2         |
-    | git               | LGPLv2.1      | rnp               | BSD 2-Clause  |
-    | glib              | GPLv2.1       | rust              | APACHE/MIT    |
-    | gmake             | GPLv3         | sqlite            | Public Domain |
-    | gnupg1            | GPLv3         | tzdata            | Public Domain |
-    | gperf             | GPLv3         | vim               | Vim           |
-    | libelf            | GPLv3         +-------------------+---------------+
+    | wbg               | MIT           | nss               | MPLv2         |
+    | wev               | MIT           | oksh              | Public Domain |
+    | wf-config         | MIT           | opendoas          | BSD           |
+    | wl-clipboard-rs   | MIT           | openssh           | BSD           |
+    | wlroots           | MIT           | opus              | BSD 3-Clause  |
+    | wlr-randr         | MIT           | pash              | MIT           |
+    | xkeyboard-config  | MIT           | pixman            | MIT           |
+    +-------------------+---------------+ pkgconf           | ISC           |
+    | GPL               | LICENSE       | python            | PSFv2         |
+    +-------------------+---------------+ python2           | PSFv2         |
+    | alsa-lib          | GPLv2.1       | rnp               | BSD 2-Clause  |
+    | alsa-utils        | GPLv2         | rust              | APACHE/MIT    |
+    | git               | LGPLv2.1      | sqlite            | Public Domain |
+    | gmake             | GPLv3         | tzdata            | Public Domain |
+    | gnupg1            | GPLv3         | vim               | Vim           |
+    | gperf             | GPLv3         +-------------------+---------------+
+    | libelf            | GPLv3         |
     | linux-headers     | GPLv2         |
-    | pango             | LGPLv2.1      |
     | perl              | GPLv1         |
     | util-linux        | GPLv2         |
     +-------------------+---------------+
+    
+    
+    
+    
+    
+    
 --- 
 
 
