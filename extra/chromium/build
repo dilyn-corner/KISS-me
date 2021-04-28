@@ -181,7 +181,7 @@ install -Dm644 out/Release/locales/en-US.pak        "$1/usr/lib/chromium/locales
 install -Dm644 out/Release/chrome_100_percent.pak   "$1/usr/lib/chromium/chrome_100_percent.pak"
 install -Dm644 out/Release/chrome_200_percent.pak   "$1/usr/lib/chromium/chrome_200_percent.pak"
 install -Dm644 out/Release/v8_context_snapshot.bin  "$1/usr/lib/chromium/v8_context_snapshot.bin"
-install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium/swift/shader/libEGL.so"
+install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium/swiftshader/libEGL.so"
 install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium/swiftshader/libGLESv2.so"
 
 # Install the license
