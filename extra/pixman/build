@@ -7,7 +7,7 @@ sed -i "s/subdir('test')//" meson.build
 meson \
     --prefix=/usr \
     -Dbuildtype=release \
-    -Ddefault_library=both \
+    -Ddefault_library=static \
     -Dgtk=disabled \
     . build
 
