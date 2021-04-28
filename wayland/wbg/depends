@@ -1,0 +1,8 @@
+libpng
+linux-headers     make
+meson             make
+pixman
+pkgconf           make
+samurai           make
+wayland
+wayland-protocols make
