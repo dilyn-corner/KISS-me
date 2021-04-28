@@ -8,17 +8,18 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
     plugins/common/wayfire/plugins/common/cairo-util.hpp
 
 # Static?
-#sed -i "s/wf-config', /wf-config', static: true, /" meson.build
-#sed -i "s/libinput', /libinput', static: true, /"   meson.build
-#sed -i "s/xkbcommon'/xkbcommon', static: true/"     meson.build
-#sed -i "s/wlroots', /wlroots', static: true, /"     meson.build
-#sed -i "s/server'/server', static: true/"           meson.build
-#sed -i "s/client'/client', static: true/"           meson.build
-#sed -i "s/cursor'/cursor', static: true/"           meson.build
-#sed -i "s/libdrm'/libdrm', static: true/"           meson.build
-#sed -i "s/pixman'/pixman', static: true/"           meson.build
-#sed -i "s/cairo'/cairo', static: true/"             meson.build
-#sed -i "s/glm'/glm', static: true/"                 meson.build
+sed -i "s/wf-config', /wf-config', static: true, /" meson.build
+sed -i "s/libinput', /libinput', static: true, /"   meson.build
+sed -i "s/xkbcommon'/xkbcommon', static: true/"     meson.build
+sed -i "s/wlroots', /wlroots', static: true, /"     meson.build
+sed -i "s/server'/server', static: true/"           meson.build
+sed -i "s/client'/client', static: true/"           meson.build
+sed -i "s/cursor'/cursor', static: true/"           meson.build
+sed -i "s/libdrm'/libdrm', static: true/"           meson.build
+sed -i "s/pixman'/pixman', static: true/"           meson.build
+sed -i "s/cairo'/cairo', static: true/"             meson.build
+
+sed -i '/^add_project_link/d' meson.build
 
 meson \
     --prefix=/usr \
