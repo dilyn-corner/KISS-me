@@ -30,21 +30,9 @@ objects - `gnupg1` line wraps after fewer characters than `rnp`.
 
 `gmake` - required for many things to build :'(
 
-`perl` - just a make dep for `chromium` :X
-
 
 ### Things we need for chromium
 
 `gperf` - make dep
 
-
-### Things we could do without
-
-`fribidi` - `pango` (want to eliminate)
-
-
-### Things we would like to kill
-
-`glib` - required by `pango`
-
-`pango` - would have to abandon `hikari`
+`perl` - make dep
