@@ -1,0 +1,38 @@
+--- a/src/debug-func.hpp
++++ b/src/debug-func.hpp
+@@ -2,7 +2,6 @@
+ #include <wayfire/debug.hpp>
+ #include <sstream>
+ #include <iomanip>
+-#include <execinfo.h>
+ #include <cxxabi.h>
+ #include <cstdio>
+ #include <dlfcn.h>
+@@ -210,6 +209,7 @@
+     };
+ }
+ 
++#if 0
+ void wf::print_trace(bool fast_mode)
+ {
+     void *addrlist[MAX_FRAMES];
+@@ -253,6 +253,7 @@
+ 
+     free(symbollist);
+ }
++#endif
+ 
+ /* ------------------- Impl of debugging functions ---------------------------*/
+ #include <iomanip>
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -138,9 +138,6 @@
+         error = "Unknown";
+     }
+ 
+-    LOGE("Fatal error: ", error);
+-    wf::print_trace(false);
+-    std::_Exit(-1);
+ }
+ 
+ #endif

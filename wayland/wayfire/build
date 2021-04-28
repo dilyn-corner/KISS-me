@@ -1,0 +1,41 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < no-execinfo.patch
+
+sed -i 's/cairo.h/cairo\/cairo.h/' \
+    plugins/common/wayfire/plugins/common/cairo-util.hpp
+
+# Static?
+#sed -i "s/wf-config', /wf-config', static: true, /" meson.build
+#sed -i "s/libinput', /libinput', static: true, /"   meson.build
+#sed -i "s/xkbcommon'/xkbcommon', static: true/"     meson.build
+#sed -i "s/wlroots', /wlroots', static: true, /"     meson.build
+#sed -i "s/server'/server', static: true/"           meson.build
+#sed -i "s/client'/client', static: true/"           meson.build
+#sed -i "s/cursor'/cursor', static: true/"           meson.build
+#sed -i "s/libdrm'/libdrm', static: true/"           meson.build
+#sed -i "s/pixman'/pixman', static: true/"           meson.build
+#sed -i "s/cairo'/cairo', static: true/"             meson.build
+#sed -i "s/glm'/glm', static: true/"                 meson.build
+
+meson \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dexamples=false \
+    -Dlibseat=disabled \
+    -Dlogind=disabled \
+    -Dx11-backend=disabled \
+    -Dxcb-errors=disabled \
+    -Dxdg-foreign=disabled \
+    -Dxwayland=disabled \
+    . build
+
+ninja -C build
+ninja -C build install
+
+install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/wayfire.license"

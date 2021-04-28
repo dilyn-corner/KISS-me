@@ -1,0 +1,17 @@
+cairo
+freetype-harfbuzz
+libdrm
+libevdev
+libinput
+libpng
+libxkbcommon
+libxml2
+mesa
+meson             make
+pixman
+pkgconf           make
+samurai           make
+wayland
+wayland-protocols make
+wf-config
+wlroots
