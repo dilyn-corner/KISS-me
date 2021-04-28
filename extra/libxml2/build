@@ -5,9 +5,10 @@
     --with-threads \
     --with-history \
     --without-python \
-    --without-icu
+    --without-icu \
+    --disable-shared
 
-gmake
+gmake CFLAGS="$CFLAGS -fPIC" LDFLAGS="$LDFLAGS --static"
 gmake DESTDIR="$1" install
 
 # Install the license
