@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson \
+    --prefix=/usr \
+    --buildtype=release \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/wlr-randr.license"
