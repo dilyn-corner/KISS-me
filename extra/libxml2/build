@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --with-threads \
+    --with-history \
+    --without-python \
+    --without-icu
+
+gmake
+gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/libxml2.license"
