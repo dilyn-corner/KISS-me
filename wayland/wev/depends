@@ -3,4 +3,4 @@ libxkbcommon
 linux-headers     make
 pkgconf           make
 wayland
-wayland protocols make
+wayland-protocols make
