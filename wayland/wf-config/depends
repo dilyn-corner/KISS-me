@@ -1,6 +1,5 @@
-glm      make
-libevdev make
-libxml2  make
-meson    make
-pkgconf  make
-samurai  make
+glm
+libevdev
+libxml2
+meson   make
+samurai make

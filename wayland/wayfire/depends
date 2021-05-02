@@ -1,18 +1,17 @@
-cairo             make
-freetype-harfbuzz make
+cairo
+freetype-harfbuzz
 libdrm
-libevdev          make
-libinput          make
-libpng            make
-libxkbcommon      make
-libxml2           make
-linux-headers     make
+libevdev
+libinput
+libpng
+libxkbcommon
+libxml2
 mesa
 meson             make
-pixman            make
+pixman
 pkgconf           make
 samurai           make
 wayland
 wayland-protocols make
-wf-config         make
-wlroots           make
+wf-config
+wlroots

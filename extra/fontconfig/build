@@ -8,7 +8,7 @@ meson \
     --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    -Dbuildtype=release \
+    --buildtype=release \
     -Ddefault_library=both \
     -Ddoc=disabled \
     -Dnls=disabled \

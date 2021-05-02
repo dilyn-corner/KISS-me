@@ -6,7 +6,7 @@ meson \
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    -Dbuildtype=release \
+    --buildtype=release \
     -Ddocs=false \
     -Dwith_glx=no \
     -Dwith_x11=no \
