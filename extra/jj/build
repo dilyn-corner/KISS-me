@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
-gmake 
-gmake DESTDIR="$1" install
+make 
+make DESTDIR="$1" install
 
 install -Dm755 extra/jji "$1/usr/bin/jji"
 

@@ -41,7 +41,7 @@ meson \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --localstatedir=/var \
-    -Dbuildtype=release \
+    --buildtype=release \
     -Dopengl=true \
     -Degl=enabled \
     -Dgbm=enabled \

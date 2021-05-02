@@ -4,10 +4,9 @@ patch -p1 < libpng-1.6.37-apng.patch
 
 ./configure \
     --prefix=/usr \
-    --disable-shared \
     --enable-hardware-optimizations
 
-make CFLAGS="$CFLAGS -fPIC"
+make
 make DESTDIR="$1" install
 
 # Install the license

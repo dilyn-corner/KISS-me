@@ -4,14 +4,14 @@ export DESTDIR="$1"
 
 meson \
     --prefix=/usr \
-    -Dbuildtype=release \
-    -Ddefault_library=static \
+    --buildtype=release \
     -Dexamples=false \
     -Dlogind=disabled \
-    -Dxcb-errors=disabled \
-    -Dxcb-icccm=disabled \
     -Dxwayland=disabled \
+    -Dxcb-icccm=disabled \
+    -Dxcb-errors=disabled \
     -Dx11-backend=disabled \
+    -Dxdg-foreign=disabled \
     . build
 
 ninja -C build
