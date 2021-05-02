@@ -5,15 +5,13 @@ for patch in musl-*.patch; do
     patch -p1 < "$patch"
 done
 
-# Chromium patches
-for patch in chromium-*.patch; do
-    patch -p1 < "$patch"
-done
-
 # Wyverkiss patches
 for patch in wyverkiss-*.patch; do
     patch -p1 < "$patch"
 done
+
+python3 ungoogled-chromium/utils/prune_binaries.py \
+    ./ ungoogled-chromium/pruning.list
 
 # Ungoogled Chromium patches
 while read -r patch; do 
@@ -25,6 +23,11 @@ python3 ungoogled-chromium/utils/domain_substitution.py apply \
     -r ungoogled-chromium/domain_regex.list \
     -f ungoogled-chromium/domain_substitution.list \
     -c domainsubcache.tar.gz ./
+
+# Chromium patches
+for patch in chromium-*.patch; do
+    patch -p1 < "$patch"
+done
 
 # USE CCACHE!
 kiss list ccache && export CCACHE_SLOPPINESS=time_macros
@@ -40,13 +43,15 @@ export CXX=clang++
 export AR=llvm-ar
 export NM=llvm-nm
 
+# Build against system libs for official builds
+sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
+    tools/generate_shim_headers/generate_shim_headers.py
+
 # compile gn early, so it can be used to generate gni stuff
 # Explicitly include things for llvm toolchains
 LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind" \
     python2 tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles
 
-# libpng: KISS builds with APNG patch (https://crbug.com/752403#c10)
-# zlib: KISS builds without minizip
 system="
     fontconfig
     freetype
@@ -81,10 +86,6 @@ done
 ./build/linux/unbundle/replace_gn_files.py --system-libraries $system
 ./third_party/libaddressinput/chromium/tools/update-strings.py
 
-
-sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
-    tools/generate_shim_headers/generate_shim_headers.py
-
 conf="
     is_cfi=false
     use_lld=true
@@ -92,7 +93,7 @@ conf="
     is_debug=false
     use_custom_libcxx=false
     clang_use_plugins=false
-    is_official_build=false
+    is_official_build=true
     is_component_build=false
     exclude_unwind_tables=true
     clang_use_chrome_plugins=false
@@ -105,6 +106,7 @@ conf="
     use_atk=false
     use_cups=false
     use_gtk=false
+    use_gio=false
     use_x11=false
     use_dbus=false
     use_glib=false
@@ -134,7 +136,11 @@ conf="
     use_ozone=true
     ozone_platform_x11=false
     ozone_platform_wayland=true
+    rtc_build_tools=false
+    rtc_use_gtk=false
+    rtc_use_x11=false
     rtc_use_pipewire=false
+    rtc_use_x11_extensions=false
     symbol_level=0
     enable_vr=false
     enable_mdns=false
@@ -142,15 +148,17 @@ conf="
     enable_remoting=false
     enable_reporting=false
     enable_nacl_nonsfi=false
+    enable_swiftshader=false
     enable_reading_list=false
     enable_js_type_check=false
     enable_one_click_signin=false
     enable_service_discovery=false
     enable_mse_mpeg2ts_stream_parser=true
+    chrome_pgo_phase=0
     enable_hangout_services_extension=false
     safe_browsing_mode=0
-    rtc_build_tools=false
     build_dawn_tests=false
+    build_with_tflite_lib=false
     v8_enable_i18n_support=false
     enable_perfetto_unittests=false
     fieldtrial_testing_like_official_build=true
@@ -170,19 +178,16 @@ ulimit -n 4096
 ninja -C out/Release chrome
 
 # Package -> This is the minimum required for #ME# to run chromium. 
-# If you need e.g. Angle, you will need EGL and GLESv2 in out/Release.
 # Just use the community build.
 
-install -Dm755 chromium.sh                          "$1/usr/bin/chromium"
-install -Dm755 out/Release/chrome                   "$1/usr/lib/chromium/chromium"
-install -Dm644 out/Release/icudtl.dat               "$1/usr/lib/chromium/icudtl.dat"
-install -Dm644 out/Release/resources.pak            "$1/usr/lib/chromium/resources.pak"
-install -Dm644 out/Release/locales/en-US.pak        "$1/usr/lib/chromium/locales/en-US.pak"
-install -Dm644 out/Release/chrome_100_percent.pak   "$1/usr/lib/chromium/chrome_100_percent.pak"
-install -Dm644 out/Release/chrome_200_percent.pak   "$1/usr/lib/chromium/chrome_200_percent.pak"
-install -Dm644 out/Release/v8_context_snapshot.bin  "$1/usr/lib/chromium/v8_context_snapshot.bin"
-install -Dm755 out/Release/swiftshader/libEGL.so    "$1/usr/lib/chromium/swiftshader/libEGL.so"
-install -Dm755 out/Release/swiftshader/libGLESv2.so "$1/usr/lib/chromium/swiftshader/libGLESv2.so"
+install -Dm755 chromium.sh                         "$1/usr/bin/chromium"
+install -Dm755 out/Release/chrome                  "$1/usr/lib/chromium/chromium"
+install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium/icudtl.dat"
+install -Dm644 out/Release/resources.pak           "$1/usr/lib/chromium/resources.pak"
+install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/en-US.pak"
+install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
+install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
+install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
