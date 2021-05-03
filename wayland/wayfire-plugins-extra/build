@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < remove-giomm.patch
+
+meson \
+    --prefix=/usr \
+    --buildtype=release \
+    . build
+
+ninja -C build
+ninja -C build install
