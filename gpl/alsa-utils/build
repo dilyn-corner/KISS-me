@@ -1,7 +1,9 @@
 #!/bin/sh -e
 
-sed -i '/\$(edit)\|\.\(service\|rules\)/d' alsactl/Makefile.in
-sed -i '/\$(edit)\|\.\(service\|rules\)/d' alsaucm/Makefile.in
+sed -i '/\$(edit)\|\.\(service\|rules\)/d'   alsactl/Makefile.in
+sed -i '/\$(edit)\|\.\(service\|rules\)/d'   alsaucm/Makefile.in
+sed -i 's/ MIN_MENU_COMMAND/REQ_LEFT_ITEM/'  alsamixer/bindings.h
+sed -i 's/ MAX_MENU_COMMAND/REQ_PREV_MATCH/' alsamixer/bindings.h
 
 ./configure \
     --prefix=/usr \
@@ -10,8 +12,7 @@ sed -i '/\$(edit)\|\.\(service\|rules\)/d' alsaucm/Makefile.in
     --disable-bat \
     --disable-nls \
     --disable-xmlto \
-    --disable-alsaconf \
-    --disable-alsamixer
+    --disable-alsaconf
 
 make
 make DESTDIR="$1" install
