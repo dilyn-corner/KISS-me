@@ -1,9 +1,14 @@
 #!/bin/sh -e
 
-./configure \
-	--prefix=/usr
+export DESTDIR="$1"
 
-make DESTDIR="$1" install
+meson \
+    --prefix=/usr \
+    -Dtests=false \
+    . build
+
+ninja -C build
+ninja -C build install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/wayland-protocols.license"
