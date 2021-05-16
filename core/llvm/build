@@ -2,13 +2,6 @@
 
 export DESTDIR="$1"
 
-sed -i 's/strtoll_l/strtoll/' \
-    libcxx/include/locale
-sed -i 's/strtoull_l/strtoull/' \
-    libcxx/include/locale
-sed -i 's/base, _LIBCPP_GET_C_LOCALE/base/g' \
-    libcxx/include/locale
-
 sed -i 's/SANITIZER_COMMON TRUE/SANITIZER_COMMON FALSE/' \
     compiler-rt/cmake/config-ix.cmake
 
@@ -22,9 +15,10 @@ cmake -B build \
     -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;libunwind;libcxxabi;libcxx;lld" \
     -DLLVM_HOST_TRIPLE="$(clang -dumpmachine)" \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU" \
-    -DLLVM_BUILD_EXAMPLES=OFF \
-    -DLLVM_BUILD_TESTS=OFF \
-    -DLLVM_BUILD_DOCS=OFF \
+    -DLLVM_INCLUDE_BENCHMARKS=OFF \
+    -DLLVM_INCLUDE_EXAMPLES=OFF \
+    -DLLVM_INCLUDE_TESTS=OFF \
+    -DLLVM_INCLUDE_DOCS=OFF \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_LINK_LLVM_DYLIB=ON \
     -DLLVM_ENABLE_TERMINFO=OFF \
@@ -37,12 +31,16 @@ cmake -B build \
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
     -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
     -DCLANG_DEFAULT_RTLIB=compiler-rt \
-    -DLIBUNWIND_USE_COMPILER_RT=ON \
+    -DLIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY=ON \
+    -DLIBCXX_STATICALLY_LINK_ABI_IN_STATIC_LIBRARY=ON \
     -DLIBCXX_USE_COMPILER_RT=ON \
     -DLIBCXX_CXX_ABI=libcxxabi \
     -DLIBCXX_HAS_MUSL_LIBC=ON \
+    -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_SHARED_LIBRARY=ON \
+    -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON \
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
     -DLIBCXXABI_USE_COMPILER_RT=ON \
+    -DLIBUNWIND_USE_COMPILER_RT=ON \
     -DCOMPILER_RT_EXCLUDE_ATOMIC_BUILTIN=OFF \
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
     -Wno-dev llvm -G Ninja
