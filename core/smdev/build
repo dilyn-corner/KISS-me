@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+# we need to include sysmacros.h... Manually?
+sed -i '/libgen.h>/a #include <libudev.h>' smdev.c
+
+make LDFLAGS=-static
+make PREFIX=/usr DESTDIR="$1" install
+
+ln -sv smdev "$1/usr/bin/mdev"
