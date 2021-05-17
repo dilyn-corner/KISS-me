@@ -12,8 +12,5 @@ install -Dm644 libbz2.a        "$1/usr/lib/libbz2.a"
 install -Dm644 bzip2.1         "$1/usr/share/man/man1/bzip2.1"
 install -Dm644 bzlib.h         "$1/usr/include/bzlib.h"
 
-ln -sf bzip2 "$1/usr/bin/bunzip2"
-ln -sf bzip2 "$1/usr/bin/bzcat"
-
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/bzip2.license"
