@@ -10,5 +10,8 @@ gmake \
 # ncurses-compatible script
 install -Dm755 ncurses5-config "$1/usr/bin/ncurses5-config"
 
+# Delete some bins we don't need
+rm -f "$1/usr/bin/clear" "$1/usr/bin/reset"
+
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/netbsd-curses.license"
