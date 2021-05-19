@@ -5,7 +5,8 @@ for patch in musl-*.patch; do
     patch -p1 < "$patch"
 done
 
-# Wyverkiss patches
+# Patches specifically for my messed up system
+# no libatomic/clang plugins (wyverkiss), no gzip (me)
 for patch in wyverkiss-*.patch; do
     patch -p1 < "$patch"
 done
@@ -13,10 +14,10 @@ done
 python3 ungoogled-chromium/utils/prune_binaries.py \
     ./ ungoogled-chromium/pruning.list
 
-# Ungoogled Chromium patches
-while read -r patch; do 
-  [ "$patch" ] || continue
-  patch  -p1 < "ungoogled-chromium/patches/$patch"
+# Bypass the Python script and apply patches ourselves to avoid GNU patch
+while read -r patch; do
+    [ "$patch" ] || continue
+    patch -p1 < "ungoogled-chromium/patches/$patch"
 done < ungoogled-chromium/patches/series
 
 python3 ungoogled-chromium/utils/domain_substitution.py apply \
@@ -24,12 +25,12 @@ python3 ungoogled-chromium/utils/domain_substitution.py apply \
     -f ungoogled-chromium/domain_substitution.list \
     -c domainsubcache.tar.gz ./
 
-# Chromium patches
+# Ungoogled Chromium patches
 for patch in chromium-*.patch; do
     patch -p1 < "$patch"
 done
 
-# USE CCACHE!
+# Avoid falling back to preprocessor mode when sources contain time macros
 kiss list ccache && export CCACHE_SLOPPINESS=time_macros
 
 # Force script incompatible with Python 3 to use /usr/bin/python2
@@ -38,19 +39,18 @@ sed -i "1s|python$|&2|" third_party/dom_distiller_js/protoc_plugins/*.py
 mkdir -p third_party/node/linux/node-linux-x64/bin
 ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
-export CC=clang
-export CXX=clang++
-export AR=llvm-ar
-export NM=llvm-nm
+export CC="${CC:-cc}"
+export CXX="${CXX:-c++}"
+export AR="${AR:-ar}"
+export NM="${NM:-nm}"
 
-# Build against system libs for official builds
+# Allow building against system libraries in official builds
 sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
     tools/generate_shim_headers/generate_shim_headers.py
 
 # compile gn early, so it can be used to generate gni stuff
-# Explicitly include things for llvm toolchains
 LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind" \
-    python2 tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles
+    ./tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles
 
 system="
     fontconfig
@@ -61,13 +61,10 @@ system="
     opus
 "
 
-# Check for libva, do some work if it exists
-kiss list libva && vaapi=true
-
 # remove build scripts for system provided dependencies - basically does the
 # same as the bundled script to remove bundled libs, but this way we don't
 # have to list the remaining libs
-for LIB in "$system"; do
+for LIB in $system; do
     find . -type f -path "*third_party/$LIB/*" \
         \! -path "*third_party/$LIB/chromium/*" \
         \! -path "*third_party/$LIB/google/*" \
@@ -84,110 +81,93 @@ done
 # switch to system provided dependencies
 # shellcheck disable=2086
 ./build/linux/unbundle/replace_gn_files.py --system-libraries $system
+
 ./third_party/libaddressinput/chromium/tools/update-strings.py
 
+# Do we want hardware accelerated graphics?
+kiss list libva && vaapi=true
+
 conf="
+    google_api_key=\"\"
+    google_default_client_id=\"\"
+    google_default_client_secret=\"\"
+    use_official_google_api_keys=false
+    use_unofficial_version_number=false
+    blink_symbol_level=0
+    safe_browsing_mode=0
+    exclude_unwind_tables=true
+    build_with_tflite_lib=false
+    fatal_linker_warnings=false
+    clang_use_chrome_plugins=false
+    treat_warnings_as_errors=false
+    fieldtrial_testing_like_official_build=true
+    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    enable_vr=false
+    enable_widevine=false
+    enable_swiftshader=false
     is_cfi=false
-    use_lld=true
     is_clang=true
     is_debug=false
-    use_custom_libcxx=false
-    clang_use_plugins=false
     is_official_build=true
-    is_component_build=false
-    exclude_unwind_tables=true
-    clang_use_chrome_plugins=false
-    is_unsafe_developer_build=false
-    blink_symbol_level=0
-    fatal_linker_warnings=false
-    treat_warnings_as_errors=false
-    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
-    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    rtc_use_pipewire=false
+    proprietary_codecs=true
+    rtc_build_examples=false
+    ffmpeg_branding=\"Chrome\"
+    link_pulseaudio=false
+    ozone_platform_x11=false
+    ozone_platform_wayland=true
+    symbol_level=0
+    use_allocator=\"none\"
+    use_allocator_shim=false
     use_atk=false
-    use_cups=false
-    use_gtk=false
     use_gio=false
+    use_gtk=false
+    use_lld=true
     use_x11=false
+    use_cups=false
     use_dbus=false
     use_glib=false
     use_gold=false
-    use_udev=false
     use_libpci=false
     use_sysroot=false
-    use_xkbcommon=true
     use_kerberos=false
-    use_pulseaudio=false
-    use_allocator=\"none\"
-    use_allocator_shim=false
-    use_gnome_keyring=false
-    use_vaapi=${vaapi:-false}
+    use_xkbcommon=false
     use_pangocairo=false
+    use_pulseaudio=false
     use_system_zlib=true
-    use_system_libdrm=true
-    use_system_minigbm=true
-    use_system_freetype=true
+    use_custom_libcxx=false
+    use_gnome_keyring=false
     use_system_harfbuzz=true
-    use_system_libwayland=true
-    use_system_wayland_scanner=true
-    enable_widevine=false
-    proprietary_codecs=true
-    ffmpeg_branding=\"Chrome\"
-    link_pulseaudio=false
-    use_ozone=true
-    ozone_platform_x11=false
-    ozone_platform_wayland=true
-    rtc_build_tools=false
-    rtc_use_gtk=false
-    rtc_use_x11=false
-    rtc_use_pipewire=false
-    rtc_use_x11_extensions=false
-    symbol_level=0
-    enable_vr=false
+    use_vaapi=${vaapi:-false}
+    chrome_pgo_phase=0
     enable_mdns=false
     enable_nacl=false
     enable_remoting=false
     enable_reporting=false
     enable_nacl_nonsfi=false
-    enable_swiftshader=false
     enable_reading_list=false
     enable_js_type_check=false
     enable_one_click_signin=false
     enable_service_discovery=false
     enable_mse_mpeg2ts_stream_parser=true
-    chrome_pgo_phase=0
     enable_hangout_services_extension=false
-    safe_browsing_mode=0
-    build_dawn_tests=false
-    build_with_tflite_lib=false
-    v8_enable_i18n_support=false
-    enable_perfetto_unittests=false
-    fieldtrial_testing_like_official_build=true
-    use_official_google_api_keys=false
-    use_unofficial_version_number=false
-    google_api_key=\"\"
-    google_default_client_id=\"\"
-    google_default_client_secret=\"\"
 "
 
 out/Release/gn gen out/Release --args="$conf"
 
-# final link needs lots of file descriptors, almost all shells support the -n flag
+# final link needs lots of file descriptors, almost all shells support the -n flag.
 # shellcheck disable=2039
 ulimit -n 4096
 
 ninja -C out/Release chrome
 
-# Package -> This is the minimum required for #ME# to run chromium. 
-# Just use the community build.
-
+# Package the monster.
 install -Dm755 chromium.sh                         "$1/usr/bin/chromium"
 install -Dm755 out/Release/chrome                  "$1/usr/lib/chromium/chromium"
-install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium/icudtl.dat"
+install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium"
 install -Dm644 out/Release/resources.pak           "$1/usr/lib/chromium/resources.pak"
 install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/en-US.pak"
 install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
 install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
 install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
-
-# Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
