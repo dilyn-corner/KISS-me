@@ -1,6 +1,5 @@
 #!/bin/sh -ef
 
-patch -p1 < rc-lib.patch
 patch -p1 < rc-boot.patch
 patch -p1 < rc-shutdown.patch
 
