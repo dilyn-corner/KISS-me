@@ -5,26 +5,20 @@ export CC="${CC:-cc}"
 
 # Build me statically baybee
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
-sed -i "s|-scanner',|-scanner', static: true, |"  meson.build
-sed -i "s|xkbcommon'|xkbcommon', static: true|"   meson.build
+sed -i "s|xkbcommon',|xkbcommon', static: true,|" meson.build
+sed -i "s|-scanner',|-scanner', static: true,|"   meson.build
 sed -i "s|protocols'|protocols', static: true|"   meson.build
 sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
 sed -i "s|-client'|-client', static: true|"       meson.build
 sed -i "s|threads'|threads', static: true|"       meson.build
-sed -i "s|cursor'|cursor', static: true, |"       meson.build
-sed -i "s|fontconfig'|fontconfig', static: true|" subprojects/fcft/meson.build
-sed -i "s|freetype2'|freetype2', static: true|"   subprojects/fcft/meson.build
-sed -i "s|pixman-1'|pixman-1', static: true|"     subprojects/fcft/meson.build
-sed -i "s|harfbuzz'|harfbuzz', static: true|"     subprojects/fcft/meson.build
-sed -i "s|threads'|threads', static: true|"       subprojects/fcft/meson.build
+sed -i "s|tllist',|tllist', static: true,|"       meson.build
+sed -i "s|cursor'|cursor', static: true|"         meson.build
+sed -i "s|fcft',|fcft', static: true,|"           meson.build
 
 # Note to self: always make doc generation toggleable
 sed -i "s|subdir('doc')||" meson.build
 
-# These headers are never in the right spot
-fixHead=subprojects/fcft
-install -Dm644 "$fixHead/fcft.h"   "$fixHead/fcft/fcft.h"
-install -Dm644 "$fixHead/stride.h" "$fixHead/fcft/stride.h"
+rm -rf .git subprojects/*/.git
 
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
@@ -36,9 +30,10 @@ export CFLAGS="$CFLAGS -O3 -fno-plt                       \
                        
 meson \
     --prefix=/usr \
+    -Ddefault_library=static \
     -Dbuildtype=release \
-    -Db_lto=true \
     -Dterminfo=disabled \
+    -Db_lto=true \
     . build
 
 # First, we generate a PGO build
@@ -65,7 +60,7 @@ if [ -e "$XDG_RUNTIME_DIR/wayland-0.lock" ]; then
         --attr-underline \
         --sixel \
         ${foot_tmp_file} && cat ${foot_tmp_file}"
-    rm ${foot_tmp_file}
+    rm "${foot_tmp_file}"
 else
     foot_tmp=$(mktemp)
     scripts/generate-alt-random-writes.py \
@@ -80,10 +75,10 @@ else
         --attr-italic \
         --attr-underline \
         --sixel \
-        ${foot_tmp}
+        "${foot_tmp}"
     
-    ./build/pgo ${foot_tmp} ${foot_tmp} ${foot_tmp}
-    rm ${foot_tmp}
+    ./build/pgo "${foot_tmp}" "${foot_tmp}" "${foot_tmp}"
+    rm "${foot_tmp}"
 fi
 
 # This is required for llvm
@@ -96,6 +91,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 LICENSE                    "$1/usr/share/LICENSES/foot.license"
-install -Dm755 subprojects/fcft/LICENSE   "$1/usr/share/LICENSES/fcft.license"
-install -Dm755 subprojects/tllist/LICENSE "$1/usr/share/LICENSES/tllist.license"
+install -Dm755 LICENSE "$1/usr/share/LICENSES/foot.license"
