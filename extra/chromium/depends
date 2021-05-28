@@ -5,8 +5,9 @@ fontconfig
 freetype-harfbuzz
 gperf              make
 libdrm
-libxkbcommon
 libwebp
+libxkbcommon
+libxml2
 linux-headers      make
 mesa
 nasm               make

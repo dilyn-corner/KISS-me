@@ -11,7 +11,12 @@ for patch in wyverkiss-*.patch; do
     patch -p1 < "$patch"
 done
 
-python3 ungoogled-chromium/utils/prune_binaries.py \
+# Ungoogled Chromium patches
+for patch in chromium-*.patch; do
+    patch -p1 < "$patch"
+done
+
+python ungoogled-chromium/utils/prune_binaries.py \
     ./ ungoogled-chromium/pruning.list
 
 # Bypass the Python script and apply patches ourselves to avoid GNU patch
@@ -20,27 +25,23 @@ while read -r patch; do
     patch -p1 < "ungoogled-chromium/patches/$patch"
 done < ungoogled-chromium/patches/series
 
-python3 ungoogled-chromium/utils/domain_substitution.py apply \
+python ungoogled-chromium/utils/domain_substitution.py apply \
     -r ungoogled-chromium/domain_regex.list \
     -f ungoogled-chromium/domain_substitution.list \
     -c domainsubcache.tar.gz ./
-
-# Ungoogled Chromium patches
-for patch in chromium-*.patch; do
-    patch -p1 < "$patch"
-done
 
 # Avoid falling back to preprocessor mode when sources contain time macros
 kiss list ccache && export CCACHE_SLOPPINESS=time_macros
 
 # Force script incompatible with Python 3 to use /usr/bin/python2
+# Remove in next release. How exciting.
 sed -i "1s|python$|&2|" third_party/dom_distiller_js/protoc_plugins/*.py
 
 mkdir -p third_party/node/linux/node-linux-x64/bin
 ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
-export CC="${CC:-cc}"
-export CXX="${CXX:-c++}"
+export CC="${CC:-cc} -v"
+export CXX="${CXX:-c++} -v"
 export AR="${AR:-ar}"
 export NM="${NM:-nm}"
 
@@ -58,23 +59,24 @@ system="
     harfbuzz-ng
     libdrm
     libwebp
+    libxml
     opus
 "
 
 # remove build scripts for system provided dependencies - basically does the
 # same as the bundled script to remove bundled libs, but this way we don't
 # have to list the remaining libs
-for LIB in $system; do
-    find . -type f -path "*third_party/$LIB/*" \
-        \! -path "*third_party/$LIB/chromium/*" \
-        \! -path "*third_party/$LIB/google/*" \
-        \! -path './base/third_party/icu/*' \
-        \! -path './third_party/pdfium/third_party/freetype/include/pstables.h' \
-        \! -path './third_party/harfbuzz-ng/utils/hb_scoped.h' \
-        \! -name '*.gn' \
-        \! -name '*.gni' \
-        \! -name '*.isolate' \
-        \! -name '*.py' \
+for lib in $system; do
+    find . -type f -path "*third_party/$lib/*" \
+        \! -path "*third_party/$lib/chromium/*" \
+        \! -path "*third_party/$lib/google/*" \
+        \! -path "./base/third_party/icu/*" \
+        \! -path "./third_party/pdfium/third_party/freetype/include/pstables.h" \
+        \! -path "./third_party/harfbuzz-ng/utils/hb_scoped.h" \
+        \! -name "*.gn" \
+        \! -name "*.gni" \
+        \! -name "*.isolate" \
+        \! -name "*.py" \
         -exec rm -rf {} +
 done
 
@@ -109,6 +111,7 @@ conf="
     is_cfi=false
     is_clang=true
     is_debug=false
+    use_thin_lto=false
     is_official_build=true
     rtc_use_pipewire=false
     proprietary_codecs=true
@@ -132,7 +135,6 @@ conf="
     use_libpci=false
     use_sysroot=false
     use_kerberos=false
-    use_xkbcommon=false
     use_pangocairo=false
     use_pulseaudio=false
     use_system_zlib=true
@@ -157,7 +159,7 @@ conf="
 out/Release/gn gen out/Release --args="$conf"
 
 # final link needs lots of file descriptors, almost all shells support the -n flag.
-# shellcheck disable=2039
+# shellcheck disable=2039,3045
 ulimit -n 4096
 
 ninja -C out/Release chrome
