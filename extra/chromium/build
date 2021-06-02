@@ -40,8 +40,8 @@ sed -i "1s|python$|&2|" third_party/dom_distiller_js/protoc_plugins/*.py
 mkdir -p third_party/node/linux/node-linux-x64/bin
 ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
-export CC="${CC:-cc} -v"
-export CXX="${CXX:-c++} -v"
+export CC="${CC:-cc}"
+export CXX="${CXX:-c++}"
 export AR="${AR:-ar}"
 export NM="${NM:-nm}"
 
