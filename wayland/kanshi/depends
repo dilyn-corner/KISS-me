@@ -1,5 +1,0 @@
-meson   make
-pkgconf make
-samurai make
-wayland
-wlroots
