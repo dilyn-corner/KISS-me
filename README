@@ -29,9 +29,9 @@ system; use it as a reference for building packages. As an example, many build
 scripts have been modified to make use of meson or cmake when available, leaving
 perhaps a large amount of overhead in the build system. Not to mention the fact
 that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
-much of the core system has changed to include toybox, nawk, and libarchive. A
-lot of utilities are gone because of dropping busybox, but I would like to
-assume that I'll be just fine.  We will see. Some current issues: 
+much of the core system has changed to include e.g. toybox, nawk, and
+libarchive. A lot of utilities are gone because of dropping busybox, but I would
+like to assume that I'll be just fine.  We will see. Some current issues: 
 
 * toybox mdev does NOT work. Use something else, or handle /dev perms manually.
 * python expects ggrep; endianness must be specified. 
@@ -41,23 +41,6 @@ Any packages that use a GPL license will end up in the gpl directory, regardless
 of their position in the system hierarchy. Ideally, there will be almost no GPL
 in the core, runtime system. Of course, concessions will have to be made for
 certain things. But we take what we get, and we get what we can.
-
-Other branches are used by me for things like my KISS-kde partition. These
-branches are more suitable for everyday KISS use.
-
-
-Thoughts
-________________________________________________________________________________
-
-In the ever-excruciating pursuit of being different for the sake of difference,
-I have switched from KISS-proper to wyverkiss.
-
-Additionally, due to recent issues with Xorg (see
-https://gitlab.freedesktop.org/xorg/xserver/-/issues/1068), I have decided to
-commit to trying out wayland.
-
-I am on the hunt for a nonGPL floating window manager for Wayland, that doesn't
-require pango. If you find one, let me know!
 
 
 For the curious
@@ -77,62 +60,63 @@ NOTE: chromium is built using some bundled libs and programs, the biggest being
 ffmpeg and x264. This makes chromium de facto GPL. 
 
 
-    +-------------------+---------------+-------------------+---------------+
-    | CORE              | LICENSE       | EXTRA             | LICENSE       |
-    +-------------------+---------------+-------------------+---------------+
-    | baseinit          | MIT           | aerc              | MIT           |
-    | byacc             | Public Domain | botan             | BSD 2-Clause  |
-    | bzip2             | bzip2         | bottom            | MIT           |
-    | cmake             | BSD 3-Clause  | cairo             | MPLv1.1       |
-    | curl              | MIT           | chromium          | BSD 3-Clause  |
-    | dash              | BSD           | cozette-font      | MIT           |
-    | flex              | BSD 2-Clause  | dhcpcd            | BSD           |
-    | kiss              | MIT           | expat             | MIT           |
-    | libarchive        | BSD 2-Clause  | fontconfig        | MIT           |
-    | libressl          | ISC           | fossil            | BSD 2-Clause  |
-    | llvm              | Apache-2.0    | freetype-harfbuzz | BSD           |
-    | m4                | BSD/ISC       | github-cli        | MIT           |
-    | make              | BSD 2-Clause  | go                | BSD 3-Clause  |
-    | musl              | MIT           | iana-etc          | Public Domain |
-    | nawk              | MIT           | jj                | MIT           |
-    | openntpd          | ISC           | json-c            | MIT           |
-    | samurai           | Apache-2.0    | libdrm            | MIT           |
-    | toybox            | 0BSD          | libevdev          | MIT           |
-    | xz                | Public Domain | libffi            | MIT           |
-    | zfs               | CDDL          | libinput          | X11           |
-    | zlib              | zlib          | libpciaccess      | X11           |
-    | zstd              | BSD 3-Clause  | libpng            | libpngv2      |
-    +-------------------+---------------+ libudev-zero      | ISC           |
-    | WAYLAND           | LICENSE       | libva             | MIT           |
-    +-------------------+---------------+ libwebp           | BSD 3-Clause  |
-    | foot              | MIT           | libxml2           | MIT           |
-    | grim              | MIT           | mesa              | MIT           |
-    | kanshi            | MIT           | meson             | Apache-2.0    |
-    | libxkcommon       | MIT           | mtdev             | MIT           |
-    | wayfire           | MIT           | nasm              | BSD 2-Clause  |
-    | wayland           | MIT           | netbsd-curses     | BSD 3-Clause  |
-    | wayland-protocols | MIT           | nodejs            | MIT           |
-    | wbg               | MIT           | nss               | MPLv2         |
-    | wev               | MIT           | oksh              | Public Domain |
-    | wf-config         | MIT           | opendoas          | BSD           |
-    | wl-clipboard-rs   | MIT           | openssh           | BSD           |
-    | wlroots           | MIT           | opus              | BSD 3-Clause  |
-    | wlr-randr         | MIT           | pash              | MIT           |
-    | xkeyboard-config  | MIT           | pixman            | MIT           |
-    +-------------------+---------------+ pkgconf           | ISC           |
-    | GPL               | LICENSE       | python            | PSFv2         |
-    +-------------------+---------------+ python2           | PSFv2         |
-    | alsa-lib          | GPLv2.1       | rnp               | BSD 2-Clause  |
-    | alsa-utils        | GPLv2         | rust              | APACHE/MIT    |
-    | git               | LGPLv2.1      | sqlite            | Public Domain |
-    | gmake             | GPLv3         | tzdata            | Public Domain |
-    | gnupg1            | GPLv3         | vim               | Vim           |
-    | gperf             | GPLv3         +-------------------+---------------+
-    | libelf            | GPLv3         |
-    | linux-headers     | GPLv2         |
-    | perl              | GPLv1         |
-    | util-linux        | GPLv2         |
-    +-------------------+---------------+
+ +-----------------------+---------------+-------------------+---------------+
+ | CORE                  | LICENSE       | EXTRA             | LICENSE       |
+ +-----------------------+---------------+-------------------+---------------+
+ | baseinit              | MIT           | aerc              | MIT           |
+ | byacc                 | Public Domain | botan             | BSD 2-Clause  |
+ | bzip2                 | bzip2         | bottom            | MIT           |
+ | cmake                 | BSD 3-Clause  | cairo             | MPLv1.1       |
+ | curl                  | MIT           | chromium          | BSD 3-Clause  |
+ | dash                  | BSD           | cozette-font      | MIT           |
+ | flex                  | BSD 2-Clause  | dhcpcd            | BSD           |
+ | kiss                  | MIT           | expat             | MIT           |
+ | libarchive            | BSD 2-Clause  | fontconfig        | MIT           |
+ | libressl              | ISC           | fossil            | BSD 2-Clause  |
+ | llvm                  | Apache-2.0    | freetype-harfbuzz | BSD           |
+ | m4                    | BSD/ISC       | github-cli        | MIT           |
+ | make                  | BSD 2-Clause  | glm               | MITi          |
+ | musl                  | MIT           | go                | BSD 3-Clause  |
+ | nawk                  | MIT           | iana-etc          | Public Domain |
+ | openntpd              | ISC           | jj                | MIT           |
+ | samurai               | Apache-2.0    | json-c            | MIT           |
+ | smdev                 | MIT             libdrm            | MIT           |
+ | toybox                | 0BSD          | libevdev          | MIT           |
+ | xz                    | Public Domain | libffi            | MIT           |
+ | zfs                   | CDDL          | libinput          | X11           |
+ | zlib                  | zlib          | libpciaccess      | X11           |
+ | zstd                  | BSD 3-Clause  | libpng            | libpngv2      |
+ +-----------------------+---------------+ libudev-zero      | ISC           |
+ | WAYLAND               | LICENSE       | libva             | MIT           |
+ +-----------------------+---------------+ libwebp           | BSD 3-Clause  |
+ | fcft                  | MIT           | libxml2           | MIT           |
+ | foot                  | MIT           | mesa              | MIT           |
+ | grim                  | MIT           | meson             | Apache-2.0    |
+ | libxkcommon           | MIT           | mtdev             | MIT           |
+ | wayfire               | MIT           | nasm              | BSD 2-Clause  |
+ | wayfire-plugins-extra | MIT           | netbsd-curses     | BSD 3-Clause  |
+ | wayland               | MIT           | nodejs            | MIT           |
+ | wayland-protocols     | MIT           | nss               | MPLv2         |
+ | wbg                   | MIT           | oksh              | Public Domain |
+ | wev                   | MIT           | opendoas          | BSD           |
+ | wf-config             | MIT           | openssh           | BSD           |
+ | wl-clipboard-rs       | MIT           | opus              | BSD 3-Clause  |
+ | wlroots               | MIT           | pash              | MIT           |
+ | xkeyboard-config      | MIT           | pixman            | MIT           |
+ +-----------------------+---------------+ pkgconf           | ISC           |
+ | GPL                   | LICENSE       | python            | PSFv2         |
+ +-----------------------+---------------+ python2           | PSFv2         |
+ | alsa-lib              | GPLv2.1       | rnp               | BSD 2-Clause  |
+ | alsa-utils            | GPLv2         | rust              | APACHE/MIT    |
+ | git                   | LGPLv2.1      | sqlite            | Public Domain |
+ | gmake                 | GPLv3         | tzdata            | Public Domain |
+ | gnupg1                | GPLv3         | vim               | Vim           |
+ | gperf                 | GPLv3         +-------------------+---------------+
+ | libelf                | GPLv3         |
+ | linux-headers         | GPLv2         |
+ | perl                  | GPLv1         |
+ | util-linux            | GPLv2         |
+ +-----------------------+---------------+
 --- 
 
 
