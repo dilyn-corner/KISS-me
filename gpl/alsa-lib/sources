@@ -1,1 +1,3 @@
 https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.5.tar.bz2
+patches/no-inline.patch
+patches/fix-load_for_all_cards.patch

@@ -1,0 +1,11 @@
+--- a/include/local.h
++++ b/include/local.h
+@@ -265,7 +265,7 @@
+ 
+ #define ASM_NAME(name) __SYMBOL_PREFIX name
+ 
+-#ifdef HAVE_GNU_LD
++#if defined(HAVE_GNU_LD) && defined(__GNUC__)
+ # ifdef HAVE_ELF
+ 
+ /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
