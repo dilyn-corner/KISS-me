@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+patch -p1 < no-inline.patch
+patch -p1 < fix-load_for_all_cards.patch
+
 # Fix a missing include
 sed -i '/<dirent.h>/a #include <linux/limits.h>' src/ucm/ucm_exec.c
 
@@ -7,7 +10,7 @@ sed -i '/<dirent.h>/a #include <linux/limits.h>' src/ucm/ucm_exec.c
     --prefix=/usr \
     --without-debug
 
-make
+make 
 make DESTDIR="$1" install
 
 # Install the license
