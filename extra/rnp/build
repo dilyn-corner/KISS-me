@@ -2,8 +2,11 @@
 
 export DESTDIR="$1"
 
+sed -i 's/llen = 76/llen = 64/' src/librepgp/stream-armor.cpp
+
 cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_TESTING=OFF \
     -G Ninja
