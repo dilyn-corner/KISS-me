@@ -1,1 +1,3 @@
 https://www.alsa-project.org/files/pub/utils/alsa-utils-1.2.5.tar.bz2
+patches/fix-null-pointer.patch
+patches/alsactl-fix-nested-iteration.patch
