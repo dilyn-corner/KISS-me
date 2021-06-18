@@ -1,5 +1,1 @@
-https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.5.tar.bz2
-patches/no-inline.patch
-patches/01-fix-load_for_all_cards.patch
-patches/02-add-_alibpref.patch
-patches/03-ucm-fix-_alibpref.patch
+https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.5.1.tar.bz2
