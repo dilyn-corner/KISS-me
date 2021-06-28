@@ -1,6 +1,6 @@
 fontconfig        make
 freetype-harfbuzz make
-pixman            make
 meson             make
-tllist            make
+pixman            make
 samurai           make
+tllist            make
