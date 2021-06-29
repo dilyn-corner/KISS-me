@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+export CFLAGS="-Wno-error"
+
+meson \
+    --prefix=/usr \
+    -Dseatd=enabled \
+    -Dbuiltin=enabled \
+    -Dlogind=disabled \
+    . build
+
+ninja -C build
+ninja -C build install
+
+install -Dm755 seatd.run "$1/etc/sv/seatd/run"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/seatd.license"
