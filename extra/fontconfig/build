@@ -2,8 +2,6 @@
 
 export DESTDIR="$1"
 
-patch -p1 < no-scripts.patch
-
 meson \
     --prefix=/usr \
     --localstatedir=/var \
@@ -21,7 +19,6 @@ meson \
 
 ninja -C build
 ninja -C build install
-
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/fontconfig.license"
