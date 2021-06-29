@@ -6,7 +6,6 @@ meson \
     --prefix=/usr \
     --buildtype=release \
     -Dexamples=false \
-    -Dlogind=disabled \
     -Dxwayland=disabled \
     -Dxcb-icccm=disabled \
     -Dxcb-errors=disabled \
