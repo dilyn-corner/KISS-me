@@ -16,8 +16,11 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
 meson \
     --prefix=/usr \
     --buildtype=release \
+    -Dexamples=false \
     -Dprint_trace=false \
     -Dxwayland=disabled \
+    -Dxcb-error=disabled \
+    -Dx11-backend=disabled \
     . build
 
 ninja -C build

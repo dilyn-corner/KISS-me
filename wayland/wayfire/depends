@@ -1,5 +1,6 @@
 cairo
 freetype-harfbuzz
+glm               make
 libdrm
 libevdev
 libinput
