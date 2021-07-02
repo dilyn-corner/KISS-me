@@ -5,15 +5,16 @@
     --enable-ipv6 \
     --enable-unix-sockets \
     --enable-hidden-symbols \
-    --without-libidn \
-    --without-libidn2 \
-    --disable-manual \
-    --disable-ldap \
     --disable-ares \
-    --without-librtmp \
+    --disable-ldap \
+    --disable-manual \
     --without-icu \
     --without-libpsl \
+    --without-libidn \
+    --without-libidn2 \
+    --without-librtmp \
     --with-pic \
+    --with-openssl \
     --with-ca-fallback
 
 make curl_LDFLAGS=-all-static
