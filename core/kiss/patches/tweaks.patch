@@ -1,0 +1,54 @@
+diff --git a/contrib/kiss-outdated b/contrib/kiss-outdated
+index 82b0990..7d265f2 100755
+--- a/contrib/kiss-outdated
++++ b/contrib/kiss-outdated
+@@ -61,6 +61,9 @@ repology_name() {
+             remote=boehm-gc
+         ;;
+
++        gmake)
++            remote=make
++        ;;
+         gnugrep)
+             # shell-check is dumb here so this must be quoted.
+             remote='grep'
+@@ -115,6 +118,10 @@ repology_name() {
+             remote=links
+         ;;
+
++        make)
++            remote=bmake
++        ;;
++
+         man-pages)
+             # TODO: Report to repology.org.
+             # man-pages       -> manpages
+--- a/contrib/kiss-orphans
++++ b/contrib/kiss-orphans
+@@ -7,8 +7,8 @@
+     case $pkg in
+         # Exemptions for orphans which aren't really
+         # orphans. Exclude them from the list.
+-        baseinit|baselayout|gcc|e2fsprogs|musl|\
+-        make|busybox|bzip2|grub|kiss|git)
++        baseinit|baselayout|dash|kiss|libarchive|\
++        llvm|make|musl|nawk|openntpd|toybox|zfs|zstd)
+             continue
+     esac
+
+EOF
+diff --git a/contrib/kiss-reset b/contrib/kiss-reset
+index 0d9ca71..535fa85 100755
+--- a/contrib/kiss-reset
++++ b/contrib/kiss-reset
+@@ -7,8 +7,8 @@ for pkg in "$KISS_ROOT/var/db/kiss/installed/"*; do
+     pkg=${pkg##*/}
+
+     case $pkg in
+-        baselayout|binutils|bison|busybox|bzip2|curl|flex|gcc|git|\
+-        gzip|kiss|libressl|linux-headers|m4|make|musl|xz|zlib) ;;
++        baselayout|byacc|bzip2|curl|flex|git|kiss|libressl|\
++        linux-headers|llvm|m4|make|musl|toybox|xz|zlib|zstd) ;;
+
+         *) set -- "$@" "$pkg" ;;
+     esac
