@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+make -C libopenbsd
+
+make -C pax PREFIX=/usr
+
+install -Dm755 pax/pax "$1/usr/bin/pax"
+
+ln -s pax "$1/usr/bin/tar"
+ln -s pax "$1/usr/bin/cpio"
