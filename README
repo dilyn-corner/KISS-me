@@ -6,7 +6,7 @@ ________________________________________________________________________________
 KISS-me - A KISS repository for forks, projects, and fun
 ________________________________________________________________________________
 
-The master branch is for: 
+The master branch is for:
 1) A self-maintained 'fork' of wyverkiss https://github.com/wyvertux/wyverkiss
 2) NonGNU experimentation
 
@@ -31,10 +31,10 @@ perhaps a large amount of overhead in the build system. Not to mention the fact
 that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
 much of the core system has changed to include e.g. toybox, nawk, and
 libarchive. A lot of utilities are gone because of dropping busybox, but I would
-like to assume that I'll be just fine.  We will see. Some current issues: 
+like to assume that I'll be just fine.  We will see. Some current issues:
 
 * toybox mdev does NOT work. Use something else, or handle /dev perms manually.
-* python expects ggrep; endianness must be specified. 
+* python expects ggrep; endianness must be specified.
 * nawk seems to generate some files incorrectly? see libffi/build.
 
 Any packages that use a GPL license will end up in the gpl directory, regardless
@@ -57,7 +57,7 @@ of code blobs they borrow. In general, I am semi-fine with this (if not wholly
 forced to accept it).
 
 NOTE: chromium is built using some bundled libs and programs, the biggest being
-ffmpeg and x264. This makes chromium de facto GPL. 
+ffmpeg and x264. This makes chromium de facto GPL.
 
 
  +-----------------------+---------------+-------------------+---------------+
@@ -80,44 +80,45 @@ ffmpeg and x264. This makes chromium de facto GPL.
  | nawk                  | MIT           | iana-etc          | Public Domain |
  | openntpd              | ISC           | jj                | MIT           |
  | samurai               | Apache-2.0    | json-c            | MIT           |
- | smdev                 | MIT             libdrm            | MIT           |
- | toybox                | 0BSD          | libevdev          | MIT           |
- | xz                    | Public Domain | libffi            | MIT           |
- | zfs                   | CDDL          | libinput          | X11           |
- | zlib                  | zlib          | libpciaccess      | X11           |
- | zstd                  | BSD 3-Clause  | libpng            | libpngv2      |
- +-----------------------+---------------+ libudev-zero      | ISC           |
- | WAYLAND               | LICENSE       | libva             | MIT           |
- +-----------------------+---------------+ libwebp           | BSD 3-Clause  |
- | fcft                  | MIT           | libxml2           | MIT           |
- | foot                  | MIT           | mesa              | MIT           |
- | grim                  | MIT           | meson             | Apache-2.0    |
- | libxkcommon           | MIT           | mtdev             | MIT           |
- | wayfire               | MIT           | nasm              | BSD 2-Clause  |
- | wayfire-plugins-extra | MIT           | netbsd-curses     | BSD 3-Clause  |
- | wayland               | MIT           | nodejs            | MIT           |
- | wayland-protocols     | MIT           | nss               | MPLv2         |
- | wbg                   | MIT           | oksh              | Public Domain |
- | wev                   | MIT           | opendoas          | BSD           |
- | wf-config             | MIT           | openssh           | BSD           |
- | wl-clipboard-rs       | MIT           | opus              | BSD 3-Clause  |
- | wlroots               | MIT           | pash              | MIT           |
- | xkeyboard-config      | MIT           | pixman            | MIT           |
- +-----------------------+---------------+ pkgconf           | ISC           |
- | GPL                   | LICENSE       | python            | PSFv2         |
- +-----------------------+---------------+ python2           | PSFv2         |
- | alsa-lib              | GPLv2.1       | rnp               | BSD 2-Clause  |
- | alsa-utils            | GPLv2         | rust              | APACHE/MIT    |
- | git                   | LGPLv2.1      | sqlite            | Public Domain |
- | gmake                 | GPLv3         | tzdata            | Public Domain |
- | gnupg1                | GPLv3         | vim               | Vim           |
- | gperf                 | GPLv3         +-------------------+---------------+
+ | sm                    | MIT           | libdrm            | MIT           |
+ | smdev                 | MIT           | libevdev          | MIT           |
+ | toybox                | 0BSD          | libffi            | MIT           |
+ | xz                    | Public Domain | libinput          | X11           |
+ | zfs                   | CDDL          | libpciaccess      | X11           |
+ | zlib                  | zlib          | libpng            | libpngv2      |
+ | zstd                  | BSD 3-Clause  | libudev-zero      | ISC           |
+ +-----------------------+---------------+ libva             | MIT           |
+ | WAYLAND               | LICENSE       | libwebp           | BSD 3-Clause  |
+ +-----------------------+---------------+ libxml2           | MIT           |
+ | fcft                  | MIT           | mesa              | MIT           |
+ | foot                  | MIT           | meson             | Apache-2.0    |
+ | grim                  | MIT           | mtdev             | MIT           |
+ | libxkcommon           | MIT           | nasm              | BSD 2-Clause  |
+ | wayfire               | MIT           | netbsd-curses     | BSD 3-Clause  |
+ | wayfire-plugins-extra | MIT           | nodejs            | MIT           |
+ | wayland               | MIT           | nss               | MPLv2         |
+ | wayland-protocols     | MIT           | oksh              | Public Domain |
+ | wbg                   | MIT           | opendoas          | BSD           |
+ | wev                   | MIT           | openssh           | BSD           |
+ | wf-config             | MIT           | opus              | BSD 3-Clause  |
+ | wl-clipboard-rs       | MIT           | pash              | MIT           |
+ | wlroots               | MIT           | pixman            | MIT           |
+ | xkeyboard-config      | MIT           | pkgconf           | ISC           |
+ +-----------------------+---------------+ python            | PSFv2         |
+ | GPL                   | LICENSE       | python2           | PSFv2         |
+ +-----------------------+---------------+ rnp               | BSD 2-Clause  |
+ | alsa-lib              | GPLv2.1       | rust              | APACHE/MIT    |
+ | alsa-utils            | GPLv2         | sqlite            | Public Domain |
+ | git                   | LGPLv2.1      | tzdata            | Public Domain |
+ | gmake                 | GPLv3         | vim               | Vim           |
+ | gnupg1                | GPLv3         +-------------------+---------------+
+ | gperf                 | GPLv3         |
  | libelf                | GPLv3         |
  | linux-headers         | GPLv2         |
  | perl                  | GPLv1         |
  | util-linux            | GPLv2         |
  +-----------------------+---------------+
---- 
+---
 
 
 My other stuff
@@ -151,9 +152,9 @@ So you made a fork
 ________________________________________________________________________________
 
 
-This is more-so for me and anyone like me who is both new to Git(hub) and forks. 
+This is more-so for me and anyone like me who is both new to Git(hub) and forks.
 
-Keeping up 
+Keeping up
 ________________________________________________________________________________
 
 
@@ -163,7 +164,7 @@ repository as a remote URL for git to track, and then you will be able to pull
 down any changes upstream makes and merge them into your fork.
 
 git remote add upstream $upstreamURL # Add upstream to your remotes
-git fetch upstream                   # Fetch upstream's changes 
+git fetch upstream                   # Fetch upstream's changes
 git checkout master                  # Switch to master
 git merge upstream/master            # Merge upstream's master branch
 
