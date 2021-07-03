@@ -1,0 +1,4 @@
+git+git://git.ckyln.com/sm
+files/respawn
+files/sysmgr.boot
+files/sysmgr.pre.shutdown
