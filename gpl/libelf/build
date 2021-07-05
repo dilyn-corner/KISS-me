@@ -10,8 +10,8 @@ sed -i 's/=5//g'            libelf/Makefile.in
 export CFLAGS="$CFLAGS -Wno-error"
 
 # Disable configure error for missing argp, fts, and obstack
-sed -i 's/as_fn_error.*argp/: "/g' configure
-sed -i 's/as_fn_error.*fts/: "/g' configure
+sed -i 's/as_fn_error.*argp/: "/g'    configure
+sed -i 's/as_fn_error.*fts/: "/g'     configure
 sed -i 's/as_fn_error.*obstack/: "/g' configure
 
 # Don't compile two unrelated C files which require argp.
