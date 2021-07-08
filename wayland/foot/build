@@ -18,8 +18,6 @@ sed -i "s|fcft',|fcft', static: true,|"           meson.build
 # Note to self: always make doc generation toggleable
 sed -i "s|subdir('doc')||" meson.build
 
-rm -rf .git subprojects/*/.git
-
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
 export CFLAGS="$CFLAGS -O3 -fno-plt                       \
@@ -27,7 +25,7 @@ export CFLAGS="$CFLAGS -O3 -fno-plt                       \
                        -static -l:libffi.a                \
                        -Wno-unused-command-line-argument  \
                        -Wno-ignored-optimization-argument"
-                       
+
 meson \
     --prefix=/usr \
     -Ddefault_library=static \
@@ -39,11 +37,12 @@ meson \
 # First, we generate a PGO build
 meson configure -Db_pgo=generate build
 ninja -C build
+ninja -C build test
 
 # We check to see if a wayland lock file exists in the runtime directory.
 # If it exists, assume we're in a wayland session and build with full PGO.
 # If it doesn't exist, assume we're not and build with partial PGO.
-if [ -e "$XDG_RUNTIME_DIR/wayland-0.lock" ]; then
+if [ "$WAYLAND_DISPLAY" ]; then
     ./build/footclient --version
     foot_tmp_file=$(mktemp)
     ./build/foot --config=/dev/null \
@@ -76,7 +75,7 @@ else
         --attr-underline \
         --sixel \
         "${foot_tmp}"
-    
+
     ./build/pgo "${foot_tmp}" "${foot_tmp}" "${foot_tmp}"
     rm "${foot_tmp}"
 fi
