@@ -3,7 +3,6 @@
 export DESTDIR="$1"
 export CC="${CC:-cc}"
 
-# Build me statically baybee
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
 sed -i "s|xkbcommon',|xkbcommon', static: true,|" meson.build
 sed -i "s|-scanner',|-scanner', static: true,|"   meson.build
@@ -11,20 +10,17 @@ sed -i "s|protocols'|protocols', static: true|"   meson.build
 sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
 sed -i "s|-client'|-client', static: true|"       meson.build
 sed -i "s|threads'|threads', static: true|"       meson.build
-sed -i "s|tllist',|tllist', static: true,|"       meson.build
 sed -i "s|cursor'|cursor', static: true|"         meson.build
-sed -i "s|fcft',|fcft', static: true,|"           meson.build
 
 # Note to self: always make doc generation toggleable
 sed -i "s|subdir('doc')||" meson.build
 
 # The author *insists* we optimize the ever-living-fuck out of this package.
 # So let's indulge them! LLVM makes this tricky, but here's how you do it.
-export CFLAGS="$CFLAGS -O3 -fno-plt                       \
-                       -Wno-error                         \
-                       -static -l:libffi.a                \
-                       -Wno-unused-command-line-argument  \
-                       -Wno-ignored-optimization-argument"
+export CFLAGS="$CFLAGS -O3 -Wno-ignored-optimization-argument"
+export CFLAGS="$CFLAGS -Wno-backend-plugin"
+
+#mkdir build && cd build
 
 meson \
     --prefix=/usr \
@@ -33,9 +29,15 @@ meson \
     -Dterminfo=disabled \
     -Db_lto=true \
     . build
+    #..
+
+# We do this here so as to not interfere with the above subproject-getting.
+sed -i "s|freetype'|freetype', static: true|" subprojects/fcft/meson.build
+sed -i "s|harfbuzz'|harfbuzz', static: true|" subprojects/fcft/meson.build
 
 # First, we generate a PGO build
 meson configure -Db_pgo=generate build
+
 ninja -C build
 ninja -C build test
 
@@ -43,26 +45,27 @@ ninja -C build test
 # If it exists, assume we're in a wayland session and build with full PGO.
 # If it doesn't exist, assume we're not and build with partial PGO.
 if [ "$WAYLAND_DISPLAY" ]; then
-    ./build/footclient --version
-    foot_tmp_file=$(mktemp)
-    ./build/foot --config=/dev/null \
-        --term=xterm sh -c \
-        "scripts/generate-alt-random-writes.py \
-        --scroll \
-        --scroll-region \
-        --colors-regular \
-        --colors-bright \
-        --colors-256 \
-        --colors-rgb \
-        --attr-bold \
-        --attr-italic \
-        --attr-underline \
-        --sixel \
-        ${foot_tmp_file} && cat ${foot_tmp_file}"
-    rm "${foot_tmp_file}"
+   ./build/footclient --version
+
+   foot_tmp_file=$(mktemp)
+   ./build/foot --config=/dev/null \
+       --term=xterm sh -c \
+       "./scripts/generate-alt-random-writes.py \
+       --scroll \
+       --scroll-region \
+       --colors-regular \
+       --colors-bright \
+       --colors-256 \
+       --colors-rgb \
+       --attr-bold \
+       --attr-italic \
+       --attr-underline \
+       --sixel \
+       ${foot_tmp_file} && cat ${foot_tmp_file}"
+   rm "${foot_tmp_file}"
 else
     foot_tmp=$(mktemp)
-    scripts/generate-alt-random-writes.py \
+    ./scripts/generate-alt-random-writes.py \
         --rows=67 \
         --cols=135 \
         --scroll \
@@ -89,5 +92,7 @@ meson configure -Db_pgo=use build
 ninja -C build
 ninja -C build install
 
-# Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/foot.license"
+# Install the licenses
+install -Dm755 LICENSE                    "$1/usr/share/LICENSES/foot.license"
+install -Dm755 subprojects/fcft/LICENSE   "$1/usr/share/LICENSES/fcft.license"
+install -Dm755 subprojects/tllist/LICENSE "$1/usr/share/LICENSES/tllist.license"
