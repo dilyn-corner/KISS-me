@@ -1,6 +1,0 @@
-fontconfig        make
-freetype-harfbuzz make
-meson             make
-pixman            make
-samurai           make
-tllist            make

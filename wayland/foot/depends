@@ -1,4 +1,3 @@
-fcft              make
 fontconfig        make
 freetype-harfbuzz make
 libxkbcommon      make
@@ -9,6 +8,5 @@ pixman            make
 pkgconf           make
 python            make
 samurai           make
-tllist            make
 wayland           make
 wayland-protocols make
