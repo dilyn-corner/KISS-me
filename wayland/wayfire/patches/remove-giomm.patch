@@ -1,5 +1,5 @@
---- a/meson.build
-+++ b/meson.build
+--- a/pl/meson.build
++++ b/pl/meson.build
 @@ -14,7 +14,6 @@
  )
  
@@ -9,8 +9,8 @@
  wfconfig = dependency('wf-config')
  cairo = dependency('cairo')
 
---- a/src/meson.build
-+++ b/src/meson.build
+--- a/pl/src/meson.build
++++ b/pl/src/meson.build
 @@ -2,10 +2,6 @@
      dependencies: [wayfire, wlroots, wfconfig, cairo],
      install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))

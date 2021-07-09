@@ -2,10 +2,28 @@
 
 export DESTDIR="$1"
 
+# We need some headers from glm
+mkdir -p "garbo/usr/include" "garbo/usr/lib/pkgconfig"
+cp -r glm/glm "garbo/usr/include/glm"
+
+cat >> garbo/usr/lib/pkgconfig/glm.pc << EOF
+prefix=/usr
+includedir=\${prefix}/include
+
+Name: GLM
+Description: OpenGL Mathematics
+Version: 0.9.9.8
+Cflags: -I\${includedir}
+EOF
+
+#include our glm C++ bindings
+export CXXFLAGS="$CXXFLAGS -I$PWD/garbo/usr/include"
+
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
+# Cairo is installed... elsewhere...
 sed -i 's/cairo.h/cairo\/cairo.h/' \
     plugins/common/wayfire/plugins/common/cairo-util.hpp
 sed -i 's/cairo.h/cairo\/cairo.h/' \
@@ -16,11 +34,14 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
 meson \
     --prefix=/usr \
     --buildtype=release \
+    -Dpkg_config_path="$PWD/garbo/usr/lib/pkgconfig" \
     -Dexamples=false \
     -Dprint_trace=false \
     -Dxwayland=disabled \
     -Dxcb-error=disabled \
     -Dx11-backend=disabled \
+    -Duse_system_wlroots=enabled \
+    -Duse_system_wfconfig=disabled \
     . build
 
 ninja -C build
@@ -28,5 +49,21 @@ ninja -C build install
 
 install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
 
+# Include the plugins.
+cd pl
+
+export CFLAGS="$CFLAGS -I$1/usr/include"
+export CXXFLAGS="$CXXFLAGS -I$1/usr/include"
+export LDFLAGS="$LDFLAGS -L$1/usr/lib"
+
+meson \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dpkg_config_path="$OLDPWD/garbo/usr/lib/pkgconfig:$1/usr/lib/pkgconfig" \
+    . build
+
+ninja -C build
+ninja -C build install
+
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/wayfire.license"
+install -Dm755 ../LICENSE "$1/usr/share/LICENSES/wayfire.license"
