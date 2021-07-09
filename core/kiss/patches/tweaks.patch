@@ -31,8 +31,8 @@ index 82b0990..7d265f2 100755
          # orphans. Exclude them from the list.
 -        baseinit|baselayout|gcc|e2fsprogs|musl|\
 -        make|busybox|bzip2|grub|kiss|git)
-+        baseinit|baselayout|dash|kiss|libarchive|\
-+        llvm|make|musl|nawk|openntpd|toybox|zfs|zstd)
++        b3sum|baselayout|dash|hummingbird|kiss|llvm|\
++        make|musl|nawk|pax|openntpd|sm|toybox|zfs|zstd)
              continue
      esac
 
@@ -47,8 +47,8 @@ index 0d9ca71..535fa85 100755
      case $pkg in
 -        baselayout|binutils|bison|busybox|bzip2|curl|flex|gcc|git|\
 -        gzip|kiss|libressl|linux-headers|m4|make|musl|xz|zlib) ;;
-+        baselayout|byacc|bzip2|curl|flex|git|kiss|libressl|\
-+        linux-headers|llvm|m4|make|musl|toybox|xz|zlib|zstd) ;;
++        b3sum|baselayout|bzip2|curl|hummingbird|kiss|libressl|\
++        llvm|make|musl|pax|sm|toybox|xz|zlib|zstd) ;;
 
          *) set -- "$@" "$pkg" ;;
      esac

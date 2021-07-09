@@ -1,6 +1,10 @@
 #!/bin/sh -e
 
-patch -p1 < tweaks.patch
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+sed -i 's/sha256sum/b3sum/' kiss
 
 mkdir -p "$1/usr/bin"
 
