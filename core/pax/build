@@ -8,3 +8,6 @@ install -Dm755 pax/pax "$1/usr/bin/pax"
 
 ln -s pax "$1/usr/bin/tar"
 ln -s pax "$1/usr/bin/cpio"
+
+# Install the license
+install -Dm755 README.md "$1/usr/bin/pax.license"
