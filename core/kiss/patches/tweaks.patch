@@ -52,3 +52,13 @@ index 0d9ca71..535fa85 100755
 
          *) set -- "$@" "$pkg" ;;
      esac
+--- a/kiss
++++ b/kiss
+@@ -153,6 +153,7 @@
+ 
+     if [ ! -d "$1" ] && [ -e "$1" ]; then
+         hash=$(
++            "${KISS_SUM:-b3sum}"    "$1" ||
+             sha256sum               "$1" ||
+             sha256 -r               "$1" ||
+             openssl dgst -sha256 -r "$1" ||
