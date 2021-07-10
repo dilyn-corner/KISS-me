@@ -1,6 +1,6 @@
 --- a/kiss
 +++ b/kiss
-@@ -328,54 +328,6 @@
+@@ -332,54 +332,6 @@
      done < "$repo_dir/sources"
  }
  
@@ -52,10 +52,10 @@
 -    done
 -}
 -
- pkg_extract() {
-     # Extract all source archives to the build directory and copy over any
-     # local repository files.
-@@ -408,7 +360,7 @@
+ pkg_extract_git() {
+     git init
+     git remote add origin "${1%[#@]*}"
+@@ -421,7 +373,7 @@
              ;;
  
              *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
@@ -64,7 +64,7 @@
              ;;
  
              *.zip)
-@@ -661,7 +613,7 @@
+@@ -674,7 +626,7 @@
      cd "$pkg_dir/$1"
  
      # Create a tarball from the contents of the built package.
@@ -73,7 +73,7 @@
          bz2)  bzip2 -z ;;
          gz)   gzip -6  ;;
          lzma) lzma -z  ;;
-@@ -1297,7 +1249,7 @@
+@@ -1310,7 +1262,7 @@
      # then "installed" to the filesystem. Running this step as soon as possible
      # allows us to also check the validity of the tarball and bail out early
      # if needed.
@@ -82,3 +82,21 @@
  
      # Naively assume that the existence of a manifest file is all that
      # determines a valid KISS package from an invalid one. This should be a
+--- a/contrib/kiss-export
++++ b/contrib/kiss-export
+@@ -1,5 +1,5 @@
+ #!/bin/sh -ef
+-# Turn an installed package into a KISS tarball
++# Turn an installed package into a KISS archive
+ 
+ db=$KISS_ROOT/var/db/kiss/installed
+ pkg=${1:-"${PWD##*/}"}
+@@ -21,7 +21,7 @@
+ 
+ dest="$OLDPWD/$pkg@$ver-$rel.tar.${KISS_COMPRESS:-gz}"
+ 
+-tar cf - "$@" | case ${KISS_COMPRESS:-gz} in
++pax -w "$@" | case ${KISS_COMPRESS:-gz} in
+     bz2)  bzip2 -z ;;
+     gz)   gzip -6  ;;
+     lzma) lzma -z  ;;
