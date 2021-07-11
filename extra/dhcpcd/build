@@ -12,8 +12,7 @@ make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
 
 # Install runit service.
-install -Dm 755 dhcpcd.run        "$1/etc/sv/dhcpcd/run"
-ln -s /run/runit/supervise.dhcpcd "$1/etc/sv/dhcpcd/supervise"
+install -Dm 755 dhcpcd.run "$1/etc/sv/dhcpcd/run"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/dhcpcd.license"
