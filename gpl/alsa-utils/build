@@ -16,7 +16,7 @@ sed -i 's/ MAX_MENU_COMMAND/REQ_PREV_MATCH/' alsamixer/bindings.h
     --disable-xmlto \
     --disable-alsaconf
 
-make 
+make
 make DESTDIR="$1" install
 
 # Install the license
