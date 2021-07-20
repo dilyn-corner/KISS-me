@@ -1,2 +1,2 @@
-gmake  make
+meson  make
 python make

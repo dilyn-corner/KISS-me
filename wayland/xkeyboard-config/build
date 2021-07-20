@@ -1,19 +1,19 @@
 #!/bin/sh -e
 
-# Swap to shell script instead of perl script
-# for conversion of rules files. See files/xml2lst.
-sed -i 's/perl //;s/xml2lst\.pl/xml2lst/' rules/Makefile.in
+export DESTDIR="$1"
 
-./configure \
+sed -i '/^perl/d'               rules/meson.build
+sed -i 's/xml2lst\.pl/xml2lst/' rules/meson.build
+
+meson \
     --prefix=/usr \
-    --with-xkb-rules-symlink=xfree86,xorg \
-    --enable-compat-rules \
-    --without-xsltproc \
-    --disable-nls \
-    --disable-runtime-deps
+    --buildtype=release \
+    -Derrorlogs=false \
+    -Dstdsplit=false \
+    . build
 
-gmake
-gmake DESTDIR="$1" install
+ninja -C build
+ninja -C build install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/xkeyboard-config.license"
