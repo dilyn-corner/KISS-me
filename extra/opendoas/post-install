@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+chmod u+s /usr/bin/doas

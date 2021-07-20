@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-sed -i '/chown/d' GNUmakefile
-
 ./configure \
     --prefix=/usr \
     --enable-static \
@@ -9,8 +7,8 @@ sed -i '/chown/d' GNUmakefile
     --with-timestamp \
     --without-pam
 
-gmake
-gmake DESTDIR="$1" install
+make
+make DESTDIR="$1" install
 
 install -Dm600 doas.conf "$1/etc/doas.conf"
 
