@@ -4,19 +4,18 @@ build_freetype() (
 
     cd freetype
 
-    CFLAGS="$CFLAGS -DDEFAULT_TT_INTERPRETER_VERSION=TT_INTERPRETER_VERSION_40" \
-    ./configure \
-        --prefix=/usr \
-        --enable-freetype-config \
-        --with-harfbuzz="$2"
+    cmake -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DFT_WITH_BROTLI=OFF \
+        -DFT_WITH_HARFBUZZ="$2" \
+        -G Ninja
 
-    gmake
-    gmake DESTDIR="$1" install
+    ninja -C build
+    ninja -C build install
 )
 
 build_harfbuzz() (
-
-    export DESTDIR="$1"
 
     # Point Harfbuzz to the Freetype files.
     export CFLAGS="$CFLAGS -I$1/usr/include/freetype2"
@@ -41,6 +40,8 @@ build_harfbuzz() (
     ninja -C build
     ninja -C build install
 )
+
+export DESTDIR="$1"
 
 build_freetype "$1" OFF
 build_harfbuzz "$1"
