@@ -1,8 +1,14 @@
 #!/bin/sh -e
 
-gmake 
+export GOPATH="$PWD/go"
+export GO111MODULE=on
 
-install -Dm755 bin/gh "$1/usr/bin/gh"
+go build \
+    -modcacherw \
+    -trimpath \
+    ./cmd/gh
+
+install -Dm755 gh "$1/usr/bin/gh"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/github-cli.license"
