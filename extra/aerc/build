@@ -3,9 +3,11 @@
 export GOPATH="$PWD/go"
 export GO111MODULE=on
 
-sed -i 's/conf doc/conf/' Makefile
+go build \
+    -modcacherw \
+    -trimpath
 
-gmake PREFIX=/usr
+sed -e 's:@SHAREDIR@:/usr/share/aerc:g' > aerc.conf < config/aerc.conf.in
 
 # default target is 'all', and of course that includes docs we don't make
 
