@@ -1,8 +1,23 @@
 #!/bin/sh -e
+# We're fine with splitting.
+#shellcheck disable=2086
 
-sed -i 's/wev wev.1/wev/' Makefile
+PROTOCOLS="$(pkg-config --variable=pkgdatadir wayland-protocols)"
+LIBS="$(pkg-config --cflags --libs --static wayland-client)"
+LIBS="$LIBS $(pkg-config --cflags --libs --static xkbcommon)"
 
-gmake PREFIX=/usr
+wayland-scanner \
+    client-header \
+    "$PROTOCOLS/stable/xdg-shell/xdg-shell.xml" \
+    xdg-shell-protocol.h
+
+wayland-scanner \
+    private-code \
+    "$PROTOCOLS/stable/xdg-shell/xdg-shell.xml" \
+    xdg-shell-protocol.c
+
+cc $CFLAGS -static -std=c11 -I. \
+    -o wev wev.c shm.c xdg-shell-protocol.c $LIBS -lrt
 
 install -Dm755 wev "$1/usr/bin/wev"
 
