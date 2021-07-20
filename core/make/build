@@ -4,6 +4,7 @@ cd bmake
 
 sed -i 's/build) op_test/build) /' boot-strap
 sed -i '/	op_test/d'         boot-strap
+sed -i 's/-nostdinc//'             mk/sys/Linux.mk
 
 export CFLAGS="$CFLAGS -static"
 export LDFLAGS="$LDFLAGS -static"
