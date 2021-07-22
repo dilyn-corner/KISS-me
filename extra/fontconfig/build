@@ -2,6 +2,10 @@
 
 export DESTDIR="$1"
 
+# The meson project is under the impression that
+# freetype isn't on major version 6...
+sed -i 's/21.0.15/2.10.4/' meson.build
+
 meson \
     --prefix=/usr \
     --localstatedir=/var \
@@ -20,5 +24,4 @@ meson \
 ninja -C build
 ninja -C build install
 
-# Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/fontconfig.license"
