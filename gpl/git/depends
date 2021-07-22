@@ -1,5 +1,0 @@
-curl     make
-gmake    make
-libressl make
-zlib     make
-zstd     make
