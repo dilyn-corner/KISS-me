@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+install -Dm644 "Iosevka%20Thin%20Nerd%20Font%20Complete.ttf" \
+    "$1/usr/share/fonts/TTF/Iosevka Thin Nerd Font Complete.ttf"
+
+install -Dm755 LICENSE "$1/usr/share/LICENSES/iosevka.license"
