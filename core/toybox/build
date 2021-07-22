@@ -2,10 +2,13 @@
 
 patch -p1 < POSIX.patch
 
-gmake LDFLAGS="$LDFLAGS --static" 
+gmake LDFLAGS="$LDFLAGS --static"
 gmake PREFIX="$1/usr/bin" install_flat
 
 chmod +s "$1/usr/bin/toybox"
+
+# Dangerous
+unlink "$1/usr/bin/sh"
 
 # Install some important files
 install -Dm644 mdev.conf "$1/etc/mdev.conf"
