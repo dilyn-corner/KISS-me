@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+export GO111MODULE=on
+
+go build \
+    -modcacherw \
+    -trimpath \
+    ./cmd/minisign
+
+install -Dm755 minisign "$1/usr/bin/minisign"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/minisign.license"
