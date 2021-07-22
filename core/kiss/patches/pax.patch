@@ -1,87 +1,3 @@
---- a/kiss
-+++ b/kiss
-@@ -332,54 +332,6 @@
-     done < "$repo_dir/sources"
- }
- 
--pkg_extract_tar_hack() {
--    # This is a portable shell implementation of GNU tar's
--    # '--strip-components 1'. Use of this function denotes a
--    # performance penalty.
--    decompress "$2" > "$tmp_dir/ktar" ||
--        die "$1" "Failed to decompress $2"
--
--    tar xf "$tmp_dir/ktar" ||
--        die "$1" "Failed to extract $2"
--
--    # Iterate over all directories in the first level of the
--    # tarball's manifest.
--    tar tf "$tmp_dir/ktar" | while IFS=/ read -r dir _; do
--        # Skip the directory if seen before.
--        ! contains "$_seen" "$dir" || continue && _seen="$_seen $dir"
--
--        # Some tarballs contain './' as the top-level directory,
--        # we need to skip these occurances.
--        [ -d "${dir#.}" ] || continue
--
--        # Move the directory to prevent naming conflicts between
--        # the child and parent.
--        mv -f "$dir" "$pid-$dir"
--
--        # First attempt to move all files up a directory level,
--        # if any files/directories fail (due to mv's lack of
--        # directory merge capability), simply do the exercise
--        # again and copy-merge the remaining files/directories.
--        #
--        # We can't use '-exec {} +' with any arguments between
--        # the '{}' and '+' as this is not POSIX. We must also
--        # use '$0' and '$@' to reference all arguments.
--        #
--        # Using only '$@' causes a single file from each
--        # invocation to be left out of the list. Weird, right?
--        find "$pid-$dir/." ! -name . -prune \
--            -exec sh -c 'mv -f "$0" "$@" .' {} + 2>/dev/null ||
--
--        find "$pid-$dir/." ! -name . -prune \
--            -exec sh -c 'cp -fRp "$0" "$@" .' {} +
--
--        # Remove the directory now that all files have been
--        # transferred out of it. This can't be a simple 'rmdir'
--        # as we may leave files in here if any were copied.
--        rm -rf "$pid-$dir"
--    done
--}
--
- pkg_extract_git() {
-     git init
-     git remote add origin "${1%[#@]*}"
-@@ -421,7 +373,7 @@
-             ;;
- 
-             *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
--                pkg_extract_tar_hack "$1" "$_res"
-+                decompress "$_res" | pax -r -s '!^[^/]*/!!'
-             ;;
- 
-             *.zip)
-@@ -674,7 +626,7 @@
-     cd "$pkg_dir/$1"
- 
-     # Create a tarball from the contents of the built package.
--    tar cf - . | case $KISS_COMPRESS in
-+    pax -w . | case $KISS_COMPRESS in
-         bz2)  bzip2 -z ;;
-         gz)   gzip -6  ;;
-         lzma) lzma -z  ;;
-@@ -1310,7 +1262,7 @@
-     # then "installed" to the filesystem. Running this step as soon as possible
-     # allows us to also check the validity of the tarball and bail out early
-     # if needed.
--    decompress "$tar_file" | tar xf -
-+    decompress "$tar_file" | pax -r
- 
-     # Naively assume that the existence of a manifest file is all that
-     # determines a valid KISS package from an invalid one. This should be a
 --- a/contrib/kiss-export
 +++ b/contrib/kiss-export
 @@ -1,5 +1,5 @@
@@ -100,3 +16,87 @@
      bz2)  bzip2 -z ;;
      gz)   gzip -6  ;;
      lzma) lzma -z  ;;
+--- a/kiss
++++ b/kiss
+@@ -457,54 +457,6 @@
+     fossil open -f "${url%[#@]*}" "${2:-trunk}"
+ }
+ 
+-pkg_source_tar() {
+-    # This is a portable shell implementation of GNU tar's
+-    # '--strip-components 1'. Use of this function denotes a
+-    # performance penalty.
+-    tmp_file "$repo_name" tarball
+-    tmp_file "$repo_name" tarball-manifest
+-
+-    decompress "$1" > "$_tmp_file_pre" ||
+-        die "$repo_name" "Failed to decompress $1"
+-
+-    tar xf "$_tmp_file_pre" ||
+-        die "$repo_name" "Failed to extract $1"
+-
+-    # The sort command filters out all duplicate top-level
+-    # directories from the tarball's manifest. This is an optimization
+-    # as we avoid looping (4000 times for Python(!)).
+-    tar tf "$_tmp_file_pre" | sort -ut / -k1,1 > "$_tmp_file" ||
+-        die "$repo_name" "Failed to extract manifest"
+-
+-    # Iterate over all directories in the first level of the
+-    # tarball's manifest. Each directory is moved up a level.
+-    while IFS=/ read -r dir _; do case ${dir#.} in *?*)
+-        # Move the parent directory to prevent naming conflicts
+-        # with the to-be-moved children.
+-        mv -f "$dir" "$KISS_PID-$dir"
+-
+-        # Move all children up a directory level. If the mv command
+-        # fails, fallback to copying the remainder of the files.
+-        #
+-        # We can't use '-exec {} +' with any arguments between
+-        # the '{}' and '+' as this is not POSIX. We must also
+-        # use '$0' and '$@' to reference all arguments.
+-        find "$KISS_PID-$dir/." ! -name . -prune \
+-            -exec sh -c 'mv -f "$0" "$@" .' {} + 2>/dev/null ||
+-
+-        find "$KISS_PID-$dir/." ! -name . -prune \
+-            -exec sh -c 'cp -fRp "$0" "$@" .' {} +
+-
+-        # Remove the directory now that all files have been
+-        # transferred out of it. This can't be a simple 'rmdir'
+-        # as we may leave files in here if any were copied.
+-        rm -rf "$KISS_PID-$dir"
+-    esac done < "$_tmp_file"
+-
+-    # Remove the tarball now that we are done with it.
+-    rm -f "$_tmp_file_pre"
+-}
+-
+ pkg_extract() {
+     # Extract all source archives to the build directory and copy over any
+     # local repository files.
+@@ -530,7 +482,7 @@
+             ;;
+ 
+             *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
+-                pkg_source_tar "$_res"
++                decompress "$_res" | pax -r -s '!^[^/]*/!!'
+             ;;
+ 
+             *?*)
+@@ -833,7 +785,7 @@
+     cd "$pkg_dir/$1"
+ 
+     # Create a tarball from the contents of the built package.
+-    tar cf - . | case $KISS_COMPRESS in
++    pax -w . | case $KISS_COMPRESS in
+         bz2)  bzip2 -z ;;
+         gz)   gzip -6  ;;
+         lzma) lzma -z  ;;
+@@ -1460,7 +1412,7 @@
+     # then "installed" to the filesystem. Running this step as soon as possible
+     # allows us to also check the validity of the tarball and bail out early
+     # if needed.
+-    decompress "$tar_file" | tar xf -
++    decompress "$tar_file" | pax -r
+ 
+     # Naively assume that the existence of a manifest file is all that
+     # determines a valid KISS package from an invalid one. This should be a

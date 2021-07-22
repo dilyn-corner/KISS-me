@@ -1,120 +1,93 @@
-diff --git a/kiss b/kiss
-index c616ded..bf961c4 100755
 --- a/kiss
 +++ b/kiss
-@@ -270,6 +270,10 @@ pkg_source_resolve() {
-     elif [ -z "${2##git+*}" ]; then
+@@ -351,6 +351,9 @@
+     if null "${2##git+*}"; then
          _res=$2
  
-+    # Fossil repository
-+    elif [ -z "${2##fossil+*}" ]; then
++    elif null "${2##fossil+*}"; then
 +        _res=$2
 +
      # Remote source (cached).
      elif [ -f "$src_dir/$1/${3:+"$3/"}${2##*/}" ]; then
          _res=$src_dir/$1/${3:+"$3/"}${2##*/}
-@@ -376,6 +380,17 @@ pkg_extract_tar_hack() {
-     done
+@@ -449,6 +452,11 @@
+     git -c advice.detachedHead=0 checkout "${com:-FETCH_HEAD}"
  }
  
-+pkg_extract_git() {
-+    git init
-+    git remote add origin "${1%[#@]*}"
-+    git fetch -t --filter=tree:0 origin "$2" || git fetch -t
-+    git -c advice.detachedHead=0 checkout "${2:-FETCH_HEAD}"
++pkg_source_fossil() {
++    url=$1 com=${url##*[@#]} com=${com#${url%[#@]*}}
++    fossil open -f "${url%[#@]*}" "${2:-trunk}"
 +}
 +
-+pkg_extract_fossil() {
-+    fossil open -f "${1%[#@]*}" "${2:-trunk}"
-+}
-+
- pkg_extract() {
-     # Extract all source archives to the build directory and copy over any
-     # local repository files.
-@@ -393,18 +408,16 @@ pkg_extract() {
-         pkg_source_resolve "$1" "$src" "$dest" >/dev/null
+ pkg_source_tar() {
+     # This is a portable shell implementation of GNU tar's
+     # '--strip-components 1'. Use of this function denotes a
+@@ -516,8 +524,9 @@
+         null "$_res" || mkcd "$mak_dir/$1/$dest"
  
          case $_res in
 -            git+*)
+-                pkg_source_git "${_res##git+}"
 +            git+*|fossil+*)
-+                vcs=${src%%+*}
-                 # Split the source into URL + OBJECT (branch or commit).
--                url=${src##git+} com=${url##*[@#]} com=${com#${url%[#@]*}}
-+                url=${src##${vcs}+} com=${url##*[@#]} com=${com#${url%[#@]*}}
- 
-                 # This magic will shallow clone branches, commits or the
-                 # regular repository. It correctly handles cases where a
-                 # shallow clone is not possible.
-                 log "$1" "Cloning ${url%[#@]*}"
--                git init
--                git remote add origin "${url%[#@]*}"
--                git fetch -t --filter=tree:0 origin "$com" || git fetch -t
--                git -c advice.detachedHead=0 checkout "${com:-FETCH_HEAD}"
-+                "pkg_extract_$vcs" "${url%[#@]*}" "$com"
++                vcs="${src%%+*}"
++                "pkg_source_$vcs" "${_res##${vcs}+}"
              ;;
  
              *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
-@@ -1363,6 +1376,59 @@ pkg_install() {
-     log "$pkg_name" "Installed successfully"
+@@ -1530,6 +1539,52 @@
+     fi
  }
  
 +repository_update_git() {
-+    # Go to the repository's root directory.
-+    git_root=$(git rev-parse --show-toplevel)
-+    cd "${git_root:?"failed to find git root for '$PWD'"}"
++   # Go to the repository's root directory.
++   git_root=$(git rev-parse --show-toplevel)
++   cd "${git_root:?"failed to find git root for '$PWD'"}"
 +
-+    # Go to the real root directory if this is a submodule.
-+    git_root=$(git rev-parse --show-superproject-working-tree)
-+    cd "${git_root:-"$PWD"}"
++   # Go to the real root directory if this is a submodule.
++   git_root=$(git rev-parse --show-superproject-working-tree)
++   cd "${git_root:-"$PWD"}"
 +
-+    contains "$repos" "$PWD" || {
-+        repos="$repos $PWD "
++   contains "$repos" "$PWD" || {
++       repos="$repos $PWD "
 +
-+        # Display a tick if signing is enabled for this repository.
-+        case $(git config merge.verifySignatures) in
-+            true) log "$PWD" "[signed] " ;;
-+            *)    log "$PWD" " " ;;
-+        esac
++       # arg1: pre-update
++       # env:  PWD is path to repository
++       run_hook pre-update
 +
-+        if [ -w "$PWD" ] && [ "$uid" != 0 ]; then
-+            git pull
-+            git submodule update --remote --init -f
++       # Display whether or not signature verification is enabled.
++       _sig=$(git config --get --default false merge.verifySignatures)
 +
-+        else
-+            [ "$uid" = 0 ] || log "$PWD" "Need root to update"
++       log "$PWD" "[verify: $_sig]"
 +
-+            # Find out the owner of the repository and spawn
-+            # git as this user below.
-+            #
-+            # This prevents 'git' from changing the original
-+            # ownership of files and directories in the rare
-+            # case that the repository is owned by a 3rd user.
-+            file_owner "$PWD"
++       if ! am_owner "$PWD"; then
++           log "$PWD" "Need '$user' to update"
++           as_user git pull
++           as_user git submodule update --remote --init -f
++       else
++           git pull
++           git submodule update --remote --init -f
++       fi
 +
-+            # We're in a repository which is owned by a 3rd
-+            # user. Not root or the current user.
-+            [ "$user" = root ] || log "Dropping to $user for pull"
-+
-+            as_root git pull
-+            as_root git submodule update --remote --init -f
-+        fi
-+    }
++       # arg1: post-update
++       # env:  PWD is path to repository
++       run_hook post-update
++   }
 +}
 +
 +repository_update_fossil() {
-+    if [ -w "$PWD" ] && [ "$uid" != 0 ]; then
++    if ! am_owner "$PWD"; then
++        as_user fossil pull
++        as_user fossil update
++    else
 +        fossil pull
 +        fossil update
-+    else
-+        as_root fossil pull
-+        as_root fossil update
 +    fi
 +}
 +
- pkg_updates() {
+ pkg_update() {
      # Check all installed packages for updates. So long as the installed
      # version and the version in the repositories differ, it's considered
-@@ -1387,52 +1453,16 @@ pkg_updates() {
+@@ -1553,45 +1608,16 @@
  
          cd "$repo"
  
@@ -130,7 +103,8 @@ index c616ded..bf961c4 100755
 +            printf 'Not a version controlled repository\n'
              continue
 -        }
--
++        fi
+ 
 -        # Go to the repository's root directory.
 -        git_root=$(git rev-parse --show-toplevel)
 -        cd "${git_root:?"failed to find git root for '$PWD'"}"
@@ -142,35 +116,27 @@ index c616ded..bf961c4 100755
 -        contains "$repos" "$PWD" || {
 -            repos="$repos $PWD "
 -
--            # Display a tick if signing is enabled for this repository.
--            case $(git config merge.verifySignatures) in
--                true) log "$PWD" "[signed] " ;;
--                *)    log "$PWD" " " ;;
--            esac
+-            # arg1: pre-update
+-            # env:  PWD is path to repository
+-            run_hook pre-update
 -
--            if [ -w "$PWD" ] && [ "$uid" != 0 ]; then
+-            # Display whether or not signature verification is enabled.
+-            _sig=$(git config --get --default false merge.verifySignatures)
+-
+-            log "$PWD" "[verify: $_sig]"
+-
+-            if ! am_owner "$PWD"; then
+-                log "$PWD" "Need '$user' to update"
+-                as_user git pull
+-                as_user git submodule update --remote --init -f
+-            else
 -                git pull
 -                git submodule update --remote --init -f
-+        fi
- 
--            else
--                [ "$uid" = 0 ] || log "$PWD" "Need root to update"
--
--                # Find out the owner of the repository and spawn
--                # git as this user below.
--                #
--                # This prevents 'git' from changing the original
--                # ownership of files and directories in the rare
--                # case that the repository is owned by a 3rd user.
--                file_owner "$PWD"
--
--                # We're in a repository which is owned by a 3rd
--                # user. Not root or the current user.
--                [ "$user" = root ] || log "Dropping to $user for pull"
--
--                as_root git pull
--                as_root git submodule update --remote --init -f
 -            fi
+-
+-            # arg1: post-update
+-            # env:  PWD is path to repository
+-            run_hook post-update
 -        }
      done
  

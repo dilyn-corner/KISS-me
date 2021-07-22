@@ -1,6 +1,6 @@
-https://github.com/kisslinux/kiss/archive/5.4.10.tar.gz
-https://github.com/kiss-community/website/archive/eb2bf625971608e3ec01b8a49498e6fe4d32ee5d.tar.gz docs
-https://github.com/kiss-community/wiki/archive/8a55f77fd3d2bb708f1a528e0769780e31b11d36.tar.gz wiki
+https://github.com/kisslinux/kiss/archive/5.5.18.tar.gz
+https://github.com/kisslinux/website/archive/e5f0396efbb86b050fbee881483258d0d20a2d4f.tar.gz docs
+https://github.com/kisslinux/wiki/archive/89d4946d128dff35df87d3210fe10a591559296a.tar.gz wiki
 patches/fossil.patch
 patches/pax.patch
 patches/tweaks.patch
