@@ -1,0 +1,38 @@
+From 2acd4b34c57659d86dca76c58e4363de9b0a1f17 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Ekl=C3=B6f?= <daniel@ekloef.se>
+Date: Thu, 22 Jul 2021 10:02:52 +0200
+Subject: [PATCH] pgo: fix PGO builds with clang
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add stubs for shm_chain_new(), shm_chain_free() and shm_unref(). This
+fixes ‘pgo’ linking failures in the ‘generate’ phase when doing a PGO
+build with clang.
+
+Closes #642
+---
+ pgo/pgo.c    | 10 ++++++++++
+ 1 files changed, 10 insertions(+)
+
+diff --git a/pgo/pgo.c b/pgo/pgo.c
+index 34af7115..94430276 100644
+--- a/pgo/pgo.c
++++ b/pgo/pgo.c
+@@ -142,6 +142,16 @@ void reaper_del(struct reaper *reaper, pid_t pid) {}
+ 
+ void urls_reset(struct terminal *term) {}
+ 
++void shm_unref(struct buffer *buf) {}
++void shm_chain_free(struct buffer_chain *chain) {}
++
++struct buffer_chain *
++shm_chain_new(struct wl_shm *shm, bool scrollable, size_t pix_instances)
++{
++    return NULL;
++}
++
++
+ int
+ main(int argc, const char *const *argv)
+ {

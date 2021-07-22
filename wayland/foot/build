@@ -3,6 +3,8 @@
 export DESTDIR="$1"
 export CC="${CC:-cc}"
 
+patch -p1 < pgo-fix.patch
+
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
 sed -i "s|xkbcommon',|xkbcommon', static: true,|" meson.build
 sed -i "s|-scanner',|-scanner', static: true,|"   meson.build
@@ -20,8 +22,6 @@ sed -i "s|subdir('doc')||" meson.build
 export CFLAGS="$CFLAGS -O3 -Wno-ignored-optimization-argument"
 export CFLAGS="$CFLAGS -Wno-backend-plugin"
 
-#mkdir build && cd build
-
 meson \
     --prefix=/usr \
     -Ddefault_library=static \
@@ -29,7 +29,6 @@ meson \
     -Dterminfo=disabled \
     -Db_lto=true \
     . build
-    #..
 
 # We do this here so as to not interfere with the above subproject-getting.
 sed -i "s|freetype'|freetype', static: true|" subprojects/fcft/meson.build
