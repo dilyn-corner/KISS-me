@@ -1,0 +1,12 @@
+diff --git a/bin/simevent b/bin/simevent
+@@ -4,9 +4,7 @@
+ # into the uevent files.
+ 
+ if [ "$#" -ne 1 ] || [ "$1" != add ] && [ "$1" != remove ]; then
+-	# warning: can't trust $0, better off just hard coding the name
+-	# echo "usage: simevent add|remove" 1>&2
+-	printf "usage: %s add|remove\n" "${0##*/}" 1>&2
++	echo "usage: simevent add|remove" 1>&2
+ 	exit 1
+ fi
+ 

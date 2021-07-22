@@ -1,8 +1,12 @@
 #!/bin/sh -e
 
+patch -p1 < 01-update-simevent.patch
+patch -p1 < 02-hardcode-name-in-simevent.patch
+
+sed -i 's/#CC = musl-gcc/CC = cc/'                config.mk
 sed -i '/<libgen.h>/a #include <sys/sysmacros.h>' smdev.c
 
-make LDFLAGS=-static
+make LDFLAGS="$LDFLAGS -static"
 make PREFIX=/usr DESTDIR="$1" install
 
 ln -sv smdev "$1/usr/bin/mdev"

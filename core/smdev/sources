@@ -1,1 +1,3 @@
-git+git://git.suckless.org/smdev
+https://dl.suckless.org/smdev/smdev-0.2.3.tar.gz
+patches/01-update-simevent.patch
+patches/02-hardcode-name-in-simevent.patch
