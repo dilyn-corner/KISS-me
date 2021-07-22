@@ -1,10 +1,6 @@
 #!/bin/sh -e
 
-sed -i 's/ctors/init_array/' blake3_cpuid.S
-
-export CFLAGS="$CFLAGS -DNDEBUG"
-
-make PREFIX=/usr
+make LDFLAGS="$LDFLAGS -static"
 make PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
