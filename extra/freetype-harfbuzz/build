@@ -4,12 +4,26 @@ build_freetype() (
 
     cd freetype
 
-    cmake -B build \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DFT_WITH_BROTLI=OFF \
-        -DFT_WITH_HARFBUZZ="$2" \
-        -G Ninja
+    LONG_OPT=FT_CONFIG_OPTION_USE
+
+    meson \
+        --prefix=/usr \
+        --buildtype=release \
+        -Ddefault_library=shared \
+        -Dharfbuzz="$2" \
+        -Dbrotli=disabled \
+        . build
+
+    # ftoption.h is improperly generated when using meson!
+    # A future option here is to submit a fix to the meson.build upstream.
+    # For now, this will do.
+    if [ "$2" = disabled ]; then
+        sed -i "s/--enable=${LONG_OPT}_HARFBUZZ/--disable=${LONG_OPT}_HARFBUZZ/g" \
+            build/build.ninja
+    fi
+
+    sed -i "s/--enable=${LONG_OPT}_BROTLI/--disable=${LONG_OPT}_HARFBUZZ/g" \
+        build/build.ninja
 
     ninja -C build
     ninja -C build install
@@ -28,12 +42,13 @@ build_harfbuzz() (
         --prefix=/usr \
         --buildtype=release \
         -Dpkg_config_path="$1/usr/lib/pkgconfig" \
-        -Ddefault_library=both \
+        -Ddefault_library=shared \
         -Dfreetype=enabled \
         -Dcairo=disabled \
         -Dglib=disabled \
         -Dicu=disabled \
         -Dbenchmark=disabled \
+        -Dgobject=disabled \
         -Dtests=disabled \
         . build
 
@@ -41,16 +56,19 @@ build_harfbuzz() (
     ninja -C build install
 )
 
+# We explicitly build both freetype and harfbuzz as shared libraries because the
+# static libraries have esoteric linker problems I don't want to resolve and have
+# basically zero patience for at this point :))))))
 export DESTDIR="$1"
 
-build_freetype "$1" OFF
+build_freetype "$1" disabled
 build_harfbuzz "$1"
 
 # Point Freetype to the Harfbuzz files.
 export HARFBUZZ_CFLAGS="-I$PWD/harfbuzz/src"
 export HARFBUZZ_LIBS="-L$PWD/harfbuzz/build/src -lharfbuzz"
 
-build_freetype "$1" ON
+build_freetype "$1" enabled
 
 # Install the license
 install -Dm755 harfbuzz/COPYING          "$1/usr/share/LICENSES/harfbuzz.license"
