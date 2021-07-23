@@ -9,7 +9,7 @@ build_freetype() (
     meson \
         --prefix=/usr \
         --buildtype=release \
-        -Ddefault_library=shared \
+        -Ddefault_library=both \
         -Dharfbuzz="$2" \
         -Dbrotli=disabled \
         . build
@@ -42,7 +42,7 @@ build_harfbuzz() (
         --prefix=/usr \
         --buildtype=release \
         -Dpkg_config_path="$1/usr/lib/pkgconfig" \
-        -Ddefault_library=shared \
+        -Ddefault_library=both \
         -Dfreetype=enabled \
         -Dcairo=disabled \
         -Dglib=disabled \
