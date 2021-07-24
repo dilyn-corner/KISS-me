@@ -1,18 +1,6 @@
 #!/bin/sh -e
 
 case $1 in
-    pre-build)
-        case $2 in
-            cmake|libressl|llvm|musl|nodejs|python*)
-                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
-                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-            ;;
-            alsa-lib|botan|chromium|github-cli|libpng|mesa|nss|opus|util-linux)
-                CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
-                CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-            ;;
-        esac
-    ;;
     post-build)
         : "${3:?DEST is unset}"
 

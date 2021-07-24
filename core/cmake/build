@@ -2,6 +2,9 @@
 
 patch -p1 < cmake-no-execinfo.patch
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 if kiss l cmake; then
     export DESTDIR="$1"
 
@@ -9,9 +12,13 @@ if kiss l cmake; then
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_USE_SYSTEM_CURL=True \
-        -DCMAKE_USE_SYSTEM_EXPAT=True \
         -DCMAKE_USE_SYSTEM_ZLIB=True \
+        -DCMAKE_USE_SYSTEM_ZSTD=True \
         -DCMAKE_USE_SYSTEM_BZIP2=True \
+        -DCMAKE_USE_SYSTEM_EXPAT=True \
+        -DCMAKE_USE_SYSTEM_LIBLZMA=True \
+        -DBUILD_CursesDialog=False \
+        -DBUILD_TESTING=False
 
     cmake --build   build
     cmake --install build
@@ -20,9 +27,13 @@ else
     ./configure \
         --prefix=/usr \
         --system-curl \
-        --system-expat \
         --system-zlib \
-        --system-bzip2
+        --system-zstd \
+        --system-bzip2 \
+        --system-expat \
+        --system-liblzma \
+        -- -DBUILD_CursesDialog=False \
+        -DBUILD_TESTING=False
 
     make
     make DESTDIR="$1" install

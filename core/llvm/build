@@ -2,6 +2,9 @@
 
 export DESTDIR="$1"
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 sed -i 's/SANITIZER_COMMON TRUE/SANITIZER_COMMON FALSE/' \
     compiler-rt/cmake/config-ix.cmake
 

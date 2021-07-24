@@ -2,6 +2,8 @@
 
 # Hide a very obnoxious warning
 export CFLAGS="$CFLAGS -Wno-implicit-fallthrough"
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
 # Install python-mako which is solely needed for mesa
 # and thus contained in this build.

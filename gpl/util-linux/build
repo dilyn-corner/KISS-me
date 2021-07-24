@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \

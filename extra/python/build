@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 # Remove util-linux dependency among other things.
 cat >> Modules/Setup <<EOF
 *disabled*

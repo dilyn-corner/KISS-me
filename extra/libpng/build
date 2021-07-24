@@ -2,6 +2,9 @@
 
 patch -p1 < libpng-1.6.37-apng.patch
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 ./configure \
     --prefix=/usr \
     --enable-hardware-optimizations

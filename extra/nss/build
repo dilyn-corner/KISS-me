@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 export NSS_USE_SYSTEM_SQLITE=1
 export NSS_ENABLE_WERROR=0
 export USE_64=1
