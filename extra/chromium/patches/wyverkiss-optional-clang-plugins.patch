@@ -22,7 +22,7 @@
  }
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -474,7 +474,7 @@
+@@ -528,7 +528,7 @@
  
    # Enable text section splitting only on linux when using lld for now. Other
    # platforms can be added later if needed.
@@ -31,7 +31,7 @@
      ldflags += [ "-Wl,-z,keep-text-section-prefix" ]
    }
  
-@@ -1115,7 +1115,7 @@
+@@ -1199,7 +1199,7 @@
    }
  
    # Makes builds independent of absolute file path.
@@ -40,16 +40,7 @@
      # If debug option is given, clang includes $cwd in debug info by default.
      # For such build, this flag generates reproducible obj files even we use
      # different build directory like "out/feature_a" and "out/feature_b" if
-@@ -2285,7 +2285,7 @@
-     # All configs using /DEBUG should include this:
-     configs = [ ":win_pdbaltpath" ]
- 
--    if (is_clang) {
-+    if (is_clang && clang_use_plugins) {
-       # Use constructor debug mode. This option reduces debug info more than
-       # -fno-standalone-debug by emitting class type information only when
-       # constructors are emitted.
-@@ -2321,7 +2321,7 @@
+@@ -2385,7 +2385,7 @@
      }
  
      # TODO(https://crbug.com/1050118): Investigate missing debug info on mac.
@@ -58,3 +49,12 @@
        cflags += [
          "-Xclang",
          "-debug-info-kind=constructor",
+@@ -2446,7 +2446,7 @@
+     configs = [ ":win_pdbaltpath" ]
+ 
+     # Enable line tables for clang. MSVC doesn't have an equivalent option.
+-    if (is_clang) {
++    if (is_clang && clang_use_plugin) {
+       # -gline-tables-only is the same as -g1, but clang-cl only exposes the
+       # former.
+       cflags += [ "-gline-tables-only" ]

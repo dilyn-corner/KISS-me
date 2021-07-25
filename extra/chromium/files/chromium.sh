@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/sh -e
 
-export CHROME_WRAPPER=/usr/lib/chromium/chromium
-
-CHROME_FLAGS="--enable-gpu-rasterization $CHROME_FLAGS"
-
-exec /usr/lib/chromium/chromium $CHROME_FLAGS "$@"
+/usr/bin/chromium \
+    --use-gl=egl \
+    --ozone-platform=wayland \
+    --enable-gpu-rasterization \
+    --enable-features=UseOzonePlatform \
+    --enable-features=VaapiVideoDecoder \
+    --disable-gpu-memory-buffer-video-frames

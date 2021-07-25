@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
 # Musl patches
 for patch in musl-*.patch; do
     patch -p1 < "$patch"
@@ -90,70 +93,72 @@ done
 kiss list libva && vaapi=true
 
 conf="
-    google_api_key=\"\"
-    google_default_client_id=\"\"
-    google_default_client_secret=\"\"
-    use_official_google_api_keys=false
-    use_unofficial_version_number=false
-    blink_symbol_level=0
-    safe_browsing_mode=0
-    exclude_unwind_tables=true
-    build_with_tflite_lib=false
-    fatal_linker_warnings=false
-    clang_use_chrome_plugins=false
-    treat_warnings_as_errors=false
-    fieldtrial_testing_like_official_build=true
-    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
-    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
-    enable_vr=false
-    enable_widevine=false
-    enable_swiftshader=false
-    is_cfi=false
-    is_clang=true
-    is_debug=false
-    use_thin_lto=false
-    is_official_build=true
-    rtc_use_pipewire=false
-    proprietary_codecs=true
-    rtc_build_examples=false
-    ffmpeg_branding=\"Chrome\"
-    link_pulseaudio=false
-    ozone_platform_x11=false
-    ozone_platform_wayland=true
-    symbol_level=0
-    use_allocator=\"none\"
-    use_allocator_shim=false
+    use_lld=true
     use_atk=false
     use_gio=false
     use_gtk=false
-    use_lld=true
     use_x11=false
     use_cups=false
     use_dbus=false
     use_glib=false
     use_gold=false
     use_libpci=false
+    rtc_use_x11=false
     use_sysroot=false
     use_kerberos=false
     use_pangocairo=false
     use_pulseaudio=false
     use_system_zlib=true
+    link_pulseaudio=false
+    rtc_use_pipewire=false
+    use_allocator=\"none\"
+    proprietary_codecs=true
     use_custom_libcxx=false
     use_gnome_keyring=false
+    rtc_build_examples=false
+    ozone_platform_x11=false
+    use_allocator_shim=false
     use_system_harfbuzz=true
     use_vaapi=${vaapi:-false}
-    chrome_pgo_phase=0
+    ffmpeg_branding=\"Chrome\"
+    ozone_platform_wayland=true
+    rtc_use_x11_extensions=false
+    is_cfi=false
+    is_clang=true
+    is_debug=false
+    symbol_level=0
+    enable_vr=false
     enable_mdns=false
     enable_nacl=false
+    use_thin_lto=false
+    chrome_pgo_phase=0
+    google_api_key=\"\"
+    blink_symbol_level=0
+    safe_browsing_mode=0
     enable_remoting=false
+    enable_widevine=false
+    is_official_build=true
     enable_reporting=false
     enable_nacl_nonsfi=false
+    enable_swiftshader=false
     enable_reading_list=false
     enable_js_type_check=false
+    exclude_unwind_tables=true
+    build_with_tflite_lib=false
+    fatal_linker_warnings=false
     enable_one_click_signin=false
+    clang_use_chrome_plugins=false
     enable_service_discovery=false
+    treat_warnings_as_errors=false
+    google_default_client_id=\"\"
+    google_default_client_secret=\"\"
+    use_official_google_api_keys=false
+    use_unofficial_version_number=false
     enable_mse_mpeg2ts_stream_parser=true
     enable_hangout_services_extension=false
+    fieldtrial_testing_like_official_build=true
+    host_toolchain=\"//build/toolchain/linux/unbundle:default\"
+    custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 "
 
 out/Release/gn gen out/Release --args="$conf"
