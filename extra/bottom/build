@@ -6,7 +6,7 @@ export CARGO_HOME=$PWD
     cd vendor
 
     for crate in *.crate; do
-        tar xf "$crate"
+        tar xzf "$crate"
 
         # Strip the filename from the sha256sum output.
         sha256=$(sha256sum "$crate")
