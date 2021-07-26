@@ -1,25 +1,7 @@
---- a/contrib/kiss-export
-+++ b/contrib/kiss-export
-@@ -1,5 +1,5 @@
- #!/bin/sh -ef
--# Turn an installed package into a KISS tarball
-+# Turn an installed package into a KISS archive
- 
- db=$KISS_ROOT/var/db/kiss/installed
- pkg=${1:-"${PWD##*/}"}
-@@ -21,7 +21,7 @@
- 
- dest="$OLDPWD/$pkg@$ver-$rel.tar.${KISS_COMPRESS:-gz}"
- 
--tar cf - "$@" | case ${KISS_COMPRESS:-gz} in
-+pax -w "$@" | case ${KISS_COMPRESS:-gz} in
-     bz2)  bzip2 -z ;;
-     gz)   gzip -6  ;;
-     lzma) lzma -z  ;;
 --- a/kiss
 +++ b/kiss
-@@ -457,54 +457,6 @@
-     fossil open -f "${url%[#@]*}" "${2:-trunk}"
+@@ -464,54 +464,6 @@
+     fossil open -f "${url%[#@]}" "${2:-trunk}"
  }
  
 -pkg_source_tar() {
@@ -73,7 +55,7 @@
  pkg_extract() {
      # Extract all source archives to the build directory and copy over any
      # local repository files.
-@@ -530,7 +482,7 @@
+@@ -537,7 +489,7 @@
              ;;
  
              *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
@@ -82,7 +64,7 @@
              ;;
  
              *?*)
-@@ -833,7 +785,7 @@
+@@ -838,7 +790,7 @@
      cd "$pkg_dir/$1"
  
      # Create a tarball from the contents of the built package.
@@ -91,7 +73,7 @@
          bz2)  bzip2 -z ;;
          gz)   gzip -6  ;;
          lzma) lzma -z  ;;
-@@ -1460,7 +1412,7 @@
+@@ -1464,7 +1416,7 @@
      # then "installed" to the filesystem. Running this step as soon as possible
      # allows us to also check the validity of the tarball and bail out early
      # if needed.
@@ -100,3 +82,21 @@
  
      # Naively assume that the existence of a manifest file is all that
      # determines a valid KISS package from an invalid one. This should be a
+--- a/contrib/kiss-export
++++ b/contrib/kiss-export
+@@ -1,5 +1,5 @@
+ #!/bin/sh -ef
+-# Turn an installed package into a KISS tarball
++# Turn an installed package into a KISS archive
+ 
+ db=$KISS_ROOT/var/db/kiss/installed
+ pkg=${1:-"${PWD##*/}"}
+@@ -21,7 +21,7 @@
+ 
+ dest="$OLDPWD/$pkg@$ver-$rel.tar.${KISS_COMPRESS:-gz}"
+ 
+-tar cf - "$@" | case ${KISS_COMPRESS:-gz} in
++pax -w "$@" | case ${KISS_COMPRESS:-gz} in
+     bz2)  bzip2 -z ;;
+     gz)   gzip -6  ;;
+     lzma) lzma -z  ;;
