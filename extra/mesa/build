@@ -47,13 +47,14 @@ meson \
     -Dgbm=enabled \
     -Dzstd=enabled \
     -Dgles2=enabled \
-    -Dplatforms=wayland \
-    -Ddri-drivers=r200 \
-    -Dvulkan-drivers=amd \
-    -Dgallium-drivers=radeonsi \
-    -Dgallium-xa=disabled \
     -Dglx=disabled \
     -Dgles1=disabled \
+    -Ddri-drivers=r200 \
+    -Dplatforms=wayland \
+    -Dvulkan-drivers=amd \
+    -Dgallium-xa=disabled \
+    -Dglx-read-only-text=true \
+    -Dgallium-drivers=radeonsi \
     . build
 
 ninja -C build
