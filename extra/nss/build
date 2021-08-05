@@ -12,50 +12,15 @@ export CC="${CC:-cc}"
 export CCC="${CXX:-c++}"
 export CXX="${CXX:-c++}"
 
-# For some... reason... gnu-as is better than clang's when it comes to 
-# building the intel hardware acceleration things in nss' freebl. 
-# I don't know why this is the case, 
-# I don't know what not including it really does, 
-# I just know that I don't need gnu-as if I comment out these four lines :v
-cat >> intel.patch << EOF
---- a/nss/lib/freebl/Makefile
-+++ b/nss/lib/freebl/Makefile
-@@ -273,10 +273,10 @@
-     DEFINES += -DMP_IS_LITTLE_ENDIAN
- #   DEFINES += -DMPI_AMD64_ADD
-     # comment the next four lines to turn off Intel HW acceleration.
--    DEFINES += -DUSE_HW_AES -DINTEL_GCM
--    ASFILES += intel-aes.s intel-gcm.s
--    EXTRA_SRCS += intel-gcm-wrap.c
--    INTEL_GCM = 1
-+    #DEFINES += -DUSE_HW_AES -DINTEL_GCM
-+    #ASFILES += intel-aes.s intel-gcm.s
-+    #EXTRA_SRCS += intel-gcm-wrap.c
-+    #INTEL_GCM = 1
-     MPI_SRCS += mpi_amd64.c mp_comba.c
- endif
- ifeq ($(CPU_ARCH),x86)
-EOF
-
-patch -p1 < intel.patch
+# People just don't believe in clang enough, I guess.
+sed -i '/-no-integrated-as/d' nss/lib/freebl/Makefile
 
 gmake -j1 -C nss nss_build_all
-
-# TODO: Maybe install the NSS binaries. They're uneeded
-#       right now as we handle certs differently.
-#
-# TODO: Maybe install nss-config. Nothing uses it yet
-#       and this build system is terrible so shhh.
-# NOTE: firefox builds using system nss/nspr require these bins.
 
 install -Dt "$1/usr/include/nss" -m644 dist/public/nss/*.h
 install -Dt "$1/usr/include/nss" -m644 dist/Linux*/include/*.h
 install -Dt "$1/usr/lib"               dist/Linux*/lib/*.so
 install -Dt "$1/usr/lib"         -m644 dist/Linux*/lib/*.chk
-
-# Yucky. This is needed by qtwebengine.
-install -Dt "$1/usr/include/nss/obsolete" \
-    -m644 dist/Linux*/include/obsolete/*.h
 
 # Install the NSPR files. This is a joint package as I'd
 # rather not juggle which version of NSPR works best with NSS.
