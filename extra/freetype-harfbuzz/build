@@ -1,10 +1,10 @@
 #!/bin/sh -e
+# We intentionally use the same variables in our subshells
+# shellcheck disable=2030,2031
 
 build_freetype() (
 
     cd freetype
-
-    LONG_OPT=FT_CONFIG_OPTION_USE
 
     meson \
         --prefix=/usr \
@@ -12,21 +12,19 @@ build_freetype() (
         -Ddefault_library=both \
         -Dharfbuzz="$2" \
         -Dbrotli=disabled \
-        . build
+        . "$2"
 
-    # ftoption.h is improperly generated when using meson!
-    # A future option here is to submit a fix to the meson.build upstream.
-    # For now, this will do.
-    if [ "$2" = disabled ]; then
-        sed -i "s/--enable=${LONG_OPT}_HARFBUZZ/--disable=${LONG_OPT}_HARFBUZZ/g" \
-            build/build.ninja
-    fi
+    # For some reason, ftoption.h is improperly generated when using meson
+    # On my system. So we'll just... Fix the build ourselves.
+    export BOPT=FT_CONFIG_OPTION_USE_BROTLI
+    export HOPT=FT_CONFIG_OPTION_USE_HARFBUZZ
 
-    sed -i "s/--enable=${LONG_OPT}_BROTLI/--disable=${LONG_OPT}_HARFBUZZ/g" \
-        build/build.ninja
+    sed -i "s/--enable=$BOPT/--disable=$BOPT/g"     "$2/build.ninja"
+    [ "$2" = enabled ] ||
+        sed -i "s/--enable=$HOPT/--disable=$HOPT/g" "$2/build.ninja"
 
-    ninja -C build
-    ninja -C build install
+    ninja -C "$2"
+    ninja -C "$2" install
 )
 
 build_harfbuzz() (
@@ -43,30 +41,28 @@ build_harfbuzz() (
         --buildtype=release \
         -Dpkg_config_path="$1/usr/lib/pkgconfig" \
         -Ddefault_library=both \
+        -Dbenchmark=disabled \
         -Dfreetype=enabled \
+        -Dgobject=disabled \
         -Dcairo=disabled \
+        -Dtests=disabled \
         -Dglib=disabled \
         -Dicu=disabled \
-        -Dbenchmark=disabled \
-        -Dgobject=disabled \
-        -Dtests=disabled \
         . build
 
     ninja -C build
     ninja -C build install
 )
 
-# We explicitly build both freetype and harfbuzz as shared libraries because the
-# static libraries have esoteric linker problems I don't want to resolve and have
-# basically zero patience for at this point :))))))
 export DESTDIR="$1"
 
 build_freetype "$1" disabled
 build_harfbuzz "$1"
 
 # Point Freetype to the Harfbuzz files.
-export HARFBUZZ_CFLAGS="-I$PWD/harfbuzz/src"
-export HARFBUZZ_LIBS="-L$PWD/harfbuzz/build/src -lharfbuzz"
+export LIBRARY_PATH="$1/usr/lib:$LIBRARY_PATH"
+export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CFLAGS="$CFLAGS -I$PWD/harfbuzz/src"
 
 build_freetype "$1" enabled
 
