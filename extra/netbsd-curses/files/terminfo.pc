@@ -1,0 +1,7 @@
+Name: terminfo
+Description: terminfo library
+Version: 5.9
+Requires:
+Conflicts:
+Libs: -lterminfo
+Cflags:

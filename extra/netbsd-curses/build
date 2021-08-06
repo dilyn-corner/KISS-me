@@ -1,11 +1,127 @@
 #!/bin/sh -e
 
-gmake \
-    LDFLAGS="$LDFLAGS -static" \
-    DESTDIR="$1" \
-    PREFIX=/usr \
-    all-static \
-    install-static
+# We could at one point simply turn this into a Makefile.
+# These are the lengths we will go to to avoid gmake.
+# Just builds static libs and programs!
+
+export N_CPPFLAGS="-DHAVE_WCHAR -DTERMINFO_COMPILE \
+                   -DTERMINFO_DB -DTERMINFO_COMPAT"
+
+export TOOL_AWK=awk
+export TOOL_SED=sed
+export TOOL_TIC=tic/host_tic
+export TOOL_SORT=sort
+export TOOL_NBPERF=nbperf/nbperf
+export TERMINFODIR=./terminfo
+
+for file in tic/*.c nbperf/*.c; do
+    ${CC:-cc} -I. -I./libterminfo -I./tic \
+    $N_CPPFLAGS $CFLAGS -DINSTALL_PREFIX=\"/usr\" \
+        -c -o "${file%%.c}.o" "$file"
+done
+
+${CC:-cc} nbperf/*.o -o nbperf/nbperf
+
+./libterminfo/genhash \
+    libterminfo/term.h \
+    nbperf/nbperf > libterminfo/hash.c
+
+cp libterminfo/hash.c tic/hash.c
+
+${CC:-cc} -I. -I./libterminfo -DINSTALL_PREFIX=\"/usr\" \
+    $N_CPPFLAGS -I./tic $CFLAGS \
+    -c -o tic/hash.o tic/hash.c
+
+${CC:-cc} -static tic/*.o -o tic/tic
+
+ln -sf tic tic/host_tic
+
+./libterminfo/genterms \
+    libterminfo/term.h \
+    terminfo/terminfo \
+    tic/host_tic > libterminfo/compiled_terms.c
+
+for file in term.c ti.c setupterm.c curterm.c tparm.c tputs.c \
+            compile.c hash.c cdbr.c mi_vector_hash.c; do
+    ${CC:-cc} -I. -I./libterminfo -I./libcurses $N_CPPFLAGS $CFLAGS -c \
+        -o "libterminfo/${file%%.c}.o" "libterminfo/$file"
+done
+
+./libterminfo/genthash \
+    libterminfo/termcap_map.c \
+    nbperf/nbperf > libterminfo/termcap_hash.c
+
+${CC:-cc} -I. -I./libterminfo \
+    $N_CPPFLAGS -I./libcurses $CFLAGS -c \
+    -o libterminfo/termcap.o libterminfo/termcap.c
+
+for file in libcurses/*.c; do
+    case "$file" in
+        libcurses/tscroll.c) ;;
+        *) ${CC:-cc} -I. -I./libterminfo -DHAVE_WCHAR -I./libcurses $CFLAGS -c \
+               -o "${file%%.c}.o" "$file"
+        ;;
+    esac
+done
+
+for file in libpanel/*.c libmenu/*.c libform/*.c tset/*.c \
+            tput/tput.c infocmp/infocmp.c tabs/tabs.c; do
+    ${CC:-cc} -I. -I./libterminfo -I./libcurses -I./libpanel \
+    -DHAVE_WCHAR $CFLAGS -c \
+    -o "${file%%.c}.o" "$file"
+done
+
+for lib in libterminfo libcurses libpanel libmenu libform; do
+    ar crs $lib/${lib}.a $lib/*.o
+done
+
+for file in tset tput tabs infocmp; do
+    ${CC:-cc} -o $file/$file $file/*.o libterminfo/libterminfo.a -static
+done
+
+# Install binaries
+install -Dm755 tabs/tabs                 "$1/usr/bin/tabs"
+install -Dm755 tput/tput                 "$1/usr/bin/tput"
+install -Dm755 tset/tset                 "$1/usr/bin/tset"
+install -Dm755 tput/clear.sh             "$1/usr/bin/clear"
+install -Dm755 infocmp/infocmp           "$1/usr/bin/infocmp"
+# Install libraries
+install -Dm644 libform/libform.a         "$1/usr/lib/libform.a"
+install -Dm644 libmenu/libmenu.a         "$1/usr/lib/libmenu.a"
+install -Dm644 libpanel/libpanel.a       "$1/usr/lib/libpanel.a"
+install -Dm644 libcurses/libcurses.a     "$1/usr/lib/libcurses.a"
+install -Dm644 libterminfo/libterminfo.a "$1/usr/lib/libterminfo.a"
+# Install headers
+install -Dm644 libmenu/eti.h             "$1/usr/include/eti.h"
+install -Dm644 libform/form.h            "$1/usr/include/form.h"
+install -Dm644 libterminfo/term.h        "$1/usr/include/term.h"
+install -Dm644 libmenu/menu.h            "$1/usr/include/menu.h"
+install -Dm644 libpanel/panel.h          "$1/usr/include/panel.h"
+install -Dm644 libcurses/curses.h        "$1/usr/include/curses.h"
+install -Dm644 libcurses/unctrl.h        "$1/usr/include/unctrl.h"
+install -Dm644 libterminfo/termcap.h     "$1/usr/include/termcap.h"
+# Install pkgconfig files
+install -Dm644 menu.pc                   "$1/usr/lib/pkgconfig/menu.pc"
+install -Dm644 form.pc                   "$1/usr/lib/pkgconfig/form.pc"
+install -Dm644 formw.pc                  "$1/usr/lib/pkgconfig/formw.pc"
+install -Dm644 menuw.pc                  "$1/usr/lib/pkgconfig/menuw.pc"
+install -Dm644 panel.pc                  "$1/usr/lib/pkgconfig/panel.pc"
+install -Dm644 curses.pc                 "$1/usr/lib/pkgconfig/curses.pc"
+install -Dm644 panelw.pc                 "$1/usr/lib/pkgconfig/panelw.pc"
+install -Dm644 ncurses.pc                "$1/usr/lib/pkgconfig/ncurses.pc"
+install -Dm644 termcap.pc                "$1/usr/lib/pkgconfig/termcap.pc"
+install -Dm644 ncursesw.pc               "$1/usr/lib/pkgconfig/ncursesw.pc"
+install -Dm644 terminfo.pc               "$1/usr/lib/pkgconfig/terminfo.pc"
+
+# Create symlinks that are expected to exist
+ln -sf tset          "$1/usr/bin/reset"
+ln -sf libmenu.a     "$1/usr/lib/libmenuw.a"
+ln -sf libform.a     "$1/usr/lib/libformw.a"
+ln -sf libpanel.a    "$1/usr/lib/libpanelw.a"
+ln -sf libcurses.a   "$1/usr/lib/libncurses.a"
+ln -sf libterminfo.a "$1/usr/lib/libtermcap.a"
+ln -sf libcurses.a   "$1/usr/lib/libncursesw.a"
+ln -sf curses.h      "$1/usr/include/ncurses.h"
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/netbsd-curses.license"

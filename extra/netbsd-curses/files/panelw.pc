@@ -1,0 +1,7 @@
+Name: panelw
+Description: curses panel library
+Version: 5.9
+Requires:
+Conflicts:
+Libs: -lpanel -lncurses -lterminfo
+Cflags:

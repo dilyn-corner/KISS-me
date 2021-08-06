@@ -1,0 +1,7 @@
+Name: menu
+Description: curses menu library
+Version: 5.9
+Requires:
+Conflicts:
+Libs: -lmenu -lcurses -lterminfo
+Cflags:

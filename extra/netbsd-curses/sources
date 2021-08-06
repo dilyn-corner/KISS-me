@@ -1,1 +1,12 @@
 https://github.com/sabotage-linux/netbsd-curses/archive/refs/tags/v0.3.2.tar.gz
+files/curses.pc
+files/form.pc
+files/formw.pc
+files/menu.pc
+files/menuw.pc
+files/ncurses.pc
+files/ncursesw.pc
+files/panel.pc
+files/panelw.pc
+files/termcap.pc
+files/terminfo.pc
