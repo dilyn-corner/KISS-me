@@ -1,10 +1,49 @@
 #!/bin/sh -e
+# Intentional, globbing disabled, lazy variables.
+# shellcheck disable=2086,2153
+
+# Look ma, no gmake
+
+# We'd like to see what we're doing
+log() {
+    printf '%s\n' "---  $3  ---"
+    printf '%s %s %s\n' "$@"
+}
+
+export IFLAGS="-I. -I./include -I./x86 -I./asm -I./disasm -I./output"
+export NFLAGS="-std=c17 -Werror=unknown-warning-option -fwrapv              \
+               -U__STRICT_ANSI__ -fno-common -Werror=attributes             \
+               -ffunction-sections -fdata-sections -fvisibility=hidden      \
+               -Wall -W -pedantic -Wc99-compat -Wc99-extensions             \
+               -Wno-long-long -Wno-shift-negative-value -Werror=implicit    \
+               -Werror=missing-braces -Werror=return-type -Werror=trigraphs \
+               -Werror=pointer-arith -Werror=strict-prototypes              \
+               -Werror=missing-prototypes -Werror=missing-declarations      \
+               -Werror=comment -Werror=vla -DHAVE_CONFIG_H"
 
 ./configure \
     --prefix=/usr
 
-gmake
-gmake DESTDIR="$1" install
+for file in asm/nasm.c common/common.c macros/macros.c     \
+            disasm/disasm.c disasm/sync.c disasm/ndisasm.c \
+            stdlib/*.c nasmlib/*.c x86/*.c asm/*.c output/*.c; do
+    log CC "${file%%.c}.o" "$file"
+    ${CC:-cc} $CFLAGS $NFLAGS $IFLAGS -c -o "${file%%.c}.o" "$file"
+done
+
+for file in x86/*.o asm/*.o output/*.o stdlib/*.o     \
+            nasmlib/*.o disasm/sync.o disasm/disasm.o \
+            common/common.o macros/macros.o; do
+    log AR libnasm.a "$file"
+    ${AR:-ar} cq libnasm.a "$file"
+done
+
+for file in nasm ndisasm; do
+    log CCLD $file libnasm.a
+    ${CC:-cc} $CFLAGS $NFLAGS $IFLAGS -Wl,--gc-sections \
+        -o "$file" "${file##n}/${file}.o" libnasm.a
+    install -Dm755 $file "$1/usr/bin/$file"
+done
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/nasm.license"
