@@ -12,10 +12,11 @@ EOF
 # Reported 20-27% performance improvements.
 # See: "PythonNoSemanticInterpositionSpeedup"
 export CFLAGS="$CFLAGS -fno-semantic-interposition"
-export CXXFLAGS="$CXXFLAGS -fno-semantic-interposition"
 export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
-patch -p1 < python3-always-pip.patch
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
 
 # python expects ggrep during configure to determine endianness.
 ax_cv_c_float_words_bigendian=no \
@@ -26,7 +27,7 @@ ax_cv_c_float_words_bigendian=no \
     --with-ensurepip=yes \
     --without-doc-strings
 
-make
+make EXTRA_CFLAGS="$CFLAGS -DTHREAD_STACK_SIZE=0x100000"
 make DESTDIR="$1" install
 
 ln -s python3 "$1/usr/bin/python"

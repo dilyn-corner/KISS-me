@@ -1,2 +1,3 @@
 https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tar.xz
+patches/pyc-hash.patch
 patches/python3-always-pip.patch
