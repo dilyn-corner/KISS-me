@@ -1,7 +1,6 @@
 cairo
 freetype-harfbuzz
 libdrm
-libevdev
 libinput
 libpng
 libxkbcommon
