@@ -38,9 +38,8 @@ log genhash nbperf libterminfo/hash.c
     libterminfo/term.h \
     nbperf/nbperf > libterminfo/hash.c
 
-cp libterminfo/hash.c tic/hash.c
-
 log CC hash.o hash.c
+cp libterminfo/hash.c tic/hash.c
 ${CC:-cc} $IFLAGS $NFLAGS $CFLAGS \
     -c -o tic/hash.o tic/hash.c
 
@@ -67,35 +66,23 @@ log genthash nbperf libterminfo/termcap_hash.c
     libterminfo/termcap_map.c \
     nbperf/nbperf > libterminfo/termcap_hash.c
 
-log CC libterminfo/termcap.o libterminfo/termcap.c
-${CC:-cc} $IFLAGS $NFLAGS $CFLAGS -c -o \
-    libterminfo/termcap.o libterminfo/termcap.c
-
-for file in libcurses/*.c; do
-    case "$file" in
-        libcurses/tscroll.c) ;;
-        *) log CC "${file%%.c}.o" "$file"
-           ${CC:-cc} $IFLAGS -DHAVE_WCHAR $CFLAGS \
-               -c -o "${file%%.c}.o" "$file"
-        ;;
-    esac
-done
-
-for file in libpanel/*.c libmenu/*.c libform/*.c tset/*.c \
-            tput/tput.c infocmp/infocmp.c tabs/tabs.c; do
+rm -f libcurses/tscroll.c
+for file in libterminfo/termcap.c libcurses/*.c libpanel/*.c \
+            libmenu/*.c libform/*.c tset/*.c tput/tput.c     \
+            infocmp/infocmp.c tabs/tabs.c; do
     log CC "${file%%.c}.o" "$file"
-    ${CC:-cc} $IFLAGS -DHAVE_WCHAR $CFLAGS \
+    ${CC:-cc} $IFLAGS $CFLAGS \
         -c -o "${file%%.c}.o" "$file"
 done
 
 for lib in libterminfo libcurses libpanel libmenu libform; do
     log AR "$lib" "${lib}.o"
-    ${AR:-ar} crs $lib/${lib}.a $lib/*.o
+    ${AR:-ar} crs "$lib/${lib}.a" $lib/*.o
 done
 
 for file in tset tput tabs infocmp; do
     log CCLD "$file" libterminfo.a
-    ${CC:-cc} -o $file/$file $file/*.o libterminfo/libterminfo.a -static
+    ${CC:-cc} -o "$file/$file" $file/*.o libterminfo/libterminfo.a -static
 done
 
 # Install binaries, libraries, headers, and pkgconfig files
@@ -112,7 +99,7 @@ done
 for hdr in libmenu/eti.h libform/form.h libterminfo/term.h    \
            libmenu/menu.h libpanel/panel.h libcurses/curses.h \
            libcurses/unctrl.h libterminfo/termcap.h; do
-    install -Dm644 "$hdr" "$1/usr/include/${hdr%*/}"
+    install -Dm644 "$hdr" "$1/usr/include/${hdr#*/}"
 done
 
 for pc in menu form formw menuw panel curses panelw \
