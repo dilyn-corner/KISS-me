@@ -1,4 +1,6 @@
 diff --git a/bin/simevent b/bin/simevent
+--- a/bin/simevent
++++ b/bin/simevent
 @@ -3,16 +3,12 @@
  # Simulate add/remove events by writing directly
  # into the uevent files.

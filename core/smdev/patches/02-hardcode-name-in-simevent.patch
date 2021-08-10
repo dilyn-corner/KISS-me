@@ -1,4 +1,6 @@
 diff --git a/bin/simevent b/bin/simevent
+--- a/bin/simevent
++++ b/bin/simevent
 @@ -4,9 +4,7 @@
  # into the uevent files.
  
