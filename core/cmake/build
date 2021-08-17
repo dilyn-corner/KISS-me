@@ -17,8 +17,8 @@ if kiss l cmake; then
         -DCMAKE_USE_SYSTEM_BZIP2=True \
         -DCMAKE_USE_SYSTEM_EXPAT=True \
         -DCMAKE_USE_SYSTEM_LIBLZMA=True \
-        -DBUILD_CursesDialog=False \
-        -DBUILD_TESTING=False
+        -DBUILD_TESTING=False \
+        -DBUILD_CursesDialog=False
 
     cmake --build   build
     cmake --install build
@@ -32,8 +32,8 @@ else
         --system-bzip2 \
         --system-expat \
         --system-liblzma \
-        -- -DBUILD_CursesDialog=False \
-        -DBUILD_TESTING=False
+        -- -DBUILD_TESTING=False \
+        -DBUILD_CursesDialog=False
 
     make
     make DESTDIR="$1" install
