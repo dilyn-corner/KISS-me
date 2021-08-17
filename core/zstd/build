@@ -1,57 +1,77 @@
 #!/bin/sh -e
+# Intentional, globbing disabled; environment variable
+# shellcheck disable=2086,2153
 
-build_zstd() (
+log() {
+    printf '%s\n' "---  $3  ---"
+    printf '%s %s %s\n' "$@"
+}
 
-    HAVE_ZLIB=1
-    HAVE_LZMA=1
-    HAVE_THREAD=1
-    
-    cd programs
-    
-    export CFLAGS="$CFLAGS -static -pthread"
-    export LDFLAGS="$LDFLAGS -static"
-    
-    gmake \
-        CC=clang \
-        zstd-pgo
+mkdir bbin blib
 
-    gmake \
-        PREFIX=/usr \
-        DESTDIR="$1" \
-        install
+CPPFLAGS="-DXXH_NAMESPACE=ZSTD_ -DDEBUGLEVEL=0 -DZSTD_MULTITHREAD   \
+          -DZSTD_GZCOMPRESS -DZSTD_GZDECOMPRESS -DZSTD_LZMACOMPRESS \
+          -DZSTD_LZMADECOMPRESS"
+LTO="-flto -ffat-lto-objects -fuse-linker-plugin -ffunction-sections \
+     -fdata-sections -fmerge-all-constants -Wl,--gc-sections         \
+     -Wl,-z,norelro -Wno-unused-command-line-argument                \
+     -Wno-ignored-optimization-argument"
+LIBS="-lz -llzma"
+LFLAGS="$CFLAGS $CPPFLAGS $LTO"
+FLAGS="$CFLAGS $CPPFLAGS -static -pthread"
 
-    # Symlink for all the things we built in
-    for bin in gzip lzma xz zcat ungz unlzma unxz; do
-        ln -s zstd "$1/usr/bin/$bin"
-    done
-)
+for file in lib/common/*.c lib/compress/*.c lib/decompress/*.c \
+            lib/dictBuilder/*.c programs/*.c; do
+    filen=${file##*/}
+    log CC "${filen%%.c}.o" "$filen"
+    ${CC:-cc} $FLAGS -fprofile-generate -c -o "bbin/${filen%%.c}.o" "$file"
+done
 
-build_libzstd() (
+log CCLD zstd xxx.o
+${CC:-cc} $FLAGS $LIBS -fprofile-generate bbin/*.o -o bbin/zstd
 
-    cd lib
-    
-    export CFLAGS="$CFLAGS -flto -ffat-lto-objects -fuse-linker-plugin \
-                           -ffunction-sections -fdata-sections \
-                           -fmerge-all-constants \
-                           -Wl,--gc-sections -Wl,-z,norelro \
-                           -Wno-unused-command-line-argument \
-                           -Wno-ignored-optimization-argument"
+for bench in b19i1 b16i1 b9i2 b b7i2 b5; do
+    ./bbin/zstd -$bench
+done
 
-    gmake \
-        PREFIX=/usr \
-        libzstd.a \
-        libzstd.pc
+llvm-profdata merge -output=default.profdata default*.profraw
+rm -f bbin/*
 
-    gmake \
-        PREFIX=/usr \
-        DESTDIR="$1" \
-        install-pc \
-        install-static \
-        install-includes
-)
+for file in lib/common/*.c lib/compress/*.c lib/decompress/*.c \
+            lib/dictBuilder/*.c programs/*.c; do
+    filen=${file##*/}
+    log CC "${filen%%.c}.o" "$filen"
+    ${CC:-cc} $FLAGS -fprofile-use -c -o "bbin/${filen%%.c}.o" "$file"
+done
 
-build_zstd "$1"
-build_libzstd "$1"
+log CCLD zstd xxx.o
+${CC:-cc} $FLAGS $LIBS -fprofile-use bbin/*.o -o bbin/zstd
 
-# Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/zstd.license"
+for file in lib/common/*.c lib/compress/*.c \
+            lib/decompress/*.c lib/dictBuilder/*.c; do
+    filen=${file##*/}
+    log CC "${filen%%.c}.o" "$filen"
+    ${CC:-cc} $LFLAGS -c -o "blib/${filen%%.c}.o" "$file"
+done
+
+log AR libzstd.a xxx.o
+ar rcs blib/libzstd.a blib/*.o
+
+sed -i "s%@VERSION@%$2%g"              lib/libzstd.pc.in
+sed -i "s%@PREFIX@%/usr%g"             lib/libzstd.pc.in
+sed -i "s%@LIBDIR@%/usr/lib%g"         lib/libzstd.pc.in
+sed -i "s%@EXEC_PREFIX@%/usr/bin%g"    lib/libzstd.pc.in
+sed -i "s%@INCLUDEDIR@%/usr/include%g" lib/libzstd.pc.in
+
+install -Dm755 bbin/zstd         "$1/usr/bin/zstd"
+install -Dm755 programs/zstdless "$1/usr/bin/zstdless"
+install -Dm755 programs/zstdgrep "$1/usr/bin/zstdgrep"
+install -Dm644 blib/libzstd.a    "$1/usr/lib/libzstd.a"
+install -Dm644 lib/zstd.h        "$1/usr/include/zstd.h"
+install -Dm644 lib/zdict.h       "$1/usr/include/zdict.h"
+install -Dm644 lib/zstd_errors.h "$1/usr/include/zstd_errors.h"
+install -Dm644 lib/libzstd.pc.in "$1/usr/lib/pkgconfig/libzstd.pc"
+
+for bin in gzip lzma xz zcat ungz unlzma unxz unzstd zstdcat zstdmt; do
+    ln -sf zstd "$1/usr/bin/$bin"
+done

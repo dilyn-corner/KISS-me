@@ -1,3 +1,2 @@
-gmake make
-xz    make
-zlib  make
+xz   make
+zlib make
