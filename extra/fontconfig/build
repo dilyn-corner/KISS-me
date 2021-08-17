@@ -1,27 +1,21 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
+# Make the build system run /bin/true to generate
+# a dummy file so our pre-generated one is used.
+sed -i 's/fcobjshash\.h/fcjunk.h/' src/Makefile.in
 
-# The meson project is under the impression that
-# freetype isn't on major version 6...
-sed -i 's/21.0.15/2.10.4/' meson.build
-
-meson \
+./configure \
+    GPERF=/bin/true \
     --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    --buildtype=release \
-    -Ddefault_library=both \
-    -Ddoc=disabled \
-    -Dnls=disabled \
-    -Dtests=disabled \
-    -Ddoc-pdf=disabled \
-    -Ddoc-man=disabled \
-    -Ddoc-txt=disabled \
-    -Ddoc-html=disabled \
-    . build
+    --with-xmldir=/etc/fonts \
+    --enable-static \
+    --disable-docs \
+    --disable-nls
 
-ninja -C build
-ninja -C build install
+make
+make DESTDIR="$1" install
 
+# Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/fontconfig.license"
