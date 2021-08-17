@@ -3,7 +3,6 @@ byacc              make
 bzip2
 fontconfig
 freetype-harfbuzz
-gperf              make
 libdrm
 libwebp
 libxkbcommon

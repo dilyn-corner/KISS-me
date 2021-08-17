@@ -1,6 +1,7 @@
 https://commondatastorage.googleapis.com/chromium-browser-official/chromium-92.0.4515.107.tar.xz
 https://github.com/stha09/chromium-patches/releases/download/chromium-92-patchset-7/chromium-92-patchset-7.tar.xz
 git+https://github.com/Ahrotahn/ungoogled-chromium#4ee8b57c6e2c285ab80ce9f2a0d70e6e2844cb6b ungoogled-chromium
+https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz gperf
 files/chromium.sh
 patches/chromium-optional-atk-dbus.patch
 patches/chromium-sql-make-VirtualCursor-standard-layout-type.patch

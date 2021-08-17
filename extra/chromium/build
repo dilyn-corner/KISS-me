@@ -1,5 +1,17 @@
 #!/bin/sh -e
 
+(
+    cd gperf
+
+    ./configure \
+        --prefix=/usr
+
+    make -B
+    make -B DESTDIR="$PWD/../garbo" install
+)
+
+export PATH="$PWD/garbo/usr/bin:$PATH"
+
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
