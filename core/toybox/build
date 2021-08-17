@@ -5,7 +5,7 @@ patch -p1 < POSIX.patch
 gmake LDFLAGS="$LDFLAGS --static"
 gmake PREFIX="$1/usr/bin" install_flat
 
-chmod +s "$1/usr/bin/toybox"
+chmod u+s "$1/usr/bin/toybox"
 
 # Dangerous
 unlink "$1/usr/bin/sh"
