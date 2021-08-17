@@ -15,7 +15,7 @@ ln -s pax "$1/usr/bin/tar"
 ln -s pax "$1/usr/bin/cpio"
 
 # doas needs setuid, nice conf
-chmod g+s "$1/usr/bin/doas"
+chmod gu+s "$1/usr/bin/doas"
 
 install -Dm600 doas.conf "$1/etc/doas.conf"
 
