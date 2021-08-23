@@ -1,12 +1,16 @@
 #!/bin/sh -e
 
+sed -i 's/\(curl_LDADD =\)/\1 -all-static/' src/Makefile.in
+
 ./configure \
     --prefix=/usr \
     --enable-ipv6 \
+    --enable-optimize \
     --enable-unix-sockets \
     --enable-hidden-symbols \
     --disable-ares \
     --disable-ldap \
+    --disable-debug \
     --disable-manual \
     --without-icu \
     --without-libpsl \
@@ -17,7 +21,7 @@
     --with-openssl \
     --with-ca-fallback
 
-make curl_LDFLAGS=-all-static
+make
 make DESTDIR="$1" install
 
 # Install the license
