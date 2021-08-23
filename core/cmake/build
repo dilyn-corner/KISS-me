@@ -5,6 +5,11 @@ patch -p1 < cmake-no-execinfo.patch
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
+sed -i 's,curses_version,baudrate,'   \
+    Source/Checks/Curses/CheckCurses.c
+sed -i 's,defined(HAVE_LIBCRYPTO),0,' \
+    Utilities/cmlibarchive/libarchive/archive_hmac.c
+
 if kiss l cmake; then
     export DESTDIR="$1"
 
@@ -17,8 +22,7 @@ if kiss l cmake; then
         -DCMAKE_USE_SYSTEM_BZIP2=True \
         -DCMAKE_USE_SYSTEM_EXPAT=True \
         -DCMAKE_USE_SYSTEM_LIBLZMA=True \
-        -DBUILD_TESTING=False \
-        -DBUILD_CursesDialog=False
+        -DBUILD_TESTING=False
 
     cmake --build   build
     cmake --install build
@@ -32,15 +36,15 @@ else
         --system-bzip2 \
         --system-expat \
         --system-liblzma \
-        -- -DBUILD_TESTING=False \
-        -DBUILD_CursesDialog=False
+        -- -DBUILD_TESTING=False
 
     make
+
     make DESTDIR="$1" install
 fi
 
 rm -rf "$1/usr/doc"
-rm -rf "$1/usr/share/cmake"*/Help
+rm -rf "$1/usr/share/cmake*/Help"
 
 # Install the license
 install -Dm755 Copyright.txt "$1/usr/share/LICENSES/cmake.license"
