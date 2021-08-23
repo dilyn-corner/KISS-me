@@ -18,7 +18,7 @@ export TOOL_TIC=tic/host_tic
 export TOOL_SORT=sort
 export TOOL_NBPERF=nbperf/nbperf
 export TERMINFODIR=./terminfo
-export CFLAGS="$CFLAGS -Wno-macro-redefined"
+export CFLAGS="$CFLAGS -fPIC -Wno-macro-redefined"
 export IFLAGS="-I. -I./libterminfo -I./tic -I./libcurses \
                -I./libmenu -I./libform -I./libpanel"
 export NFLAGS="-DHAVE_WCHAR -DTERMINFO_COMPILE -DTERMINFO_DB \
@@ -85,15 +85,37 @@ for file in tset tput tabs infocmp; do
     ${CC:-cc} -o "$file/$file" $file/*.o libterminfo/libterminfo.a -static
 done
 
+log CCLD libterminfo.sh xxx.o
+cc -shared -o libterminfo/libterminfo.so \
+    libterminfo/*.o -Wl,-soname=libterminfo.so
+log CCLD libcurses.so xxx.o
+cc -shared -o libcurses/libcurses.so \
+    libcurses/*.o libterminfo/libterminfo.so -Wl,-soname=libcurses.so
+log CCLD libpanel.so xxx.o
+cc -shared -o libpanel/libpanel.so \
+    libpanel/*.o libcurses/libcurses.so -Wl,-soname=libpanel.so
+log CCLD libmenu.so xxx.o
+cc -shared -o libmenu/libmenu.so \
+    libmenu/*.o libcurses/libcurses.so -Wl,-soname=libmenu.so
+log CCLD libform.so xxx.o
+cc -shared -o libform/libform.so \
+    libform/*.o libcurses/libcurses.so -Wl,-soname=libform.so
+
 # Install binaries, libraries, headers, and pkgconfig files
+install -Dm755 tput/clear.sh "$1/usr/bin/clear"
+
 for bin in tabs tput tset infocmp; do
     install -Dm755 "$bin/$bin" "$1/usr/bin/$bin"
 done
 
-install -Dm755 tput/clear.sh "$1/usr/bin/clear"
-
 for lib in libform libmenu libpanel libcurses libterminfo; do
-    install -Dm644 "$lib/${lib}.a" "$1/usr/lib/${lib}.a"
+    install -Dm644 "$lib/${lib}.a"  "$1/usr/lib/${lib}.a"
+    install -Dm644 "$lib/${lib}.so" "$1/usr/lib/${lib}.so"
+done
+
+for pc in menu form formw menuw panel curses panelw \
+          ncurses termcap ncursesw terminfo; do
+    install -Dm644 "${pc}.pc" "$1/usr/lib/pkgconfig/${pc}.pc"
 done
 
 for hdr in libmenu/eti.h libform/form.h libterminfo/term.h    \
@@ -102,20 +124,23 @@ for hdr in libmenu/eti.h libform/form.h libterminfo/term.h    \
     install -Dm644 "$hdr" "$1/usr/include/${hdr#*/}"
 done
 
-for pc in menu form formw menuw panel curses panelw \
-          ncurses termcap ncursesw terminfo; do
-    install -Dm644 "${pc}.pc" "$1/usr/lib/pkgconfig/${pc}.pc"
-done
-
 # Create symlinks that are expected to exist
-ln -sf tset          "$1/usr/bin/reset"
-ln -sf libmenu.a     "$1/usr/lib/libmenuw.a"
-ln -sf libform.a     "$1/usr/lib/libformw.a"
-ln -sf libpanel.a    "$1/usr/lib/libpanelw.a"
-ln -sf libcurses.a   "$1/usr/lib/libncurses.a"
-ln -sf libterminfo.a "$1/usr/lib/libtermcap.a"
-ln -sf libcurses.a   "$1/usr/lib/libncursesw.a"
-ln -sf curses.h      "$1/usr/include/ncurses.h"
+ln -sf tset           "$1/usr/bin/reset"
+ln -sf curses.h       "$1/usr/include/ncurses.h"
+
+ln -sf libmenu.a      "$1/usr/lib/libmenuw.a"
+ln -sf libform.a      "$1/usr/lib/libformw.a"
+ln -sf libpanel.a     "$1/usr/lib/libpanelw.a"
+ln -sf libcurses.a    "$1/usr/lib/libncurses.a"
+ln -sf libterminfo.a  "$1/usr/lib/libtermcap.a"
+ln -sf libcurses.a    "$1/usr/lib/libncursesw.a"
+
+ln -sf libmenu.so     "$1/usr/lib/libmenuw.so"
+ln -sf libform.so     "$1/usr/lib/libformw.so"
+ln -sf libpanel.so    "$1/usr/lib/libpanelw.so"
+ln -sf libterminfo.so "$1/usr/lib/libtermcap.so"
+ln -sf libcurses.so   "$1/usr/lib/libncurses.so"
+ln -sf libcurses.so   "$1/usr/lib/libncursesw.so"
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/netbsd-curses.license"
