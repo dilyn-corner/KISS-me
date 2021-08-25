@@ -10,15 +10,11 @@ The master branch is for:
 1) A self-maintained 'fork' of wyverkiss https://github.com/wyvertux/wyverkiss
 2) NonGNU experimentation
 
-The wyverkiss-static branch is for:
-1) A (mostly) completely static system
-2) Experimenting with minimalism
-3) NonGNU experimentation
-
 Other branches are for:
 1) Staging things prior to submitting them to Community
 2) for things I know will never be accepted to Community
 3) for forks
+4) Strangeness
 
 
 The structure of this repository
@@ -29,9 +25,9 @@ system; use it as a reference for building packages. As an example, many build
 scripts have been modified to make use of meson or cmake when available, leaving
 perhaps a large amount of overhead in the build system. Not to mention the fact
 that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
-much of the core system has changed to include e.g. toybox, nawk, and
-libarchive. A lot of utilities are gone because of dropping busybox, but I would
-like to assume that I'll be just fine.  We will see. Some current issues:
+much of the core system has changed to include e.g. toybox, nawk, and pax. A lot
+of utilities are gone because of dropping busybox, but I would like to assume
+that I'll be just fine.  We will see. Some current issues:
 
 * toybox mdev does NOT work. Use something else, or handle /dev perms manually.
 * python expects gnugrep; endianness must be specified.
@@ -51,8 +47,8 @@ get there for the most part! The real question is how one feels about
 GPL-compatible (what I would think of as semi-GPL) licenses (PSF, MPL).
 
 Finally, the list doesn't go into the nuances of several licenses. Big examples
-are things like mesa or llvm - projects which inherit extra licenses because
-of code blobs they borrow. In general, I am semi-fine with this (if not wholly
+are things like mesa or llvm - projects which inherit extra licenses because of
+code blobs they borrow. In general, I am semi-fine with this (if not wholly
 forced to accept it).
 
 NOTE: chromium is built using some bundled libs and programs, the biggest being
