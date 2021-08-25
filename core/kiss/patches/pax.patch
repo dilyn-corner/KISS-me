@@ -82,21 +82,3 @@
  
      # Naively assume that the existence of a manifest file is all that
      # determines a valid KISS package from an invalid one. This should be a
---- a/contrib/kiss-export
-+++ b/contrib/kiss-export
-@@ -1,5 +1,5 @@
- #!/bin/sh -ef
--# Turn an installed package into a KISS tarball
-+# Turn an installed package into a KISS archive
- 
- db=$KISS_ROOT/var/db/kiss/installed
- pkg=${1:-"${PWD##*/}"}
-@@ -21,7 +21,7 @@
- 
- dest="$OLDPWD/$pkg@$ver-$rel.tar.${KISS_COMPRESS:-gz}"
- 
--tar cf - "$@" | case ${KISS_COMPRESS:-gz} in
-+pax -w "$@" | case ${KISS_COMPRESS:-gz} in
-     bz2)  bzip2 -z ;;
-     gz)   gzip -6  ;;
-     lzma) lzma -z  ;;

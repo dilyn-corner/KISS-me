@@ -6,8 +6,8 @@
          # orphans. Exclude them from the list.
 -        baseinit|baselayout|gcc|e2fsprogs|musl|\
 -        make|busybox|bzip2|grub|kiss|git)
-+        b3sum|baselayout|dash|hummingbird|kiss|llvm|\
-+        make|musl|nawk|pax|openntpd|sm|toybox|zfs|zstd)
++        b3sum|baselayout|hummingbird|kiss|llvm|make|\
++        musl|nawk|pax|oksh|openntpd|sm|toybox|zfs|zstd)
              continue
      esac
  
@@ -36,24 +36,3 @@
          linux-headers)
              remote=linux
          ;;
---- a/contrib/kiss-export
-+++ b/contrib/kiss-export
-@@ -22,12 +22,12 @@
- dest="$OLDPWD/$pkg@$ver-$rel.tar.${KISS_COMPRESS:-gz}"
- 
- pax -w "$@" | case ${KISS_COMPRESS:-gz} in
--    bz2)  bzip2 -z ;;
--    gz)   gzip -6  ;;
--    lzma) lzma -z  ;;
--    lz)   lzip -z  ;;
--    xz)   xz -zT 0 ;;
--    zst)  zstd -z  ;;
-+    bz2)  bzip2 -z  ;;
-+    gz)   gzip -6   ;;
-+    lzma) lzma -z   ;;
-+    lz)   lzip -z   ;;
-+    xz)   xz -zT0   ;;
-+    zst)  zstd -zT0 ;;
- esac > "$dest"
- 
- printf 'created %s\n' "$dest"
