@@ -67,7 +67,7 @@ ffmpeg and x264. This makes chromium de facto GPL.
     | bzip2             | bzip2         | cairo             | MPLv1.1       |
     | cmake             | BSD 3-Clause  | chromium          | BSD 3-Clause  |
     | curl              | MIT           | cozette-font      | MIT           |
-    | dash              | BSD           | dhcpcd            | BSD           |
+    | oksh              | Public Domain | dhcpcd            | BSD           |
     | flex              | BSD 2-Clause  | expat             | MIT           |
     | fossil            | BSD 2-Clause  | fontconfig        | MIT           |
     | hummingbird       | MIT           | freetype-harfbuzz | BSD           |
@@ -90,26 +90,24 @@ ffmpeg and x264. This makes chromium de facto GPL.
     | zstd              | BSD 3-Clause  | netbsd-curses     | BSD 3-Clause  |
     +-------------------+---------------+ nodejs            | MIT           |
     | WAYLAND           | LICENSE       | nss               | MPLv2         |
-    +-------------------+---------------+ oksh              | Public Domain |
-    | foot              | MIT           | openssh           | BSD           |
-    | grim              | MIT           | opus              | BSD 3-Clause  |
-    | libxkcommon       | MIT           | pash              | MIT           |
-    | seatd             | MIT           | pixman            | MIT           |
-    | wayfire           | MIT           | pkgconf           | ISC           |
-    | wayland           | MIT           | perl              | Artistic      |
-    | wayland-protocols | MIT           | python            | PSFv2         |
-    | wbg               | MIT           | python2           | PSFv2         |
-    | wev               | MIT           | rust              | APACHE/MIT    |
-    | wl-clipboard-rs   | MIT           | sqlite            | Public Domain |
-    | wlroots           | MIT           | tzdata            | Public Domain |
-    | xkeyboard-config  | MIT           | vim               | Vim           |
-    +-------------------+---------------+-------------------+---------------+
+    +-------------------+---------------+ openssh           | BSD           |
+    | foot              | MIT           | opus              | BSD 3-Clause  |
+    | grim              | MIT           | pash              | MIT           |
+    | libxkcommon       | MIT           | pixman            | MIT           |
+    | seatd             | MIT           | pkgconf           | ISC           |
+    | wayfire           | MIT           | perl              | Artistic      |
+    | wayland           | MIT           | python            | PSFv2         |
+    | wayland-protocols | MIT           | python2           | PSFv2         |
+    | wbg               | MIT           | rust              | APACHE/MIT    |
+    | wev               | MIT           | sqlite            | Public Domain |
+    | wl-clipboard-rs   | MIT           | tzdata            | Public Domain |
+    | wlroots           | MIT           | vim               | Vim           |
+    | xkeyboard-config  | MIT           +-------------------+---------------+
+    +-------------------+---------------+
     | GPL               | LICENSE       |
     +-------------------+---------------+
     | alsa-lib          | GPLv2.1       |
     | alsa-utils        | GPLv2         |
-    | gmake             | GPLv3         |
-    | gperf             | GPLv3         |
     | libelf            | GPLv3         |
     | linux-headers     | GPLv2         |
     | util-linux        | GPLv2         |
@@ -216,32 +214,41 @@ H2fRPQaiSQA/XL3QGgh+C+BYwdCxCHPsX41EvadnT27ms0SxeSk6RCpAwB26tA8O
 ueHYEEVRSRJCakOsidP4uomJAxYlPj35zvvYAfEcyMYc3ts3Xd/6FjpGHRYBhNv9
 BuIPvKvQaDepnd4MLXiddhNkMxOa38VxX3Y1xyi5QTAdEfyzMvuftUYS7q4xL/P1
 TYE2sdI3LG36TDx6qrQpRGlseW4gQ29ybmVyIDxkaWx5bi5jb3JuZXJAazFzc2xp
-bnV4Lm9yZz6JAbgEEwECACIFAmB5tAgCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4B
-AheAAAoJENpKtzHUw/E9qKMMALIWkHafXs1aaDAM2sXXfYUPQVrFWmRiaM/eAKBY
-l2KBJw124Wa8SQzRDu/IHxQffDqVn8ShURocUWqXpJepjOnBGb1y5FViUME9hSRS
-cxn+14xPHquRQMUCUvCHU48HjcDFOTXBzmA8oezuRO/pzqWJhVFaHWl+M/j15l1C
-I5k/hZ/Kv9Mja9lSoMYGHZ/v2+OzLWtXR9qfdQn81AkWNgj8cuR+VuHgxD0g51i+
-hsTXJ35vQ6Wghoh7LXNlj3RShsR+dU5E/6HJlpYVsPve/x7CUWGENO7FAQYN0eFr
-rrXg6uq8dT1SzHR276yUcienm7YkEoKhEhYOhPc0EYQswCoDrDvMTWMNsT7cZ8fP
-S+sbtIiZNAs/Qz4UFzZKVjq/i7LCItqQjJNAHgd8lUQik3J7P0K5v3xicmjM3ri0
-MlPVshcnIc8GF6H54Fq6mcQ8biI7oPzKG62NuMi8GqLTYWVxP+f0yICobyQmB8dx
-zSZA7mZTlgG0TVyPxOyqUv+7mbkBjQRciFDEAQwAyC8EcDVfoxQB4UBYXJltSwsL
-e2azNaZqw+fQbk4jJKv9bNwwm+QFxGrcSLsacqStbkETO8QKC1Qv/9MDDC/2qklD
-4joyzcGFKnOUFncOcvemf1cwoEgYSebPZH8VPmZj7e8jLo170IOR0qr44rd0tP0P
-ElM3IFXB+Z6YFR1Z/nV5gLLf4igZpcgFcKIhLW0/jLoykix+fW091SlyL2VopLJJ
-rrVMJa19eoUdOt9OQ2z3Vl+oTkQ6RWD0ZNrP6Ty8I6+2FUxVQuRjb0n9JLHmN6mk
-zlm3FxuzMpmqZH7ylxQ16pkOUODRAkpUAnAmVTfIFiKhfPm46pHKuuY8g11ju2AJ
-G5wvjwU4pLPnoR0BsNMPofh+158wF3d/fs2rfmb+taZeRixKsSZ8lLps6lyM905t
-FpZpc2oG5p4rrqTY86Q5tS3IwrYydDfh5aUQz6J8Yqdz/fo0iTkrzAkstdHQv5xB
-iZBOuq0lkNQOVrovk8L+yLmloP4VucElkbzmGbK7ABEBAAGJAZ8EGAEKAAkFglyI
-UMQCmwwACgkQ2kq3MdTD8T0qWQv9Gv5rGHL/gcVW199YZB1LikIDNmjxmV177BV4
-Lgx+ac+EVEamLWcpbqHmpGn9K/UPg3KqxpQmxjOcBdR0l9UcioVtfj7y7/vgRi86
-6g3/OuUH+vmNpLhAK8krURCOX04La3geybyAXIZT6blQa1KylE2KLeqjsJUkjoVP
-v9uZIoTnIEaY8LCshsQzUmBgq20ZuhsVyVyxmbBeMePkhR1trf5JTi3mI1X66AdG
-LHFHczhRnoxlXNrfjqR5iRoG3070gU6KoOyWK/6zeIJfEPDkP5zsE6aRYeoSiNj4
-7Frl2sHr/F94XrhKPeDTTmlai+XuuZrlnyXjwVdfqsEf5w8Va1pMMBQt8ux6qkUp
-xZzjy/ih3pV4BKDdGV4NQO9VKBwwQHKYi6T295rBaQ+2Z0ey0kDnCfWdb9/HHMc2
-YZSQflBgdxrnnFiK8wnADPGA3fzL/9F+fNysX9Ypg2N7pkTbvz7WOqhgDf3D+jXt
-eVUxgq9KFTjDC7NBgOvvveXb5ccd
-=ERKU
+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
+YA39w/o17XlVMYKvShU4wwuzQYDr773l2+XHHQ==
+=LfSP
 -----END PGP PUBLIC KEY BLOCK-----
