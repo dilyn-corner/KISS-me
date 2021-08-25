@@ -1,14 +1,14 @@
 #!/bin/sh -e
 
+LDFLAGS="$LDFLAGS --static"
+
 patch -p1 < POSIX.patch
 
-gmake LDFLAGS="$LDFLAGS --static"
-gmake PREFIX="$1/usr/bin" install_flat
+# Very conveniently, we can evade gmake
+./scripts/make.sh
+PREFIX="$1/usr/bin" ./scripts/install.sh --symlink --force
 
 chmod u+s "$1/usr/bin/toybox"
-
-# Dangerous
-unlink "$1/usr/bin/sh"
 
 # Install some important files
 install -Dm644 mdev.conf "$1/etc/mdev.conf"
