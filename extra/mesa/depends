@@ -1,7 +1,7 @@
 byacc             make
+elftoolchain
 flex              make
 libdrm
-libelf
 linux-headers     make
 m4                make
 meson             make
