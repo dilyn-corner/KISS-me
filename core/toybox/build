@@ -8,7 +8,7 @@ patch -p1 < POSIX.patch
 ./scripts/make.sh
 PREFIX="$1/usr/bin" ./scripts/install.sh --symlink --force
 
-chmod u+s "$1/usr/bin/toybox"
+chmod gu+s "$1/usr/bin/toybox"
 
 # Install some important files
 install -Dm644 mdev.conf "$1/etc/mdev.conf"
