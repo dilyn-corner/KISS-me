@@ -1,5 +1,27 @@
 #!/bin/sh -e
 
+log() {
+    printf '%s\n' "---  $3  ---"
+    printf '%s %s %s\n' "$@"
+}
+
+# Bundle lib{blk,uu}id
+(
+    cd util-linux
+
+    CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+    CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+    ./configure \
+        --disable-all-programs \
+        --disable-shared \
+        --enable-libuuid \
+        --enable-libblkid
+
+    make
+    make DESTDIR="$PWD/../garbo" install
+)
+
 # Bundle libtirpc
 (
     cd libtirpc
@@ -11,40 +33,500 @@
         --disable-gssapi
 
     make
-    make DESTDIR="$PWD/../tirp" install
+    make DESTDIR="$PWD/../garbo" install
 )
 
-export CFLAGS="$CFLAGS -I$PWD/tirp/usr/include/tirpc"
-export CXXFLAGS="$CXXFLAGS -I$PWD/tirp/usr/include/tirpc"
-export LDFLAGS="$LDFLAGS -L$PWD/tirp/usr/lib"
-
-# toybox doesn't support these options
-sed -i -- 's/--in-place/-i/g' configure
-sed -i -- 's/rm -R/rm -r/g'   configure
+# Use nicer options
+sed -i 's/rm -R/rm -r/g'   configure
+sed -i 's/--in-place/-i/g' configure
 
 ./configure \
-    PKG_CONFIG_LIBDIR="$PWD/tirp/usr/lib/pkgconfig" \
+    CFLAGS="$CFLAGS -L$PWD/garbo/usr/lib" \
+    LIBUUID_CFLAGS="-I$PWD/garbo/usr/include" \
+    LIBBLKID_CFLAGS="-I$PWD/garbo/usr/include" \
+    LIBTIRPC_CFLAGS="-I$PWD/garbo/usr/include/tirpc" \
     --prefix=/usr \
     --sysconfdir=/etc \
     --libdir=/usr/lib \
     --sbindir=/usr/bin \
-    --with-mounthelperdir=/usr/bin \
+    --libexecdir=/usr/lib \
     --disable-nls \
     --disable-pam \
+    --disable-rpath \
     --disable-shared \
     --disable-systemd \
     --disable-sysvinit \
-    --with-config=user
+    --with-config=user \
+    --with-mounthelperdir=/usr/bin \
+    --without-udevdir \
+    --without-systemdunitdir \
+    --without-systemdpresetdir \
+    --without-systemdgeneratordir \
+    --without-systemdmodulesloaddir
 
-gmake \
-    LDFLAGS="$LDFLAGS --static" \
-    DESTDIR="$1" \
-    install
+FLAGS="-I./include -I./module/icp/include -I./lib/libspl/include              \
+       -I./lib/libspl/include/os/linux -DHAVE_CONFIG_H -include               \
+       zfs_config.h -D_GNU_SOURCE -D_REENTRANT -D_FILE_OFFSET_BITS=64         \
+       -D_LARGEFILE64_SOURCE -DHAVE_LARGE_STACKS=1 -DLIBEXECDIR=\"/usr/lib\"  \
+       -DRUNSTATEDIR=\"/usr/var/run\" -DSBINDIR=\"/usr/bin\"                  \
+       -DSYSCONFDIR=\"/etc\" -DPKGDATADIR=\"/usr/share/zfs\" -UDEBUG -DNDEBUG \
+       -DTEXT_DOMAIN=\"zfs-linux-user\" -std=gnu99 -fno-strict-aliasing       \
+       -Wno-missing-prototypes -Wno-macro-redefined"
 
-# Remove some useless directories
-rm -rf "$1/etc/sudoers.d"
-rm -rf "$1/usr/lib/udev"
-rm -rf "$1/usr/lib/dracut"
+FLAGS="$FLAGS $CFLAGS"
+
+mkdir -p obj/libavl obj/libicp obj/libshare obj/libspl obj/libtpool obj/zstd   \
+         obj/libefi obj/libnvpair obj/libzutil obj/libunicode obj/libuutil     \
+         obj/libzfs_core obj/libzfs obj/libzpool obj/libzfsbootenv obj/zfs     \
+         obj/zpool obj/zed obj/zdb obj/zhack obj/zinject obj/zstream obj/ztest \
+         obj/raidz_test obj/zfs_ids_to_path obj/zpool_influxdb obj/mount_zfs   \
+         obj/zed obj/zgenhostid "$1/usr/include" "$1/etc/zfs" "$1/etc/default" \
+         "$1/etc/zfs/zed.d" "$1/usr/lib/pkgconfig" "$1/etc/zfs/zpool.d"
+
+# The absolute state of this header structure
+cp -rf include                                     \
+    "$1/usr/include/libzfs"
+cp -rf lib/libspl/include                          \
+    "$1/usr/include/libspl"
+cp -rf include/os/linux/spl/sys/*.h                \
+    "$1/usr/include/libspl/sys"
+cp -f lib/libspl/include/util/sscanf.h             \
+    "$1/usr/include/libspl/sscanf.h"
+cp -f lib/libspl/include/os/linux/sys/mount.h      \
+    "$1/usr/include/libspl/sys/mount.h"
+cp -f lib/libspl/include/os/linux/sys/mnttab.h     \
+    "$1/usr/include/libspl/sys/mnttab.h"
+cp -f include/os/linux/zfs/sys/zfs_context_os.h    \
+    "$1/usr/include/libspl/sys/zfs_context_os.h"
+
+rm -rf cmd/zpool/zpool.d/README                    \
+       "$1/usr/include/libspl/util"                \
+       "$1/usr/include/libspl/sys/zmod.h"          \
+       "$1/usr/include/libspl/sys/wait.h"          \
+       "$1/usr/include/libspl/sys/vmsystm.h"       \
+       "$1/usr/include/libspl/sys/vmem.h"          \
+       "$1/usr/include/libspl/sys/vfs.h"           \
+       "$1/usr/include/libspl/sys/user.h"          \
+       "$1/usr/include/libspl/sys/tsd.h"           \
+       "$1/usr/include/libspl/sys/trace_taskq.h"   \
+       "$1/usr/include/libspl/sys/trace.h"         \
+       "$1/usr/include/libspl/sys/timer.h"         \
+       "$1/usr/include/libspl/sys/thread.h"        \
+       "$1/usr/include/libspl/sys/taskq.h"         \
+       "$1/usr/include/libspl/sys/signal.h"        \
+       "$1/usr/include/libspl/sys/sid.h"           \
+       "$1/usr/include/libspl/sys/shrinker.h"      \
+       "$1/usr/include/libspl/sys/rwlock.h"        \
+       "$1/usr/include/libspl/sys/random.h"        \
+       "$1/usr/include/libspl/sys/procfs_list.h"   \
+       "$1/usr/include/libspl/sys/proc.h"          \
+       "$1/usr/include/libspl/sys/mutex.h"         \
+       "$1/usr/include/libspl/sys/mod_os.h"        \
+       "$1/usr/include/libspl/sys/kmem_cache.h"    \
+       "$1/usr/include/libspl/sys/file.h"          \
+       "$1/usr/include/libspl/sys/fcntl.h"         \
+       "$1/usr/include/libspl/sys/disp.h"          \
+       "$1/usr/include/libspl/sys/ctype.h"         \
+       "$1/usr/include/libspl/sys/condvar.h"       \
+       "$1/usr/include/libspl/sys/callo.h"         \
+       "$1/usr/include/libspl/sys/atomic.h"        \
+       "$1/usr/include/libzfs/sys/zvol.h"          \
+       "$1/usr/include/libzfs/zfs_gitrev.h"        \
+       "$1/usr/include/libzfs/sys/zfs_ioctl.h"     \
+       "$1/usr/include/libzfs/sys/zvol_impl.h"     \
+       "$1/usr/include/libzfs/sys/zfs_onexit.h"    \
+       "$1/usr/include/libzfs/sys/zfs_ioctl_impl.h"
+
+find "$1/usr/include" -name os          -exec rm -rf {} +
+find "$1/usr/include" -name 'Makefile*' -exec rm  -f {} +
+
+log CC avl.o avl.c
+cc $FLAGS -c -o obj/libavl/avl.o module/avl/avl.c
+log AR libavl.a avl.o
+ar rcs libavl.a obj/libavl/avl.o
+
+for file in module/icp/spi/*.c module/icp/api/*.c module/icp/algs/aes/*.c \
+    module/icp/algs/edonr/*.c module/icp/algs/modes/*.c                   \
+    module/icp/algs/sha1/*.c module/icp/algs/sha2/*.c                     \
+    module/icp/algs/skein/*.c module/icp/*.c module/icp/io/*.c            \
+    module/icp/os/*.c module/icp/core/*.c module/icp/asm-x86_64/aes/*.S   \
+    module/icp/asm-x86_64/aes/*.c module/icp/asm-x86_64/modes/*.S         \
+    module/icp/asm-x86_64/sha1/*.S module/icp/asm-x86_64/sha2/*.S; do
+    filen=${file##*/}
+    case $file in
+        module/icp/asm-x86_64/modes/gcm_pclmulqdq.S)
+             log CC lt1-${filen%%.S}.o $filen
+             cc $FLAGS -c -o \
+                obj/libicp/lt1-${filen%%.S}.o $file ;;
+        *.S) log CC ${filen%%.S}.o $filen
+             cc $FLAGS -c -o \
+                obj/libicp/${filen%%.S}.o $file ;;
+        *.c) log CC ${file%%.c}.o $filen
+             cc $FLAGS -c -o \
+                obj/libicp/${filen%%.c}.o $file ;;
+    esac
+done
+
+log AR libicp.a xxx.o
+ar rcs libicp.a obj/libicp/*.o
+
+for file in lib/libshare/libshare.c lib/libshare/os/linux/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc -Ilib/libshare $FLAGS -c -o obj/libshare/${filen%%.c}.o $file
+done
+
+log AR libshare.a xxx.o
+ar rcs libshare.a obj/libshare/*.o
+
+for file in lib/libspl/*.c lib/libspl/os/linux/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/libspl/${filen%%.c}.o $file
+done
+
+log AR libspl.a xxx.o
+ar rcs libspl.a obj/libspl/*.o
+
+log CC thread_pool.o thread_pool.c
+cc $FLAGS -c -o obj/libtpool/thread_pool.o lib/libtpool/thread_pool.c
+
+log AR libtpool.a thread_pool.o
+ar rcs libtpool.a obj/libtpool/thread_pool.o
+
+for file in module/zstd/zfs_zstd.c module/zstd/lib/zstd.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -fno-tree-vectorize -include \
+        module/zstd/include/zstd_compat_wrapper.h -c -o \
+        obj/zstd/${filen%%.c}.o $file
+done
+
+log AR libzstd.a xxx.o
+ar rcs libzstd.a obj/zstd/*.o
+
+log CC rdwr_efi.o rdwr_efi.c
+cc -Igarbo/usr/include $FLAGS -c -o obj/libefi/rdwr_efi.o lib/libefi/rdwr_efi.c
+
+log AR libefi.a rdwr_efi.o
+ar rcs libefi.a obj/libefi/rdwr_efi.o garbo/usr/lib/libuuid.a /usr/lib/libz.a
+
+for file in lib/libnvpair/*.c module/nvpair/nvpair.c module/nvpair/fnvpair.c \
+    module/nvpair/nvpair_alloc_fixed.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -Igarbo/usr/include/tirpc -c -o obj/libnvpair/${filen%%.c}.o $file
+done
+
+log AR libnvpair.a xxx.o
+ar rcs libnvpair.a obj/libnvpair/*.o obj/libspl/assert.o
+
+for file in lib/libzutil/*.c lib/libzutil/os/linux/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc -Igarbo/usr/include -Ilib/libzutil $FLAGS -c -o \
+        obj/libzutil/${filen%%.c}.o $file
+done
+
+log ar libzutil.a xxx.lo
+ar rcs libzutil.a obj/libzutil/*.o libavl.a libtpool.a libnvpair.a            \
+    garbo/usr/lib/libtirpc.a garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a \
+    libspl.a libefi.a /usr/lib/librt.a /usr/lib/libm.a /usr/lib/libudev.a
+
+for file in module/unicode/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/libunicode/${filen%%.c}.o $file
+done
+
+log AR libunicode.a xxx.o
+ar rcs libunicode.a obj/libunicode/*.o
+
+for file in lib/libuutil/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/libuutil/${filen%%.c}.o $file
+done
+
+log AR libuutil.a xxx.o
+ar rcs libuutil.a obj/libuutil/*.o obj/libavl/avl.o obj/libspl/*.o
+
+log CC libzfs_core.o libzfs_core.c
+cc $FLAGS -c -o obj/libzfs_core/libzfs_core.o lib/libzfs_core/libzfs_core.c
+
+log AR libzfs_core.a libzfs_core.o
+ar rcs libzfs_core.a obj/libzfs_core/*.o obj/libzutil/*.o obj/libavl/*.o \
+    obj/libtpool/*.o obj/libspl/*.o obj/libefi/*.o
+
+for file in lib/libzfs/*.c lib/libzfs/os/linux/*.c \
+    module/icp/algs/sha2/*.c module/zcommon/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/libzfs/${filen%%.c}.o $file
+done
+
+log AR libzfs.a xxx.o
+ar rcs libzfs.a obj/libzfs/*.o obj/libshare/*.o
+
+for file in lib/libzpool/*.c module/zcommon/*.c module/os/linux/zfs/abd_os.c \
+    module/os/linux/zfs/arc_os.c module/os/linux/zfs/trace.c                 \
+    module/os/linux/zfs/vdev_file.c module/os/linux/zfs/zfs_debug.c          \
+    module/os/linux/zfs/zfs_racct.c module/os/linux/zfs/zfs_znode.c          \
+    module/os/linux/zfs/zio_crypt.c module/zfs/*.c module/lua/*.c; do
+    filen=${file##*/}
+    case $file in
+        module/zfs/dataset_kstats.c|module/zfs/zfs_ioctl.c|\
+        module/zfs/zfs_log.c|module/zfs/zfs_onexit.c|module/zfs/zfs_quota.c|\
+        module/zfs/zfs_replay.c|module/zfs/zfs_vnops.c|module/zfs/zvol.c) ;;
+        *) log CC ${filen%%.c}.o $filen
+           cc $FLAGS -Iinclude/os/linux/zfs -DDEBUG -UNDEBUG -DZFS_DEBUG \
+               -DLIB_ZPOOL_BUILD -c -o obj/libzpool/${filen%%.c}.o $file ;;
+    esac
+done
+
+log AR libzpool.a xxx.o
+ar rcs libzpool.a obj/libzpool/*.o obj/libicp/*.o obj/libunicode/*.o \
+    obj/zstd/*.o
+
+for file in lib/libzfsbootenv/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -Iinclude/os/linux/zfs -c -o \
+        obj/libzfsbootenv/${filen%%.c}.o $file
+done
+
+log AR libzfsbootenv.a xxx.o
+ar rcs libzfsbootenv.a obj/libzfsbootenv/*.o
+
+for file in cmd/zfs/*.c; do
+    filen=${file##*/}
+    log CC ${file%%.c}.o $file
+    cc -Icmd/zfs $FLAGS -c -o obj/zfs/${filen%%.c}.o $file
+done
+
+log CCLD zfs xxx.o
+cc $CFLAGS --static -Wl,--gc-sections -o zfs obj/zfs/*.o                       \
+    libzfs.a libzfs.a libshare.a libzfs_core.a libzutil.a libavl.a libtpool.a  \
+    libnvpair.a garbo/usr/lib/libtirpc.a libspl.a libefi.a                     \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a libuutil.a libavl.a       \
+    libspl.a /usr/lib/libm.a /usr/lib/libcrypto.a /usr/lib/libz.a              \
+    /usr/lib/libpthread.a /usr/lib/libudev.a
+
+for file in cmd/zpool/*.c cmd/zpool/os/linux/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc -Icmd/zpool -Igarbo/usr/include $FLAGS -c -o \
+        obj/zpool/${filen%%.c}.o $file
+done
+
+log CCLD zpool xxx.o
+cc $CFLAGS -Igarbo/usr/include --static -Wl,--gc-sections -o zpool       \
+    obj/zpool/*.o libzfs.a libshare.a libzfs_core.a libzutil.a libavl.a  \
+    libtpool.a libnvpair.a garbo/usr/lib/libtirpc.a libspl.a libefi.a    \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a libuutil.a libavl.a \
+    libspl.a /usr/lib/libm.a /usr/lib/libcrypto.a /usr/lib/libz.a        \
+    /usr/lib/libpthread.a /usr/lib/libudev.a
+
+for file in cmd/zdb/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc -DDEBUG -UNDEBUG -DZFS_DEBUG $FLAGS -c -o obj/zdb/${filen%%.c}.o $file
+done
+
+log CCLD zdb xxx.o
+cc $CFLAGS --static -Wl,--gc-sections -o zdb obj/zdb/*.o libzpool.a          \
+    libunicode.a libzfs_core.a libzutil.a libavl.a libtpool.a libnvpair.a    \
+    garbo/usr/lib/libtirpc.a libspl.a libefi.a garbo/usr/lib/libuuid.a       \
+    garbo/usr/lib/libblkid.a libzstd.a /usr/lib/libpthread.a /usr/lib/libz.a \
+    /usr/lib/libdl.a /usr/lib/libm.a /usr/lib/libudev.a libicp.a
+
+log CC zhack.o zhack.c
+cc -DDEBUG -UNDEBUG -DZFS_DEBUG $FLAGS -c -o obj/zhack/zhack.o cmd/zhack/zhack.c
+
+log CCLD zhack zhack.o
+cc $CFLAGS --static -Wl,--gc-sections -o zhack obj/zhack/zhack.o libzpool.a \
+    libicp.a libunicode.a libzfs_core.a libzutil.a libavl.a libtpool.a      \
+    libnvpair.a garbo/usr/lib/libtirpc.a libspl.a libefi.a libzstd.a        \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a /usr/lib/libpthread.a  \
+    /usr/lib/libz.a /usr/lib/libdl.a /usr/lib/libm.a /usr/lib/libudev.a
+
+for file in cmd/zinject/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/zinject/${filen%%.c}.o $file
+done
+
+log CCLD zinject xxx.o
+cc $CFLAGS --static -Wl,--gc-sections -o zinject obj/zinject/*.o libzfs.a  \
+    libshare.a libzfs_core.a libzutil.a libavl.a libtpool.a libnvpair.a    \
+    garbo/usr/lib/libtirpc.a libspl.a libefi.a garbo/usr/lib/libuuid.a     \
+    garbo/usr/lib/libblkid.a libuutil.a libavl.a libspl.a /usr/lib/libm.a  \
+    /usr/lib/libcrypto.a /usr/lib/libz.a /usr/lib/libpthread.a /usr/lib/libudev.a
+
+for file in cmd/zstream/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -c -o obj/zstream/${filen%%.c}.o $file
+done
+
+log CCLD zstream xxx.o
+cc $CFLAGS --static -Wl,--gc-sections -o zstream obj/zstream/*.o libzfs.a  \
+    libshare.a libzfs_core.a libzutil.a libavl.a libtpool.a libnvpair.a    \
+    garbo/usr/lib/libtirpc.a libspl.a libefi.a garbo/usr/lib/libuuid.a     \
+    garbo/usr/lib/libblkid.a libuutil.a libavl.a libspl.a /usr/lib/libm.a  \
+    /usr/lib/libcrypto.a /usr/lib/libz.a /usr/lib/libpthread.a /usr/lib/libudev.a
+
+log CC ztest.o ztest.c
+cc -DDEBUG -UNDEBUG -DZFS_DEBUG $FLAGS -c -o obj/ztest/ztest.o cmd/ztest/ztest.c
+
+log CCLD ztest ztest.o
+cc $CFLAGS --static -Wl,--gc-sections -o ztest obj/ztest/ztest.o libzpool.a   \
+    libunicode.a libzfs_core.a libzutil.a libavl.a libtpool.a libnvpair.a     \
+    garbo/usr/lib/libtirpc.a libspl.a libicp.a libicp.a libefi.a              \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a libzstd.a                \
+    /usr/lib/libpthread.a /usr/lib/libz.a /usr/lib/libdl.a /usr/lib/libm.a    \
+    /usr/lib/libudev.a
+
+for file in cmd/raidz_test/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -DDEBUG -UNDEBUG -DZFS_DEBUG -c -o \
+        obj/raidz_test/${filen%%.c}.o $file
+done
+
+log CCLD raidz_test xxx.o
+cc $CFLAGS --static -Wl,--gc-sections -o raidz_test obj/raidz_test/*.o         \
+    libzpool.a libicp.a libunicode.a libzfs_core.a libzutil.a libavl.a         \
+    libtpool.a libnvpair.a garbo/usr/lib/libtirpc.a libspl.a libefi.a          \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a libzstd.a /usr/lib/libm.a \
+    /usr/lib/libpthread.a /usr/lib/libz.a /usr/lib/libdl.a /usr/lib/libudev.a
+
+log CC zfs_ids_to_path.o zfs_ids_to_path.c
+cc $FLAGS -c -o obj/zfs_ids_to_path/zfs_ids_to_path.o cmd/zfs_ids_to_path/*.c
+
+log CCLD zfs_ids_to_path zfs_ids_to_path.o
+cc $CFLAGS --static -Wl,--gc-sections -o zfs_ids_to_path libzfs.a       \
+    obj/zfs_ids_to_path/zfs_ids_to_path.o libshare.a libzfs_core.a      \
+    libzutil.a libavl.a libtpool.a libnvpair.a garbo/usr/lib/libtirpc.a \
+    libspl.a libefi.a garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a  \
+    libuutil.a libavl.a libspl.a /usr/lib/libm.a /usr/lib/libcrypto.a   \
+    /usr/lib/libz.a /usr/lib/libpthread.a /usr/lib/libudev.a
+
+log CC zpool_influxdb.o zpool_influxdb.c
+cc $FLAGS -c -o obj/zpool_influxdb/zpool_influxdb.o cmd/zpool_influxdb/*.c
+
+log CCLD zpool_influxdb zpool_influxdb.o
+cc $CFLAGS --static -Wl,--gc-sections -o zpool_influxdb      \
+    obj/zpool_influxdb/zpool_influxdb.o libspl.a libnvpair.a \
+    garbo/usr/lib/libtirpc.a /usr/lib/libpthread.a libzfs.a  \
+    libshare.a libzfs_core.a libzutil.a libavl.a libtpool.a  \
+    libspl.a libefi.a garbo/usr/lib/libuuid.a                \
+    garbo/usr/lib/libblkid.a libuutil.a libavl.a libspl.a    \
+    /usr/lib/libm.a /usr/lib/libcrypto.a /usr/lib/libz.a     \
+    /usr/lib/libudev.a
+
+log CC mount_zfs.o mount_zfs.c
+cc $FLAGS -c -o obj/mount_zfs/mount_zfs.o cmd/mount_zfs/*.c
+
+log CCLD mount.zfs mount_zfs.o
+cc $CFLAGS --static -Wl,--gc-sections -o mount.zfs obj/mount_zfs/mount_zfs.o   \
+    libzfs.a libzfs_core.a libnvpair.a libshare.a libzutil.a libavl.a          \
+    libtpool.a garbo/usr/lib/libtirpc.a libspl.a libefi.a libuutil.a           \
+    garbo/usr/lib/libuuid.a garbo/usr/lib/libblkid.a libavl.a libspl.a         \
+    /usr/lib/libm.a /usr/lib/libcrypto.a /usr/lib/libz.a /usr/lib/libpthread.a \
+    /usr/lib/libudev.a
+
+for file in cmd/zed/*.c cmd/zed/agents/*.c; do
+    filen=${file##*/}
+    log CC ${filen%%.c}.o $filen
+    cc $FLAGS -Igarbo/usr/include -c -o obj/zed/${filen%%.c}.o $file
+done
+
+log CCLD zed xxx.o
+cc $CFLAGS -Igarbo/usr/include -pthread --static -Wl,--gc-sections -o zed      \
+    obj/zed/*.o libzfs.a libzfs_core.a libnvpair.a libuutil.a /usr/lib/librt.a \
+    /usr/lib/libudev.a garbo/usr/lib/libuuid.a libshare.a libzutil.a libavl.a  \
+    libtpool.a garbo/usr/lib/libtirpc.a libspl.a libefi.a libavl.a libspl.a    \
+    garbo/usr/lib/libblkid.a /usr/lib/libm.a /usr/lib/libcrypto.a              \
+    /usr/lib/libz.a /usr/lib/libpthread.a
+
+log zgenhostid.o zgenhostid.c
+cc $FLAGS -c -o obj/zgenhostid/zgenhostid.o cmd/zgenhostid/zgenhostid.c
+
+log CCLD zgenhostid zgenhostid.o
+cc $CFLAGS --static -Wl,--gc-sections -o zgenhostid obj/zgenhostid/zgenhostid.o
+
+for lib in zfs zpool uutil nvpair zfs_core zfsbootenv; do
+    install -Dm644 "lib${lib}.a" "$1/usr/lib/lib${lib}.a"
+done
+for bin in zed zfs zdb zpool zhack ztest zinject zstream \
+    mount.zfs raidz_test zgenhostid zfs_ids_to_path; do
+    install -Dm755 "$bin" "$1/usr/bin/$bin"
+done
+
+install -Dm755 zpool_influxdb "$1/usr/lib/zfs/zpool_influxdb"
+
+install -Dm755 cmd/zvol_wait/zvol_wait "$1/usr/bin/zvol_wait"
+
+ln -sf zstream "$1/usr/bin/zstreamdump"
+
+for file in etc/zfs/zfs-functions.in etc/default/zfs.in \
+    cmd/fsck_zfs/fsck.zfs.in                            \
+    cmd/zed/zed.d/history_event-zfs-list-cacher.sh.in; do
+    sed -e 's|@bindir[@]|/usr/bin|g'             \
+        -e 's|@sbindir[@]|/usr/bin|g'            \
+        -e 's|@datadir[@]|/usr/share|g'          \
+        -e 's|@sysconfdir[@]|/etc|g'             \
+        -e 's|@runstatedir[@]|/usr/var/run|g'    \
+        -e 's|@initconfdir[@]|/etc/default|g'    \
+        -e 's|@initdir[@]|/etc/init.d|g'         \
+        -e 's|@mounthelperdir[@]|/usr/bin|g'     \
+        -e 's|@systemdgeneratordir[@]|no|g'      \
+        -e 's|@systemdunitdir[@]|no|g'           \
+        -e 's|@udevdir[@]|no|g'                  \
+        -e 's|@udevruledir[@]|no/rules.d|g'      \
+        -e 's|@zfsexecdir[@]|/usr/lib/zfs|g'     \
+        -e 's|@PYTHON[@]|:|g'                    \
+        -e 's|@PYTHON_SHEBANG[@]|python3|g'      \
+        -e 's|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g' \
+        -e 's|@DEFAULT_INIT_SHELL[@]|/bin/sh|g'  \
+        "$file" > "${file%%.in}"
+done
+
+install -Dm755 etc/default/zfs       "$1/etc/default/zfs"
+install -Dm755 cmd/fsck_zfs/fsck.zfs "$1/usr/bin/fsck.zfs"
+install -Dm755 etc/zfs/zfs-functions "$1/etc/zfs/zfs-functions"
+
+for file in etc/zfs/*.example; do
+    install -Dm644 $file "$1/etc/zfs/${file##*/}"
+done
+
+for file in libzfs_core libzfs libzfsbootenv; do
+sed -e 's|@prefix@|/usr|g'             \
+    -e 's|@exec_prefix@|/usr/bin|g'    \
+    -e 's|@libdir@|/usr/lib|g'         \
+    -e 's|@includedir@|/usr/include|g' \
+    -e "s|@VERSION@|$2|g"              \
+    "lib/$file/${file}.pc.in" >        \
+    "$1/usr/lib/pkgconfig/${file}.pc"
+done
+
+for file in cmd/zpool/zpool.d/*; do
+    filen="${file##*/}"
+    install -Dm644 "$file" "$1/usr/lib/zfs/zpool.d/$filen"
+    ln -sf "/usr/lib/zfs/zpool.d/$filen" "$1/etc/zfs/zpool.d/$filen"
+done
+
+for file in cmd/zed/zed.d/*.sh; do
+    filen="${file##*/}"
+    case $file in
+        cmd/zed/zed.d/zed.rc|cmd/zed/zed.d/zed-functions.sh)
+            install -Dm755 "$file" "$1/etc/zfs/zed.d/$filen" ;;
+        *)
+            install -Dm755 "$file" "$1/usr/lib/zfs/zed.d/$filen"
+            ln -sf "/usr/lib/zfs/zed.d/$filen" "$1/etc/zfs/zed.d/$filen" ;;
+    esac
+done
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/zfs.license"

@@ -1,3 +1,2 @@
 linux-headers make
-util-linux    make
 zlib          make
