@@ -2,9 +2,6 @@
 
 patch -p1 < posix-build.patch
 
-# Temporary fix until my patch makes it into a release
-sed -i 's|/etc/alpine-release|/lib/ld-musl-x86_64.so.1|' go-current/src/make.bash
-
 # Disable stripping of binaries.
 # This breaks Go.
 :> nostrip
