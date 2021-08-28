@@ -1,0 +1,7 @@
+https://github.com/elftoolchain/elftoolchain/archive/f7e9afc6f9ad0d84ea73b4659c5d6d13275d2306.tar.gz
+files/makefile
+patches/0001-Prevent-empty-top-level-declarations.patch
+patches/0002-Use-_Alignof-when-built-as-C11.patch
+patches/0003-Revert-Add-back-sys-cdefs.h.patch
+patches/0004-readelf-remove-unnecessary-after-function-definition.patch
+patches/0005-Allow-empty-Elf_Data.patch
