@@ -3,8 +3,6 @@
 export DESTDIR="$1"
 export CC="${CC:-cc}"
 
-patch -p1 < pgo-fix.patch
-
 sed -i "s|fontconfig'|fontconfig', static: true|" meson.build
 sed -i "s|xkbcommon',|xkbcommon', static: true,|" meson.build
 sed -i "s|-scanner',|-scanner', static: true,|"   meson.build
