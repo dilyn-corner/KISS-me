@@ -92,12 +92,12 @@ libelf.a: ${LIBELF_OBJ}
 .PHONY: install
 install: libelf.so.1 libelf.a
 	mkdir -p ${DESTDIR}${LIBDIR} ${DESTDIR}${INCDIR}/sys
-	cp libelf.so.1 ${DESTDIR}${LIBDIR}
-	cp libelf.a ${DESTDIR}${LIBDIR}
-	cp libelf/gelf.h ${DESTDIR}${INCDIR}
-	cp libelf/libelf.h ${DESTDIR}${INCDIR}
-	cp common/sys/elfdefinitions.h ${DESTDIR}${INCDIR}/sys
-	ln -sf libelf.so.1 "${DESTDIR}${LIBDIR}/libelf.so"
+	cp -f libelf.so.1 ${DESTDIR}${LIBDIR}
+	cp -f libelf.a ${DESTDIR}${LIBDIR}
+	cp -f libelf/gelf.h ${DESTDIR}${INCDIR}
+	cp -f libelf/libelf.h ${DESTDIR}${INCDIR}
+	cp -f common/sys/elfdefinitions.h ${DESTDIR}${INCDIR}/sys
+	ln -fs libelf.so.1 "${DESTDIR}${LIBDIR}/libelf.so"
 
 .PHONY: clean
 clean:
