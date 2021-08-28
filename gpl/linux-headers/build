@@ -68,23 +68,23 @@ sh './arch/x86/entry/syscalls/syscalltbl.sh' \
 
 rm -f .tmp_quiet_recordmcount
 
-clang -Wp,-MMD,scripts/.unifdef.d -Wall -Wmissing-prototypes \
-    -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 \
-    -o scripts/unifdef scripts/unifdef.c
-clang -Wp,-MMD,arch/x86/tools/.relocs_32.o.d -Wall -Wmissing-prototypes \
-    -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include \
-    -c -o arch/x86/tools/relocs_32.o arch/x86/tools/relocs_32.c
-clang -Wp,-MMD,arch/x86/tools/.relocs_64.o.d -Wall -Wmissing-prototypes \
-    -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include  \
-    -c -o arch/x86/tools/relocs_64.o arch/x86/tools/relocs_64.c
-clang -Wp,-MMD,arch/x86/tools/.relocs_common.o.d -Wall -Wmissing-prototypes \
-    -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include  \
-    -c -o arch/x86/tools/relocs_common.o arch/x86/tools/relocs_common.c
+cc -Wp,-MMD,scripts/.unifdef.d -Wall -Wmissing-prototypes \
+   -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 \
+   -o scripts/unifdef scripts/unifdef.c
+cc -Wp,-MMD,arch/x86/tools/.relocs_32.o.d -Wall -Wmissing-prototypes \
+   -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include \
+   -c -o arch/x86/tools/relocs_32.o arch/x86/tools/relocs_32.c
+cc -Wp,-MMD,arch/x86/tools/.relocs_64.o.d -Wall -Wmissing-prototypes \
+   -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include  \
+   -c -o arch/x86/tools/relocs_64.o arch/x86/tools/relocs_64.c
+cc -Wp,-MMD,arch/x86/tools/.relocs_common.o.d -Wall -Wmissing-prototypes \
+   -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -I./tools/include  \
+   -c -o arch/x86/tools/relocs_common.o arch/x86/tools/relocs_common.c
 
-clang -o arch/x86/tools/relocs \
-         arch/x86/tools/relocs_32.o \
-         arch/x86/tools/relocs_64.o \
-         arch/x86/tools/relocs_common.o
+cc -o arch/x86/tools/relocs \
+      arch/x86/tools/relocs_32.o \
+      arch/x86/tools/relocs_64.o \
+      arch/x86/tools/relocs_common.o
 
 sh ./scripts/headers_install.sh include/uapi/asm-generic/unistd.h usr/include/asm-generic/unistd.h
 sh ./scripts/headers_install.sh include/uapi/asm-generic/ucontext.h usr/include/asm-generic/ucontext.h
