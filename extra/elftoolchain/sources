@@ -5,3 +5,4 @@ patches/0002-Use-_Alignof-when-built-as-C11.patch
 patches/0003-Revert-Add-back-sys-cdefs.h.patch
 patches/0004-readelf-remove-unnecessary-after-function-definition.patch
 patches/0005-Allow-empty-Elf_Data.patch
+patches/0006-Fix-definitions.patch

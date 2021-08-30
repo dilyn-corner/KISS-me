@@ -1,13 +1,11 @@
 #!/bin/sh -e
 
+m4 -I./common/sys -DSRCDIR=./common/sys \
+    common/sys/elfdefinitions.m4 > common/sys/elfdefinitions.h
+
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
-
-(
-    cd common/sys
-    m4 -DSRCDIR=$PWD elfdefinitions.m4 > elfdefinitions.h
-)
 
 for file in libelf/*.m4; do
     m4 -DSRCDIR=libelf "$file" > "${file%%.m4}.c"

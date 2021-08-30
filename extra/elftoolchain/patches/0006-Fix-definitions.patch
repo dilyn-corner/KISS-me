@@ -1,0 +1,11 @@
+--- a/common/sys/elfdefinitions.h
++++ b/common/sys/elfdefinitions.h
+@@ -47,6 +47,8 @@
+ 
+ #include <stdint.h>
+ 
++#define STN_UNDEF	0
++
+ /*
+  * Types of capabilities.
+  */
