@@ -89,6 +89,10 @@ meson configure -Db_pgo=use build
 ninja -C build
 ninja -C build install
 
+# Generate our terminfo
+mkdir -p "$1/usr/share/foot/terminfo/f"
+tic -x -o "$1/usr/share/foot/terminfo/f/foot" foot.ini
+
 # Install the licenses
 install -Dm755 LICENSE                    "$1/usr/share/LICENSES/foot.license"
 install -Dm755 subprojects/fcft/LICENSE   "$1/usr/share/LICENSES/fcft.license"
