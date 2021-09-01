@@ -1,7 +1,0 @@
-Name: panel
-Description: curses panel library
-Version: 5.9
-Requires:
-Conflicts:
-Libs: -lpanel -lcurses -lterminfo
-Cflags:

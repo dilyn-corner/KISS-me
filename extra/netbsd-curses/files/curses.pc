@@ -1,7 +1,0 @@
-Name: curses
-Description: curses terminal library
-Version: 5.9
-Requires:
-Conflicts:
-Libs: -lcurses -lterminfo
-Cflags:

@@ -1,7 +1,0 @@
-Name: form
-Description: curses form library
-Version: 5.9
-Requires:
-Conflicts:
-Libs: -lform -lcurses -lterminfo
-Cflags:

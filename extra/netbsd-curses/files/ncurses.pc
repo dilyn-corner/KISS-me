@@ -1,7 +1,0 @@
-Name: ncurses
-Description: ncurses terminal library
-Version: 5.9
-Requires:
-Conflicts:
-Libs: -lncurses -lterminfo
-Cflags:

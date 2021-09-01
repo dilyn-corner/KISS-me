@@ -1,7 +1,0 @@
-Name: termcap
-Description: termcap library
-Version: 5.9
-Requires:
-Conflicts:
-Libs: -lterminfo
-Cflags:
