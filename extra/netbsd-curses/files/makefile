@@ -12,7 +12,12 @@ SH ?= /bin/sh
 TOOL_TIC = tic/tic
 TOOL_NBPERF = nbperf/nbperf
 
-SCRIPT_ENV = TERMINFODIR=./terminfo TOOL_AWK=awk TOOL_NBPERF=$(TOOL_NBPERF) TOOL_SED=sed TOOL_SORT=sort TOOL_TIC=$(TOOL_TIC)
+SCRIPT_ENV = TERMINFODIR=./terminfo \
+				TOOL_AWK=awk \
+				TOOL_NBPERF=$(TOOL_NBPERF) \
+				TOOL_SED=sed \
+				TOOL_SORT=sort \
+				TOOL_TIC=$(TOOL_TIC)
 
 XCFLAGS = -fPIC ${CFLAGS}
 INCFLAGS = -I. -I./libterminfo -I./tic -I./libcurses \
@@ -113,7 +118,9 @@ tic/tic: ${TIC_OBJ} tic/hash.c
 	${CC} -static ${TIC_OBJ} -o $@
 
 libterminfo/compiled_terms.c: libterminfo/term.h tic/tic
-	${SCRIPT_ENV} ${SH} libterminfo/genterms libterminfo/term.h terminfo/terminfo > $@
+	${SCRIPT_ENV} ${SH} libterminfo/genterms \
+						libterminfo/term.h \
+						terminfo/terminfo > $@
 
 libterminfo/hash.c: nbperf/nbperf
 libterminfo/termcap_hash.c: nbperf/nbperf
@@ -123,7 +130,8 @@ libterminfo/term.o: libterminfo/compiled_terms.c
 libterminfo/termcap.c: libterminfo/termcap_hash.c
 
 libterminfo/termcap_hash.c: libterminfo/genthash libterminfo/termcap_map.c
-	${SCRIPT_ENV} ${SH} libterminfo/genthash libterminfo/termcap_map.c > $@
+	${SCRIPT_ENV} ${SH} libterminfo/genthash \
+						libterminfo/termcap_map.c > $@
 
 LIBTERMINFO_OBJ += libterminfo/hash.o libterminfo/termcap.o libterminfo/term.o
 
