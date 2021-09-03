@@ -5,13 +5,13 @@ PREFIX ?= /usr/local
 CC ?= cc
 AR ?= ar
 
-XCFLAGS = ${CFLAGS} -std=c17 -fwrapv -fno-common \
-			-ffunction-sections -fdata-sections -fvisibility=hidden \
-			-pedantic -Wno-long-long -Wno-shift-negative-value \
+XCFLAGS = -std=c17 -fwrapv -fno-common -ffunction-sections -fdata-sections \
+			-fvisibility=hidden -pedantic -Wno-long-long \
+			-Wno-shift-negative-value ${CFLAGS}
 
-XCPPFLAGS = ${CPPFLAGS} -U__STRICT_ANSI__ -DHAVE_CONFIG_H
+XCPPFLAGS = -U__STRICT_ANSI__ -DHAVE_CONFIG_H ${CPPFLAGS}
 
-IFLAGS = -I. -I./include -I./x86 -I./asm -I./disasm -I./output
+IFLAGS = -I. -Iinclude -Ix86 -Iasm -Idisasm -Ioutput
 
 FLAGS = ${XCFLAGS} ${XCPPFLAGS} ${IFLAGS}
 
@@ -127,13 +127,13 @@ LIB_OBJ = asm/assemble.o \
 			x86/regdis.o \
 			x86/regflags.o \
 			x86/regs.o \
-			x86/regvals.o \
+			x86/regvals.o
 
 .PHONY: all
 all: nasm ndisasm libnasm.a
 
 .c.o:
-	${CC} ${FLAGS} ${CFLAGS} -c -o $@ $<
+	${CC} ${FLAGS} -c -o $@ $<
 
 libnasm.a: ${LIB_OBJ}
 	${AR} rcs $@ ${LIB_OBJ}
@@ -146,10 +146,9 @@ ndisasm: ${DIS_OBJ} libnasm.a
 
 .PHONY: install
 install: nasm ndisasm
-	mkdir -p ${DESTDIR}${PREFIX}/bin
-	cp nasm ${DESTDIR}${PREFIX}/bin/nasm
-	cp ndisasm ${DESTDIR}${PREFIX}/bin/ndisasm
+	install -Dm755 nasm ${DESTDIR}${PREFIX}/bin
+	install -Dm755 ndisasm ${DESTDIR}${PREFIX}/bin
 
 .PHONY: clean
 clean:
-	rm -f libnasm.a nasm ndisasm ${LIB_OBJ}
+	rm -f libnasm.a nasm ndisasm ${N_OBJ} ${DIS_OBJ} ${LIB_OBJ}
