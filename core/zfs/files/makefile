@@ -10,17 +10,18 @@ CC ?= cc
 AR ?= ar
 PKG_CONFIG ?= pkg-config
 
-INCLUDES = -I./include -I./module/icp/include -I./lib/libspl/include \
-	-I./lib/libspl/include/os/linux
+INCLUDES = -Iinclude -Imodule/icp/include -Ilib/libspl/include \
+	-Ilib/libspl/include/os/linux
 
 XCPPFLAGS = -DHAVE_CONFIG_H -include zfs_config.h -D_GNU_SOURCE -D_REENTRANT \
 	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -DHAVE_LARGE_STACKS=1 \
-	-DLIBEXECDIR=\"/usr/lib\" -DRUNSTATEDIR=\"/usr/var/run\" \
-	-DSBINDIR=\"/usr/bin\" -DSYSCONFDIR=\"/etc\" -DPKGDATADIR=\"/usr/share/zfs\" \
-	-DTEXT_DOMAIN=\"zfs-linux-user\"
+	-DLIBEXECDIR=\"${LIBDIR}\" -DRUNSTATEDIR=\"${PREFIX}/var/run\" \
+	-DSBINDIR=\"${BINDIR}\" -DSYSCONFDIR=\"${SYSCONFDIR}\" \
+	-DPKGDATADIR=\"${PREFIX}/share/zfs\" -DTEXT_DOMAIN=\"zfs-linux-user\"
 
-XCFLAGS = -std=gnu99 -fno-strict-aliasing -Wno-missing-prototypes \
-		-Wno-macro-redefined
+XCFLAGS = -std=gnu99 -fno-strict-aliasing
+
+XDEBUGFLAGS = -DDEBUG -UNDEBUG -DZFS_DEBUG
 
 FLAGS = ${INCLUDES} ${XCPPFLAGS} ${CPPFLAGS} ${XCFLAGS} ${CFLAGS}
 
@@ -233,10 +234,9 @@ INFLUXDB_PROG = ${LIBCOMMON} ${LIB_ZFS_SHARE} ${LIB_EFI_UTIL}
 MOUNT_ZFS_PROG = ${LIBCOMMON} ${LIB_ZFS_SHARE} ${LIB_EFI_UTIL}
 ZED_PROG = ${LIBCOMMON} ${LIB_EFI_UTIL} libzfs.a libuutil.a
 
-COMMON_LIBS = ${LIBUUID_LIBS} ${LIBTIRPC_LIBS} ${LIBBLKID_LIBS} \
-	/usr/lib/libm.a /usr/lib/libz.a /usr/lib/libpthread.a /usr/lib/libudev.a
+LIBS = ${LIBUUID_LIBS} ${LIBTIRPC_LIBS} ${LIBBLKID_LIBS} -lm -lz -lpthread -ludev
 
-.SUFFIXES: .S .c .o
+.SUFFIXES: .S
 
 .PHONY: all
 all: libs progs extra
@@ -247,239 +247,132 @@ all: libs progs extra
 .S.o:
 	${CC} ${FLAGS} -c -o $@ $<
 
-lib/libshare/libshare.o lib/libshare/os/linux/nfs.o \
-	lib/libshare/os/linux/smb.o:
+${LIBSHARE_OBJ}:
 	${CC} ${FLAGS} -Ilib/libshare -c -o $@ $<
 
-module/zstd/lib/zstd.o module/zstd/zfs_zstd.o:
+${LIBZSTD_OBJ}:
 	${CC} ${FLAGS} -fno-tree-vectorize -c -o $@ $<
 
-lib/libefi/rdwr_efi.o:
+${LIBEFI_OBJ} ${ZED_OBJ}:
 	${CC} ${FLAGS} ${LIBUUID_CFLAGS} -c -o $@ $<
 
-module/nvpair/fnvpair.o module/nvpair/nvpair.o \
-	module/nvpair/nvpair_alloc_fixed.o lib/libnvpair/libnvpair.o \
-	lib/libnvpair/libnvpair_json.o lib/libnvpair/nvpair_alloc_system.o:
+${LIBNVPAIR_OBJ}:
 	${CC} ${FLAGS} ${LIBTIRPC_CFLAGS} -c -o $@ $<
 
-lib/libzutil/os/linux/zutil_compat.o \
-	lib/libzutil/os/linux/zutil_device_path_os.o \
-	lib/libzutil/os/linux/zutil_import_os.o lib/libzutil/zutil_device_path.o \
-	lib/libzutil/zutil_import.o lib/libzutil/zutil_nicenum.o \
-	lib/libzutil/zutil_pool.o:
-	${CC} ${FLAGS} -Ilib/libzutil ${LIBBLKID_CFLAGS} -c -o $@ $<
+${LIBZUTIL_OBJ}:
+	${CC} ${FLAGS} ${LIBBLKID_CFLAGS} -Ilib/libzutil -c -o $@ $<
 
-module/lua/lapi.o module/lua/lauxlib.o module/lua/lbaselib.o \
-	module/lua/lcode.o module/lua/lcompat.o module/lua/lcorolib.o \
-	module/lua/lctype.o module/lua/ldebug.o module/lua/ldo.o \
-	module/lua/lfunc.o module/lua/lgc.o module/lua/llex.o module/lua/lmem.o \
-	module/lua/lobject.o module/lua/lopcodes.o module/lua/lparser.o \
-	module/lua/lstate.o module/lua/lstring.o module/lua/lstrlib.o \
-	module/lua/ltable.o module/lua/ltablib.o module/lua/ltm.o module/lua/lvm.o \
-	module/lua/lzio.o module/os/linux/zfs/abd_os.o \
-	module/os/linux/zfs/arc_os.o module/os/linux/zfs/trace.o \
-	module/os/linux/zfs/vdev_file.o module/os/linux/zfs/zfs_debug.o \
-	module/os/linux/zfs/zfs_racct.o module/os/linux/zfs/zfs_znode.o \
-	module/os/linux/zfs/zio_crypt.o module/zfs/abd.o module/zfs/aggsum.o \
-	module/zfs/arc.o module/zfs/blkptr.o module/zfs/bplist.o \
-	module/zfs/bpobj.o module/zfs/bptree.o module/zfs/bqueue.o \
-	module/zfs/btree.o module/zfs/dbuf.o module/zfs/dbuf_stats.o \
-	module/zfs/ddt.o module/zfs/ddt_zap.o module/zfs/dmu.o \
-	module/zfs/dmu_diff.o module/zfs/dmu_object.o module/zfs/dmu_objset.o \
-	module/zfs/dmu_recv.o module/zfs/dmu_redact.o module/zfs/dmu_send.o \
-	module/zfs/dmu_traverse.o module/zfs/dmu_tx.o module/zfs/dmu_zfetch.o \
-	module/zfs/dnode.o module/zfs/dnode_sync.o module/zfs/dsl_bookmark.o \
-	module/zfs/dsl_crypt.o module/zfs/dsl_dataset.o module/zfs/dsl_deadlist.o \
-	module/zfs/dsl_deleg.o module/zfs/dsl_destroy.o module/zfs/dsl_dir.o \
-	module/zfs/dsl_pool.o module/zfs/dsl_prop.o module/zfs/dsl_scan.o \
-	module/zfs/dsl_synctask.o module/zfs/dsl_userhold.o module/zfs/edonr_zfs.o \
-	module/zfs/fm.o module/zfs/gzip.o module/zfs/hkdf.o module/zfs/lz4.o \
-	module/zfs/lzjb.o module/zfs/metaslab.o module/zfs/mmp.o \
-	module/zfs/multilist.o module/zfs/objlist.o module/zfs/pathname.o \
-	module/zfs/range_tree.o module/zfs/refcount.o module/zfs/rrwlock.o \
-	module/zfs/sa.o module/zfs/sha256.o module/zfs/skein_zfs.o \
-	module/zfs/spa.o module/zfs/spa_boot.o module/zfs/spa_checkpoint.o \
-	module/zfs/spa_config.o module/zfs/spa_errlog.o module/zfs/spa_history.o \
-	module/zfs/spa_log_spacemap.o module/zfs/spa_misc.o module/zfs/spa_stats.o \
-	module/zfs/space_map.o module/zfs/space_reftree.o module/zfs/txg.o \
-	module/zfs/uberblock.o module/zfs/unique.o module/zfs/vdev.o \
-	module/zfs/vdev_cache.o module/zfs/vdev_draid.o \
-	module/zfs/vdev_draid_rand.o module/zfs/vdev_indirect.o \
-	module/zfs/vdev_indirect_births.o module/zfs/vdev_indirect_mapping.o \
-	module/zfs/vdev_initialize.o module/zfs/vdev_label.o \
-	module/zfs/vdev_mirror.o module/zfs/vdev_missing.o module/zfs/vdev_queue.o \
-	module/zfs/vdev_raidz.o module/zfs/vdev_raidz_math.o \
-	module/zfs/vdev_raidz_math_aarch64_neon.o \
-	module/zfs/vdev_raidz_math_aarch64_neonx2.o \
-	module/zfs/vdev_raidz_math_avx2.o module/zfs/vdev_raidz_math_avx512bw.o \
-	module/zfs/vdev_raidz_math_avx512f.o \
-	module/zfs/vdev_raidz_math_powerpc_altivec.o \
-	module/zfs/vdev_raidz_math_scalar.o module/zfs/vdev_raidz_math_sse2.o \
-	module/zfs/vdev_raidz_math_ssse3.o module/zfs/vdev_rebuild.o \
-	module/zfs/vdev_removal.o module/zfs/vdev_root.o module/zfs/vdev_trim.o \
-	module/zfs/zap.o module/zfs/zap_leaf.o module/zfs/zap_micro.o \
-	module/zfs/zcp.o module/zfs/zcp_get.o module/zfs/zcp_global.o \
-	module/zfs/zcp_iter.o module/zfs/zcp_set.o module/zfs/zcp_synctask.o \
-	module/zfs/zfeature.o module/zfs/zfs_byteswap.o module/zfs/zfs_fm.o \
-	module/zfs/zfs_fuid.o module/zfs/zfs_ratelimit.o module/zfs/zfs_rlock.o \
-	module/zfs/zfs_sa.o module/zfs/zil.o module/zfs/zio.o \
-	module/zfs/zio_checksum.o module/zfs/zio_compress.o \
-	module/zfs/zio_inject.o module/zfs/zle.o module/zfs/zrlock.o \
-	module/zfs/zthr.o lib/libzpool/kernel.o lib/libzpool/taskq.o \
-	lib/libzpool/util.o:
-	${CC} ${FLAGS} -Iinclude/os/linux/zfs -DDEBUG -UNDEBUG -DZFS_DEBUG -DLIB_ZPOOL_BUILD -c -o $@ $<
+${LIBZPOOL_OBJ}:
+	${CC} ${FLAGS} ${XDEBUGFLAGS} -DLIB_ZPOOL_BUILD -Iinclude/os/linux/zfs -c -o $@ $<
 
-lib/libzfsbootenv/lzbe_device.o lib/libzfsbootenv/lzbe_pair.o \
-	lib/libzfsbootenv/lzbe_util.o:
+${LIBZFSBOOTENV_OBJ} ${ZCOMMON_OBJ}:
 	${CC} ${FLAGS} -Iinclude/os/linux/zfs -c -o $@ $<
 
-cmd/zfs/zfs_iter.o cmd/zfs/zfs_main.o cmd/zfs/zfs_project.o:
-	${CC} -Icmd/zfs ${FLAGS} -c -o $@ $<
+${ZFS_OBJ}:
+	${CC} ${FLAGS} -Icmd/zfs -c -o $@ $<
 
-cmd/zpool/os/linux/zpool_vdev_os.o cmd/zpool/zpool_iter.o \
-	cmd/zpool/zpool_main.o cmd/zpool/zpool_util.o cmd/zpool/zpool_vdev.o:
+${ZPOOL_OBJ}:
 	${CC} ${FLAGS} ${LIBUUID_CFLAGS} -Icmd/zpool -c -o $@ $<
 
-cmd/zed/zed.o cmd/zed/zed_conf.o cmd/zed/zed_disk_event.o \
-	cmd/zed/zed_event.o cmd/zed/zed_exec.o cmd/zed/zed_file.o \
-	cmd/zed/zed_log.o cmd/zed/zed_strings.o cmd/zed/agents/fmd_api.o \
-	cmd/zed/agents/fmd_serd.o cmd/zed/agents/zfs_agents.o \
-	cmd/zed/agents/zfs_diagnosis.o cmd/zed/agents/zfs_mod.o \
-	cmd/zed/agents/zfs_retire.o:
-	${CC} ${FLAGS} ${LIBUUID_CFLAGS} -c -o $@ $<
+${ZDB_OBJ}:
+	${CC} ${FLAGS} ${XDEBUGFLAGS} -Icmd/zdb -c -o $@ $<
 
-cmd/zdb/zdb.o cmd/zdb/zdb_il.o:
-	${CC} -Icmd/zdb ${FLAGS} ${XDEBUFLAGS} -c -o $@ $<
-
-cmd/zhack/zhack.o:
-	${CC} ${FLAGS} ${XDEBUFLAGS} -c -o $@ $<
-
-cmd/ztest/ztest.o:
-	${CC} ${FLAGS} ${XDEBUFLAGS} -c -o $@ $<
-cmd/raidz_test/raidz_test.o cmd/raidz_test/raidz_bench.o:
-	${CC} ${FLAGS} ${XDEBUFLAGS} -c -o $@ $<
-
-module/zcommon/cityhash.o module/zcommon/zfeature_common.o \
-	module/zcommon/zfs_comutil.o module/zcommon/zfs_deleg.o \
-	module/zcommon/zfs_fletcher.o module/zcommon/zfs_fletcher_aarch64_neon.o \
-	module/zcommon/zfs_fletcher_avx512.o module/zcommon/zfs_fletcher_intel.o \
-	module/zcommon/zfs_fletcher_sse.o module/zcommon/zfs_fletcher_superscalar.o \
-	module/zcommon/zfs_fletcher_superscalar4.o module/zcommon/zfs_namecheck.o \
-	module/zcommon/zfs_prop.o module/zcommon/zpool_prop.o \
-	module/zcommon/zprop_common.o:
-	${CC} ${FLAGS} -Iinclude/os/linuz/zfs -c -o $@ $<
-
+${ZHACK_OBJ} ${ZTEST_OBJ} ${RAIDZ_TEST_OBJ}:
+	${CC} ${FLAGS} ${XDEBUGFLAGS} -c -o $@ $<
 
 .PHONY: libs
-libs: libavl.a libicp.a libshare.a libspl.a libtpool.a libzstd.a \
-	libefi.a libzutil.a libunicode.a libnvpair.a libuutil.a \
-	libzfs_core.a libzfs.a libzpool.a libzfsbootenv.a
-
-.PHONY: progs
-progs: zfs zpool zdb zhack zinject zstream ztest raidz_test \
-	zfs_ids_to_path zpool_influxdb mount.zfs zed zgenhostid
+libs: libavl.a libicp.a libspl.a libzstd.a libshare.a libtpool.a \
+	libunicode.a libzfs_core.a libzfsbootenv.a libnvpair.a libzfs.a \
+	libuutil.a libzpool.a libefi.a libzutil.a
 
 libavl.a: ${LIBAVL_OBJ}
-	${AR} rcs $@ ${LIBAVL_OBJ}
+	${AR} rcs $@ $?
 
 libicp.a: ${LIBICP_OBJ}
-	${AR} rcs $@ ${LIBICP_OBJ}
-
-libshare.a: ${LIBSHARE_OBJ}
-	${AR} rcs $@ ${LIBSHARE_OBJ}
+	${AR} rcs $@ $?
 
 libspl.a: ${LIBSPL_OBJ}
-	${AR} rcs $@ ${LIBSPL_OBJ}
-
-libtpool.a: ${LIBTPOOL_OBJ}
-	${AR} rcs $@ ${LIBTPOOL_OBJ}
+	${AR} rcs $@ $?
 
 libzstd.a: ${LIBZSTD_OBJ}
-	${AR} rcs $@ ${LIBZSTD_OBJ}
+	${AR} rcs $@ $?
 
-libefi.a: ${LIBEFI_OBJ}
-	${AR} rcs $@ ${LIBEFI_OBJ} ${LIBBLKID_LIBS} /usr/lib/libz.a
+libshare.a: ${LIBSHARE_OBJ}
+	${AR} rcs $@ $?
 
-libnvpair.a: ${LIBNVPAIR_OBJ} ${LIBSPL_OBJ}
-	${AR} rcs $@ ${LIBNVPAIR_OBJ} ${LIBSPL_OBJ}
-
-libzutil.a: ${LIBZUTIL_OBJ} libavl.a libtpool.a libnvpair.a libspl.a libefi.a
-	${AR} rcs $@ ${LIBZUTIL_OBJ} libavl.a libtpool.a libnvpair.a \
-		${LIBTIRPC_LIBS} ${LIBUUID_LIBS} ${LIBBLKID_LIBS} \
-		/usr/lib/libudev.a /usr/lib/libm.a /usr/lib/librt.a
+libtpool.a: ${LIBTPOOL_OBJ}
+	${AR} rcs $@ $?
 
 libunicode.a: ${UNICODE_OBJ}
-	${AR} rcs $@ ${UNICODE_OBJ}
-
-libuutil.a: ${LIBUUTIL_OBJ} ${LIBAVL_OBJ} ${LIBSPL_OBJ}
-	${AR} rcs $@ ${LIBUUTIL_OBJ} ${LIBAVL_OBJ} ${LIBSPL_OBJ}
+	${AR} rcs $@ $?
 
 libzfs_core.a: ${LIBZFS_CORE_A_OBJ}
-	${AR} rcs $@ ${LIBZFS_CORE_A_OBJ}
-
-libzfs.a: ${LIBZFS_OBJ} ${ZCOMMON_OBJ} ${LIBSHARE_OBJ}
-	${AR} rcs $@ ${LIBZFS_OBJ} ${ZCOMMON_OBJ} ${LIBSHARE_OBJ}
-
-libzpool.a: ${LIBZPOOL_OBJ} ${ZCOMMON_OBJ} ${LIBICP_OBJ} ${UNICODE_OBJ} ${LIBZSTD_OBJ}
-	${AR} rcs $@ ${LIBZPOOL_OBJ} ${ZCOMMON_OBJ} ${LIBICP_OBJ} ${UNICODE_OBJ} ${LIBZSTD_OBJ}
+	${AR} rcs $@ $?
 
 libzfsbootenv.a: ${LIBZFSBOOTENV_OBJ}
-	${AR} rcs $@ ${LIBZFSBOOTENV_OBJ}
+	${AR} rcs $@ $?
+
+libnvpair.a: ${LIBNVPAIR_OBJ} ${LIBSPL_OBJ}
+	${AR} rcs $@ $?
+
+libzfs.a: ${LIBZFS_OBJ} ${ZCOMMON_OBJ} ${LIBSHARE_OBJ}
+	${AR} rcs $@ $?
+
+libuutil.a: ${LIBUUTIL_OBJ} ${LIBAVL_OBJ} ${LIBSPL_OBJ}
+	${AR} rcs $@ $?
+
+libzpool.a: ${LIBZPOOL_OBJ} ${ZCOMMON_OBJ} ${LIBICP_OBJ} ${UNICODE_OBJ} ${LIBZSTD_OBJ}
+	${AR} rcs $@ $?
+
+libefi.a: ${LIBEFI_OBJ}
+	${AR} rcs $@ $? ${LIBBLKID_LIBS} /usr/lib/libz.a
+
+libzutil.a: ${LIBZUTIL_OBJ} libavl.a libtpool.a libnvpair.a libspl.a libefi.a
+	${AR} rcs $@ $? ${LIBTIRPC_LIBS} ${LIBUUID_LIBS} ${LIBBLKID_LIBS} \
+		/usr/lib/libudev.a /usr/lib/libm.a /usr/lib/librt.a
 
 .PHONY: progs
-progs: zfs zed zdb zpool mount.zfs zhack zinject zstream \
-	ztest raidz_test zfs_ids_to_path zgenhostid
-
-zfs: ${ZFS_OBJ} ${ZFS_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZFS_OBJ} ${ZFS_PROG} ${COMMON_LIBS} \
-		/usr/lib/libcrypto.a
-
-zpool: ${ZPOOL_OBJ} ${ZPOOL_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZPOOL_OBJ} ${ZPOOL_PROG} \
-		${COMMON_LIBS} /usr/lib/libcrypto.a
-
-zdb: ${ZDB_OBJ} ${ZDB_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZDB_OBJ} ${ZDB_PROG} \
-		${COMMON_LIBS} /usr/lib/libdl.a
-
-zhack: ${ZHACK_OBJ} ${ZHACK_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZHACK_OBJ} ${ZHACK_PROG} \
-		${COMMON_LIBS} /usr/lib/libdl.a
-
-zinject: ${ZINJECT_OBJ} ${ZINJECT_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZINJECT_OBJ} ${ZINJECT_PROG} \
-		${COMMON_LIBS} /usr/lib/libcrypto.a
-
-zstream: ${ZSTREAM_OBJ} ${ZSTREAM_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZSTREAM_OBJ} ${ZSTREAM_PROG} \
-		${COMMON_LIBS} libuutil.a /usr/lib/libcrypto.a
-
-ztest: ${ZTEST_OBJ} ${ZTEST_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZTEST_OBJ} ${ZTEST_PROG} \
-		${COMMON_LIBS} /usr/lib/libdl.a
-
-raidz_test: ${RAIDZ_TEST_OBJ} ${RAIDZ_TEST_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${RAIDZ_TEST_OBJ} ${RAIDZ_TEST_PROG} \
-		${COMMON_LIBS} /usr/lib/libdl.a
-
-zfs_ids_to_path: ${ZFS_IDS_OBJ} ${ZFS_IDS_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZFS_IDS_OBJ} ${ZFS_IDS_PROG} \
-		${COMMON_LIBS} /usr/lib/libcrypto.a
-
-zpool_influxdb: ${INFLUXDB_OBJ} ${INFLUXDB_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${INFLUXDB_OBJ} ${INFLUXDB_PROG} \
-		${COMMON_LIBS} /usr/lib/libcrypto.a
-
-mount.zfs: ${MOUNT_ZFS_OBJ} ${MOUNT_ZFS_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${MOUNT_ZFS_OBJ} ${MOUNT_ZFS_PROG} \
-		${COMMON_LIBS} /usr/lib/libcrypto.a
-
-zed: ${ZED_OBJ} ${ZED_PROG}
-	${CC} ${PROG_FLAGS} -o $@ ${ZED_OBJ} ${ZED_PROG} \
-		${COMMON_LIBS} /usr/lib/librt.a /usr/lib/libcrypto.a
+progs: zgenhostid zdb zhack ztest raidz_test zfs zpool \
+	zinject zfs_ids_to_path zpool_influxdb mount.zfs zed zstream
 
 zgenhostid: ${ZGENHOSTID_OBJ}
-	${CC} ${PROG_FLAGS} -o $@ ${ZGENHOSTID_OBJ}
+	${CC} ${PROG_FLAGS} -o $@ $?
+
+zdb: ${ZDB_OBJ} ${ZDB_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -ldl
+
+zhack: ${ZHACK_OBJ} ${ZHACK_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -ldl
+
+ztest: ${ZTEST_OBJ} ${ZTEST_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -ldl
+
+raidz_test: ${RAIDZ_TEST_OBJ} ${RAIDZ_TEST_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -ldl
+
+zfs: ${ZFS_OBJ} ${ZFS_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+zpool: ${ZPOOL_OBJ} ${ZPOOL_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+zinject: ${ZINJECT_OBJ} ${ZINJECT_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+zfs_ids_to_path: ${ZFS_IDS_OBJ} ${ZFS_IDS_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+zpool_influxdb: ${INFLUXDB_OBJ} ${INFLUXDB_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+mount.zfs: ${MOUNT_ZFS_OBJ} ${MOUNT_ZFS_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lcrypto
+
+zed: ${ZED_OBJ} ${ZED_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -lrt -lcrypto
+
+zstream: ${ZSTREAM_OBJ} ${ZSTREAM_PROG}
+	${CC} ${PROG_FLAGS} -o $@ $? ${LIBS} -luutil -lcrypto
 
 .PHONY: extra
 extra: pkgconfig functions
@@ -513,61 +406,61 @@ libzfsbootenv.pc: lib/libzfsbootenv/libzfsbootenv.pc.in
 functions: etc/zfs/zfs-functions etc/default/zfs cmd/zed/zed.d/history_event-zfs-list-cacher.sh
 
 etc/zfs/zfs-functions:
-	sed -e 's|@bindir[@]|/usr/bin|g' \
-		-e 's|@sbindir[@]|/usr/bin|g' \
-		-e 's|@datadir[@]|/usr/share|g' \
-		-e 's|@sysconfdir[@]|/etc|g' \
-		-e 's|@runstatedir[@]|/usr/var/run|g' \
-		-e 's|@initconfdir[@]|/etc/default|g' \
-		-e 's|@initdir[@]|/etc/init.d|g' \
-		-e 's|@mounthelperdir[@]|/usr/bin|g' \
-		-e 's|@systemdgeneratordir[@]|no|g' \
-		-e 's|@systemdunitdir[@]|no|g' \
-		-e 's|@udevdir[@]|no|g' \
-		-e 's|@udevruledir[@]|no/rules.d|g' \
-		-e 's|@zfsexecdir[@]|/usr/lib/zfs|g' \
-		-e 's|@PYTHON[@]|:|g' \
-		-e 's|@PYTHON_SHEBANG[@]|python3|g' \
-		-e 's|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g' \
-		-e 's|@DEFAULT_INIT_SHELL[@]|/bin/sh|g' \
+	sed -e "s|@bindir[@]|${BINDIR}|g" \
+		-e "s|@sbindir[@]|${BINDIR}|g" \
+		-e "s|@datadir[@]|${PREFIX}/share|g" \
+		-e "s|@sysconfdir[@]|${SYSCONFDIR}|g" \
+		-e "s|@runstatedir[@]|${PREFIX}/var/run|g" \
+		-e "s|@initconfdir[@]|${SYSCONFDIR}/default|g" \
+		-e "s|@initdir[@]|${SYSCONFDIR}/init.d|g" \
+		-e "s|@mounthelperdir[@]|${BINDIR}|g" \
+		-e "s|@systemdgeneratordir[@]|no|g" \
+		-e "s|@systemdunitdir[@]|no|g" \
+		-e "s|@udevdir[@]|no|g" \
+		-e "s|@udevruledir[@]|no/rules.d|g" \
+		-e "s|@zfsexecdir[@]|${LIBDIR}/zfs|g" \
+		-e "s|@PYTHON[@]|:|g" \
+		-e "s|@PYTHON_SHEBANG[@]|python3|g" \
+		-e "s|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g" \
+		-e "s|@DEFAULT_INIT_SHELL[@]|${SHELL}|g" \
 		etc/zfs/zfs-functions.in > $@
 etc/default/zfs:
-	sed -e 's|@bindir[@]|/usr/bin|g' \
-		-e 's|@sbindir[@]|/usr/bin|g' \
-		-e 's|@datadir[@]|/usr/share|g' \
-		-e 's|@sysconfdir[@]|/etc|g' \
-		-e 's|@runstatedir[@]|/usr/var/run|g' \
-		-e 's|@initconfdir[@]|/etc/default|g' \
-		-e 's|@initdir[@]|/etc/init.d|g' \
-		-e 's|@mounthelperdir[@]|/usr/bin|g' \
-		-e 's|@systemdgeneratordir[@]|no|g' \
-		-e 's|@systemdunitdir[@]|no|g' \
-		-e 's|@udevdir[@]|no|g' \
-		-e 's|@udevruledir[@]|no/rules.d|g' \
-		-e 's|@zfsexecdir[@]|/usr/lib/zfs|g' \
-		-e 's|@PYTHON[@]|:|g' \
-		-e 's|@PYTHON_SHEBANG[@]|python3|g' \
-		-e 's|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g' \
-		-e 's|@DEFAULT_INIT_SHELL[@]|/bin/sh|g' \
+	sed -e "s|@bindir[@]|${BINDIR}|g" \
+		-e "s|@sbindir[@]|${BINDIR}|g" \
+		-e "s|@datadir[@]|${PREFIX}/share|g" \
+		-e "s|@sysconfdir[@]|${SYSCONFDIR}|g" \
+		-e "s|@runstatedir[@]|${PREFIX}/var/run|g" \
+		-e "s|@initconfdir[@]|${SYSCONFDIR}/default|g" \
+		-e "s|@initdir[@]|${SYSCONFDIR}/init.d|g" \
+		-e "s|@mounthelperdir[@]|${BINDIR}|g" \
+		-e "s|@systemdgeneratordir[@]|no|g" \
+		-e "s|@systemdunitdir[@]|no|g" \
+		-e "s|@udevdir[@]|no|g" \
+		-e "s|@udevruledir[@]|no/rules.d|g" \
+		-e "s|@zfsexecdir[@]|${LIBDIR}/zfs|g" \
+		-e "s|@PYTHON[@]|:|g" \
+		-e "s|@PYTHON_SHEBANG[@]|python3|g" \
+		-e "s|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g" \
+		-e "s|@DEFAULT_INIT_SHELL[@]|${SHELL}|g" \
 		etc/default/zfs.in > $@
 cmd/zed/zed.d/history_event-zfs-list-cacher.sh:
-	sed -e 's|@bindir[@]|/usr/bin|g' \
-		-e 's|@sbindir[@]|/usr/bin|g' \
-		-e 's|@datadir[@]|/usr/share|g' \
-		-e 's|@sysconfdir[@]|/etc|g' \
-		-e 's|@runstatedir[@]|/usr/var/run|g' \
-		-e 's|@initconfdir[@]|/etc/default|g' \
-		-e 's|@initdir[@]|/etc/init.d|g' \
-		-e 's|@mounthelperdir[@]|/usr/bin|g' \
-		-e 's|@systemdgeneratordir[@]|no|g' \
-		-e 's|@systemdunitdir[@]|no|g' \
-		-e 's|@udevdir[@]|no|g' \
-		-e 's|@udevruledir[@]|no/rules.d|g' \
-		-e 's|@zfsexecdir[@]|/usr/lib/zfs|g' \
-		-e 's|@PYTHON[@]|:|g' \
-		-e 's|@PYTHON_SHEBANG[@]|python3|g' \
-		-e 's|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g' \
-		-e 's|@DEFAULT_INIT_SHELL[@]|/bin/sh|g' \
+	sed -e "s|@bindir[@]|${BINDIR}|g" \
+		-e "s|@sbindir[@]|${BINDIR}|g" \
+		-e "s|@datadir[@]|${PREFIX}/share|g" \
+		-e "s|@sysconfdir[@]|${SYSCONFDIR}|g" \
+		-e "s|@runstatedir[@]|${PREFIX}/var/run|g" \
+		-e "s|@initconfdir[@]|${SYSCONFDIR}/default|g" \
+		-e "s|@initdir[@]|${SYSCONFDIR}/init.d|g" \
+		-e "s|@mounthelperdir[@]|${BINDIR}|g" \
+		-e "s|@systemdgeneratordir[@]|no|g" \
+		-e "s|@systemdunitdir[@]|no|g" \
+		-e "s|@udevdir[@]|no|g" \
+		-e "s|@udevruledir[@]|no/rules.d|g" \
+		-e "s|@zfsexecdir[@]|${LIBDIR}/zfs|g" \
+		-e "s|@PYTHON[@]|:|g" \
+		-e "s|@PYTHON_SHEBANG[@]|python3|g" \
+		-e "s|@DEFAULT_INIT_NFS_SERVER[@]|nfs|g" \
+		-e "s|@DEFAULT_INIT_SHELL[@]|${SHELL}|g" \
 		cmd/zed/zed.d/history_event-zfs-list-cacher.sh > $@
 
 .PHONY: install
@@ -962,9 +855,9 @@ install-headers:
 	install -Dm644 lib/libspl/include/os/linux/sys/zfs_context_os.h ${DESTDIR}${INCDIR}/libspl/sys/zfs_context_os.h
 
 install-pc: pkgconfig
-	install -Dm644 lib/libzfs_core/libzfs_core.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfs_core.pc
-	install -Dm644 lib/libzfs/libzfs.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfs.pc
-	install -Dm644 lib/libzfsbootenv/libzfsbootenv.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfsbootenv.pc
+	install -Dm644 libzfs_core.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfs_core.pc
+	install -Dm644 libzfs.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfs.pc
+	install -Dm644 libzfsbootenv.pc ${DESTDIR}${LIBDIR}/pkgconfig/libzfsbootenv.pc
 
 .PHONY: clean
 clean:

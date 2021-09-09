@@ -43,36 +43,14 @@
 sed -i 's/rm -R/rm -r/g'   configure
 sed -i 's/--in-place/-i/g' configure
 
-export PKG_CONFIG_PATH="$PWD/garbo/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LIBUUID_LIBS="$PWD/garbo/usr/lib/libuuid.a"
+export LIBBLKID_LIBS="$PWD/garbo/usr/lib/libblkid.a"
+export LIBTIRPC_LIBS="$PWD/garbo/usr/lib/libtirpc.a"
 export LIBUUID_CFLAGS="-I$PWD/garbo/usr/include"
 export LIBBLKID_CFLAGS="-I$PWD/garbo/usr/include"
 export LIBTIRPC_CFLAGS="-I$PWD/garbo/usr/include/tirpc"
 
-./configure \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --libdir=/usr/lib \
-    --sbindir=/usr/bin \
-    --libexecdir=/usr/lib \
-    --disable-nls \
-    --disable-pam \
-    --disable-rpath \
-    --disable-shared \
-    --disable-systemd \
-    --disable-sysvinit \
-    --with-config=user \
-    --with-mounthelperdir=/usr/bin \
-    --without-udevdir \
-    --without-systemdunitdir \
-    --without-systemdpresetdir \
-    --without-systemdgeneratordir \
-    --without-systemdmodulesloaddir
-
-export LIBUUID_LIBS="$PWD/garbo/usr/lib/libuuid.a"
-export LIBBLKID_LIBS="$PWD/garbo/usr/lib/libblkid.a"
-export LIBTIRPC_LIBS="$PWD/garbo/usr/lib/libtirpc.a"
-
-make
+make PREFIX=/usr
 make PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
