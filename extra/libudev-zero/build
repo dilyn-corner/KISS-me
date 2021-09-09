@@ -3,5 +3,9 @@
 make PREFIX=/usr
 make DESTDIR="$1" PREFIX=/usr install
 
+cc -o helper contrib/helper.c
+
+install -Dm755 helper "$1/usr/bin/helper"
+
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/libudev-zero.license"
