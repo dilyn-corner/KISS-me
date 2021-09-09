@@ -1,2 +1,4 @@
+cmake   make
+samurai make
 xz
 zlib-ng

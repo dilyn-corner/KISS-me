@@ -1,14 +1,17 @@
 #!/bin/sh -e
 
-./configure \
-    --prefix=/usr \
-    --with-threads \
-    --with-history \
-    --without-python \
-    --without-icu
+export DESTDIR="$1"
 
-gmake
-gmake DESTDIR="$1" install
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIBXML2_WITH_DEBUG=OFF \
+    -DLIBXML2_WITH_LEGACY=OFF \
+    -DLIBXML2_WITH_PYTHON=OFF \
+    -DLIBXML2_WITH_TESTS=OFF \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/libxml2.license"
