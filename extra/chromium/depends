@@ -20,4 +20,4 @@ python2            make
 samurai            make
 wayland
 wayland-protocols  make
-zlib
+zlib-ng

@@ -3,4 +3,4 @@ curl
 expat
 libressl
 linux-headers make
-zlib
+zlib-ng

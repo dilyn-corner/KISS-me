@@ -7,4 +7,4 @@ meson   make
 pixman
 pkgconf make
 samurai make
-zlib
+zlib-ng

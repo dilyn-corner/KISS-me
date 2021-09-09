@@ -4,4 +4,4 @@ openssl
 pkgconf make
 python  make
 xz
-zlib
+zlib-ng

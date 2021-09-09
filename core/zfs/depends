@@ -1,2 +1,2 @@
 linux-headers make
-zlib          make
+zlib-ng       make

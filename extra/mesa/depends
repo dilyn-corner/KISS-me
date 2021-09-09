@@ -9,5 +9,5 @@ pkgconf           make
 python            make
 wayland
 wayland-protocols make
-zlib
+zlib-ng
 zstd

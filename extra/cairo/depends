@@ -5,4 +5,4 @@ mesa
 meson   make
 pixman
 pkgconf make
-zlib
+zlib-ng
