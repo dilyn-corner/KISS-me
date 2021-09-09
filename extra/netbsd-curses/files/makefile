@@ -1,9 +1,10 @@
 .POSIX:
 
 PREFIX ?= /usr/local
-BINDIR ?= $(PREFIX)/bin
-LIBDIR ?= $(PREFIX)/lib
-INCDIR ?= $(PREFIX)/include
+BINDIR ?= ${PREFIX}/bin
+LIBDIR ?= ${PREFIX}/lib
+INCDIR ?= ${PREFIX}/include
+PKGCONFDIR ?= ${LIBDIR}/pkgconfig
 
 CC ?= cc
 AR ?= ar
@@ -14,17 +15,17 @@ TOOL_NBPERF = nbperf/nbperf
 
 SCRIPT_ENV = TERMINFODIR=./terminfo \
 				TOOL_AWK=awk \
-				TOOL_NBPERF=$(TOOL_NBPERF) \
+				TOOL_NBPERF=${TOOL_NBPERF} \
 				TOOL_SED=sed \
 				TOOL_SORT=sort \
-				TOOL_TIC=$(TOOL_TIC)
+				TOOL_TIC=${TOOL_TIC}
 
 XCFLAGS = -fPIC ${CFLAGS}
 INCFLAGS = -I. -I./libterminfo -I./tic -I./libcurses \
 			-I./libmenu -I./libform -I./libpanel
 
 XCPPFLAGS = -DHAVE_WCHAR -DTERMINFO_COMPILE -DTERMINFO_DB \
-			-DTERMINFO_COMPAT -DINSTALL_PREFIX=\"/usr\" ${CPPFLAGS}
+			-DTERMINFO_COMPAT -DINSTALL_PREFIX=\"${PREFIX}\" ${CPPFLAGS}
 FLAGS = ${INCFLAGS} ${XCPPFLAGS} ${XCFLAGS}
 
 TIC_OBJ = tic/tic.o tic/cdbw.o tic/mi_vector_hash.o tic/compile.o
@@ -225,29 +226,29 @@ install-headers:
 	ln -sf curses.h                      ${DESTDIR}${INCDIR}/ncurses.h
 
 install-pc:
-	mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
+	mkdir -p ${DESTDIR}${PKGCONFDIR}
 	./genpc curses "curses terminal library" "-lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/curses.pc
+		${DESTDIR}${PKGCONFDIR}/curses.pc
 	./genpc ncurses "ncurses terminal library" "-lncurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/ncurses.pc
+		${DESTDIR}${PKGCONFDIR}/ncurses.pc
 	./genpc ncursesw "ncurses terminal library" "-lncurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/ncursesw.pc
+		${DESTDIR}${PKGCONFDIR}/ncursesw.pc
 	./genpc terminfo "terminfo library" "-lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/terminfo.pc
+		${DESTDIR}${PKGCONFDIR}/terminfo.pc
 	./genpc termcap "termcap library" "-lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/termcap.pc
+		${DESTDIR}${PKGCONFDIR}/termcap.pc
 	./genpc panel "curses panel library" "-lpanel -lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/panel.pc
+		${DESTDIR}${PKGCONFDIR}/panel.pc
 	./genpc panelw "curses panel library" "-lpanel -lncurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/panelw.pc
+		${DESTDIR}${PKGCONFDIR}/panelw.pc
 	./genpc menu "curses menu library" "-lmenu -lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/menu.pc
+		${DESTDIR}${PKGCONFDIR}/menu.pc
 	./genpc menuw "curses menu library" "-lmenu -lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/menuw.pc
+		${DESTDIR}${PKGCONFDIR}/menuw.pc
 	./genpc form "curses form library" "-lform -lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/form.pc
+		${DESTDIR}${PKGCONFDIR}/form.pc
 	./genpc formw "curses form library" "-lform -lcurses -lterminfo" > \
-		${DESTDIR}${LIBDIR}/pkgconfig/formw.pc
+		${DESTDIR}${PKGCONFDIR}/formw.pc
 
 .PHONY: clean
 clean:
