@@ -4,7 +4,7 @@
     --prefix=/usr \
     --with-system-zlib
 
-make LDFLAGS="$LDFLAGS -static"
+make doas patch pax LDFLAGS="$LDFLAGS -static"
 
 install -Dm755 pax   "$1/usr/bin/pax"
 install -Dm755 doas  "$1/usr/bin/doas"
