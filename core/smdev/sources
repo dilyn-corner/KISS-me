@@ -1,3 +1,4 @@
 https://dl.suckless.org/smdev/smdev-0.2.3.tar.gz
-patches/01-update-simevent.patch
-patches/02-hardcode-name-in-simevent.patch
+files/config.h
+patches/scan_all.patch
+patches/usb_nodes.patch
