@@ -3,5 +3,5 @@
 make
 make DESTDIR="$1" PREFIX=/usr install
 
-# Install the license file
+# Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/zstd.license"
