@@ -1,7 +1,8 @@
 #!/bin/sh -e
 
-/usr/bin/chromium \
+/usr/lib/chromium/chromium \
     --use-gl=egl \
+    --ignore-gpu-blocklist \
     --ozone-platform=wayland \
     --enable-gpu-rasterization \
     --enable-features=UseOzonePlatform \
