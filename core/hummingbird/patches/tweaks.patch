@@ -1,0 +1,43 @@
+diff --git a/dist/kiss/fs b/dist/kiss/fs
+index bae9450..c3ff346 100644
+--- a/dist/kiss/fs
++++ b/dist/kiss/fs
+@@ -13,11 +13,10 @@ mnt /dev/shm tmpfs shm mode=1777,nosuid,nodev
+ [ -h /dev/stdout ] || ln -sf fd/1 /dev/stdout
+ [ -h /dev/stderr ] || ln -sf fd/2 /dev/stderr
+ 
+-fsck -ATat noopts=_netdev
++fsck -ATt noopts=_netdev
+ [ $? -gt 1 ] && log "fsck call failed"
+ 
+ [ -e /etc/crypttab ] && [ -x /bin/cryptsetup ] && parse_crypttab
+ 
+ mount -o remount,rw /
+ mount -a
+-swapon -a
+diff --git a/dist/kiss/interlude b/dist/kiss/interlude
+index 3fd705c..f97b3c7 100644
+--- a/dist/kiss/interlude
++++ b/dist/kiss/interlude
+@@ -11,6 +11,9 @@ setup_hotplug(){
+         udevadm trigger -c change -t devices
+         udevadm settle
+ 
++    elif command -v smdev >/dev/null; then
++        smdev -s
++
+     elif command -v mdev >/dev/null; then
+         mdev -s
+         mdev -df & mdev_pid=$!
+diff --git a/dist/kiss/shutdown b/dist/kiss/shutdown
+index 0bd8389..9d6d592 100644
+--- a/dist/kiss/shutdown
++++ b/dist/kiss/shutdown
+@@ -11,7 +11,6 @@ dd count=1 bs=512 if=/dev/random of=/usr/lib/hummingbird/random.seed
+ 
+ # killall processes
+ 
+-swapoff -a
+ umount -a -l
+ umount -a
+ 
