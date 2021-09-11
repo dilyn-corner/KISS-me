@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+mkdir -p bin
+go build \
+    -trimpath \
+    -modcacherw \
+    -buildmode=pie \
+    -o bin filippo.io/age/cmd/...
+
+mkdir -p "$1/usr/bin"
+install -Dm755 bin/age        "$1/usr/bin"
+install -Dm755 bin/age-keygen "$1/usr/bin"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/age.license"
