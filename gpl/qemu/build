@@ -1,0 +1,115 @@
+#!/bin/sh -e
+
+(
+    cd gmake
+
+    ./configure \
+        --prefix=/usr \
+        --program-prefix=g
+
+    make
+    make DESTDIR="$OLDPWD/garbo" install
+)
+
+(
+    cd glib
+    unset DESTDIR
+
+    # Remove 'libelf' dependency.
+    sed 's/HAVE_LIBELF/HAVE_KISS/' gio/meson.build > _
+    mv -f _ gio/meson.build
+
+    # Remove 'util-linux' dependency.
+    sed 's/libmount_dep.found()/false/' meson.build > _
+    mv -f _ meson.build
+
+    : > glib/tests/meson.build
+    : > tests/meson.build
+    : > gobject/tests/mesom.build
+    : > gio/tests/meson.build
+    : > fuzzing/meson.build
+
+    # Set 'prefix' so that pkgconf finds the right headers/libs
+    meson \
+        --prefix="$OLDPWD/garbo/usr" \
+        -Dlibmount=disabled \
+        -Dinstalled_tests=false \
+        -Ddefault_library=static \
+        -Dman=false \
+        -Dfam=false \
+        -Dinternal_pcre=true \
+        . build
+
+    ninja -C build
+    ninja -C build install
+
+    rm -rf "$1/usr/bin/gdbus"
+
+    # Install the license
+    install -Dm755 COPYING "$1/usr/share/LICENSES/glib.license"
+)
+
+(
+    cd sdl2
+    unset DESTDIR
+
+    # Use cmake because it's 'preferred' and handles symbol
+    # duplication in the library better than autotools (for qemu).
+    # I won't have to vendor a HID symbol. #lazy
+
+    # Set 'prefix' so that pkgconf finds the right headers/libs
+    cmake -B build \
+        -DCMAKE_INSTALL_PREFIX="$OLDPWD/garbo/usr" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DSDL_SHARED=OFF \
+        -G Ninja
+
+    ninja -C build
+    ninja -C build install
+
+    # Install the license
+    install -Dm755 LICENSE.txt "$1/usr/share/LICENSES/sdl2.license"
+)
+
+export PATH="$PWD/garbo/usr/bin:$PATH"
+
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+# Remove bash dependency
+sed -i 's/bash/sh/g' Makefile
+
+# We vendored glib, and this is what happens.
+export PKG_CONFIG_PATH="$PWD/garbo/usr/lib/pkgconfig"
+export LDFLAGS="$LDFLAGS -Lgarbo/usr/lib"
+export CFLAGS="$CFLAGS -Igarbo/usr/include/SDL2 \
+                       -Igarbo/usr/include/gio-unix-2.0 \
+                       -Igarbo/usr/include/glib-2.0 \
+                       -Igarbo/usr/lib/glib-2.0/include"
+
+# The check for glib doesn't interact with our specified
+# CFLAGS, so we just comandeer the ones used by configure.
+CONFIGURE_CFLAGS="$CFLAGS" \
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --libexecdir=/usr/lib \
+    --disable-debug-info \
+    --disable-gtk \
+    --disable-docs \
+    --enable-sdl \
+    --enable-kvm \
+    --enable-curses \
+    --disable-user \
+    --enable-linux-user \
+    --enable-system \
+    --static
+
+gmake
+gmake DESTDIR="$1" PREFIX=/usr install
+
+# Install the license
+install -Dm755 COPYING     "$1/usr/share/LICENSES/qemu.license"
+install -Dm755 COPYING.LIB "$1/usr/share/LICENSES/qemu-lib.license"

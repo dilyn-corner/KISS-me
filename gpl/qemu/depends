@@ -1,0 +1,11 @@
+cmake         make
+libffi        make
+linux-headers make
+meson         make
+netbsd-curses make
+perl          make
+pixman        make
+pkgconf       make
+python        make
+samurai       make
+zlib-ng       make
