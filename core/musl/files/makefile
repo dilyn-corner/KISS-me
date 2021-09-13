@@ -9,7 +9,6 @@ CC ?= cc
 AR ?= ar
 SH ?= /bin/sh
 
-
 PICFLAGS="$FLAGS -fPIC"
 
 XCPPFLAGS = -D_XOPEN_SOURCE=700
@@ -790,22 +789,16 @@ headers:
 	install -Dm644 arch/generic/bits/dirent.h    ${DESTDIR}${INCDIR}/bits/dirent.h
 	install -Dm644 arch/generic/bits/errno.h     ${DESTDIR}${INCDIR}/bits/errno.h
 	install -Dm644 arch/generic/bits/fcntl.h     ${DESTDIR}${INCDIR}/bits/fcntl.h
-	install -Dm644 arch/generic/bits/fenv.h      ${DESTDIR}${INCDIR}/bits/fenv.h
 	install -Dm644 arch/generic/bits/hwcap.h     ${DESTDIR}${INCDIR}/bits/hwcap.h
-	install -Dm644 arch/generic/bits/io.h        ${DESTDIR}${INCDIR}/bits/io.h
 	install -Dm644 arch/generic/bits/ioctl.h     ${DESTDIR}${INCDIR}/bits/ioctl.h
 	install -Dm644 arch/generic/bits/ioctl_fix.h ${DESTDIR}${INCDIR}/bits/ioctl_fix.h
 	install -Dm644 arch/generic/bits/ipc.h       ${DESTDIR}${INCDIR}/bits/ipc.h
 	install -Dm644 arch/generic/bits/ipcstat.h   ${DESTDIR}${INCDIR}/bits/ipcstat.h
 	install -Dm644 arch/generic/bits/kd.h        ${DESTDIR}${INCDIR}/bits/kd.h
-	install -Dm644 arch/generic/bits/limits.h    ${DESTDIR}${INCDIR}/bits/limits.h
 	install -Dm644 arch/generic/bits/link.h      ${DESTDIR}${INCDIR}/bits/link.h
-	install -Dm644 arch/generic/bits/mman.h      ${DESTDIR}${INCDIR}/bits/mman.h
 	install -Dm644 arch/generic/bits/msg.h       ${DESTDIR}${INCDIR}/bits/msg.h
 	install -Dm644 arch/generic/bits/poll.h      ${DESTDIR}${INCDIR}/bits/poll.h
-	install -Dm644 arch/generic/bits/ptrace.h    ${DESTDIR}${INCDIR}/bits/ptrace.h
 	install -Dm644 arch/generic/bits/resource.h  ${DESTDIR}${INCDIR}/bits/resource.h
-	install -Dm644 arch/generic/bits/sem.h       ${DESTDIR}${INCDIR}/bits/sem.h
 	install -Dm644 arch/generic/bits/shm.h       ${DESTDIR}${INCDIR}/bits/shm.h
 	install -Dm644 arch/generic/bits/socket.h    ${DESTDIR}${INCDIR}/bits/socket.h
 	install -Dm644 arch/generic/bits/soundcard.h ${DESTDIR}${INCDIR}/bits/soundcard.h
