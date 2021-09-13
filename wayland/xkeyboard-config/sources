@@ -1,3 +1,2 @@
-https://x.org/releases/individual/data/xkeyboard-config/xkeyboard-config-2.33.tar.bz2
-https://x.org/releases/individual/lib/libX11-1.6.12.tar.bz2 libX11
-files/xml2lst rules
+https://alpine.global.ssl.fastly.net/alpine/edge/main/x86_64/xkeyboard-config-VERSION-r0.apk
+https://alpine.global.ssl.fastly.net/alpine/edge/main/x86_64/libx11-1.7.2-r0.apk

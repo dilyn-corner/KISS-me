@@ -1,19 +1,8 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
+cd "$1"
 
-sed -i '/^perl/d'               rules/meson.build
-sed -i 's/xml2lst\.pl/xml2lst/' rules/meson.build
+tar zxf "$OLDPWD/xkeyboard-config-"*.apk
+tar zxf "$OLDPWD/libx11-"*.apk
 
-meson \
-    --prefix=/usr \
-    --buildtype=release \
-    -Derrorlogs=false \
-    -Dstdsplit=false \
-    . build
-
-ninja -C build
-ninja -C build install
-
-# Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/xkeyboard-config.license"
+rm -rf usr/lib .PKGINFO .*.pub
