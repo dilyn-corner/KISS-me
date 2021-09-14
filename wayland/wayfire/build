@@ -2,11 +2,26 @@
 
 export DESTDIR="$1"
 
-# We need some headers from glm
-mkdir -p "garbo/usr/include" "garbo/usr/lib/pkgconfig"
-cp -r glm/glm "garbo/usr/include/glm"
+(
+    cd evdev
+    export DESTDIR="$OLDPWD"
 
-cat >> garbo/usr/lib/pkgconfig/glm.pc << EOF
+    meson \
+        --prefix=/usr \
+        --buildtype=release \
+        -Ddefault_library=static \
+        -Ddocumentation=disabled \
+        -Dtests=disabled \
+        . build
+
+    ninja -C build
+    ninja -C build install
+)
+
+# We need some headers from glm
+cp -r glm/glm "usr/include/glm"
+
+cat >> usr/lib/pkgconfig/glm.pc << EOF
 prefix=/usr
 includedir=\${prefix}/include
 
@@ -17,7 +32,11 @@ Cflags: -I\${includedir}
 EOF
 
 #include our glm C++ bindings
-export CXXFLAGS="$CXXFLAGS -I$PWD/garbo/usr/include"
+
+#export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig"
+export CFLAGS="$CFLAGS -I$PWD/usr/include -I$PWD/usr/include/libevdev-1.0"
+export CXXFLAGS="$CXXFLAGS -I$PWD/usr/include -I$PWD/usr/include/libevdev-1.0"
+export LDFLAGS="$LDFLAGS -L$PWD/usr/lib"
 
 for patch in *.patch; do
     patch -p1 < "$patch"
@@ -31,10 +50,11 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
 sed -i 's/cairo.h/cairo\/cairo.h/' \
     plugins/decor/deco-subsurface.cpp
 
+
 meson \
     --prefix=/usr \
     --buildtype=release \
-    -Dpkg_config_path="$PWD/garbo/usr/lib/pkgconfig" \
+    -Dpkg_config_path="$PWD/usr/lib/pkgconfig" \
     -Dexamples=false \
     -Dprint_trace=false \
     -Dxwayland=disabled \
@@ -50,20 +70,22 @@ ninja -C build install
 install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
 
 # Include the plugins.
-cd pl
+(
+    cd pl
 
-export CFLAGS="$CFLAGS -I$1/usr/include"
-export CXXFLAGS="$CXXFLAGS -I$1/usr/include"
-export LDFLAGS="$LDFLAGS -L$1/usr/lib"
+    export CFLAGS="$CFLAGS -I$1/usr/include"
+    export CXXFLAGS="$CXXFLAGS -I$1/usr/include"
+    export LDFLAGS="$LDFLAGS -L$1/usr/lib"
 
-meson \
-    --prefix=/usr \
-    --buildtype=release \
-    -Dpkg_config_path="$OLDPWD/garbo/usr/lib/pkgconfig:$1/usr/lib/pkgconfig" \
-    . build
+    meson \
+        --prefix=/usr \
+        --buildtype=release \
+        -Dpkg_config_path="$OLDPWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig" \
+        . build
 
-ninja -C build
-ninja -C build install
+    ninja -C build
+    ninja -C build install
+)
 
 # Install the license
-install -Dm755 ../LICENSE "$1/usr/share/LICENSES/wayfire.license"
+install -Dm755 LICENSE "$1/usr/share/LICENSES/wayfire.license"
