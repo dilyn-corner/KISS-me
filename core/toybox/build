@@ -10,8 +10,5 @@ PREFIX="$1/usr/bin" ./scripts/install.sh --symlink --force
 
 chmod gu+s "$1/usr/bin/toybox"
 
-# Install some important files
-install -Dm644 mdev.conf "$1/etc/mdev.conf"
-
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/toybox.license"
