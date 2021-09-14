@@ -19,8 +19,9 @@
 make
 make DESTDIR="$1" install
 
-install -m755 contrib/ssh-copy-id   "$1/usr/bin/ssh-copy-id"
-install -m644 contrib/ssh-copy-id.1 "$1/usr/share/man/man8/ssh-copy-id.1"
+# Install service, utility
+install -Dm755 sshd.run           "$1/etc/sysmgr/sshd"
+install -m755 contrib/ssh-copy-id "$1/usr/bin/ssh-copy-id"
 
 # Install the license
 install -Dm755 LICENCE "$1/usr/share/LICENSES/openssh.license"
