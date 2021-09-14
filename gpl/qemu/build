@@ -8,8 +8,10 @@
         --program-prefix=g
 
     make
-    make DESTDIR="$OLDPWD/garbo" install
+    make DESTDIR="$OLDPWD" install
 )
+
+export PATH="$PWD/usr/bin:$PATH"
 
 (
     cd glib
@@ -31,7 +33,7 @@
 
     # Set 'prefix' so that pkgconf finds the right headers/libs
     meson \
-        --prefix="$OLDPWD/garbo/usr" \
+        --prefix="$OLDPWD/usr" \
         -Dlibmount=disabled \
         -Dinstalled_tests=false \
         -Ddefault_library=static \
@@ -51,27 +53,17 @@
 
 (
     cd sdl2
-    unset DESTDIR
 
-    # Use cmake because it's 'preferred' and handles symbol
-    # duplication in the library better than autotools (for qemu).
-    # I won't have to vendor a HID symbol. #lazy
+    # We'll keep SDL2; static builds don't seem to function
+    ./configure \
+        --prefix=/usr
 
-    # Set 'prefix' so that pkgconf finds the right headers/libs
-    cmake -B build \
-        -DCMAKE_INSTALL_PREFIX="$OLDPWD/garbo/usr" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DSDL_SHARED=OFF \
-        -G Ninja
-
-    ninja -C build
-    ninja -C build install
+    gmake
+    gmake DESTDIR="$1" install
 
     # Install the license
     install -Dm755 LICENSE.txt "$1/usr/share/LICENSES/sdl2.license"
 )
-
-export PATH="$PWD/garbo/usr/bin:$PATH"
 
 for patch in *.patch; do
     patch -p1 < "$patch"
@@ -81,30 +73,46 @@ done
 sed -i 's/bash/sh/g' Makefile
 
 # We vendored glib, and this is what happens.
-export PKG_CONFIG_PATH="$PWD/garbo/usr/lib/pkgconfig"
-export LDFLAGS="$LDFLAGS -Lgarbo/usr/lib"
-export CFLAGS="$CFLAGS -Igarbo/usr/include/SDL2 \
-                       -Igarbo/usr/include/gio-unix-2.0 \
-                       -Igarbo/usr/include/glib-2.0 \
-                       -Igarbo/usr/lib/glib-2.0/include"
+export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig $1/usr/lib/pkgconfig"
+export LDFLAGS="$LDFLAGS -Lusr/lib -L$1/usr/lib"
+export CFLAGS="$CFLAGS -I$1/usr/include/SDL2 -Iusr/include/gio-unix-2.0 \
+    -Iusr/include/glib-2.0 -Iusr/lib/glib-2.0/include"
 
 # The check for glib doesn't interact with our specified
 # CFLAGS, so we just comandeer the ones used by configure.
+# Build qemu-system* binaries dynamically linked
 CONFIGURE_CFLAGS="$CFLAGS" \
 ./configure \
     --prefix=/usr \
-    --sysconfdir=/etc \
     --localstatedir=/var \
-    --libexecdir=/usr/lib \
+    --sysconfdir=/etc \
     --disable-debug-info \
     --disable-gtk \
     --disable-docs \
     --enable-sdl \
     --enable-kvm \
+    --enable-pie \
     --enable-curses \
     --disable-user \
+    --disable-linux-user \
+    --enable-system
+
+gmake
+gmake DESTDIR="$1" PREFIX=/usr install
+gmake clean
+
+# Build qemu Linux user binaries statically linked.
+CONFIGURE_CFLAGS="$CFLAGS" \
+./configure \
+    --prefix=/usr \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --disable-debug-info \
+    --disable-gtk \
+    --disable-docs \
+    --disable-user \
     --enable-linux-user \
-    --enable-system \
+    --disable-system \
     --static
 
 gmake
