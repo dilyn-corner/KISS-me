@@ -9,6 +9,18 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
 make 
 make DESTDIR="$1" install
+make clean
+
+patch -p1 < fix-control-empty.patch
+
+./configure \
+    --prefix=/usr \
+    --without-debug \
+    --disable-shared \
+    --enable-static
+
+make
+make DESTDIR="$1" install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/alsa-lib.license"
