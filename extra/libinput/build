@@ -5,33 +5,38 @@ export DESTDIR="$1"
 patch -p1 < evdev-wrap.patch
 
 (
-cd evdev
+    cd evdev
+    export DESTDIR="$OLDPWD"
 
-meson \
-    --prefix=/usr \
-    --buildtype=release \
-    -Ddocumentation=disabled \
-    -Dtests=disabled \
-    . build
+    meson \
+        --prefix=/usr \
+        --buildtype=release \
+        -Ddefault_library=static \
+        -Ddocumentation=disabled \
+        -Dtests=disabled \
+        . build
 
-ninja -C build
-ninja -C build install
+    ninja -C build
+    ninja -C build install
 
-# Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/libevdev.license"
+    # Install the license
+    install -Dm755 COPYING "$1/usr/share/LICENSES/libevdev.license"
 )
 
 (
-cd mtdev
+    cd mtdev
+    export DESTDIR="$OLDPWD"
 
-./configure \
-    --prefix=/usr
+    ./configure \
+        --prefix=/usr \
+        --disable-shared \
+        --disable-gcov
 
-make
-make DESTDIR="$1" install
+    make
+    make install
 
-# Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/mtdev.license"
+    # Install the license
+    install -Dm755 COPYING "$1/usr/share/LICENSES/mtdev.license"
 )
 
 # Build fails with clang due to -Werror (forced on) and
@@ -49,6 +54,7 @@ meson \
     --mandir=/usr/share/man \
     --libexecdir=/usr/lib \
     --buildtype=release \
+    -Ddefault_library=both \
     -Ddebug-gui=false \
     -Ddocumentation=false \
     -Dtests=false \
