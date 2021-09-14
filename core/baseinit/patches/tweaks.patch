@@ -1,0 +1,43 @@
+--- a/lib/init/rc.boot
++++ b/lib/init/rc.boot
+@@ -43,6 +43,9 @@
+         mdevd & pid_mdevd=$!
+         mdevd-coldplug
+ 
++    elif command -v smdev >/dev/null; then
++        smdev -s
++
+     elif command -v mdev >/dev/null; then
+         mdev -s
+         mdev -df & pid_mdev=$!
+@@ -54,7 +57,7 @@
+ }
+ 
+ log "Checking filesystems..."; {
+-    fsck -ATat noopts=_netdev
++    fsck -ATt noopts=_netdev
+ 
+     # It can't be assumed that success is 0
+     # and failure is > 0.
+@@ -69,10 +72,6 @@
+     mount -a || sos
+ }
+ 
+-log "Enabling swap..."; {
+-    swapon -a || sos
+-}
+-
+ log "Seeding random..."; {
+     random_seed load
+ }
+--- a/lib/init/rc.shutdown
++++ b/lib/init/rc.shutdown
+@@ -30,8 +30,6 @@
+ }
+ 
+ log "Unmounting filesystems and disabling swap..."; {
+-    swapoff -a
+-
+     # Skip unmounting pseudo filesystems as they may be
+     # needed below for encryption and user shutdown scripts.
+     #

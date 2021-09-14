@@ -1,0 +1,52 @@
+--- a/lib/init/rc.boot
++++ b/lib/init/rc.boot
+@@ -51,7 +51,6 @@ log "Starting device manager..."; {
+ 
+         mdev)
+             mdev -s
+-            mdev -df & pid_mdev=$!
+         ;;
+     esac
+ }
+@@ -61,7 +60,7 @@ log "Remounting rootfs as read-only..."; {
+ }
+ 
+ log "Checking filesystems..."; {
+-    fsck -ATat noopts=_netdev
++    fsck -ATt noopts=_netdev
+ 
+     # It can't be assumed that success is 0
+     # and failure is > 0.
+@@ -76,10 +75,6 @@ log "Mounting all local filesystems..."; {
+     mount -a || sos
+ }
+ 
+-log "Enabling swap..."; {
+-    swapon -a || sos
+-}
+-
+ log "Seeding random..."; {
+     random_seed load
+ }
+@@ -151,6 +146,9 @@ log "Replacing rc.boot with service manager..."; {
+                 *)
+                     run_exec s6-svscan "$CONFIG_SERVICE_DIR"
+                 ;;
++                sysmgr)
++                    respawn sysmgr &
++                ;;
+             esac
+         ;;
+ 
+--- a/lib/init/rc.shutdown
++++ b/lib/init/rc.shutdown
+@@ -29,8 +27,7 @@
+     kall 9
+ }
+ 
+-log "Unmounting filesystems and disabling swap..."; {
+-    swapoff -a
++log "Unmounting filesystems..."; {
+ 
+     # Skip unmounting pseudo filesystems as they may be
+     # needed below for encryption and user shutdown scripts.
