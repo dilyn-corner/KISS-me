@@ -1,5 +1,19 @@
+diff --git a/mojo/public/c/system/thunks.cc b/mojo/public/c/system/thunks.cc
+index d7dc6e3d..5cb40a21 100644
+--- a/mojo/public/c/system/thunks.cc
++++ b/mojo/public/c/system/thunks.cc
+@@ -100,7 +100,8 @@ class CoreLibraryInitializer {
+     base::ScopedAllowBlocking allow_blocking;
+     base::NativeLibraryOptions library_options;
+ #if !defined(ADDRESS_SANITIZER) && !defined(THREAD_SANITIZER) && \
+-    !defined(MEMORY_SANITIZER) && !defined(LEAK_SANITIZER)
++    !defined(MEMORY_SANITIZER) && !defined(LEAK_SANITIZER) && \
++    defined(RTLD_DEEPBIND)
+     // Sanitizer builds cannnot support RTLD_DEEPBIND, but they also disable
+     // allocator shims, so it's unnecessary there.
+     library_options.prefer_own_symbols = true;
 diff --git a/net/socket/udp_socket_posix.cc b/net/socket/udp_socket_posix.cc
-index 47f3149..03f7528 100644
+index c34a1e72..02e8d9d7 100644
 --- a/net/socket/udp_socket_posix.cc
 +++ b/net/socket/udp_socket_posix.cc
 @@ -1162,7 +1162,7 @@ SendResult UDPSocketPosixSender::InternalSendmmsgBuffers(

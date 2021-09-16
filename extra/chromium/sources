@@ -1,10 +1,15 @@
-https://commondatastorage.googleapis.com/chromium-browser-official/chromium-92.0.4515.107.tar.xz
-https://github.com/stha09/chromium-patches/releases/download/chromium-92-patchset-7/chromium-92-patchset-7.tar.xz
-git+https://github.com/Ahrotahn/ungoogled-chromium#4ee8b57c6e2c285ab80ce9f2a0d70e6e2844cb6b ungoogled-chromium
+https://commondatastorage.googleapis.com/chromium-browser-official/chromium-93.0.4577.63.tar.xz
+https://github.com/stha09/chromium-patches/releases/download/chromium-93-patchset-6/chromium-93-patchset-6.tar.xz
+https://github.com/Eloston/ungoogled-chromium/archive/fff1538f74cf3c8d7f0512aa088e72df8b61b972.tar.gz ungoogled-chromium
 https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz gperf
 files/chromium.sh
+files/default.profdata
+patches/chromium-InkDropHost-crash.patch
 patches/chromium-optional-atk-dbus.patch
+patches/chromium-skia-harmony.patch
+patches/chromium-static-cast-fix.patch
 patches/chromium-sql-make-VirtualCursor-standard-layout-type.patch
+patches/chromium-vaapi-build-with-libva.patch
 patches/musl-crashpad.patch
 patches/musl-default-pthread-stacksize.patch
 patches/musl-fixes.patch
@@ -13,6 +18,7 @@ patches/musl-libc++.patch
 patches/musl-no-execinfo.patch
 patches/musl-no-getcontext.patch
 patches/musl-no-mallinfo.patch
+patches/musl-quiche-arena-size.patch
 patches/musl-resolver.patch
 patches/musl-sandbox.patch
 patches/musl-scoped-file.patch

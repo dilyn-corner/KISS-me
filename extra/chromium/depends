@@ -4,6 +4,7 @@ bzip2
 fontconfig
 freetype-harfbuzz
 libdrm
+libva
 libwebp
 libxkbcommon
 libxml2
@@ -16,7 +17,6 @@ opus
 perl               make
 pkgconf            make
 python             make
-python2            make
 samurai            make
 wayland
 wayland-protocols  make
