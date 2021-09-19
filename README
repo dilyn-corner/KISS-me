@@ -86,14 +86,13 @@ NOTES:
     | zfs               | CDDL          | mesa              | MIT           |
     | zlib-ng           | zlib          | meson             | Apache-2.0    |
     | zstd              | BSD 3-Clause  | nasm              | BSD 2-Clause  |
-    | nasm              | BSD 2-Clause  | netbsd-curses     | BSD 3-Clause  |
-    +-------------------+---------------+ nodejs            | MIT           |
-    | WAYLAND           | LICENSE       | nss               | MPLv2         |
-    +-------------------+---------------+ openssh           | BSD           |
-    | foot              | MIT           | opus              | BSD 3-Clause  |
-    | grim              | MIT           | passage           | Public Domain |
-    | libxkcommon       | MIT           | perl              | Artistic      |
-    | seatd             | MIT           | pipewire          | MIT           |
+    +-------------------+---------------+ netbsd-curses     | BSD 3-Clause  |
+    | WAYLAND           | LICENSE       | nodejs            | MIT           |
+    +-------------------+---------------+ nss               | MPLv2         |
+    | foot              | MIT           | openssh           | BSD           |
+    | grim              | MIT           | opus              | BSD 3-Clause  |
+    | libxkcommon       | MIT           | passage           | Public Domain |
+    | seatd             | MIT           | perl              | Artistic      |
     | wayfire           | MIT           | pixman            | MIT           |
     | wayland           | MIT           | pkgconf           | ISC           |
     | wayland-protocols | MIT           | python            | PSFv2         |
@@ -107,7 +106,6 @@ NOTES:
     +-------------------+---------------+
     | alsa-lib          | GPLv2.1       |
     | alsa-utils        | GPLv2         |
-    | basu              | LGPLv2.1      |
     | linux-headers     | GPLv2         |
     | qemu              | GPLv2         |
     +-------------------+---------------+
