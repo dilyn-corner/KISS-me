@@ -8,4 +8,3 @@ patches/003-map-sync-fix.patch
 patches/004-guest-agent-shutdown.patch
 patches/005-xattr-size-max.patch
 patches/CVE-2021-20255.patch
-patches/no-tests.patch
