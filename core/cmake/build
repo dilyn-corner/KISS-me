@@ -7,8 +7,6 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
 sed -i 's,curses_version,baudrate,'   \
     Source/Checks/Curses/CheckCurses.c
-sed -i 's,defined(HAVE_LIBCRYPTO),0,' \
-    Utilities/cmlibarchive/libarchive/archive_hmac.c
 
 if kiss l cmake; then
     export DESTDIR="$1"
