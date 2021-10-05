@@ -11,7 +11,7 @@
     --disable-lzmainfo \
     --disable-lzma-links
 
-# xz is Public Domain without GNU getopt. 
+# xz is Public Domain without GNU getopt.
 # Configure checks for getopt.h, but I want
 # to make sure it isn't built.
 # If the make errors, you need GNU getopt.
