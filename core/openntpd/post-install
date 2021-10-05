@@ -5,5 +5,5 @@ NOTE: OpenNTPD needs its own user and group for privilege separation.
       succession:
 
   # addgroup -S openntpd
-  # adduser -S -h /var/empty -G openntpd openntpd
+  # adduser -D -S -h /var/empty -G openntpd openntpd
 EOF
