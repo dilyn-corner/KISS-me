@@ -63,10 +63,10 @@ struct rule {
     { "lp[0-9]*",       "root", "lp",    0660, NULL,      "@/usr/bin/helper" },
     { "irlpt[0-9].*",   "root"," lp",    0660, NULL,      "@/usr/bin/helper" },
     // block
-    { "sd[a-z].*",      "root", "disk",  0660, NULL,      NULL               },
-    { "hd[a-z].*",      "root", "disk",  0660, NULL,      NULL               },
-    { "ram[0-9].*",     "root", "disk",  0660, NULL,      NULL               },
-    { "loop[0-9].*",    "root", "disk",  0660, NULL,      NULL               },
+    { "sd[a-z].*",      "root", "disk",  0660, NULL,      "@/usr/bin/helper" },
+    { "hd[a-z].*",      "root", "disk",  0660, NULL,      "@/usr/bin/helper" },
+    { "ram[0-9].*",     "root", "disk",  0660, NULL,      "@/usr/bin/helper" },
+    { "loop[0-9].*",    "root", "disk",  0660, NULL,      "@/usr/bin/helper" },
     { "control",        "root", "disk",  0660, NULL,      NULL               },
     { "mmcblk[0-9].*",  "root", "disk",  0660, NULL,      NULL               },
     { "md.*",           "root", "disk",  0660, NULL,      NULL               },
@@ -106,7 +106,7 @@ struct rule {
     { "aoe.*",          "root", "disk",  0660, "=etherd/",NULL               },
     { "bsg/.*",         "root", "disk",  0660, "=bsg/",   NULL               },
     // audio
-    { "snd/.*",         "root", "audio", 0660, "=snd/",   NULL               },
+    { "snd/.*",         "root", "audio", 0660, "=snd/",   "@/usr/bin/helper" },
     { "midi.*",         "root", "audio", 0660, "=snd/",   NULL               },
     { "seq",            "root", "audio", 0660, "=snd/",   NULL               },
     { "timer",          "root", "audio", 0660, "=snd/",   NULL               },
@@ -125,11 +125,11 @@ struct rule {
     { "tap[0-9].*",     "root", "network",  0660, "=net/",   NULL            },
     { "rfkill",         "root", "rfkill",   0640, NULL,      NULL            },
     // cpu
-    { "cpu([0-9].+)",   "root", "root",  0444, "=cpu/%1/cpuid", NULL         },
-    { "msr([0-9].+)",   "root", "root",  0600, "=cpu/%1/msr",   NULL         },
-    { "microcode",      "root", "root",  0600, "=cpu/microcode",NULL         },
+    { "cpu([0-9].+)",   "root", "root",  0444, "=cpu/%1/cpuid",  NULL        },
+    { "msr([0-9].+)",   "root", "root",  0600, "=cpu/%1/msr",    NULL        },
+    { "microcode",      "root", "root",  0600, "=cpu/microcode", NULL        },
     // fuse
-    { "fuse",           "root", "root",  0666, NULL,      NULL },
+    { "fuse",           "root", "root",  0666, NULL,      NULL               },
     // raid controllers
     { "cciss.*",        "root", "disk",  0660, NULL,      NULL               },
     { "ida.*",          "root", "disk",  0660, NULL,      NULL               },
