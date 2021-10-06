@@ -1,4 +1,4 @@
-https://github.com/ClementTsang/bottom/archive/0.6.3.tar.gz
+https://github.com/ClementTsang/bottom/archive/0.6.4.tar.gz
 https://static.crates.io/crates/addr2line/addr2line-0.15.1.crate vendor
 https://static.crates.io/crates/adler/adler-0.2.3.crate vendor
 https://static.crates.io/crates/aho-corasick/aho-corasick-0.7.18.crate vendor
@@ -120,7 +120,7 @@ https://static.crates.io/crates/predicates/predicates-1.0.8.crate vendor
 https://static.crates.io/crates/proc-macro-hack/proc-macro-hack-0.5.19.crate vendor
 https://static.crates.io/crates/proc-macro-nested/proc-macro-nested-0.1.6.crate vendor
 https://static.crates.io/crates/proc-macro2/proc-macro2-1.0.27.crate vendor
-https://static.crates.io/crates/procfs/procfs-0.9.1.crate vendor
+https://static.crates.io/crates/procfs/procfs-0.10.1.crate vendor
 https://static.crates.io/crates/quote/quote-1.0.7.crate vendor
 https://static.crates.io/crates/rayon-core/rayon-core-1.9.0.crate vendor
 https://static.crates.io/crates/rayon/rayon-1.5.0.crate vendor
