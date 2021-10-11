@@ -1,0 +1,4 @@
+cairo
+libxkbcommon
+meson make
+wayland
