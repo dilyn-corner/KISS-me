@@ -22,7 +22,7 @@
  }
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -526,7 +526,7 @@
+@@ -524,7 +524,7 @@
  
    # Enable text section splitting only on linux when using lld for now. Other
    # platforms can be added later if needed.
@@ -31,25 +31,16 @@
      ldflags += [ "-Wl,-z,keep-text-section-prefix" ]
    }
  
-@@ -1205,7 +1205,7 @@
+@@ -2317,7 +2317,7 @@
+     }
    }
  
-   # Makes builds independent of absolute file path.
--  if (is_clang && strip_absolute_paths_from_debug_symbols) {
-+  if (is_clang && strip_absolute_paths_from_debug_symbols && clang_use_plugins) {
-     # If debug option is given, clang includes $cwd in debug info by default.
-     # For such build, this flag generates reproducible obj files even we use
-     # different build directory like "out/feature_a" and "out/feature_b" if
-@@ -2427,7 +2427,7 @@
-   }
- 
-   # TODO(https://crbug.com/1050118): Investigate missing debug info on mac.
--  if (is_clang && !is_nacl && !use_xcode_clang && !is_apple) {
-+  if (is_clang && !is_nacl && !use_xcode_clang && !is_apple && clang_use_plugins) {
-     # Use constructor homing for debug info. This option reduces debug info
-     # by emitting class type info only when constructors are emitted.
-     cflags += [
-@@ -2456,7 +2456,7 @@
+-  if (is_clang && !is_nacl && !use_xcode_clang) {
++  if (is_clang && !is_nacl && !use_xcode_clang && clang_use_plugins) {
+     if (is_apple) {
+       # TODO(https://crbug.com/1050118): Investigate missing debug info on mac.
+       # Make sure we don't use constructor homing on mac.
+@@ -2356,7 +2356,7 @@
      configs = [ ":win_pdbaltpath" ]
  
      # Enable line tables for clang. MSVC doesn't have an equivalent option.

@@ -1,20 +1,20 @@
 alsa-lib
 byacc              make
 bzip2
+dbus
 fontconfig
-freetype-harfbuzz
+glib
 libdrm
 libva
 libwebp
 libxkbcommon
-libxml2
 linux-headers      make
 mesa
-nasm               make
 nodejs             make
 nss
 opus
 perl               make
+pipewire
 pkgconf            make
 python             make
 samurai            make
