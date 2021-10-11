@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+make
+make PREFIX=/usr DESTDIR="$1" install
+
+# Rename npm to avoid some conflicts
+mv "$1/usr/bin/npm" "$1/usr/bin/nass"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/npm.license"
