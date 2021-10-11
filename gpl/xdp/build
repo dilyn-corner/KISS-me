@@ -1,0 +1,47 @@
+#!/bin/sh -e
+
+(
+    cd gmake
+
+    ./configure \
+        --prefix=/usr \
+        --program-prefix=g
+
+    make
+    make DESTDIR="$OLDPWD" install
+)
+
+(
+    cd fuse2
+
+    ./configure \
+        --prefix=/usr \
+        --bindir=/usr/bin \
+        --sbindir=/usr/bin \
+        --datarootdir=/usr/share \
+        --disable-example \
+        --disable-shared \
+        MOUNT_FUSE_PATH=/usr/bin \
+        UDEV_RULES_PATH=/usr/lib/udev
+
+    make LDFLAGS="$LDFLAGS --static"
+    make DESTDIR="$1" install
+)
+
+export PATH="$PWD/usr/bin:$PATH"
+export CFLAGS="$CFLAGS -I$1/usr/include -L$1/usr/lib"
+
+./configure \
+    -prefix=/usr \
+    -libexecdir=/usr/lib \
+    --disable-nls \
+    --disable-geoclue \
+    --disable-libportal \
+    --enable-pipewire
+
+gmake
+gmake DESTDIR="$1" install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/xdg-desktop-portal.license"
+
