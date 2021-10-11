@@ -11,7 +11,7 @@ EOF
 
 # Reported 20-27% performance improvements.
 # See: "PythonNoSemanticInterpositionSpeedup"
-export CFLAGS="$CFLAGS -fno-semantic-interposition"
+export CFLAGS="$CFLAGS -fno-semantic-interposition -Wno-error"
 export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
 for patch in *.patch; do
