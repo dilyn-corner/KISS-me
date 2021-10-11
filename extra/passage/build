@@ -1,6 +1,0 @@
-#!/bin/sh -e
-
-install -Dm755 passage "$1/usr/bin/passage"
-
-# Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/passage.license"
