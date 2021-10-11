@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+PATH_MAX="$(getconf PATH_MAX /)"
+export CPPFLAGS="$CPPFLAGS -DPATH_MAX=$PATH_MAX"
+
+meson \
+    --prefix=/usr \
+    --libexecdir=/usr/lib \
+    -Dtests=disabled \
+    -Dman=disabled \
+    -Dudev=enabled \
+    . build
+
+ninja -C build
+ninja -C build install
+
+:>"$1/usr/share/pipewire/media-session.d/with-alsa"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/pipewire.license"
