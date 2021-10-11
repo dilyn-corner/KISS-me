@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson \
+    --prefix=/ \
+    -Ddefault_library=static \
+    inih inih/build
+
+ninja -C inih/build
+DESTDIR="$PWD/junk" ninja -C inih/build install
+
+export CFLAGS="$CFLAGS -I$PWD/junk/include"
+export LDFLAGS="$LDFLAGS -L$PWD/junk/lib"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PWD/junk/lib/pkgconfig"
+
+meson \
+    --prefix=/usr \
+    --libexecdir=/usr/lib \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/xdg-desktop-portal-wlr.license"

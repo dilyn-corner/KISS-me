@@ -1,0 +1,8 @@
+basu
+dbus
+meson             make
+pipewire
+pkgconf           make
+wayland
+wayland-protocols make
+xdp
