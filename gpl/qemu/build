@@ -14,44 +14,6 @@
 export PATH="$PWD/usr/bin:$PATH"
 
 (
-    cd glib
-    unset DESTDIR
-
-    # Remove 'libelf' dependency.
-    sed 's/HAVE_LIBELF/HAVE_KISS/' gio/meson.build > _
-    mv -f _ gio/meson.build
-
-    # Remove 'util-linux' dependency.
-    sed 's/libmount_dep.found()/false/' meson.build > _
-    mv -f _ meson.build
-
-    : > glib/tests/meson.build
-    : > tests/meson.build
-    : > gobject/tests/mesom.build
-    : > gio/tests/meson.build
-    : > fuzzing/meson.build
-
-    # Set 'prefix' so that pkgconf finds the right headers/libs
-    meson \
-        --prefix="$OLDPWD/usr" \
-        -Dlibmount=disabled \
-        -Dinstalled_tests=false \
-        -Ddefault_library=static \
-        -Dman=false \
-        -Dfam=false \
-        -Dinternal_pcre=true \
-        . build
-
-    ninja -C build
-    ninja -C build install
-
-    rm -rf "$1/usr/bin/gdbus"
-
-    # Install the license
-    install -Dm755 COPYING "$1/usr/share/LICENSES/glib.license"
-)
-
-(
     cd sdl2
 
     # We'll keep SDL2; static builds don't seem to function
@@ -75,13 +37,12 @@ sed -i 's/bash/sh/g' Makefile
 # We vendored glib, and this is what happens.
 export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig"
 export LDFLAGS="$LDFLAGS -Lusr/lib -L$1/usr/lib"
-export CFLAGS="$CFLAGS -I$1/usr/include/SDL2 -Iusr/include/gio-unix-2.0 \
-    -Iusr/include/glib-2.0 -Iusr/lib/glib-2.0/include"
+export CFLAGS="$CFLAGS -I$1/usr/include/SDL2"
 
 # The check for glib doesn't interact with our specified
 # CFLAGS, so we just comandeer the ones used by configure.
 # Build qemu-system* binaries dynamically linked
-CONFIGURE_CFLAGS="$CFLAGS" \
+#CONFIGURE_CFLAGS="$CFLAGS" \
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
@@ -102,7 +63,7 @@ gmake DESTDIR="$1" PREFIX=/usr install
 gmake clean
 
 # Build qemu Linux user binaries statically linked.
-CONFIGURE_CFLAGS="$CFLAGS" \
+#CONFIGURE_CFLAGS="$CFLAGS" \
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
