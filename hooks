@@ -8,8 +8,8 @@ case $1 in
             kiss) # ensure we keep docs
             ;;
             *)
-                rm -rf "$3/usr/share/bash-completions"
                 rm -rf "$3/etc/bash_completions.d"
+                rm -rf "$3/usr/share/bash-completion"
                 rm -rf "$3/usr/share/applications"
                 rm -rf "$3/usr/lib/charset.alias"
                 rm -rf "$3/usr/share/polkit-1"
@@ -19,6 +19,7 @@ case $1 in
                 rm -rf "$3/usr/share/sounds"
                 rm -rf "$3/usr/share/icons"
                 rm -rf "$3/usr/share/info"
+                rm -rf "$3/usr/share/fish"
                 rm -rf "$3/usr/share/doc"
                 rm -rf "$3/usr/share/man"
                 rm -rf "$3/usr/share/zsh"
