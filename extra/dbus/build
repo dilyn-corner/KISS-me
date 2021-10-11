@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+export CFLAGS="$CFLAGS -Wno-unused-command-line-argument \
+    -Wno-gnu-folding-constant"
+
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DDBUS_INSTALL_SYSTEM_LIBS=ON \
+    -DDBUS_ENABLE_XML_DOCS=OFF \
+    -DENABLE_USER_SESSION=ON \
+    -DDBUS_BUILD_TESTS=OFF \
+    -DDBUS_SYSTEM_BUS_DEFAULT_ADDRESS=/run/dbus/system_bus_socket \
+    -DDBUS_SYSTEM_PID_FILE=/run/dbus/pid \
+    -DDBUS_CONSOLE_AUTH_DIR=/run/console \
+    -Wno-dev -G Ninja
+
+ninja -C build
+ninja -C build install
+
+# Useless on UNIX, only nontest file that isn't AFL
+rm -f "$1/usr/bin/dbus-cleanup-sockets"
+
+# Install service
+install -Dm755 dbus.run "$1/etc/sysmgr/dbus"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/dbus.license"

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ ! -d /run/dbus ] && {
+    mkdir /run/dbus
+    chown messagebus:messagebus /run/dbus
+}
+
+exec chpst -u messagebus dbus-daemon --system --nofork --nopidfile
