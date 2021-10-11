@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson \
+    --prefix=/usr \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 LICENSE.LGPL2.1 "$1/usr/share/LICENSES/basu.license"
