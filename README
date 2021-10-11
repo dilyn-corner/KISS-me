@@ -11,10 +11,7 @@ The master branch is for:
 2) NonGNU experimentation
 
 Other branches are for:
-1) Staging things prior to submitting them to Community
-2) for things I know will never be accepted to Community
-3) for forks
-4) Strangeness
+1) Strangeness
 
 
 The structure of this repository
@@ -34,38 +31,43 @@ that I'll be just fine.  We will see. Some current issues:
 
 Any packages that use a GPL license will end up in the gpl directory, regardless
 of their position in the system hierarchy. Ideally, there will be almost no GPL
-in the core, runtime system. Of course, concessions will have to be made for
-certain things. But we take what we get, and we get what we can.
+in the core, runtime system.
 
 
 For the curious
 ________________________________________________________________________________
 
 Here is a roughly current list of all the licenses each package in this
-repository uses. Dropping GPL *entirely* doesn't seem super possible, but we can
-get there for the most part! The real question is how one feels about
-GPL-compatible (what I would think of as semi-GPL) licenses (PSF, MPL).
+repository uses. The real question is how one feels about GPL-compatible (what I
+would think of as semi-GPL) licenses (PSF, MPL).
 
-Finally, the list doesn't go into the nuances of several licenses. Big examples
-are things like mesa or llvm - projects which inherit extra licenses because of
-code blobs they borrow. In general, I am semi-fine with this (if not wholly
-forced to accept it).
+The list doesn't go into the nuances of several licenses. Big examples are
+things like mesa or llvm - projects which inherit extra licenses because of code
+blobs they borrow. In general, I am semi-fine with this (if not wholly forced to
+accept it).
 
 NOTES:
     * chromium is built using some bundled libs and programs, the biggest being
         ffmpeg and x264. This makes chromium de facto GPL.
     * zfs bundles util-linux for libblkid and libuuid. libblkid is BSD, but
-      libbuid is GPLv2.
+        libbuid is GPLv2.
+    * some packages include their own makefiles. Please be aware of this before
+        building packages.
+    * qemu, basu, dbus, glib, pipewire, xdg-desktop-portal{-wlr} only exist for
+        my job. The system can build and run just fine without them.
+    * the most GNU- and GPL-free system I've been able to achieve on this
+        system: alsa-{lib,utils}, linux, libuuid, the kernel, + chromium's bundled
+        dependencies.
 
     +-------------------+---------------+-------------------+---------------+
     | CORE              | LICENSE       | EXTRA             | LICENSE       |
     +-------------------+---------------+-------------------+---------------+
     | b3sum             | Public Domain | aerc              | MIT           |
-    | baseinit          | MIT           | age               | BSD 3-Clause  |
-    | byacc             | Public Domain | bottom            | MIT           |
-    | bzip2             | bzip2         | cairo             | MPLv1.1       |
-    | cmake             | BSD 3-Clause  | chromium          | BSD 3-Clause  |
-    | curl              | MIT           | cozette-font      | MIT           |
+    | baseinit          | MIT           | bottom            | MIT           |
+    | byacc             | Public Domain | cairo             | MPLv1.1       |
+    | bzip2             | bzip2         | chromium          | BSD 3-Clause  |
+    | cmake             | BSD 3-Clause  | cozette-font      | MIT           |
+    | curl              | MIT           | dbus              | Academic      |
     | flex              | Public Domain | dhcpcd            | BSD           |
     | fossil            | BSD 2-Clause  | elftoolchain      | MIT           |
     | kiss              | MIT           | expat             | BSD           |
@@ -85,29 +87,34 @@ NOTES:
     | xz                | Public Domain | libxml2           | MIT           |
     | zfs               | CDDL          | mesa              | MIT           |
     | zlib-ng           | zlib          | meson             | Apache-2.0    |
-    | zstd              | BSD 3-Clause  | nasm              | BSD 2-Clause  |
-    +-------------------+---------------+ netbsd-curses     | BSD 3-Clause  |
-    | WAYLAND           | LICENSE       | nodejs            | MIT           |
+    | zstd              | BSD 3-Clause  | netbsd-curses     | BSD 3-Clause  |
+    +-------------------+---------------| nodejs            | MIT           |
+    | WAYLAND           | LICENSE       | npm               | ISC           |
     +-------------------+---------------+ nss               | MPLv2         |
     | foot              | MIT           | openssh           | BSD           |
     | grim              | MIT           | opus              | BSD 3-Clause  |
-    | libxkcommon       | MIT           | passage           | Public Domain |
-    | seatd             | MIT           | perl              | Artistic      |
-    | wayfire           | MIT           | pixman            | MIT           |
-    | wayland           | MIT           | pkgconf           | ISC           |
-    | wayland-protocols | MIT           | python            | PSFv2         |
-    | wbg               | MIT           | rust              | APACHE/MIT    |
-    | wev               | MIT           | sqlite            | Public Domain |
-    | wl-clipboard-rs   | MIT           | tzdata            | Public Domain |
-    | wlroots           | MIT           | vim               | Vim           |
-    | xkeyboard-config  | MIT           +-------------------+---------------+
+    | libxkcommon       | MIT           | perl              | Artistic      |
+    | seatd             | MIT           | pipewire          | MIT           |
+    | slurp             | MIT           | pixman            | MIT           |
+    | wayfire           | MIT           | pkgconf           | ISC           |
+    | wayland           | MIT           | python            | PSFv2         |
+    | wayland-protocols | MIT           | rust              | APACHE/MIT    |
+    | wbg               | MIT           | sqlite            | Public Domain |
+    | wev               | MIT           | tzdata            | Public Domain |
+    | wl-clipboard-rs   | MIT           | vim               | Vim           |
+    | wlroots           | MIT           | wpa_supplicant    | BSD 3-Clause  |
+    | xdp-wlr           | MIT           +-------------------+---------------+
+    | xkeyboard-config  | MIT           |
     +-------------------+---------------+
     | GPL               | LICENSE       |
     +-------------------+---------------+
     | alsa-lib          | GPLv2.1       |
     | alsa-utils        | GPLv2         |
+    | basu              | LGPLv2.1      |
+    | glib              | GPLv2.1       |
     | linux-headers     | GPLv2         |
     | qemu              | GPLv2         |
+    | xdp               | GPLv2.1       |
     +-------------------+---------------+
 ---
 
@@ -133,10 +140,6 @@ maintain my dotfiles and share screenshots. Don't use it, just marvel.
 ---
 
 Useful fork-facts
-________________________________________________________________________________
-
-
-So you made a fork
 ________________________________________________________________________________
 
 
@@ -182,70 +185,3 @@ This will be edited heavily in the future maybe hopefully probably. [3]
 2. https://git-scm.com/book/en/v2/Git-Branching-Rebasing
 
 3. https://medium.com/@catalinaturlea/clean-git-history-a-step-by-step-guide-eefc0ad8696d
-
----
-
-Repository trust
-________________________________________________________________________________
-
-All commits signed with my own GPG key. Save this key to a file and import it.
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-YA39w/o17XlVMYKvShU4wwuzQYDr773l2+XHHQ==
-=LfSP
------END PGP PUBLIC KEY BLOCK-----
