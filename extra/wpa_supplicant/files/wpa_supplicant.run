@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec wpa_supplicant -C /etc/wpa_supplicant.conf

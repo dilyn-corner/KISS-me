@@ -1,0 +1,35 @@
+#!/bin/sh -e
+
+(
+    cd libnl
+
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o nl.o nl.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o handlers.o handlers.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o msg.o msg.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o attr.o attr.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o cache.o cache.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o cache_mngt.o cache_mngt.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o object.o object.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o socket.o socket.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o error.o error.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o genl.o genl.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o genl_family.o genl_family.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o genl_ctrl.o genl_ctrl.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o genl_mngt.o genl_mngt.c
+    "${CC:-cc}" $CFLAGS -fPIC -Iinclude -c -o unl.o unl.c
+    ar rcs libnl-tiny.a nl.o handlers.o msg.o attr.o cache.o \
+        cache_mngt.o object.o socket.o error.o genl.o \
+        genl_family.o genl_ctrl.o genl_mngt.o unl.o
+)
+
+export CFLAGS="$CFLAGS -I$PWD/libnl/include -L$PWD/libnl -lnl-tiny"
+export CFLAGS="$CFLAGS -static -D_GNU_SOURCE -DLIBNL1_COMPAT"
+export CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
+
+make PREFIX=/usr
+make PREFIX=/usr DESTDIR="$1" install
+
+install -Dm755 wpa_supplicant.run "$1/etc/sysmgr/wpa_supplicant"
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/wpa_supplicant.license"
