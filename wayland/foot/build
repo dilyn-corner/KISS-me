@@ -11,26 +11,20 @@ sed -i "s|pixman-1'|pixman-1', static: true|"     meson.build
 sed -i "s|-client'|-client', static: true|"       meson.build
 sed -i "s|threads'|threads', static: true|"       meson.build
 sed -i "s|cursor'|cursor', static: true|"         meson.build
+sed -i "s|freetype'|freetype', static: true|"     subprojects/fcft/meson.build
+sed -i "s|harfbuzz'|harfbuzz', static: true|"     subprojects/fcft/meson.build
 
-# Note to self: always make doc generation toggleable
-sed -i "s|subdir('doc')||" meson.build
-
-# The author *insists* we optimize the ever-living-fuck out of this package.
-# So let's indulge them! LLVM makes this tricky, but here's how you do it.
 export CFLAGS="$CFLAGS -O3 -Wno-ignored-optimization-argument"
 export CFLAGS="$CFLAGS -Wno-backend-plugin"
 
 meson \
     --prefix=/usr \
-    -Ddefault_library=static \
     -Dbuildtype=release \
     -Dterminfo=disabled \
+    -Ddocs=disabled \
     -Db_lto=true \
+    -Dime=false \
     . build
-
-# We do this here so as to not interfere with the above subproject-getting.
-sed -i "s|freetype'|freetype', static: true|" subprojects/fcft/meson.build
-sed -i "s|harfbuzz'|harfbuzz', static: true|" subprojects/fcft/meson.build
 
 # First, we generate a PGO build
 meson configure -Db_pgo=generate build
@@ -41,13 +35,12 @@ ninja -C build test
 # We check to see if a wayland lock file exists in the runtime directory.
 # If it exists, assume we're in a wayland session and build with full PGO.
 # If it doesn't exist, assume we're not and build with partial PGO.
+touch .pgotmp
+./build/footclient --version
 if [ "$WAYLAND_DISPLAY" ]; then
-   ./build/footclient --version
 
-   foot_tmp_file=$(mktemp)
-   ./build/foot --config=/dev/null \
-       --term=xterm sh -c \
-       "./scripts/generate-alt-random-writes.py \
+   set -- \
+       ./scripts/generate-alt-random-writes.py \
        --scroll \
        --scroll-region \
        --colors-regular \
@@ -57,11 +50,13 @@ if [ "$WAYLAND_DISPLAY" ]; then
        --attr-bold \
        --attr-italic \
        --attr-underline \
-       --sixel \
-       ${foot_tmp_file} && cat ${foot_tmp_file}"
-   rm "${foot_tmp_file}"
+       --sixel .pgotmp
+
+   ./build/foot \
+       --config=/dev/null \
+       --term=xterm \
+       sh -c "$* && cat .pgotmp"
 else
-    foot_tmp=$(mktemp)
     ./scripts/generate-alt-random-writes.py \
         --rows=67 \
         --cols=135 \
@@ -74,10 +69,10 @@ else
         --attr-italic \
         --attr-underline \
         --sixel \
-        "${foot_tmp}"
+        .pgotmp
 
-    ./build/pgo "${foot_tmp}" "${foot_tmp}" "${foot_tmp}"
-    rm "${foot_tmp}"
+    ./build/pgo .pgotmp .pgotmp .pgotmp
+    rm .pgotmp
 fi
 
 # This is required for llvm
@@ -90,10 +85,14 @@ ninja -C build
 ninja -C build install
 
 # Generate our terminfo
-mkdir -p "$1/usr/share/foot/terminfo/f"
-tic -x -o "$1/usr/share/foot/terminfo/f/foot" foot.ini
+sed -i 's/@default_terminfo@/foot/g' foot.info
+tic -x -o term.info foot.info
+install -Dm644 term.info "$DESTDIR/usr/share/terminfo/f/foot"
 
 # Install the licenses
-install -Dm755 LICENSE                    "$1/usr/share/LICENSES/foot.license"
-install -Dm755 subprojects/fcft/LICENSE   "$1/usr/share/LICENSES/fcft.license"
-install -Dm755 subprojects/tllist/LICENSE "$1/usr/share/LICENSES/tllist.license"
+install -Dm755 LICENSE                    \
+    "$DESTDIR/usr/share/LICENSES/foot.license"
+install -Dm755 subprojects/fcft/LICENSE   \
+    "$DESTDIR/usr/share/LICENSES/fcft.license"
+install -Dm755 subprojects/tllist/LICENSE \
+    "$DESTDIR/usr/share/LICENSES/tllist.license"
