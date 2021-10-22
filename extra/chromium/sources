@@ -1,12 +1,13 @@
-https://commondatastorage.googleapis.com/chromium-browser-official/chromium-94.0.4606.71.tar.xz
-https://github.com/stha09/chromium-patches/releases/download/chromium-94-patchset-3/chromium-94-patchset-3.tar.xz
-https://github.com/Eloston/ungoogled-chromium/archive/refs/tags/94.0.4606.71-1.tar.gz ungoogled-chromium
+https://commondatastorage.googleapis.com/chromium-browser-official/chromium-95.0.4638.54.tar.xz
+https://github.com/stha09/chromium-patches/releases/download/chromium-95-patchset-4/chromium-95-patchset-4.tar.xz
 https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz gperf
 files/chromium.sh
 files/default.profdata
 patches/chromium-InkDropHost-crash.patch
+patches/chromium-fix-build-without-avx2.patch
 patches/chromium-fix-narrowing-cast.patch
 patches/chromium-optional-atk-dbus.patch
+patches/chromium-python-3.10.patch
 patches/chromium-sql-make-VirtualCursor-standard-layout-type.patch
 patches/musl-crashpad.patch
 patches/musl-default-pthread-stacksize.patch
@@ -24,7 +25,6 @@ patches/musl-stacktrace.patch
 patches/musl-stat.patch
 patches/musl-sync.patch
 patches/musl-v8-monotonic-pthread-cont_timedwait.patch
-patches/ungoogled-safebrowsing.patch
 patches/wyverkiss-drop-atoms.patch
 patches/wyverkiss-optional-clang-plugins.patch
 patches/wyverkiss-rip-gzip.patch
