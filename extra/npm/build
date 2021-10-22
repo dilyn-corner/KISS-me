@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+sed -i 's/cp $</cp config.def.h/' Makefile
+
 make
 make PREFIX=/usr DESTDIR="$1" install
 
