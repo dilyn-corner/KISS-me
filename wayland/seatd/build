@@ -1,13 +1,14 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export CFLAGS="-Wno-error"
+export CFLAGS="$CFLAGS -Wno-error"
 
 meson \
     --prefix=/usr \
-    -Dseatd=enabled \
-    -Dbuiltin=enabled \
-    -Dlogind=disabled \
+    -Dlibseat-seatd=enabled \
+    -Dlibseat-builtin=enabled \
+    -Dlibseat-logind=disabled \
+    -Dman-pages=disabled \
     . build
 
 ninja -C build
