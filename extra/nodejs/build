@@ -3,14 +3,12 @@
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
-# Fix python3.
-sed -i 's|(3, 8)|(3, 10), (3, 8)|g' configure
-
-# Don't link with libatomic on LLVM systems.
-sed -i "s/\\'libraries\\'\\: \\[\\'-latomic\\'\\],/#/g" node.gyp
+# Don't link with libatomic on LLVM systems
+sed -i 's/-latomic//' node.gyp
 
 CC=cc CXX=c++ ./configure \
     --prefix=/usr \
+    --shared-zlib \
     --without-intl \
     --without-etw \
     --without-dtrace \
@@ -22,10 +20,13 @@ CC=cc CXX=c++ ./configure \
 ninja -C out/Release
 tools/install.py install "$1" /usr
 
-# Remove unneeded files.
-rm -rf "$1/usr/include/node/openssl"
-rm -rf "$1/usr/lib/node_modules/npm/scripts"
-rm -f  "$1/usr/lib/node_modules/npm/configure"
+# Remove unneeded files
+rm -rf \
+    "$1/usr/include/node/openssl" \
+    "$1/usr/share/doc" \
+    "$1/usr/share/systemtap" \
+    "$1/usr/lib/node_modules/npm/scripts" \
+    "$1/usr/lib/node_modules/npm/configure"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/nodejs.license"
