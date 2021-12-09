@@ -1,3 +1,5 @@
 alsa-lib
 libudev-zero
-meson make
+linux-headers make
+meson         make
+pkgconf       make

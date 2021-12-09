@@ -6,8 +6,8 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-PATH_MAX="$(getconf PATH_MAX /)"
-export CPPFLAGS="$CPPFLAGS -DPATH_MAX=$PATH_MAX"
+#PATH_MAX="$(getconf PATH_MAX /)"
+#export CPPFLAGS="$CPPFLAGS -DPATH_MAX=$PATH_MAX"
 
 meson \
     --prefix=/usr \
@@ -15,12 +15,16 @@ meson \
     -Dtests=disabled \
     -Dman=disabled \
     -Dudev=enabled \
+    -Dudevrulesdir=/usr/lib/udev/rules.d \
     . build
 
 ninja -C build
 ninja -C build install
 
 :>"$1/usr/share/pipewire/media-session.d/with-alsa"
+
+mkdir -p "$1/etc"
+ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf "$1/etc/asound.conf"
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/pipewire.license"
