@@ -1,4 +1,4 @@
-https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tar.xz
+https://www.python.org/ftp/python/3.10.1/Python-3.10.1.tar.xz
 patches/libressl.patch
 patches/pyc-hash.patch
 patches/python3-always-pip.patch
