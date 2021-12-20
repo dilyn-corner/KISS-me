@@ -7,11 +7,9 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
     --prefix=/usr \
     --without-debug
 
-make 
+make
 make DESTDIR="$1" install
 make clean
-
-patch -p1 < fix-control-empty.patch
 
 ./configure \
     --prefix=/usr \
