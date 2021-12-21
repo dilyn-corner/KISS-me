@@ -45,6 +45,7 @@ LIB_OBJ = lib/common/debug.o \
 			lib/compress/zstd_opt.o \
 			lib/compress/zstdmt_compress.o \
 			lib/decompress/huf_decompress.o \
+			lib/decompress/huf_decompress_amd64.o \
 			lib/decompress/zstd_ddict.o \
 			lib/decompress/zstd_decompress.o \
 			lib/decompress/zstd_decompress_block.o \
@@ -67,6 +68,8 @@ OBJ = programs/benchfn.o \
 .PHONY: all
 all: libzstd.a libzstd.pc zstd-pgo
 
+.S.o:
+	${CC} ${LFLAGS} ${MOREFLAGS} -c -o $@ $<
 .c.o:
 	${CC} ${LFLAGS} ${MOREFLAGS} -c -o $@ $<
 
