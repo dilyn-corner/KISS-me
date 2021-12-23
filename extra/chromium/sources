@@ -1,13 +1,12 @@
-https://commondatastorage.googleapis.com/chromium-browser-official/chromium-95.0.4638.54.tar.xz
-https://github.com/stha09/chromium-patches/releases/download/chromium-95-patchset-4/chromium-95-patchset-4.tar.xz
+https://commondatastorage.googleapis.com/chromium-browser-official/chromium-96.0.4664.45.tar.xz
+https://github.com/stha09/chromium-patches/releases/download/chromium-96-patchset-4/chromium-96-patchset-4.tar.xz
 https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz gperf
+https://github.com/anholt/libepoxy/releases/download/1.5.8/libepoxy-1.5.8.tar.xz libepoxy
 files/chromium.sh
 files/default.profdata
 patches/chromium-InkDropHost-crash.patch
-patches/chromium-fix-build-without-avx2.patch
 patches/chromium-fix-narrowing-cast.patch
 patches/chromium-optional-atk-dbus.patch
-patches/chromium-python-3.10.patch
 patches/chromium-sql-make-VirtualCursor-standard-layout-type.patch
 patches/musl-crashpad.patch
 patches/musl-default-pthread-stacksize.patch

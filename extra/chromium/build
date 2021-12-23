@@ -1,5 +1,6 @@
 #!/bin/sh -e
 
+# gperf is a build dep for chromium; just do it here.
 (
     cd gperf
 
@@ -7,11 +8,31 @@
         --prefix=/usr
 
     make -B
-    make -B DESTDIR="$PWD/../garbo" install
+    make -B DESTDIR="$PWD/.." install
 )
 
-export PATH="$PWD/garbo/usr/bin:$PATH"
+# Build libepoxy for chromium's sole use - it's the only package which uses it.
+(
+    cd libepoxy
 
+    export DESTDIR="$PWD/.."
+
+    meson \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --mandir=/usr/share/man \
+        -Ddefault_library=static \
+        -Degl=yes \
+        -Dtests=false \
+        -Dglx=no \
+        -Dx11=false \
+        . build
+
+    ninja -C build
+    ninja -C build install
+)
+
+# chromium does not play nicely with thin LTO - we do PGO later though.
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
@@ -39,8 +60,9 @@ export CXX=clang++
 export AR="${AR:-ar}"
 export NM="${NM:-nm}"
 
+export CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
 export CFLAGS="$CFLAGS -Wno-builtin-macro-redefined"
-export CXXFLAGS="$CXXFLAGS -Wno-builtin-macro-redefined"
+export CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"
 export CPPFLAGS="$CPPFLAGS -D__DATE__=  -D__TIME__=  -D__TIMESTAMP__="
 
 # Allow building against system libraries in official builds
@@ -161,6 +183,13 @@ conf="
     host_toolchain=\"//build/toolchain/linux/unbundle:default\"
     custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 "
+# Point chromium to the vendored libepoxy, gperf
+export PATH="$PWD/usr/bin:$PATH"
+export CFLAGS="$CFLAGS -L$PWD/usr/lib"
+export CFLAGS="$CFLAGS -I$PWD/usr/include"
+export CXXFLAGS="$CXXFLAGS -L$PWD/usr/lib"
+export CXXFLAGS="$CXXFLAGS -I$PWD/usr/include"
+export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig"
 
 out/Release/gn gen out/Release --args="$conf"
 
