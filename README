@@ -88,7 +88,7 @@ NOTES:
     | zfs               | CDDL          | mesa              | MIT           |
     | zlib-ng           | zlib          | meson             | Apache-2.0    |
     | zstd              | BSD 3-Clause  | netbsd-curses     | BSD 3-Clause  |
-    +-------------------+---------------| nodejs            | MIT           |
+    +-------------------+---------------+ nodejs            | MIT           |
     | WAYLAND           | LICENSE       | npm               | ISC           |
     +-------------------+---------------+ nss               | MPLv2         |
     | foot              | MIT           | openssh           | BSD           |
