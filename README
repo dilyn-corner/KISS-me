@@ -50,13 +50,14 @@ NOTES:
     * chromium is built using some bundled libs and programs, the biggest being
         ffmpeg and x264. This makes chromium de facto GPL.
     * zfs bundles util-linux for libblkid and libuuid. libblkid is BSD, but
-        libbuid is GPLv2.
+        libuuid is GPLv2.
     * some packages include their own makefiles. Please be aware of this before
-        building packages.
+        building packages. Currently,
+        {zlib-ng, musl, zfs, zstd, elftoolchain, netbsd-curses, wpa_supplicant}
     * qemu, basu, dbus, glib, pipewire, xdg-desktop-portal{-wlr} only exist for
         my job. The system can build and run just fine without them.
     * the most GNU- and GPL-free system I've been able to achieve on this
-        system: alsa-{lib,utils}, linux, libuuid, the kernel, + chromium's bundled
+        system: alsa-{lib,utils}, linux, libuuid, and chromium's bundled
         dependencies.
 
     +-------------------+---------------+-------------------+---------------+
