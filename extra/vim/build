@@ -17,7 +17,7 @@
     --disable-canberra \
     --disable-acl \
     --disable-nls \
-    --with-features=normal
+    --with-features=big
 
 make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
