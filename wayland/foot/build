@@ -84,10 +84,10 @@ meson configure -Db_pgo=use build
 ninja -C build
 ninja -C build install
 
-# Generate our terminfo
-sed -i 's/@default_terminfo@/foot/g' foot.info
-tic -x -o term.info foot.info
-install -Dm644 term.info "$DESTDIR/usr/share/terminfo/f/foot"
+# Generate our terminfo -- more valuable with ncurses
+#sed -i 's/@default_terminfo@/foot/g' foot.info
+#tic -x -o term.info foot.info
+#install -Dm644 term.info "$DESTDIR/usr/share/terminfo/f/foot"
 
 # Install the licenses
 install -Dm755 LICENSE                    \
