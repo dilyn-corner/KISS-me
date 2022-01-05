@@ -8,4 +8,5 @@
     --enable-gpu-rasterization \
     --enable-features=UseOzonePlatform \
     --enable-features=VaapiVideoDecoder \
-    --disable-gpu-memory-buffer-video-frames
+    --disable-gpu-memory-buffer-video-frames \
+    --disk-cache-dir="$XDG_RUNTIME_DIR/chromium-cache" "$@"
