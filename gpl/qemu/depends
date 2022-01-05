@@ -1,5 +1,5 @@
 cmake         make
-glib          make
+glib
 libffi
 linux-headers make
 meson         make

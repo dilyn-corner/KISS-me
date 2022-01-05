@@ -1,6 +1,5 @@
 https://download.qemu.org/qemu-6.2.0.tar.xz
 https://ftp.gnu.org/gnu/make/make-4.3.tar.gz gmake
-https://download.gnome.org/sources/glib/2.70/glib-2.70.2.tar.xz glib
 https://libsdl.org/release/SDL2-2.0.18.tar.gz sdl2
 patches/001-sigtrm-max.patch
 patches/002-syscall.patch
