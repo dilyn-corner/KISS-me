@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+export GO111MODULE=on
+
+go build \
+    -trimpath \
+    -modcacherw \
+    -o cmd/exercism ./exercism
+
+install -Dm755 cmd/exercism "$1/usr/bin/exercism"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/exercism.license"
