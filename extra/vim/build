@@ -17,6 +17,7 @@
     --disable-canberra \
     --disable-acl \
     --disable-nls \
+    --enable-terminal \
     --with-features=big
 
 make LDFLAGS="$LDFLAGS -static"
