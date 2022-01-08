@@ -5,9 +5,6 @@ patch -p1 < cmake-no-execinfo.patch
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
-sed -i 's,curses_version,baudrate,'   \
-    Source/Checks/Curses/CheckCurses.c
-
 if kiss l cmake; then
     export DESTDIR="$1"
 
