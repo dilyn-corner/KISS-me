@@ -6,8 +6,8 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-#PATH_MAX="$(getconf PATH_MAX /)"
-#export CPPFLAGS="$CPPFLAGS -DPATH_MAX=$PATH_MAX"
+PATH_MAX="$(getconf PATH_MAX /)"
+export CPPFLAGS="$CPPFLAGS -DPATH_MAX=$PATH_MAX"
 
 meson \
     --prefix=/usr \
