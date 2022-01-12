@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+install -Dm644 Fantasque%20Sans%20Mono%20Regular%20Nerd%20Font%20Complete.ttf        \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Regular Nerd Font Complete.ttf"
+install -Dm644 Fantasque%20Sans%20Mono%20Italic%20Nerd%20Font%20Complete.ttf         \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Italic Nerd Font Complete.ttf"
+install -Dm644 Fantasque%20Sans%20Mono%20Bold%20Nerd%20Font%20Complete.ttf           \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Bold Nerd Font Complete.ttf"
+install -Dm644 Fantasque%20Sans%20Mono%20Regular%20Nerd%20Font%20Complete%20Mono.ttf \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Regular Nerd Font Complete Mono.ttf"
+install -Dm644 Fantasque%20Sans%20Mono%20Italic%20Nerd%20Font%20Complete%20Mono.ttf  \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Italic Nerd Font Complete Mono.ttf"
+install -Dm644 Fantasque%20Sans%20Mono%20Bold%20Nerd%20Font%20Complete%20Mono.ttf    \
+    "$1/usr/share/fonts/TTF/Fantasque Sans Mono Bold Nerd Font Complete Mono.ttf"
+
+install -Dm755 LICENSE "$1/usr/share/LICENSES/fantasque-nerd-font.license"
