@@ -1,6 +1,16 @@
 #!/bin/sh -e
 
-install -Dm644 "Iosevka%20Thin%20Nerd%20Font%20Complete.ttf" \
-    "$1/usr/share/fonts/TTF/Iosevka Thin Nerd Font Complete.ttf"
+install -Dm644 Iosevka%20Bold%20Nerd%20Font%20Complete%20Mono.ttf          \
+    "$1/usr/share/fonts/TTF/Iosevka Bold Nerd Font Complete Mono.ttf"
+install -Dm644 Iosevka%20Bold%20Nerd%20Font%20Complete.ttf                 \
+    "$1/usr/share/fonts/TTF/Iosevka Bold Nerd Font Complete.ttf"
+install -Dm644 Iosevka%20Italic%20Nerd%20Font%20Complete%20Mono.ttf        \
+    "$1/usr/share/fonts/TTF/Iosevka Italic Nerd Font Complete Mono.ttf"
+install -Dm644 Iosevka%20Italic%20Nerd%20Font%20Complete.ttf               \
+    "$1/usr/share/fonts/TTF/Iosevka Italic Nerd Font Complete.ttf"
+install -Dm644 Iosevka%20Nerd%20Font%20Complete%20Mono.ttf                 \
+    "$1/usr/share/fonts/TTF/Iosevka Nerd Font Complete Mono.ttf"
+install -Dm644 Iosevka%20Nerd%20Font%20Complete.ttf                        \
+    "$1/usr/share/fonts/TTF/Iosevka Nerd Font Complete.ttf"
 
-install -Dm755 LICENSE "$1/usr/share/LICENSES/iosevka.license"
+install -Dm755 LICENSE.md "$1/usr/share/LICENSES/iosevka-nerd-font.license"
