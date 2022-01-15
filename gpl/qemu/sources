@@ -1,9 +1,4 @@
 https://download.qemu.org/qemu-6.2.0.tar.xz
 https://ftp.gnu.org/gnu/make/make-4.3.tar.gz gmake
 https://libsdl.org/release/SDL2-2.0.18.tar.gz sdl2
-patches/001-sigtrm-max.patch
-patches/002-syscall.patch
-patches/003-map-sync-fix.patch
-patches/004-guest-agent-shutdown.patch
-patches/005-xattr-size-max.patch
-patches/CVE-2021-20255.patch
+patches/sdl-wayland-1.20.patch

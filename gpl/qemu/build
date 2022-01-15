@@ -16,6 +16,8 @@ export PATH="$PWD/usr/bin:$PATH"
 (
     cd sdl2
 
+    patch -p1 < ../sdl-wayland-1.20.patch
+
     # We'll keep SDL2; static builds don't seem to function
     ./configure \
         --prefix=/usr
@@ -27,25 +29,19 @@ export PATH="$PWD/usr/bin:$PATH"
     install -Dm755 LICENSE.txt "$1/usr/share/LICENSES/sdl2.license"
 )
 
-for patch in *.patch; do
-    patch -p1 < "$patch"
-done
-
 # Remove bash dependency
 sed -i 's/bash/sh/g' Makefile
 
 # We vendored glib, and this is what happens.
-export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig"
-export LDFLAGS="$LDFLAGS -Lusr/lib -L$1/usr/lib"
+export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig"
+export LDFLAGS="$LDFLAGS -L$1/usr/lib"
 export CFLAGS="$CFLAGS -I$1/usr/include/SDL2"
 
-# The check for glib doesn't interact with our specified
-# CFLAGS, so we just comandeer the ones used by configure.
 # Build qemu-system* binaries dynamically linked
-#CONFIGURE_CFLAGS="$CFLAGS" \
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
+    --libexecdir=/usr/lib \
     --sysconfdir=/etc \
     --disable-debug-info \
     --disable-gtk \
@@ -63,7 +59,6 @@ gmake DESTDIR="$1" PREFIX=/usr install
 gmake clean
 
 # Build qemu Linux user binaries statically linked.
-#CONFIGURE_CFLAGS="$CFLAGS" \
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
