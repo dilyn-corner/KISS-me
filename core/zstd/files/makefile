@@ -99,7 +99,7 @@ libzstd.pc: lib/libzstd.pc.in
 		-e "s|@LIBDIR@|${LIBDIR}|" \
 		-e "s|@EXEC_PREFIX@|${PREFIX}|" \
 		-e "s|@INCLUDEDIR@|${INCDIR}|" \
-		-e '|@LIBS_PRIVATE@|d' \
+		-e 's|Libs.private: @LIBS_PRIVATE@||' \
 		lib/libzstd.pc.in > libzstd.pc
 
 .PHONY: install
