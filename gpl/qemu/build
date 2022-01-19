@@ -1,78 +1,48 @@
 #!/bin/sh -e
 
-(
-    cd gmake
-
-    ./configure \
-        --prefix=/usr \
-        --program-prefix=g
-
-    make
-    make DESTDIR="$OLDPWD" install
-)
-
-export PATH="$PWD/usr/bin:$PATH"
-
-(
-    cd sdl2
-
-    patch -p1 < ../sdl-wayland-1.20.patch
-
-    # We'll keep SDL2; static builds don't seem to function
-    ./configure \
-        --prefix=/usr
-
-    gmake
-    gmake DESTDIR="$1" install
-
-    # Install the license
-    install -Dm755 LICENSE.txt "$1/usr/share/LICENSES/sdl2.license"
-)
+export DESTDIR="$1"
 
 # Remove bash dependency
 sed -i 's/bash/sh/g' Makefile
 
-# We vendored glib, and this is what happens.
-export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig"
-export LDFLAGS="$LDFLAGS -L$1/usr/lib"
-export CFLAGS="$CFLAGS -I$1/usr/include/SDL2"
-
-# Build qemu-system* binaries dynamically linked
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
     --libexecdir=/usr/lib \
     --sysconfdir=/etc \
-    --disable-debug-info \
     --disable-gtk \
     --disable-docs \
+    --disable-user \
+    --disable-debug-info \
+    --disable-linux-user \
     --enable-sdl \
     --enable-kvm \
-    --enable-pie \
     --enable-curses \
-    --disable-user \
-    --disable-linux-user \
     --enable-system
 
-gmake
-gmake DESTDIR="$1" PREFIX=/usr install
-gmake clean
+ninja -C build
+ninja -C build install
 
-# Build qemu Linux user binaries statically linked.
+rm -rf build
+
 ./configure \
     --prefix=/usr \
     --localstatedir=/var \
+    --libexecdir=/usr/lib \
     --sysconfdir=/etc \
-    --disable-debug-info \
     --disable-gtk \
     --disable-docs \
     --disable-user \
-    --enable-linux-user \
     --disable-system \
+    --disable-debug-info \
+    --enable-sdl \
+    --enable-kvm \
+    --enable-curses \
+    --enable-linux-user \
     --static
 
-gmake
-gmake DESTDIR="$1" PREFIX=/usr install
+ninja -C build
+ninja -C build install
 
 # Install the license
 install -Dm755 COPYING     "$1/usr/share/LICENSES/qemu.license"

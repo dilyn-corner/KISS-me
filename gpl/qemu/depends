@@ -1,5 +1,4 @@
-cmake         make
-glib
+glib          make
 libffi
 linux-headers make
 meson         make
@@ -7,6 +6,5 @@ netbsd-curses
 perl          make
 pixman
 pkgconf       make
-python        make
-samurai       make
+sdl2          make
 zlib-ng
