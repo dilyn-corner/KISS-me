@@ -3,12 +3,10 @@
 export DESTDIR="$1"
 
 # Remove 'libelf' dependency.
-sed 's/HAVE_LIBELF/HAVE_KISS/' gio/meson.build > _
-mv -f _ gio/meson.build
+sed -i 's/HAVE_LIBELF/HAVE_KISS/' gio/meson.build
 
 # Remove 'util-linux' dependency.
-sed 's/libmount_dep.found()/false/' meson.build > _
-mv -f _ meson.build
+sed -i 's/libmount_dep.found()/false/' meson.build
 
 : > glib/tests/meson.build
 : > tests/meson.build
@@ -18,39 +16,20 @@ mv -f _ meson.build
 
 meson \
     --prefix=/usr \
-    -Dlibmount=disabled \
-    -Dinstalled_tests=false \
-    -Ddefault_library=both \
+    -Ddefault_library=static \
+    -Dbuildtype=release \
     -Dman=false \
     -Dfam=false \
-    -Dinternal_pcre=true \
+    -Dnls=disabled \
+    -Dglib_assert=false \
+    -Dglib_checks=false \
+    -Dlibmount=disabled \
+    -Dglib_debug=disabled \
+    -Dinstalled_tests=false \
     . build
 
 ninja -C build
 ninja -C build install
 
-(
-    cd json-glib
-    export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig"
-    export PATH="$1/usr/bin:$PATH"
-    export CFLAGS="$CFLAGS -I$1/usr/include/glib-2.0"
-    export CFLAGS="$CFLAGS -I$1/usr/lib/glib-2.0/include -pthread"
-    export CFLAGS="$CFLAGS -L$1/usr/lib/"
-
-    export CFLAGS="$CFLAGS -l:libffi.a -l:libz.a -l:libgmodule-2.0.a \
-        -Wno-unused-command-line-argument"
-
-    meson \
-        --prefix=/usr \
-        --sysconfdir=/etc \
-        -Dintrospection=disabled \
-        -Dgtk_doc=disabled \
-        -Dtests=false \
-        . build
-
-    ninja -C build
-    ninja -C build install
-)
-
-# Install the license
+#Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/glib.license"
