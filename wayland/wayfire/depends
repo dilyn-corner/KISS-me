@@ -4,7 +4,7 @@ libdrm
 libinput
 libpng
 libxkbcommon
-libxml2
+libxml2           make
 linux-headers     make
 mesa
 meson             make
