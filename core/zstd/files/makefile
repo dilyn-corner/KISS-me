@@ -10,13 +10,13 @@ CC ?= cc
 AR ?= ar
 
 CPPFLAGS = -DXXH_NAMESPACE=ZSTD_ -DDEBUGLEVEL=0 -DZSTD_MULTITHREAD \
-			-DZSTD_GZCOMPRESS -DZSTD_GZDECOMPRESS -DZSTD_LZMACOMPRESS \
-			-DZSTD_LZMADECOMPRESS
+	-DZSTD_GZCOMPRESS -DZSTD_GZDECOMPRESS -DZSTD_LZMACOMPRESS \
+	-DZSTD_LZMADECOMPRESS
 
 LTO = -flto -ffat-lto-objects -fuse-linker-plugin -ffunction-sections \
-		-fdata-sections -fmerge-all-constants -Wl,--gc-sections \
-		-Wl,-z,norelro -Wno-unused-command-line-argument \
-		-Wno-ignored-optimization-argument
+	-fdata-sections -fmerge-all-constants -Wl,--gc-sections \
+	-Wl,-z,norelro -Wno-unused-command-line-argument \
+	-Wno-ignored-optimization-argument
 
 LIBS = -lz -llzma
 
@@ -24,46 +24,46 @@ FLAGS = ${CFLAGS} ${CPPFLAGS} ${LIBS} -static -pthread
 LFLAGS = ${CFLAGS} ${CPPFLAGS} ${LTO}
 
 LIB_OBJ = lib/common/debug.o \
-			lib/common/entropy_common.o \
-			lib/common/error_private.o \
-			lib/common/fse_decompress.o \
-			lib/common/pool.o \
-			lib/common/threading.o \
-			lib/common/xxhash.o \
-			lib/common/zstd_common.o \
-			lib/compress/fse_compress.o \
-			lib/compress/hist.o \
-			lib/compress/huf_compress.o \
-			lib/compress/zstd_compress.o \
-			lib/compress/zstd_compress_literals.o \
-			lib/compress/zstd_compress_sequences.o \
-			lib/compress/zstd_compress_superblock.o \
-			lib/compress/zstd_double_fast.o \
-			lib/compress/zstd_fast.o \
-			lib/compress/zstd_lazy.o \
-			lib/compress/zstd_ldm.o \
-			lib/compress/zstd_opt.o \
-			lib/compress/zstdmt_compress.o \
-			lib/decompress/huf_decompress.o \
-			lib/decompress/huf_decompress_amd64.o \
-			lib/decompress/zstd_ddict.o \
-			lib/decompress/zstd_decompress.o \
-			lib/decompress/zstd_decompress_block.o \
-			lib/dictBuilder/cover.o \
-			lib/dictBuilder/divsufsort.o \
-			lib/dictBuilder/fastcover.o \
-			lib/dictBuilder/zdict.o
+	lib/common/entropy_common.o \
+	lib/common/error_private.o \
+	lib/common/fse_decompress.o \
+	lib/common/pool.o \
+	lib/common/threading.o \
+	lib/common/xxhash.o \
+	lib/common/zstd_common.o \
+	lib/compress/fse_compress.o \
+	lib/compress/hist.o \
+	lib/compress/huf_compress.o \
+	lib/compress/zstd_compress.o \
+	lib/compress/zstd_compress_literals.o \
+	lib/compress/zstd_compress_sequences.o \
+	lib/compress/zstd_compress_superblock.o \
+	lib/compress/zstd_double_fast.o \
+	lib/compress/zstd_fast.o \
+	lib/compress/zstd_lazy.o \
+	lib/compress/zstd_ldm.o \
+	lib/compress/zstd_opt.o \
+	lib/compress/zstdmt_compress.o \
+	lib/decompress/huf_decompress.o \
+	lib/decompress/huf_decompress_amd64.o \
+	lib/decompress/zstd_ddict.o \
+	lib/decompress/zstd_decompress.o \
+	lib/decompress/zstd_decompress_block.o \
+	lib/dictBuilder/cover.o \
+	lib/dictBuilder/divsufsort.o \
+	lib/dictBuilder/fastcover.o \
+	lib/dictBuilder/zdict.o
 
 OBJ = programs/benchfn.o \
-		programs/benchzstd.o \
-		programs/datagen.o \
-		programs/dibio.o \
-		programs/fileio.o \
-		programs/timefn.o \
-		programs/util.o \
-		programs/zstdcli.o \
-		programs/zstdcli_trace.o \
-		${LIB_OBJ}
+	programs/benchzstd.o \
+	programs/datagen.o \
+	programs/dibio.o \
+	programs/fileio.o \
+	programs/timefn.o \
+	programs/util.o \
+	programs/zstdcli.o \
+	programs/zstdcli_trace.o \
+	${LIB_OBJ}
 
 .PHONY: all
 all: libzstd.a libzstd.pc zstd-pgo
@@ -94,11 +94,12 @@ zstd: ${OBJ}
 	${CC} ${MOREFLAGS} ${FLAGS} -o $@ ${OBJ}
 
 libzstd.pc: lib/libzstd.pc.in
-	sed -e "s|@VERSION@|1.5.0|g" \
-		-e "s|@PREFIX@|${PREFIX}|g" \
-		-e "s|@LIBDIR@|${LIBDIR}|g" \
-		-e "s|@EXEC_PREFIX@|${PREFIX}|g" \
-		-e "s|@INCLUDEDIR@|${INCDIR}|g" \
+	sed -e "s|@VERSION@|1.5.1|" \
+		-e "s|@PREFIX@|${PREFIX}|" \
+		-e "s|@LIBDIR@|${LIBDIR}|" \
+		-e "s|@EXEC_PREFIX@|${PREFIX}|" \
+		-e "s|@INCLUDEDIR@|${INCDIR}|" \
+		-e '|@LIBS_PRIVATE@|d' \
 		lib/libzstd.pc.in > libzstd.pc
 
 .PHONY: install
