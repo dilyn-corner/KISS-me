@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < sdl-wayland-1.20.patch
+
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSDL_STATIC=True \
+    -DSDL_SHARED=False \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 INSTALL.txt "$1/usr/share/LICENSES/sdl2.license"
