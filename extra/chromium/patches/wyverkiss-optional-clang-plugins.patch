@@ -1,6 +1,6 @@
 --- a/build/config/clang/clang.gni
 +++ b/build/config/clang/clang.gni
-@@ -7,12 +7,18 @@
+@@ -7,6 +7,11 @@
  default_clang_base_path = "//third_party/llvm-build/Release+Asserts"
  
  declare_args() {
@@ -12,17 +12,20 @@
    # Indicates if the build should use the Chrome-specific plugins for enforcing
    # coding guidelines, etc. Only used when compiling with Chrome's Clang, not
    # Chrome OS's.
-   clang_use_chrome_plugins =
-       is_clang && !is_nacl && !use_xcode_clang &&
--      default_toolchain != "//build/toolchain/cros:target"
-+      default_toolchain != "//build/toolchain/cros:target" &&
-+      clang_use_plugins
- 
-   clang_base_path = default_clang_base_path
- }
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -524,7 +524,7 @@
+@@ -354,7 +354,9 @@
+     }
+ 
+     if (use_lld) {
+-      ldflags += [ "-fuse-ld=lld" ]
++      ldflags += [ "-fuse-ld=lld",
++                   "-Wl,--allow-multiple-definition",
++                 ]
+       if (lld_path != "") {
+         ldflags += [ "-B$lld_path" ]
+       }
+@@ -535,7 +537,7 @@
  
    # Enable text section splitting only on linux when using lld for now. Other
    # platforms can be added later if needed.
@@ -31,16 +34,16 @@
      ldflags += [ "-Wl,-z,keep-text-section-prefix" ]
    }
  
-@@ -2317,7 +2317,7 @@
+@@ -2325,7 +2327,7 @@
      }
    }
  
--  if (is_clang && !is_nacl && !use_xcode_clang) {
-+  if (is_clang && !is_nacl && !use_xcode_clang && clang_use_plugins) {
+-  if (is_clang && !is_nacl && !use_xcode_clang && current_os != "zos") {
++  if (is_clang && !is_nacl && !use_xcode_clang && current_os != "zos" && clang_use_plugins) {
      if (is_apple) {
        # TODO(https://crbug.com/1050118): Investigate missing debug info on mac.
        # Make sure we don't use constructor homing on mac.
-@@ -2356,7 +2356,7 @@
+@@ -2364,7 +2366,7 @@
      configs = [ ":win_pdbaltpath" ]
  
      # Enable line tables for clang. MSVC doesn't have an equivalent option.

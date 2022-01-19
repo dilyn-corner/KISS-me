@@ -3,7 +3,7 @@ byacc              make
 bzip2
 dbus
 fontconfig
-glib
+freetype-harfbuzz
 libdrm
 libva
 libwebp
@@ -11,6 +11,7 @@ libxkbcommon
 linux-headers      make
 mesa
 nodejs             make
+nss
 opus
 perl               make
 pipewire
