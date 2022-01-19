@@ -1,4 +1,5 @@
-glib
-pkgconf make
+glib    make
+libffi
 pipewire
+pkgconf make
 python  make

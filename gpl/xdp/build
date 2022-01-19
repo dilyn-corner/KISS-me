@@ -1,47 +1,38 @@
 #!/bin/sh -e
 
 (
-    cd gmake
-
-    ./configure \
-        --prefix=/usr \
-        --program-prefix=g
-
-    make
-    make DESTDIR="$OLDPWD" install
-)
-
-(
     cd fuse2
 
     ./configure \
-        --prefix=/usr \
-        --bindir=/usr/bin \
-        --sbindir=/usr/bin \
-        --datarootdir=/usr/share \
+        --prefix=/ \
+        --bindir=/bin \
+        --sbindir=/bin \
+        --datarootdir=/share \
         --disable-example \
         --disable-shared \
         MOUNT_FUSE_PATH=/usr/bin \
         UDEV_RULES_PATH=/usr/lib/udev
 
     make LDFLAGS="$LDFLAGS --static"
-    make DESTDIR="$1" install
+    make DESTDIR="$OLDPWD" install
 )
 
-export PATH="$PWD/usr/bin:$PATH"
-export CFLAGS="$CFLAGS -I$1/usr/include -L$1/usr/lib"
+export CFLAGS="$CFLAGS -Iinclude/fuse -Llib"
+export PKG_CONFIG_PATH="$PWD/lib/pkgconfig"
 
 ./configure \
-    -prefix=/usr \
-    -libexecdir=/usr/lib \
+    --prefix=/usr \
+    --libexecdir=/usr/lib \
     --disable-nls \
+    --disable-rpath \
+    --disable-shared \
     --disable-geoclue \
     --disable-libportal \
+    --enable-static \
     --enable-pipewire
 
-gmake
-gmake DESTDIR="$1" install
+make PREFIX=/usr 
+make PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/xdg-desktop-portal.license"
-
