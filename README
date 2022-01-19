@@ -71,8 +71,8 @@ NOTES:
     | curl              | MIT           | dbus                | Academic      |
     | flex              | Public Domain | dhcpcd              | BSD           |
     | fossil            | BSD 2-Clause  | elftoolchain        | MIT           |
-    | kiss              | MIT           | expat               | BSD           |
-    | libressl          | MIT           | exercism            | MIT           |
+    | kiss              | MIT           | exercism            | MIT           |
+    | libressl          | MIT           | expat               | BSD           |
     | llvm              | ISC           | fantasque-nerd-font | MIT           |
     | m4                | Apache-2.0    | fontconfig          | MIT           |
     | make              | BSD/ISC       | freetype-harfbuzz   | BSD           |
@@ -93,21 +93,21 @@ NOTES:
     | WAYLAND           | LICENSE       | meson               | Apache-2.0    |
     +-------------------+---------------+ netbsd-curses       | BSD 3-Clause  |
     | foot              | MIT           | nodejs              | MIT           |
-    | grim              | MIT           | npm                 | ISC           |
-    | libxkcommon       | MIT           | nss                 | MPLv2         |
-    | seatd             | MIT           | openssh             | BSD           |
-    | slurp             | MIT           | opus                | BSD 3-Clause  |
-    | wayfire           | MIT           | perl                | Artistic      |
-    | wayland           | MIT           | pipewire            | MIT           |
-    | wayland-protocols | MIT           | pixman              | MIT           |
-    | wbg               | MIT           | pkgconf             | ISC           |
-    | wev               | MIT           | python              | PSFv2         |
-    | wl-clipboard-rs   | MIT           | rust                | APACHE/MIT    |
+    | grim              | MIT           | nss                 | MPLv2         |
+    | libxkcommon       | MIT           | openssh             | BSD           |
+    | seatd             | MIT           | opus                | BSD 3-Clause  |
+    | slurp             | MIT           | perl                | Artistic      |
+    | wayfire           | MIT           | pipewire            | MIT           |
+    | wayland           | MIT           | pixman              | MIT           |
+    | wayland-protocols | MIT           | pkgconf             | ISC           |
+    | wbg               | MIT           | python              | PSFv2         |
+    | wev               | MIT           | rust                | APACHE/MIT    |
+    | wl-clipboard-rs   | MIT           | sdl2                | BSD 3-Clause  |
     | wlroots           | MIT           | sqlite              | Public Domain |
     | xdp-wlr           | MIT           | tzdata              | Public Domain |
     | xkeyboard-config  | MIT           | vim                 | Vim           |
     +-------------------+---------------+ wpa_supplicant      | BSD 3-Clause  |
-    | GPL               | LICENSE       +---------------------+---------------+
+    | GPL               | LICENSE       +--------------------+----------------+
     +-------------------+---------------+
     | alsa-lib          | GPLv2.1       |
     | alsa-utils        | GPLv2         |
