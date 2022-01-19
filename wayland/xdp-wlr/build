@@ -5,18 +5,20 @@ export DESTDIR="$1"
 meson \
     --prefix=/ \
     -Ddefault_library=static \
+    -Dbuildtype=release \
     inih inih/build
 
 ninja -C inih/build
-DESTDIR="$PWD/junk" ninja -C inih/build install
+DESTDIR="$PWD" ninja -C inih/build install
 
-export CFLAGS="$CFLAGS -I$PWD/junk/include"
-export LDFLAGS="$LDFLAGS -L$PWD/junk/lib"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PWD/junk/lib/pkgconfig"
+export CFLAGS="$CFLAGS -I$PWD/include"
+export LDFLAGS="$LDFLAGS -L$PWD/lib"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PWD/lib/pkgconfig"
 
 meson \
     --prefix=/usr \
     --libexecdir=/usr/lib \
+    -Dbuildtype=release \
     . build
 
 ninja -C build
