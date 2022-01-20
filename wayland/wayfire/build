@@ -50,16 +50,15 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
 sed -i 's/cairo.h/cairo\/cairo.h/' \
     plugins/decor/deco-subsurface.cpp
 
+sed -i "/subdir('test')/d" subprojects/wf-config/meson.build
 
 meson \
     --prefix=/usr \
     --buildtype=release \
+    -Ddefault_library=static \
     -Dpkg_config_path="$PWD/usr/lib/pkgconfig" \
-    -Dexamples=false \
     -Dprint_trace=false \
     -Dxwayland=disabled \
-    -Dxcb-error=disabled \
-    -Dx11-backend=disabled \
     -Duse_system_wlroots=enabled \
     -Duse_system_wfconfig=disabled \
     . build
