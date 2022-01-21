@@ -1,0 +1,296 @@
+.POSIX:
+
+PREFIX ?= /usr/local
+BINDIR ?= ${PREFIX}/bin
+LIBDIR ?= ${PREFIX}/lib
+INCDIR ?= ${PREFIX}/include
+PKGCONFDIR ?= ${LIBDIR}/pkgconfig
+
+CC ?= cc
+AR ?= ar
+
+XCFLAGS = -fPIC -m64 -ffunction-sections -fdata-sections -pthread
+
+XCPPFLAGS = -UDEBUG -DLINUX -Dlinux -DXP_UNIX -DNSS_NO_GCC48 -DNDEBUG \
+	-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_SOURCE -DSDB_MEASURE_USE_TEMP_DIR \
+	-DNSS_NO_INIT_SUPPORT -DUSE_UTIL_DIRECTLY -DNO_NSPR_10_SUPPORT \
+	-DHAVE_STRERROR -DSSL_DISABLE_DEPRECATED_CIPHER_SUITE_NAMES
+
+
+NSPRCPP = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" \
+	-DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" \
+	-DNDEBUG=1 -DHAVE_VISIBILITY_HIDDEN_ATTRIBUTE=1 -D_PR_PTHREADS \
+	-DHAVE_VISIBILITY_PRAGMA=1 -DXP_UNIX=1 -D_GNU_SOURCE=1 \
+	-DHAVE_FCNTL_FILE_LOCKING=1 -DHAVE_POINTER_LOCALTIME_R=1 -DLINUX=1 \
+	-DHAVE_DLADDR=1 -DHAVE_GETTID=1 -DHAVE_LCHOWN=1 -DHAVE_SETPRIORITY=1 \
+	-DHAVE_STRERROR=1 -DHAVE_SYSCALL=1 -DHAVE_SECURE_GETENV=1 -D_REENTRANT=1 \
+	-DFORCE_PR_LOG -UHAVE_CVAR_BUILT_ON_SEM
+
+NSPRINCLUDES = -Ipr/include/private -Ipr/include -I../dist/build/include \
+	-I../dist/build/include/public -I../dist/build/include/private
+
+NSPRFLAGS = -fvisibility=hidden ${XCFLAGS} ${XCPPFLAGS} ${NSPRCPP} ${NSPRINCLUDES}
+
+FLAGS = ${NSPRFLAGS} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
+
+#CFG_OBJ = pr/include/md/_aix32.cfg pr/include/md/_aix64.cfg \
+#	pr/include/md/_bsdi.cfg pr/include/md/_darwin.cfg \
+#	pr/include/md/_freebsd.cfg pr/include/md/_hpux32.cfg \
+#	pr/include/md/_hpux64.cfg pr/include/md/_netbsd.cfg pr/include/md/_nto.cfg \
+#	pr/include/md/_openbsd.cfg pr/include/md/_os2.cfg pr/include/md/_qnx.cfg \
+#	pr/include/md/_riscos.cfg pr/include/md/_scoos.cfg \
+#	pr/include/md/_solaris.cfg pr/include/md/_unixware.cfg \
+#	pr/include/md/_unixware7.cfg pr/include/md/_win95.cfg \
+#	pr/include/md/_winnt.cfg
+
+NSPR_OBJ = pr/src/io/prfdcach.o pr/src/io/priometh.o pr/src/io/pripv6.o \
+	pr/src/io/prlayer.o pr/src/io/prlog.o pr/src/io/prmapopt.o \
+	pr/src/io/prmmap.o pr/src/io/prmwait.o pr/src/io/prpolevt.o \
+	pr/src/io/prprf.o pr/src/io/prscanf.o pr/src/io/prstdio.o \
+	pr/src/linking/prlink.o pr/src/malloc/prmalloc.o pr/src/malloc/prmem.o \
+	pr/src/md/prosdep.o pr/src/md/unix/linux.o pr/src/md/unix/unix.o \
+	pr/src/md/unix/unix_errors.o pr/src/md/unix/uxproces.o \
+	pr/src/md/unix/uxrng.o pr/src/md/unix/uxshm.o pr/src/md/unix/uxwrap.o \
+	pr/src/memory/prseg.o pr/src/memory/prshm.o pr/src/memory/prshma.o \
+	pr/src/misc/pralarm.o pr/src/misc/pratom.o pr/src/misc/praton.o \
+	pr/src/misc/prcountr.o pr/src/misc/prdtoa.o pr/src/misc/prenv.o \
+	pr/src/misc/prerr.o pr/src/misc/prerror.o pr/src/misc/prerrortable.o \
+	pr/src/misc/prinit.o pr/src/misc/prinrval.o pr/src/misc/pripc.o \
+	pr/src/misc/prlog2.o pr/src/misc/prlong.o pr/src/misc/prnetdb.o \
+	pr/src/misc/prolock.o pr/src/misc/prrng.o pr/src/misc/prsystem.o \
+	pr/src/misc/prthinfo.o pr/src/misc/prtime.o pr/src/misc/prtpool.o \
+	pr/src/misc/prtrace.o pr/src/pthreads/ptio.o pr/src/pthreads/ptmisc.o \
+	pr/src/pthreads/ptsynch.o pr/src/threads/prcmon.o \
+	pr/src/pthreads/ptthread.o pr/src/threads/prrwlock.o \
+	pr/src/threads/prtpd.o pr/src/md/unix/os_Linux_x86_64.o pr/src/prvrsion.o
+
+PLDS_OBJ = lib/ds/plvrsion.o lib/ds/plarena.o lib/ds/plhash.o
+
+PLC_OBJ = lib/libc/src/base64.o lib/libc/src/plerror.o \
+	lib/libc/src/plgetopt.o lib/libc/src/plvrsion.o lib/libc/src/strcase.o \
+	lib/libc/src/strcat.o lib/libc/src/strchr.o lib/libc/src/strcmp.o \
+	lib/libc/src/strcpy.o lib/libc/src/strdup.o lib/libc/src/strlen.o \
+	lib/libc/src/strpbrk.o lib/libc/src/strstr.o lib/libc/src/strtok.o \
+
+MY_OBJ = pr/tests/dll/mygetval.o pr/tests/dll/mysetval.o
+
+OBJ = ${NSPR_OBJ} ${PLDS_OBJ} ${PLC_OBJ} ${MY_OBJ}
+
+.PHONY: all
+all: abstract static shared headers
+
+static: libnspr4.a libplds4.a libplc4.a
+shared: libnspr4.so libplds4.so libplc4.so libmy.so
+
+.c.o:
+	${CC} ${NSPRFLAGS} ${NSPRINCLUDES} -c -o $@ $<
+.s.o:
+	${CC} ${NSPRFLAGS} ${NSPRINCLUDES} -c -o $@ $<
+
+headers:
+	cp -f pr/include/md/_linux.cfg ../dist/build/include/prcpucfg.h
+	install -Dm444 pr/include/md/_aix32.cfg ../dist/build/include/_aix32.cfg
+	install -Dm444 pr/include/md/_aix64.cfg ../dist/build/include/_aix64.cfg
+	install -Dm444 pr/include/md/_bsdi.cfg ../dist/build/include/_bsdi.cfg
+	install -Dm444 pr/include/md/_darwin.cfg ../dist/build/include/_darwin.cfg
+	install -Dm444 pr/include/md/_freebsd.cfg ../dist/build/include/_freebsd.cfg
+	install -Dm444 pr/include/md/_hpux32.cfg ../dist/build/include/_hpux32.cfg
+	install -Dm444 pr/include/md/_hpux64.cfg ../dist/build/include/_hpux64.cfg
+	install -Dm444 pr/include/md/_netbsd.cfg ../dist/build/include/_netbsd.cfg
+	install -Dm444 pr/include/md/_nto.cfg ../dist/build/include/_nto.cfg
+	install -Dm444 pr/include/md/_openbsd.cfg ../dist/build/include/_openbsd.cfg
+	install -Dm444 pr/include/md/_os2.cfg ../dist/build/include/_os2.cfg
+	install -Dm444 pr/include/md/_qnx.cfg ../dist/build/include/_qnx.cfg
+	install -Dm444 pr/include/md/_riscos.cfg ../dist/build/include/_riscos.cfg
+	install -Dm444 pr/include/md/_scoos.cfg ../dist/build/include/_scoos.cfg
+	install -Dm444 pr/include/md/_solaris.cfg ../dist/build/include/_solaris.cfg
+	install -Dm444 pr/include/md/_unixware.cfg ../dist/build/include/_unixware.cfg
+	install -Dm444 pr/include/md/_unixware7.cfg ../dist/build/include/_unixware7.cfg
+	install -Dm444 pr/include/md/_win95.cfg ../dist/build/include/_win95.cfg
+	install -Dm444 pr/include/md/_winnt.cfg ../dist/build/include/_winnt.cfg
+	install -Dm444 pr/include/private/pprio.h ../dist/build/include/private/pprio.h
+	install -Dm444 pr/include/private/pprmwait.h ../dist/build/include/private/pprmwait.h
+	install -Dm444 pr/include/private/pprthred.h ../dist/build/include/private/pprthred.h
+	install -Dm444 pr/include/private/primpl.h ../dist/build/include/private/primpl.h
+	install -Dm444 pr/include/private/prpriv.h ../dist/build/include/private/prpriv.h
+	install -Dm444 pr/include/obsolete/pralarm.h ../dist/build/include/obsolete/pralarm.h
+	install -Dm444 pr/include/obsolete/probslet.h ../dist/build/include/obsolete/probslet.h
+	install -Dm444 pr/include/obsolete/protypes.h ../dist/build/include/obsolete/protypes.h
+	install -Dm444 pr/include/obsolete/prsem.h ../dist/build/include/obsolete/prsem.h
+	install -Dm444 pr/include/nspr.h ../dist/build/include/nspr.h
+	install -Dm444 pr/include/pratom.h ../dist/build/include/pratom.h
+	install -Dm444 pr/include/prbit.h ../dist/build/include/prbit.h
+	install -Dm444 pr/include/prclist.h ../dist/build/include/prclist.h
+	install -Dm444 pr/include/prcmon.h ../dist/build/include/prcmon.h
+	install -Dm444 pr/include/prcountr.h ../dist/build/include/prcountr.h
+	install -Dm444 pr/include/prcvar.h ../dist/build/include/prcvar.h
+	install -Dm444 pr/include/prdtoa.h ../dist/build/include/prdtoa.h
+	install -Dm444 pr/include/prenv.h ../dist/build/include/prenv.h
+	install -Dm444 pr/include/prerr.h ../dist/build/include/prerr.h
+	install -Dm444 pr/include/prerror.h ../dist/build/include/prerror.h
+	install -Dm444 pr/include/prinet.h ../dist/build/include/prinet.h
+	install -Dm444 pr/include/prinit.h ../dist/build/include/prinit.h
+	install -Dm444 pr/include/prinrval.h ../dist/build/include/prinrval.h
+	install -Dm444 pr/include/prio.h ../dist/build/include/prio.h
+	install -Dm444 pr/include/pripcsem.h ../dist/build/include/pripcsem.h
+	install -Dm444 pr/include/prlink.h ../dist/build/include/prlink.h
+	install -Dm444 pr/include/prlock.h ../dist/build/include/prlock.h
+	install -Dm444 pr/include/prlog.h ../dist/build/include/prlog.h
+	install -Dm444 pr/include/prlong.h ../dist/build/include/prlong.h
+	install -Dm444 pr/include/prmem.h ../dist/build/include/prmem.h
+	install -Dm444 pr/include/prmon.h ../dist/build/include/prmon.h
+	install -Dm444 pr/include/prmwait.h ../dist/build/include/prmwait.h
+	install -Dm444 pr/include/prnetdb.h ../dist/build/include/prnetdb.h
+	install -Dm444 pr/include/prolock.h ../dist/build/include/prolock.h
+	install -Dm444 pr/include/prpdce.h ../dist/build/include/prpdce.h
+	install -Dm444 pr/include/prprf.h ../dist/build/include/prprf.h
+	install -Dm444 pr/include/prproces.h ../dist/build/include/prproces.h
+	install -Dm444 pr/include/prrng.h ../dist/build/include/prrng.h
+	install -Dm444 pr/include/prrwlock.h ../dist/build/include/prrwlock.h
+	install -Dm444 pr/include/prshm.h ../dist/build/include/prshm.h
+	install -Dm444 pr/include/prshma.h ../dist/build/include/prshma.h
+	install -Dm444 pr/include/prsystem.h ../dist/build/include/prsystem.h
+	install -Dm444 pr/include/prthread.h ../dist/build/include/prthread.h
+	install -Dm444 pr/include/prtime.h ../dist/build/include/prtime.h
+	install -Dm444 pr/include/prtpool.h ../dist/build/include/prtpool.h
+	install -Dm444 pr/include/prtrace.h ../dist/build/include/prtrace.h
+	install -Dm444 pr/include/prtypes.h ../dist/build/include/prtypes.h
+	install -Dm444 pr/include/prvrsion.h ../dist/build/include/prvrsion.h
+	install -Dm444 pr/include/prwin16.h ../dist/build/include/prwin16.h
+
+pr/src/prvrsion.o: pr/src/_pr_bld.h
+
+pr/src/_pr_bld.h:
+	echo '#define _BUILD_STRING "2022-01-20 21:28:50"' > pr/src/_pr_bld.h
+	echo '#define _BUILD_TIME "164273208300000LL"' >> pr/src/_pr_bld.h
+	echo '#define _PRODUCTION "libnspr4.so"' >> pr/src/_pr_bld.h
+
+lib/ds/plvrsion.o: lib/ds/_pl_bld.h
+	${CC} ${NSPRFLAGS} ${NSPRINCLUDES} -I lib/ds -c -o $@ lib/ds/plvrsion.c
+	rm -f lib/ds/_pl_bld.h
+
+lib/ds/_pl_bld.h:
+	echo '#define _BUILD_STRING "2022-01-20 21:28:50"' > lib/ds/_pl_bld.h
+	echo '#define _BUILD_TIME "164273208300000LL"' >> lib/ds/_pl_bld.h
+	echo '#define _PRODUCTION "libnspr4.so"' >> lib/ds/_pl_bld.h
+	install -Dm444 lib/ds/plhash.h ../dist/build/include/plhash.h
+	install -Dm444 lib/ds/plarena.h ../dist/build/include/plarena.h
+	install -Dm444 lib/ds/plarenas.h ../dist/build/include/plarenas.h
+
+lib/libc/src/plvrsion.o: lib/libc/src/_pl_bld.h
+	${CC} ${NSPRFLAGS} -I lib/libc/src -c -o $@ lib/libc/src/plvrsion.c
+
+lib/libc/src/_pl_bld.h:
+	echo '#define _BUILD_STRING "2022-01-20 21:28:50"' > lib/libc/src/_pl_bld.h
+	echo '#define _BUILD_TIME "164273208300000LL"' >> lib/libc/src/_pl_bld.h
+	echo '#define _PRODUCTION "libnspr4.so"' >> lib/libc/src/_pl_bld.h 
+	install -Dm444 lib/libc/include/plstr.h ../dist/build/include/plstr.h
+	install -Dm444 lib/libc/include/plerror.h ../dist/build/include/plerror.h
+	install -Dm444 lib/libc/include/plgetopt.h ../dist/build/include/plgetopt.h
+	install -Dm444 lib/libc/include/plbase64.h ../dist/build/include/plbase64.h
+
+libnspr4.a: ${NSPR_OBJ} headers
+	${AR} rcs $@ ${NSPR_OBJ}
+	install -Dm444 $@ ../dist/build/lib/$@
+
+libnspr4.so: ${NSPR_OBJ} headers
+	${CC} -shared -Wl,-soname -Wl,libnspr4.so -o \
+		$@ ${NSPR_OBJ} -m64 -z noexecstack -lpthread -ldl -lrt
+	install -Dm444 $@ ../dist/build/lib/$@
+	install -Dm444 $@ ../dist/build/bin/$@
+
+libplds4.a: lib/ds/plarena.o lib/ds/plhash.o
+	${AR} rcs libplds4.a lib/ds/plarena.o lib/ds/plhash.o
+	install -Dm444 libplds4.a ../dist/build/lib/$@
+
+libplds4.so: ${PLDS_OBJ} libnspr4.so
+	${CC} -shared -Wl,-soname -Wl,libplds4.so -o \
+		$@ ${PLDS_OBJ} -m64 -z noexecstack -L../dist/build/lib -lnspr4
+	install -Dm444 libplds4.so ../dist/build/lib/$@
+	install -Dm444 libplds4.so ../dist/build/bin/$@
+
+libplc4.a: ${PLC_OBJ} headers
+	${AR} rcs $@ ${PLC_OBJ}
+	install -Dm444 $@ ../dist/build/lib/$@
+
+libplc4.so: ${PLC_OBJ} libnspr4.so
+	${CC} -shared -Wl,-soname -Wl,libplc4.so -o \
+		$@ ${PLC_OBJ} -m64 -z noexecstack -L../dist/lib -lnspr4
+	install -Dm444 $@ ../dist/build/lib/$@
+	install -Dm444 $@ ../dist/build/bin/$@
+
+libmy.so: ${MY_OBJ} headers
+	${CC} -shared -Wl,-soname -Wl,$@ -o \
+		$@ ${MY_OBJ} -m64 -z noexecstack
+
+abstract: pr/tests/abstract.o libplc4.so libnspr4.so headers
+	${CC} pr/tests/abstract.o -Xlinker -rpath ../dist/build/lib \
+		-L../dist/build/lib -lplc4 -lnspr4 -lpthread -o $@
+
+make-pc:
+	sed -i "s|@prefix@|${PREFIX}|" config/nspr.pc.in
+	sed -i "s|@exec_prefix@|${PREFIX}|" config/nspr.pc.in
+	sed -i "s|@libdir@|${LIBDIR}|" config/nspr.pc.in
+	sed -i "s|@includedir@|${INCDIR}|" config/nspr.pc.in
+	sed -i "s|@MOD_MAJOR_VERSION@|4|" config/nspr.pc.in
+	sed -i "s|@MOD_MINOR_VERSION@|32|" config/nspr.pc.in
+	sed -i "s|@MOD_PATCH_VERSION@||" config/nspr.pc.in
+
+.PHONY: install
+install:
+	install -Dm755 libplds4.so ${DESTDIR}${LIBDIR}/libplds4.so
+	install -Dm755 libnspr4.so ${DESTDIR}${LIBDIR}/libnspr4.so
+	install -Dm755 libplc4.so ${DESTDIR}${LIBDIR}/libplc4.so
+	install -Dm755 libmy.so ${DESTDIR}${LIBDIR}/libmy.so
+	install -Dm644 pr/include/nspr.h ${DESTDIR}${INCDIR}/nspr/nspr.h
+	install -Dm644 pr/include/pratom.h ${DESTDIR}${INCDIR}/nspr/pratom.h
+	install -Dm644 pr/include/prbit.h ${DESTDIR}${INCDIR}/nspr/prbit.h
+	install -Dm644 pr/include/prclist.h ${DESTDIR}${INCDIR}/nspr/prclist.h
+	install -Dm644 pr/include/prcmon.h ${DESTDIR}${INCDIR}/nspr/prcmon.h
+	install -Dm644 pr/include/prcountr.h ${DESTDIR}${INCDIR}/nspr/prcountr.h
+	install -Dm644 pr/include/prcvar.h ${DESTDIR}${INCDIR}/nspr/prcvar.h
+	install -Dm644 pr/include/prdtoa.h ${DESTDIR}${INCDIR}/nspr/prdtoa.h
+	install -Dm644 pr/include/prenv.h ${DESTDIR}${INCDIR}/nspr/prenv.h
+	install -Dm644 pr/include/prerr.h ${DESTDIR}${INCDIR}/nspr/prerr.h
+	install -Dm644 pr/include/prerror.h ${DESTDIR}${INCDIR}/nspr/prerror.h
+	install -Dm644 pr/include/prinet.h ${DESTDIR}${INCDIR}/nspr/prinet.h
+	install -Dm644 pr/include/prinit.h ${DESTDIR}${INCDIR}/nspr/prinit.h
+	install -Dm644 pr/include/prinrval.h ${DESTDIR}${INCDIR}/nspr/prinrval.h
+	install -Dm644 pr/include/prio.h ${DESTDIR}${INCDIR}/nspr/prio.h
+	install -Dm644 pr/include/pripcsem.h ${DESTDIR}${INCDIR}/nspr/pripcsem.h
+	install -Dm644 pr/include/prlink.h ${DESTDIR}${INCDIR}/nspr/prlink.h
+	install -Dm644 pr/include/prlock.h ${DESTDIR}${INCDIR}/nspr/prlock.h
+	install -Dm644 pr/include/prlog.h ${DESTDIR}${INCDIR}/nspr/prlog.h
+	install -Dm644 pr/include/prlong.h ${DESTDIR}${INCDIR}/nspr/prlong.h
+	install -Dm644 pr/include/prmem.h ${DESTDIR}${INCDIR}/nspr/prmem.h
+	install -Dm644 pr/include/prmon.h ${DESTDIR}${INCDIR}/nspr/prmon.h
+	install -Dm644 pr/include/prmwait.h ${DESTDIR}${INCDIR}/nspr/prmwait.h
+	install -Dm644 pr/include/prnetdb.h ${DESTDIR}${INCDIR}/nspr/prnetdb.h
+	install -Dm644 pr/include/prolock.h ${DESTDIR}${INCDIR}/nspr/prolock.h
+	install -Dm644 pr/include/prpdce.h ${DESTDIR}${INCDIR}/nspr/prpdce.h
+	install -Dm644 pr/include/prprf.h ${DESTDIR}${INCDIR}/nspr/prprf.h
+	install -Dm644 pr/include/prproces.h ${DESTDIR}${INCDIR}/nspr/prproces.h
+	install -Dm644 pr/include/prrng.h ${DESTDIR}${INCDIR}/nspr/prrng.h
+	install -Dm644 pr/include/prrwlock.h ${DESTDIR}${INCDIR}/nspr/prrwlock.h
+	install -Dm644 pr/include/prshm.h ${DESTDIR}${INCDIR}/nspr/prshm.h
+	install -Dm644 pr/include/prshma.h ${DESTDIR}${INCDIR}/nspr/prshma.h
+	install -Dm644 pr/include/prsystem.h ${DESTDIR}${INCDIR}/nspr/prsystem.h
+	install -Dm644 pr/include/prthread.h ${DESTDIR}${INCDIR}/nspr/prthread.h
+	install -Dm644 pr/include/prtime.h ${DESTDIR}${INCDIR}/nspr/prtime.h
+	install -Dm644 pr/include/prtpool.h ${DESTDIR}${INCDIR}/nspr/prtpool.h
+	install -Dm644 pr/include/prtrace.h ${DESTDIR}${INCDIR}/nspr/prtrace.h
+	install -Dm644 pr/include/prtypes.h ${DESTDIR}${INCDIR}/nspr/prtypes.h
+	install -Dm644 pr/include/prvrsion.h ${DESTDIR}${INCDIR}/nspr/prvrsion.h
+	install -Dm644 pr/include/prwin16.h ${DESTDIR}${INCDIR}/nspr/prwin16.h
+	install -Dm644 lib/prstreams/prstrms.h ${DESTDIR}${INCDIR}/nspr/prstrms.h
+	install -Dm444 ../dist/build/include/plhash.h ${DESTDIR}${INCDIR}/nspr/plhash.h
+	install -Dm444 ../dist/build/include/plarena.h ${DESTDIR}${INCDIR}/nspr/plarena.h
+	install -Dm444 ../dist/build/include/plarenas.h ${DESTDIR}${INCDIR}/nspr/plarenas.h
+	install -Dm644 config/nspr.pc.in ${DESTDIR}${PKGCONFDIR}/nspr.pc
+
+.PHONY: clean
+clean:
+	rm -f pr/src/_pr_bld.h lib/ds/_pl_bld.h lib/libc/src/_pl_bld.h
+	rm -f nspr.pc
+	rm -rf ../dist
+	rm -f static shared ${OBJ}
