@@ -94,7 +94,7 @@ zstd: ${OBJ}
 	${CC} ${MOREFLAGS} ${FLAGS} -o $@ ${OBJ}
 
 libzstd.pc: lib/libzstd.pc.in
-	sed -e "s|@VERSION@|1.5.1|" \
+	sed -e "s|@VERSION@|1.5.2|" \
 		-e "s|@PREFIX@|${PREFIX}|" \
 		-e "s|@LIBDIR@|${LIBDIR}|" \
 		-e "s|@EXEC_PREFIX@|${PREFIX}|" \
