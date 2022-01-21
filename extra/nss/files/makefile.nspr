@@ -33,16 +33,6 @@ NSPRFLAGS = -fvisibility=hidden ${XCFLAGS} ${XCPPFLAGS} ${NSPRCPP} ${NSPRINCLUDE
 
 FLAGS = ${NSPRFLAGS} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
 
-#CFG_OBJ = pr/include/md/_aix32.cfg pr/include/md/_aix64.cfg \
-#	pr/include/md/_bsdi.cfg pr/include/md/_darwin.cfg \
-#	pr/include/md/_freebsd.cfg pr/include/md/_hpux32.cfg \
-#	pr/include/md/_hpux64.cfg pr/include/md/_netbsd.cfg pr/include/md/_nto.cfg \
-#	pr/include/md/_openbsd.cfg pr/include/md/_os2.cfg pr/include/md/_qnx.cfg \
-#	pr/include/md/_riscos.cfg pr/include/md/_scoos.cfg \
-#	pr/include/md/_solaris.cfg pr/include/md/_unixware.cfg \
-#	pr/include/md/_unixware7.cfg pr/include/md/_win95.cfg \
-#	pr/include/md/_winnt.cfg
-
 NSPR_OBJ = pr/src/io/prfdcach.o pr/src/io/priometh.o pr/src/io/pripv6.o \
 	pr/src/io/prlayer.o pr/src/io/prlog.o pr/src/io/prmapopt.o \
 	pr/src/io/prmmap.o pr/src/io/prmwait.o pr/src/io/prpolevt.o \
@@ -75,6 +65,8 @@ PLC_OBJ = lib/libc/src/base64.o lib/libc/src/plerror.o \
 MY_OBJ = pr/tests/dll/mygetval.o pr/tests/dll/mysetval.o
 
 OBJ = ${NSPR_OBJ} ${PLDS_OBJ} ${PLC_OBJ} ${MY_OBJ}
+
+.SUFFIXES: .s
 
 .PHONY: all
 all: abstract static shared headers

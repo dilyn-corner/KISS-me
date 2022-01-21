@@ -1095,10 +1095,6 @@ sign-libs: shlibsign libsoftokn3.so libfreebl3.so libfreeblpriv3.so libnssdbm3.s
 		./ Linux ../dist/build/lib ../dist/build/lib/libfreeblpriv3.so
 	sh ./cmd/shlibsign/sign.sh ../dist/build \
 		./ Linux ../dist/build/lib ../dist/build/lib/libnssdbm3.so
-	#../shlibsign -v -i ../dist/build/lib/libsoftokn3.so
-	#../shlibsign -v -i ../dist/build/lib/libfreebl3.so
-	#../shlibsign -v -i ../dist/build/lib/libfreeblpriv3.so
-	#../shlibsign -v -i ../dist/build/lib/libnssdbm3.so
 
 make-pc:
 	sed -i "s|%prefix%|${PREFIX}|" pkg/pkg-config/nss.pc.in
