@@ -1,4 +1,4 @@
 cmake   make
 samurai make
-xz
+xz      make
 zlib-ng
