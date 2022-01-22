@@ -1,0 +1,15 @@
+#!/bin/sh -e
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+export GO111MODULE=on
+
+go build \
+    -modcacherw \
+    -trimpath \
+    -o gotop ./cmd/gotop
+
+install -Dm755 gotop "$1/usr/bin/gotop"
+
+# Install the license
+install -Dm755 LICENSE "$1/usr/share/LICENSES/gotop.license"
