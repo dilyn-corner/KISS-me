@@ -64,20 +64,20 @@ NOTES:
     | CORE              | LICENSE       | EXTRA               | LICENSE       |
     +-------------------+---------------+---------------------+---------------+
     | b3sum             | Public Domain | aerc                | MIT           |
-    | baseinit          | MIT           | bottom              | MIT           |
-    | byacc             | Public Domain | cairo               | MPLv1.1       |
-    | bzip2             | bzip2         | chromium            | BSD 3-Clause  |
-    | cmake             | BSD 3-Clause  | cozette-font        | MIT           |
-    | curl              | MIT           | dbus                | Academic      |
-    | flex              | Public Domain | dhcpcd              | BSD           |
-    | fossil            | BSD 2-Clause  | elftoolchain        | MIT           |
-    | kiss              | MIT           | exercism            | MIT           |
-    | libressl          | MIT           | expat               | BSD           |
-    | llvm              | ISC           | fantasque-nerd-font | MIT           |
-    | m4                | Apache-2.0    | fontconfig          | MIT           |
-    | make              | BSD/ISC       | freetype-harfbuzz   | BSD           |
-    | musl              | BSD 2-Clause  | go                  | BSD 3-Clause  |
-    | nawk              | MIT           | gopls               | BSD 3-Clause  |
+    | baseinit          | MIT           | cairo               | MPLv1.1       |
+    | byacc             | Public Domain | chromium            | BSD 3-Clause  |
+    | bzip2             | bzip2         | cozette-font        | MIT           |
+    | cmake             | BSD 3-Clause  | dbus                | Academic      |
+    | curl              | MIT           | dhcpcd              | BSD           |
+    | flex              | Public Domain | elftoolchain        | MIT           |
+    | fossil            | BSD 2-Clause  | exercism            | MIT           |
+    | kiss              | MIT           | expat               | BSD           |
+    | libressl          | MIT           | fantasque-nerd-font | MIT           |
+    | llvm              | ISC           | fontconfig          | MIT           |
+    | m4                | Apache-2.0    | freetype-harfbuzz   | BSD           |
+    | make              | BSD/ISC       | go                  | BSD 3-Clause  |
+    | musl              | BSD 2-Clause  | gopls               | BSD 3-Clause  |
+    | nawk              | MIT           | gotop               | MIT           |
     | oksh              | MIT           | iana-etc            | Public Domain |
     | openntpd          | ISC           | iosevka-nerd-font   | OFL           |
     | otools            | BSD-style     | libdrm              | MIT           |
