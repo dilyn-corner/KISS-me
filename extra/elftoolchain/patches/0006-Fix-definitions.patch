@@ -1,5 +1,5 @@
---- a/common/sys/elfdefinitions.h
-+++ b/common/sys/elfdefinitions.h
+--- a/common/sys/elfdefinitions.m4
++++ b/common/sys/elfdefinitions.m4
 @@ -47,6 +47,8 @@
  
  #include <stdint.h>

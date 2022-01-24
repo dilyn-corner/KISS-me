@@ -1,14 +1,7 @@
 #!/bin/sh -e
 
-m4 -I./common/sys -DSRCDIR=./common/sys \
-    common/sys/elfdefinitions.m4 > common/sys/elfdefinitions.h
-
 for patch in *.patch; do
     patch -p1 < "$patch"
-done
-
-for file in libelf/*.m4; do
-    m4 -DSRCDIR=libelf "$file" > "${file%%.m4}.c"
 done
 
 make
