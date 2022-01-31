@@ -1,22 +1,21 @@
 #!/bin/sh -e
 
+# xz is Public Domain without GNU getopt.
+# Configure checks for getopt.h, but I want to make sure it isn't built.
+# If the make errors, you need GNU getopt.
+rm -r lib/getopt*
+
 ./configure \
     --prefix=/usr \
-    --disable-nls \
     --disable-xz \
     --disable-doc \
+    --disable-nls \
     --disable-xzdec \
     --disable-shared \
     --disable-lzmadec \
     --disable-scripts \
     --disable-lzmainfo \
     --disable-lzma-links
-
-# xz is Public Domain without GNU getopt.
-# Configure checks for getopt.h, but I want
-# to make sure it isn't built.
-# If the make errors, you need GNU getopt.
-rm -r lib
 
 make
 make DESTDIR="$1" install
