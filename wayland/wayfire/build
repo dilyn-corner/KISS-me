@@ -50,7 +50,12 @@ sed -i 's/cairo.h/cairo\/cairo.h/' \
 sed -i 's/cairo.h/cairo\/cairo.h/' \
     plugins/decor/deco-subsurface.cpp
 
-sed -i "/subdir('test')/d" subprojects/wf-config/meson.build
+sed -i "/subdir('test')/d" \
+    subprojects/wf-config/meson.build
+sed -i "s/libevdev'/libevdev', static: true/" \
+    subprojects/wf-config/meson.build
+sed -i "s/libxml-2.0'/libxml-2.0', static: true/" \
+    subprojects/wf-config/meson.build
 
 meson \
     --prefix=/usr \
@@ -79,6 +84,7 @@ install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
     meson \
         --prefix=/usr \
         --buildtype=release \
+        -Ddefault_library=static \
         -Dpkg_config_path="$OLDPWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig" \
         . build
 
