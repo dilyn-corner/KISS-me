@@ -1,3 +1,16 @@
+--- a/contrib/kiss-outdated
++++ b/contrib/kiss-outdated
+@@ -141,6 +141,10 @@
+             remote=lux-brightness-ventto
+         ;;
+ 
++        make)
++            remote=bmake
++            ;;
++
+         man-pages)
+             # TODO: Report to repology.org.
+             # man-pages       -> manpages
 --- a/contrib/kiss-orphans
 +++ b/contrib/kiss-orphans
 @@ -7,8 +7,8 @@
@@ -6,33 +19,8 @@
          # orphans. Exclude them from the list.
 -        baseinit|baselayout|gcc|e2fsprogs|musl|\
 -        make|busybox|bzip2|grub|kiss|git)
-+        b3sum|baselayout|hummingbird|kiss|llvm|make|\
-+        musl|nawk|pax|oksh|openntpd|sm|toybox|zfs|zstd)
++        b3sum|baseinit|baselayout|kiss|llvm|make|\
++        musl|nawk|oksh|openntpd|otools|sm|smdev|toybox|zfs|zstd)
              continue
      esac
  
---- a/contrib/kiss-outdated
-+++ b/contrib/kiss-outdated
-@@ -75,6 +75,11 @@
-             remote=boehm-gc
-         ;;
- 
-+        gmake)
-+            # shell-check is dumb here so this must be quoted.
-+            remote='make'
-+        ;;
-+
-         gnugrep)
-             # shell-check is dumb here so this must be quoted.
-             remote='grep'
-@@ -133,6 +138,10 @@
-             remote=links
-         ;;
- 
-+        make)
-+            remote=bmake
-+        ;;
-+
-         linux-headers)
-             remote=linux
-         ;;

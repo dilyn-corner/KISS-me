@@ -1,7 +1,7 @@
 --- a/kiss
 +++ b/kiss
-@@ -464,54 +464,6 @@
-     fossil open -f "${url%[#@]}" "${2:-trunk}"
+@@ -491,54 +491,6 @@
+     fossil pull "${com:-trunk}"
  }
  
 -pkg_source_tar() {
@@ -55,16 +55,16 @@
  pkg_extract() {
      # Extract all source archives to the build directory and copy over any
      # local repository files.
-@@ -537,7 +489,7 @@
+@@ -563,7 +515,7 @@
              ;;
  
              *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
 -                pkg_source_tar "$_res"
-+                decompress "$_res" | pax -r -s '!^[^/]*/!!'
++                decompress "$_res" || pax -r -s '!^[^/]*/!!'
              ;;
  
              *?*)
-@@ -838,7 +790,7 @@
+@@ -877,7 +829,7 @@
      cd "$pkg_dir/$1"
  
      # Create a tarball from the contents of the built package.
@@ -73,12 +73,12 @@
          bz2)  bzip2 -z ;;
          gz)   gzip -6  ;;
          lzma) lzma -z  ;;
-@@ -1464,7 +1416,7 @@
+@@ -1540,7 +1492,7 @@
      # then "installed" to the filesystem. Running this step as soon as possible
      # allows us to also check the validity of the tarball and bail out early
      # if needed.
 -    decompress "$tar_file" | tar xf -
-+    decompress "$tar_file" | pax -r
++    decompress "$tar_file" | pax -r -
  
      # Naively assume that the existence of a manifest file is all that
      # determines a valid KISS package from an invalid one. This should be a
