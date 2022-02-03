@@ -60,7 +60,7 @@
  
              *.tar|*.tar.??|*.tar.???|*.tar.????|*.t?z)
 -                pkg_source_tar "$_res"
-+                decompress "$_res" || pax -r -s '!^[^/]*/!!'
++                decompress "$_res" | pax -r -s '!^[^/]*/!!'
              ;;
  
              *?*)
@@ -78,7 +78,7 @@
      # allows us to also check the validity of the tarball and bail out early
      # if needed.
 -    decompress "$tar_file" | tar xf -
-+    decompress "$tar_file" | pax -r -
++    decompress "$tar_file" | pax -r
  
      # Naively assume that the existence of a manifest file is all that
      # determines a valid KISS package from an invalid one. This should be a
