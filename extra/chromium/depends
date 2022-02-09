@@ -4,6 +4,7 @@ bzip2
 dbus
 fontconfig
 freetype-harfbuzz
+glib               make
 libdrm
 libva
 libwebp
