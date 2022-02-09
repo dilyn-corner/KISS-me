@@ -69,7 +69,7 @@ OBJ = ${NSPR_OBJ} ${PLDS_OBJ} ${PLC_OBJ} ${MY_OBJ}
 .SUFFIXES: .s
 
 .PHONY: all
-all: abstract static shared headers
+all: abstract static shared headers make-pc
 
 static: libnspr4.a libplds4.a libplc4.a
 shared: libnspr4.so libplds4.so libplc4.so libmy.so
@@ -224,8 +224,8 @@ make-pc:
 	sed -i "s|@exec_prefix@|${PREFIX}|" config/nspr.pc.in
 	sed -i "s|@libdir@|${LIBDIR}|" config/nspr.pc.in
 	sed -i "s|@includedir@|${INCDIR}|" config/nspr.pc.in
-	sed -i "s|@MOD_MAJOR_VERSION@|4|" config/nspr.pc.in
-	sed -i "s|@MOD_MINOR_VERSION@|32|" config/nspr.pc.in
+	sed -i "s|@MOD_MAJOR_VERSION@|4|g" config/nspr.pc.in
+	sed -i "s|@MOD_MINOR_VERSION@.|32|" config/nspr.pc.in
 	sed -i "s|@MOD_PATCH_VERSION@||" config/nspr.pc.in
 
 .PHONY: install
