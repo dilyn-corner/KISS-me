@@ -335,8 +335,8 @@ SHA_BIN_OBJ = cmd/shlibsign/mangle/mangle.o cmd/shlibsign/shlibsign.o
 
 .SUFFIXES: .c .s .S .o
 
-.PHONY: all headers definitions static-libs shared-libs sign-libs bins
-all: headers definitions static-libs shared-libs sign-libs bins
+.PHONY: all headers definitions static-libs shared-libs sign-libs bins make-pc
+all: headers definitions static-libs shared-libs sign-libs bins make-pc
 
 bins: bltest ecperf fbectest fipstest lowhashtest mangle shlibsign
 
