@@ -45,10 +45,10 @@ ninja -C build
 ninja -C build install
 
 # Install some files for RISCV emulation
-install -Dm644 files/fw_jump.elf \
-    "$1/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf"
-install -Dm644 files/uboot.elf \
+install -Dm644 uboot.elf \
     "$1/usr/lib/u-boot/qemu-riscv64_smode/uboot.elf"
+install -Dm644 fw_jump.elf \
+    "$1/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf"
 
 # Install the license
 install -Dm755 COPYING         "$1/usr/share/LICENSES/qemu.license"
