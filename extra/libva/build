@@ -7,11 +7,10 @@ meson \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
     --buildtype=release \
-    -Ddocs=false \
+    -Denable_docs=false \
     -Dwith_glx=no \
     -Dwith_x11=no \
     -Dwith_wayland=yes \
-    -Dintrospection=false \
     . build
 
 ninja -C build
