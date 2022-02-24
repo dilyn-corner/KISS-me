@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+
 ./configure \
     --prefix=/usr \
     --static
