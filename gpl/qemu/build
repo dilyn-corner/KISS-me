@@ -3,7 +3,10 @@
 export DESTDIR="$1"
 
 # Remove bash dependency
-sed -i 's/bash/sh/g' Makefile
+#sed -i 's/bash/sh/g' Makefile
+
+# Disable tests
+sed -i "/^subdir('tests/d" meson.build
 
 ./configure \
     --prefix=/usr \
@@ -49,6 +52,8 @@ install -Dm644 uboot.elf \
     "$1/usr/lib/u-boot/qemu-riscv64_smode/uboot.elf"
 install -Dm644 fw_jump.elf \
     "$1/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf"
+install -Dm644 OVMF_CODE.fd \
+    "$1/usr/lib/x86_64-linux-gnu/efi/OVMF_CODE.fd"
 
 # Install the license
 install -Dm755 COPYING         "$1/usr/share/LICENSES/qemu.license"
