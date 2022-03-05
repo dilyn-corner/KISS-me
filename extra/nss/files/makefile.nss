@@ -1101,7 +1101,7 @@ make-pc:
 	sed -i "s|%exec_prefix%|${PREFIX}|" pkg/pkg-config/nss.pc.in
 	sed -i "s|%libdir%|${LIBDIR}|" pkg/pkg-config/nss.pc.in
 	sed -i "s|%includedir%|${INCDIR}/nss|" pkg/pkg-config/nss.pc.in
-	sed -i "s|%NSS_VERSION%|3.75|" pkg/pkg-config/nss.pc.in
+	sed -i "s|%NSS_VERSION%|3.76|" pkg/pkg-config/nss.pc.in
 	sed -i "s|%NSPR_VERSION%|4.32|" pkg/pkg-config/nss.pc.in
 
 .PHONY: install
