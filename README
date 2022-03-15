@@ -101,13 +101,13 @@ NOTES:
     | wayland           | MIT           | pixman              | MIT           |
     | wayland-protocols | MIT           | pkgconf             | ISC           |
     | wbg               | MIT           | python              | PSFv2         |
-    | wev               | MIT           | rust                | APACHE/MIT    |
-    | wl-clipboard-rs   | MIT           | sdl2                | BSD 3-Clause  |
-    | wlroots           | MIT           | sqlite              | Public Domain |
-    | xdp-wlr           | MIT           | tzdata              | Public Domain |
-    | xkeyboard-config  | MIT           | vim                 | Vim           |
-    +-------------------+---------------+ wpa_supplicant      | BSD 3-Clause  |
-    | GPL               | LICENSE       +--------------------+----------------+
+    | wev               | MIT           | sdl2                | BSD 3-Clause  | 
+    | wayclip           | ISC           | sqlite              | Public Domain |
+    | wlroots           | MIT           | tzdata              | Public Domain |
+    | xdp-wlr           | MIT           | vim                 | Vim           |
+    | xkeyboard-config  | MIT           | wpa_supplicant      | BSD 3-Clause  |
+    +-------------------+---------------+---------------------+---------------+
+    | GPL               | LICENSE       |
     +-------------------+---------------+
     | alsa-lib          | GPLv2.1       |
     | alsa-utils        | GPLv2         |
