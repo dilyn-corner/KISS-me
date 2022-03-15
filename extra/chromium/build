@@ -114,8 +114,7 @@ conf="
     use_gtk=false
     use_aura=true
     use_dbus=true
-    use_glib=true
-    use_x11=false
+    use_glib=false
     use_cups=false
     use_gold=false
     use_ozone=true
@@ -156,9 +155,10 @@ conf="
     enable_remoting=true
     enable_widevine=false
     angle_enable_null=true
+    angle_enable_swiftshader=false
+    enable_swiftshader=false
     is_official_build=true
     enable_reporting=true
-    enable_swiftshader=false
     enable_reading_list=false
     enable_js_type_check=false
     exclude_unwind_tables=true
@@ -166,7 +166,6 @@ conf="
     fatal_linker_warnings=false
     enable_one_click_signin=true
     enable_service_discovery=true
-    angle_enable_swiftshader=false
     clang_use_chrome_plugins=false
     treat_warnings_as_errors=false
     google_default_client_id=\"\"
@@ -206,6 +205,8 @@ install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/
 install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
 install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
 install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
+
+# libEGL & libGLESv2?
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
