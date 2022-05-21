@@ -1,4 +1,4 @@
-https://download.qemu.org/qemu-6.2.0.tar.xz
+https://download.qemu.org/qemu-7.0.0.tar.xz
 files/fw_jump.elf
 files/opensbi.license
 files/uboot.elf
