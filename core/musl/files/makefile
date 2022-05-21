@@ -8,6 +8,7 @@ INCDIR ?= ${PREFIX}/include
 CC ?= cc
 AR ?= ar
 SH ?= /bin/sh
+LIBGCC != cc --print-libgcc-file-name
 
 PICFLAGS="$FLAGS -fPIC"
 
@@ -357,7 +358,7 @@ LIBC_OBJ = src/aio/aio.o src/aio/aio_suspend.o src/aio/lio_listio.o \
 	src/stdlib/atoll.o src/stdlib/bsearch.o src/stdlib/div.o src/stdlib/ecvt.o \
 	src/stdlib/fcvt.o src/stdlib/gcvt.o src/stdlib/imaxabs.o \
 	src/stdlib/imaxdiv.o src/stdlib/labs.o src/stdlib/ldiv.o \
-	src/stdlib/llabs.o src/stdlib/lldiv.o src/stdlib/qsort.o \
+	src/stdlib/llabs.o src/stdlib/lldiv.o src/stdlib/qsort.o src/stdlib/qsort_nr.o \
 	src/stdlib/strtod.o src/stdlib/strtol.o src/stdlib/wcstod.o \
 	src/stdlib/wcstol.o src/string/bcmp.o src/string/bcopy.o \
 	src/string/bzero.o src/string/explicit_bzero.o src/string/index.o \
@@ -559,8 +560,7 @@ libc.so: ${LIBC_OBJ} ${DYN_OBJ}
 	${CC} ${FLAGS} -Wl,--sort-section,alignment -Wl,--sort-common \
 		-Wl,--gc-sections -Wl,--hash-style=both -Wl,--no-undefined \
 		-Wl,--exclude-libs=ALL -Wl,--dynamic-list=./dynamic.list -nostdlib \
-		-shared -Wl,-e,_dlstart -o $@ ${LIBC_OBJ} ${DYN_OBJ} \
-		/usr/lib/clang/12.0.1/lib/linux/libclang_rt.builtins-x86_64.a
+		-shared -Wl,-e,_dlstart -o $@ ${LIBC_OBJ} ${DYN_OBJ} ${LIBGCC}
 
 .PHONY: install
 install: libs headers
