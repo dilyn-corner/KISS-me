@@ -7,20 +7,34 @@ go build \
     -modcacherw \
     -trimpath
 
-sed -e 's:@SHAREDIR@:/usr/share/aerc:g' > aerc.conf < config/aerc.conf.in
-
-# default target is 'all', and of course that includes docs we don't make
-
-install -Dm755 aerc                      "$1/usr/bin/aerc"
-install -Dm644 aerc.conf                 "$1/usr/share/aerc/aerc.conf"
-install -Dm644 config/binds.conf         "$1/usr/share/aerc/binds.conf"
-install -Dm755 filters/html              "$1/usr/share/aerc/filters/html"
-install -Dm644 config/accounts.conf      "$1/usr/share/aerc/accounts.conf"
-install -Dm755 filters/hldiff            "$1/usr/share/aerc/filters/hldiff"
-install -Dm755 filters/plaintext         "$1/usr/share/aerc/filters/plaintext"
-install -Dm644 config/default_styleset   "$1/usr/share/aerc/stylesets/default"
-install -Dm644 templates/quoted_reply    "$1/usr/share/aerc/templates/quoted_reply"
-install -Dm644 templates/forward_as_body "$1/usr/share/aerc/templates/forward_as_body"
+install -Dm755 aerc \
+    "$1/usr/bin/aerc"
+install -Dm644 config/aerc.conf \
+    "$1/usr/share/aerc/aerc.conf"
+install -Dm644 config/binds.conf \
+    "$1/usr/share/aerc/binds.conf"
+install -Dm755 filters/html \
+    "$1/usr/share/aerc/filters/html"
+install -Dm644 config/accounts.conf \
+    "$1/usr/share/aerc/accounts.conf"
+install -Dm755 filters/hldiff \
+    "$1/usr/share/aerc/filters/hldiff"
+install -Dm755 filters/colorize \
+    "$1/usr/share/aerc/filters/colorize"
+install -Dm755 filters/plaintext \
+    "$1/usr/share/aerc/filters/plaintext"
+install -m755 filters/html-unsafe \
+    "$1/usr/share/aerc/filters/html-unsafe"
+install -Dm644 config/default_styleset \
+    "$1/usr/share/aerc/stylesets/default"
+install -Dm644 templates/new_message \
+    "$1/usr/share/aerc/templates/new_message"
+install -Dm644 templates/quoted_reply \
+    "$1/usr/share/aerc/templates/quoted_reply"
+install -Dm644 templates/forward_as_body \
+    "$1/usr/share/aerc/templates/forward_as_body"
+install -Dm755 filters/show-ics-details.py \
+    "$1/usr/share/aerc/filters/show-ics-details.py"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/aerc.license"
