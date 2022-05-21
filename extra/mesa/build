@@ -49,7 +49,6 @@ meson \
     -Dgles2=enabled \
     -Dglx=disabled \
     -Dgles1=disabled \
-    -Ddri-drivers=r200 \
     -Dplatforms=wayland \
     -Dvulkan-drivers=amd \
     -Dgallium-drivers=radeonsi \
