@@ -8,11 +8,9 @@ export CFLAGS="$CFLAGS -Wno-enum-conversion"
 meson \
     --prefix=/usr \
     --buildtype=release \
-    -Dps=enabled \
     -Dtee=enabled \
     -Dglib=disabled \
     -Dtests=disabled \
-    -Dtrace=disabled \
     -Dgl-backend=glesv2 \
     . build
 
