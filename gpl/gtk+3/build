@@ -1,0 +1,58 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+ 
+patch -p1 < no-fribidi.patch
+
+# Don't enable native language support and don't compile schemas.
+sed -i "/subdir('po/d"                  meson.build
+sed -i '/ENABLE_NLS/s/1/0/'             meson.build
+sed -i '/compile_schemas/s/true/false/' meson.build
+
+meson setup \
+    -Dprefix=/usr \
+    -Dx11_backend=false \
+    -Dwayland_backend=true \
+    -Dprint_backends=file,lpr \
+    -Dcolord=no \
+    -Dintrospection=false \
+    -Ddemos=false \
+    -Dexamples=false \
+    -Dtests=false \
+    -Dlibepoxy:default_library=static \
+    -Dlibepoxy:egl=yes \
+    -Dlibepoxy:tests=false \
+    -Dlibepoxy:glx=no \
+    -Dlibepoxy:x11=false \
+    --force-fallback-for=libepoxy \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# GTK+3 on Wayland requires gsettings-desktop-schemas for gsettings to work
+# correctly. Under X11 it made use of xsettings but this is no longer the case.
+(
+    cd schemas
+
+    meson \
+        --prefix=/usr \
+        -Dintrospection=false \
+        . build
+
+    ninja -C build
+    ninja -C build install
+)
+
+# We don't compile with librsvg which leads to this utility solely causing
+# compiler errors for some packages. It has no use at all.
+rm -f "$1/usr/bin/gtk-encode-symbolic-svg"
+
+# Remove epoxy references from installed pkg-config files. The build system
+# should have done this for us as it is statically linked.
+for f in "$1/usr/lib/pkgconfig/"*.pc; do
+    sed -i 's/epoxy >= 1.4//' "$f"
+done
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/gtk+3.license"
