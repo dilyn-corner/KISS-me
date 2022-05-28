@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+patch -p1 < no-docs.patch
+
+cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_SHARED_LIBS=True \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_JPEG8=1 \
+    -G Ninja
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm644 LICENSE.md "$1/usr/share/LICENSES/libjpeg-turbo.license"
