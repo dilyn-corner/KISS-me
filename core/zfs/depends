@@ -1,2 +1,5 @@
+gmake         make
+libtirpc      make
 linux-headers make
+util-linux
 zlib-ng       make

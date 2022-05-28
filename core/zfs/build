@@ -1,57 +1,11 @@
 #!/bin/sh -e
 
-# Bundle lib{blk,uu}id
-(
-    cd util-linux
-
-    CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
-    CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
-
-    ./configure \
-        --prefix="$OLDPWD/garbo/usr"\
-        --disable-all-programs \
-        --disable-shared \
-        --enable-libuuid \
-        --enable-libblkid
-
-    make
-    make DESTDIR="" install
-
-    # Install the licenses
-    install -Dm755 libuuid/COPYING "$1/usr/share/LICENSES/libuuid.license"
-    install -Dm755 libblkid/COPYING "$1/usr/share/LICENSES/libblkid.license"
-)
-
-# Bundle libtirpc
-(
-    cd libtirpc
-
-    ./configure \
-        --prefix="$OLDPWD/garbo/usr" \
-        --sysconfdir="$OLDPWD/garbo/etc" \
-        --disable-shared \
-        --disable-gssapi
-
-    make
-    make DESTDIR="" install
-
-    # Install the license
-    install -Dm755 COPYING "$1/usr/share/LICENSES/libtirpc.license"
-)
-
 # Use nicer options
 sed -i 's/rm -R/rm -r/g'   configure
 sed -i 's/--in-place/-i/g' configure
 
-export LIBUUID_LIBS="$PWD/garbo/usr/lib/libuuid.a"
-export LIBBLKID_LIBS="$PWD/garbo/usr/lib/libblkid.a"
-export LIBTIRPC_LIBS="$PWD/garbo/usr/lib/libtirpc.a"
-export LIBUUID_CFLAGS="-I$PWD/garbo/usr/include"
-export LIBBLKID_CFLAGS="-I$PWD/garbo/usr/include"
-export LIBTIRPC_CFLAGS="-I$PWD/garbo/usr/include/tirpc"
-
-make PREFIX=/usr
-make PREFIX=/usr DESTDIR="$1" install
+gmake PREFIX=/usr
+gmake PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/zfs.license"
