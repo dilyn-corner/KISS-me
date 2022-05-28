@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+patch -p1 < musl-compat.patch
+patch -p1 < no-add-needed.patch
+
+# Disable test program 'thread-test' as it causes build failures when using
+# parallel make (due to missing dependency on libefivar.so). Other workarounds
+# include patching the Makefile or forcing -j1 (what we used to do).
+# See: https://github.com/rhboot/efivar/pull/169
+sed 's/thread-test//' src/Makefile > _
+mv -f _ src/Makefile
+
+# Remove mandoc build dependency
+mv -f docs/efisecdb.1.mdoc docs/efisecdb.1
+
+make COMPILER="$CC"
+make libdir=/usr/lib/ install
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/efivar.license"
