@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --disable-doxygen-docs \
+    --disable-xmms-plugin \
+    --disable-cpplibs \
+    --disable-oggtest \
+    --disable-examples \
+    --disable-rpath \
+    --with-pic
+
+make
+make DESTDIR="$1" install
+
+# Install the license
+install -Dm644 COPYING.Xiph "$1/usr/share/LICENSES/flac.xip.license"
+install -Dm644 COPYING.GPL  "$1/usr/share/LICENSES/flac.gpl-2.license"
