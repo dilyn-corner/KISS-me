@@ -15,3 +15,6 @@ sed -i 's/ -ltinfo//g' configure
 
 make
 make DESTDIR="$1" install
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/sqlite.license"
