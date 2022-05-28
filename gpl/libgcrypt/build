@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+# Missing includes...
+sed -i '/^#ifdef USE_JENT/a #include <fcntl.h>\n#include <limits.h>' \
+    random/rndjent.c
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --mandir=/usr/share/man \
+    --localstatedir=/var
+
+make
+make DESTDIR="$1" install
+
+# Install the license
+install -Dm644 COPYING     "$1/usr/share/LICENSES/libgcrypt.gpl-2.license"
+install -Dm644 LICENSES    "$1/usr/share/LICENSES/libgcrypt.extra.license"
+install -Dm644 COPYING.LIB "$1/usr/share/LICENSES/libgcrypt.lgpl-2.license"
