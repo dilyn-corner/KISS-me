@@ -10,3 +10,6 @@ patch -p1 < m4-hand-written-lexer.patch
 
 make -B
 make -B DESTDIR="$1" install
+
+# Install the license
+install -Dm644 README.md "$1/usr/share/LICENSES/m4.license"
