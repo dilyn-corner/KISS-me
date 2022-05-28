@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < no-fribidi.patch
+
+# Disable download of missing (optional) dependencies
+# during the build. This cannot be turned off otherwise.
+rm -rf subprojects
+
+: > tests/meson.build
+: > examples/meson.build
+: > docs/meson.build
+
+meson \
+    --prefix=/usr \
+    -Dgtk_doc=false \
+    -Dxft=disabled \
+    -Dintrospection=disabled \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/pango.license"
