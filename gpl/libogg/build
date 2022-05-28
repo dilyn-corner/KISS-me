@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr
+
+make -C src
+make -C src     DESTDIR="$1" install
+make -C include DESTDIR="$1" install
+
+make DESTDIR="$1" install-m4dataDATA install-pkgconfigDATA
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/libogg.license"
