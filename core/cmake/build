@@ -5,7 +5,7 @@ patch -p1 < cmake-no-execinfo.patch
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
-if kiss l cmake; then
+if command -v cmake >/dev/null; then
     export DESTDIR="$1"
 
     cmake -B build \
