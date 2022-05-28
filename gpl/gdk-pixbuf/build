@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+: > tests/meson.build
+
+meson \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --mandir=/usr/share/man \
+    -Ddebug=false \
+    -Djpeg=enabled \
+    -Dpng=enabled \
+    -Dtiff=disabled \
+    -Ddocs=false \
+    -Dman=false \
+    -Dgio_sniffing=false \
+    -Dinstalled_tests=false \
+    -Dbuiltin_loaders=all \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/gdk-pixbuf.license"
