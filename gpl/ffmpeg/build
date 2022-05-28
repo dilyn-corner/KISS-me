@@ -1,0 +1,47 @@
+#!/bin/sh -e
+
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+patch -p1 < add-av_stream_get_first_dts-for-chromium.patch
+
+./configure \
+    --cc="$CC" \
+    --cxx="$CXX" \
+    --prefix=/usr \
+    --disable-debug \
+    --disable-libxml2 \
+    --disable-static \
+    --disable-libxcb \
+    --disable-libxcb-shm \
+    --disable-libxcb-xfixes \
+    --disable-libxcb-shape \
+    --disable-xlib \
+    --enable-gpl \
+    --enable-libass \
+    --enable-libdrm \
+    --enable-libmp3lame \
+    --enable-libopus \
+    --enable-libvorbis \
+    --enable-libvpx \
+    --enable-libwebp \
+    --enable-libx264 \
+    --enable-libx265 \
+    --enable-libxvid \
+    --enable-nonfree \
+    --enable-openssl \
+    --enable-shared \
+    --enable-version3 \
+    --x86asmexe=nasm \
+
+gmake
+gmake DESTDIR="$1" install
+
+rm -rf "$1/usr/share/ffmpeg/examples"
+
+# Install the license
+install -Dm644 LICENSE.md       "$1/usr/share/LICENSES/ffmpeg.license"
+install -Dm644 COPYING.GPLv2    "$1/usr/share/LICENSES/ffmpeg.gpl-2.license"
+install -Dm644 COPYING.GPLv3    "$1/usr/share/LICENSES/ffmpeg.gpl-3.license"
+install -Dm644 COPYING.LGPLv3   "$1/usr/share/LICENSES/ffmpeg.lgpl-3.license"
+install -Dm644 COPYING.LGPLv2.1 "$1/usr/share/LICENSES/ffmpeg.lgpl-2.1.license"
