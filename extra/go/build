@@ -45,8 +45,8 @@ mkdir -p "$1/usr/bin" "$1/usr/lib/go/bin"
 install -m755 "bin/go"    "$1/usr/lib/go/bin/go"
 install -m755 "bin/gofmt" "$1/usr/lib/go/bin/gofmt"
 
-ln -s "/usr/lib/go/bin/go"    "$1/usr/bin"
-ln -s "/usr/lib/go/bin/gofmt" "$1/usr/bin"
+ln -sf "/usr/lib/go/bin/go"    "$1/usr/bin"
+ln -sf "/usr/lib/go/bin/gofmt" "$1/usr/bin"
 
 cp -a misc pkg src lib "$1/usr/lib/go"
 

@@ -11,8 +11,8 @@ make DESTDIR="$1" install
 rm -rf "$1/usr/share/info"
 
 # Create a symlink to avoid rebuilds
-ln -s libffi.so.8 "$1/usr/lib/libffi.so.7"
-ln -s libffi.so.7 "$1/usr/lib/libffi.so.6"
+ln -sf libffi.so.8 "$1/usr/lib/libffi.so.7"
+ln -sf libffi.so.7 "$1/usr/lib/libffi.so.6"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/libffi.license"

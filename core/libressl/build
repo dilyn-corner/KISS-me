@@ -10,7 +10,7 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 make
 make DESTDIR="$1" install
 
-install -Dm 755 update-certdata.sh "$1/etc/ssl"
+install -Dm755 update-certdata.sh "$1/etc/ssl"
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/libressl.license"

@@ -11,8 +11,8 @@ install -Dm755 doas  "$1/usr/bin/doas"
 install -Dm755 patch "$1/usr/bin/patch"
 
 # pax replaces tar, cpio
-ln -s pax "$1/usr/bin/tar"
-ln -s pax "$1/usr/bin/cpio"
+ln -sf pax "$1/usr/bin/tar"
+ln -sf pax "$1/usr/bin/cpio"
 
 # doas needs setuid, nice conf
 chmod gu+s "$1/usr/bin/doas"
