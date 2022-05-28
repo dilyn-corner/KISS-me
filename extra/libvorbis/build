@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr
+
+make
+
+make -C lib     install
+make -C include install
+
+make DESTDIR="$1" install-m4dataDATA install-pkgconfigDATA
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/libvorbis.license"
