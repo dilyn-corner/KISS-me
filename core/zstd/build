@@ -1,7 +1,57 @@
 #!/bin/sh -e
 
-make
-make DESTDIR="$1" PREFIX=/usr install
+build_zstd() (
+
+    HAVE_ZLIB=1
+    HAVE_LZMA=1
+    HAVE_THREAD=1
+
+    cd programs
+
+    export CFLAGS="$CFLAGS -static -pthread"
+    export LDFLAGS="$LDFLAGS -static"
+
+    gmake \
+        CC=clang \
+        zstd-pgo
+
+    gmake \
+        PREFIX=/usr \
+        DESTDIR="$1" \
+        install
+
+    # Symlink for all the things we built in
+    for bin in gzip lzma xz zcat ungz unlzma unxz; do
+        ln -s zstd "$1/usr/bin/$bin"
+    done
+)
+
+build_libzstd() (
+
+    cd lib
+
+    export CFLAGS="$CFLAGS -flto -ffat-lto-objects -fuse-linker-plugin \
+                           -ffunction-sections -fdata-sections \
+                           -fmerge-all-constants \
+                           -Wl,--gc-sections -Wl,-z,norelro \
+                           -Wno-unused-command-line-argument \
+                           -Wno-ignored-optimization-argument"
+
+    gmake \
+        PREFIX=/usr \
+        libzstd.a \
+        libzstd.pc
+
+    gmake \
+        PREFIX=/usr \
+        DESTDIR="$1" \
+        install-pc \
+        install-static \
+        install-includes
+)
+
+build_zstd "$1"
+build_libzstd "$1"
 
 # Install the license
 install -Dm755 LICENSE "$1/usr/share/LICENSES/zstd.license"
