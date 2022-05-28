@@ -1,12 +1,9 @@
 #!/bin/sh -e
 
-LDFLAGS="$LDFLAGS --static"
-
 patch -p1 < POSIX.patch
 
-# Very conveniently, we can evade gmake
-./scripts/make.sh
-PREFIX="$1/usr/bin" ./scripts/install.sh --symlink --force
+gmake LDFLAGS="$LDFLAGS --static"
+gmake PREFIX="$1/usr/bin" install_flat
 
 chmod gu+s "$1/usr/bin/toybox"
 
