@@ -1,0 +1,33 @@
+#!/bin/sh -e
+#shellcheck disable=2030,2031,2086
+
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+export LDFLAGS="$LDFLAGS -static"
+
+${CC:-cc} $CFLAGS -c -o third-party/xxhash/xxhash.o third-party/xxhash/xxhash.c
+${AR:-ar} rcs third-party/xxhash/libxxhash.a third-party/xxhash/xxhash.o
+
+make -C third-party/mimalloc -f makefile.mimalloc
+make -C third-party/tbb      -f makefile.tbb
+
+# Point mold to the local xxhash.
+export CFLAGS="$CFLAGS -Lthird-party/mimalloc -Lthird-party/tbb \
+    -Lthird-party/xxhash"
+export CFLAGS="$CFLAGS -Ithird-party/mimalloc -Ithird-party/tbb \
+    -Ithird-party/xxhash"
+
+make PREFIX=/usr
+make PREFIX=/usr DESTDIR="$1" install
+
+# Create a symbolic link so users can use mold as the linker system-wide
+# (without need for special CFLAGS/CXXFLAGS).
+ln -sf mold "$1/usr/bin/ld"
+
+# To tell GCC to use mold we must put a symlink to it in a directory and set it
+# to search for the linker within.
+ln -sf ../../bin/mold "$1/usr/lib/mold/ld"
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/mold.license"
