@@ -15,3 +15,6 @@ meson \
 
 ninja -C build
 ninja -C build install
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/libdrm.license"
