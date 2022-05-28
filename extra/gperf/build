@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr
+
+make -B
+make -B DESTDIR="$1" install
+
+# Remove HTML documentation.
+rm -rf "$1/usr/share/doc"
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/gperf.license"
