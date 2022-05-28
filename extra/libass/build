@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+patch -p1 < no-fribidi.patch
+
+# Remove fribidi configure checks.
+sed -i 's/as_fn_error.*fribidi/: 0 "/'  configure
+sed -i '/pkg_requires="fribidi >= .*/d' configure
+
+sh ./configure \
+    FRIBIDI_LIBS="  " \
+    --prefix=/usr \
+    --enable-fontconfig
+
+make
+make DESTDIR="$1" install
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/libass.license"
