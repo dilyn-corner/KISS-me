@@ -7,10 +7,7 @@ meson \
     --buildtype=release \
     -Dexamples=false \
     -Dxwayland=disabled \
-    -Dxcb-icccm=disabled \
     -Dxcb-errors=disabled \
-    -Dx11-backend=disabled \
-    -Dxdg-foreign=disabled \
     . build
 
 ninja -C build

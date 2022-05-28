@@ -1,4 +1,5 @@
 flex              make
+libdrm
 libinput
 libxkbcommon
 linux-headers     make
@@ -8,5 +9,6 @@ pixman
 pkgconf           make
 samurai           make
 seatd
+wayland
 wayland-protocols make
 xkeyboard-config
