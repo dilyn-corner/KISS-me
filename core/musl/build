@@ -7,8 +7,8 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
     --prefix=/usr \
     --syslibdir=/usr/lib
 
-make
-make PREFIX=/usr DESTDIR="$1" install
+gmake
+gmake PREFIX=/usr DESTDIR="$1" install
 
 # Install BSD compatibility headers.
 cp -f cdefs.h queue.h tree.h \
