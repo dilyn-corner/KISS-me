@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+# Disable HTML documentation.
+sed -i 's/html man/man/' doc/Makefile.in
+
+./configure \
+    ac_cv_lib_ncurses_initscr=no \
+    ac_cv_lib_curses_initscr=no \
+    --prefix=/usr \
+    --enable-shared \
+    --disable-gtktest
+
+make
+make DESTDIR="$1" install
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/lame.license"
