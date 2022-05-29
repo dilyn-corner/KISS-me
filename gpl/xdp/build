@@ -31,8 +31,8 @@ export PKG_CONFIG_PATH="$PWD/lib/pkgconfig"
     --enable-static \
     --enable-pipewire
 
-make PREFIX=/usr 
-make PREFIX=/usr DESTDIR="$1" install
+gmake PREFIX=/usr 
+gmake PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
 install -Dm755 COPYING "$1/usr/share/LICENSES/xdg-desktop-portal.license"

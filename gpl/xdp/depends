@@ -1,4 +1,5 @@
 glib    make
+gmake   make
 libffi
 pipewire
 pkgconf make
