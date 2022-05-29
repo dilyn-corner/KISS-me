@@ -1,8 +1,6 @@
 https://commondatastorage.googleapis.com/chromium-browser-official/chromium-99.0.4844.51.tar.xz
 https://github.com/stha09/chromium-patches/releases/download/chromium-99-patchset-3/chromium-99-patchset-3.tar.xz
 https://github.com/Eloston/ungoogled-chromium/archive/refs/tags/99.0.4844.51-1.tar.gz ungoogled-chromium
-https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz gperf
-https://github.com/anholt/libepoxy/releases/download/1.5.8/libepoxy-1.5.8.tar.xz libepoxy
 files/chromium.sh
 files/default.profdata
 patches/chromium-InkDropHost-crash.patch

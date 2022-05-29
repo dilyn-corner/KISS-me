@@ -1,37 +1,5 @@
 #!/bin/sh -e
 
-# gperf is a build dep for chromium; just do it here.
-(
-    cd gperf
-
-    ./configure \
-        --prefix=/usr
-
-    make -B
-    make -B DESTDIR="$PWD/.." install
-)
-
-# Build libepoxy for chromium's sole use - it's the only package which uses it.
-(
-    cd libepoxy
-
-    export DESTDIR="$PWD/.."
-
-    meson \
-        --prefix=/usr \
-        --sysconfdir=/etc \
-        --mandir=/usr/share/man \
-        -Ddefault_library=static \
-        -Degl=yes \
-        -Dtests=false \
-        -Dglx=no \
-        -Dx11=false \
-        . build
-
-    ninja -C build
-    ninja -C build install
-)
-
 # chromium does not play nicely with thin LTO - we do PGO later though.
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
@@ -182,11 +150,6 @@ conf="
     host_toolchain=\"//build/toolchain/linux/unbundle:default\"
     custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 "
-# Point chromium to the vendored libepoxy, gperf
-export PATH="$PWD/usr/bin:$PATH"
-export CFLAGS="$CFLAGS -L$PWD/usr/lib -I$PWD/usr/include"
-export CXXFLAGS="$CXXFLAGS -L$PWD/usr/lib -I$PWD/usr/include"
-export PKG_CONFIG_PATH="$PWD/usr/lib/pkgconfig"
 
 out/Release/gn gen out/Release --args="$conf"
 
