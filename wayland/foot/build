@@ -20,10 +20,8 @@ export CFLAGS="$CFLAGS -Wno-backend-plugin"
 meson \
     --prefix=/usr \
     -Dbuildtype=release \
-    -Dterminfo=disabled \
     -Ddocs=disabled \
     -Db_lto=true \
-    -Dime=false \
     . build
 
 # First, we generate a PGO build

@@ -2,7 +2,7 @@ glib          make
 libffi
 linux-headers make
 meson         make
-netbsd-curses
+ncurses
 perl          make
 pixman
 pkgconf       make

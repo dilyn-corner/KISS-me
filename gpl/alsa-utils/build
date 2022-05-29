@@ -2,11 +2,6 @@
 # We don't want expansion
 # shellcheck disable=2016
 
-sed -i '/\$(edit)\|\.\(service\|rules\)/d'   alsactl/Makefile.in
-sed -i '/\$(edit)\|\.\(service\|rules\)/d'   alsaucm/Makefile.in
-sed -i 's/ MIN_MENU_COMMAND/REQ_LEFT_ITEM/'  alsamixer/bindings.h
-sed -i 's/ MAX_MENU_COMMAND/REQ_PREV_MATCH/' alsamixer/bindings.h
-
 ./configure \
     --prefix=/usr \
     --sbindir=/usr/bin \
@@ -16,7 +11,7 @@ sed -i 's/ MAX_MENU_COMMAND/REQ_PREV_MATCH/' alsamixer/bindings.h
     --disable-xmlto \
     --disable-alsaconf
 
-make LDFLAGS="$LDFLAGS -lterminfo"
+make
 make DESTDIR="$1" install
 
 # Install the license
