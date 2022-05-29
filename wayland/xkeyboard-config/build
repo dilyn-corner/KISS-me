@@ -1,8 +1,34 @@
 #!/bin/sh -e
 
-cd "$1"
+(
+    cd libX11
 
-tar zxf "$OLDPWD/xkeyboard-config-"*.apk
-tar zxf "$OLDPWD/libx11-"*.apk
+    patch -p1 < ../compose-only.patch
 
-rm -rf usr/lib .PKGINFO .*.pub
+    ./configure \
+        --prefix=/usr \
+        --disable-specs \
+        --disable-xkb \
+        --without-fop \
+        --without-xmlto
+
+    make -C nls
+    make -C nls install
+)
+
+export DESTDIR="$1"
+
+# Swap to shell script instead of perl script
+# for conversion of rules files and remove po/ dir.
+sed -i 's/xml2lst\.pl/xml2lst/' rules/meson.build
+sed -i "/subdir('po')/d"        meson.build
+
+meson setup \
+    -Dprefix=/usr \
+    . build
+
+ninja -C build
+ninja -C build install
+
+# Install the license
+install -Dm755 COPYING "$1/usr/share/LICENSES/xkeyboard-config.license"
