@@ -2,10 +2,14 @@ alsa-lib
 byacc              make
 bzip2
 dbus
+ffmpeg
+flac
 fontconfig
-freetype-harfbuzz
 glib               make
+gperf
+gtk+3
 libdrm
+libgcrypt
 libva
 libwebp
 libxkbcommon
@@ -21,4 +25,3 @@ python             make
 samurai            make
 wayland
 wayland-protocols  make
-zlib-ng

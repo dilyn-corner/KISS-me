@@ -46,8 +46,13 @@ LDFLAGS="$LDFLAGS -lc++ -lc++abi -lunwind" \
     ./tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles
 
 system="
+    ffmpeg
+    flac
     fontconfig
+    freetype
+    harfbuzz-ng
     libdrm
+    libjpeg
     libwebp
     opus
 "
