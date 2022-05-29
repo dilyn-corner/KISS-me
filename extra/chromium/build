@@ -157,16 +157,16 @@ ulimit -n 4096 2>/dev/null ||:
 ninja -C out/Release chrome
 
 # Package the monster.
-install -Dm755 chromium.sh                         "$1/usr/bin/chromium"
-install -Dm755 out/Release/chrome                  "$1/usr/lib/chromium/chromium"
-install -Dm644 out/Release/icudtl.dat              "$1/usr/lib/chromium"
-install -Dm644 out/Release/resources.pak           "$1/usr/lib/chromium/resources.pak"
-install -Dm644 out/Release/locales/en-US.pak       "$1/usr/lib/chromium/locales/en-US.pak"
-install -Dm644 out/Release/chrome_100_percent.pak  "$1/usr/lib/chromium/chrome_100_percent.pak"
-install -Dm644 out/Release/chrome_200_percent.pak  "$1/usr/lib/chromium/chrome_200_percent.pak"
-install -Dm644 out/Release/v8_context_snapshot.bin "$1/usr/lib/chromium/v8_context_snapshot.bin"
+mkdir -p "$1/usr/bin" \
+         "$1/usr/lib/chromium/locales"
 
-# libEGL & libGLESv2?
+cp chromium.sh "$1/usr/bin/chromium"
+
+cd out/Release
+
+cp chrome "$1/usr/lib/chromium/chromium"
+cp locales/*.pak "$1/usr/lib/chromium/locales/"
+cp -- icudtl.dat *.bin *.pak "$1/usr/lib/chromium/"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/chromium.license"
+install -Dm755 ../../LICENSE "$1/usr/share/LICENSES/chromium.license"
