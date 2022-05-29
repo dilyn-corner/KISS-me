@@ -1,71 +1,57 @@
 #!/bin/sh -e
-# We intentionally use the same variables in our subshells
-# shellcheck disable=2030,2031
+
+export DESTDIR="$1"
 
 build_freetype() (
-
     cd freetype
 
     meson \
         --prefix=/usr \
-        --buildtype=release \
         -Ddefault_library=both \
-        -Dharfbuzz="$2" \
-        -Dbrotli=disabled \
-        . "$2"
-
-    # For some reason, ftoption.h is improperly generated when using meson
-    # On my system. So we'll just... Fix the build ourselves.
-    export BOPT=FT_CONFIG_OPTION_USE_BROTLI
-    export HOPT=FT_CONFIG_OPTION_USE_HARFBUZZ
-
-    sed -i "s/--enable=$BOPT/--disable=$BOPT/g"     "$2/build.ninja"
-    [ "$2" = enabled ] ||
-        sed -i "s/--enable=$HOPT/--disable=$HOPT/g" "$2/build.ninja"
-
-    ninja -C "$2"
-    ninja -C "$2" install
-)
-
-build_harfbuzz() (
-
-    # Point Harfbuzz to the Freetype files.
-    export CFLAGS="$CFLAGS -I$1/usr/include/freetype2"
-    export CXXFLAGS="$CXXFLAGS -I$1/usr/include/freetype2"
-    export LDFLAGS="$LDFLAGS -L$1/usr/lib"
-
-    cd harfbuzz
-
-    meson \
-        --prefix=/usr \
-        --buildtype=release \
-        -Dpkg_config_path="$1/usr/lib/pkgconfig" \
-        -Ddefault_library=both \
-        -Dbenchmark=disabled \
-        -Dfreetype=enabled \
-        -Dgobject=disabled \
-        -Dcairo=disabled \
-        -Dtests=disabled \
-        -Dglib=disabled \
-        -Dicu=disabled \
+        -Dbzip2=disabled \
+        -Dzlib=disabled \
+        "$@" \
         . build
 
     ninja -C build
     ninja -C build install
 )
 
-export DESTDIR="$1"
+# No it doesn't
+# shellcheck disable=2120
+build_harfbuzz() (
+    cd harfbuzz
 
-build_freetype "$1" disabled
-build_harfbuzz "$1"
+    meson \
+        --prefix=/usr \
+        -Dpkg_config_path="$1/usr/lib/pkgconfig" \
+        -Ddefault_library=both \
+        -Dglib=disabled \
+        -Dfreetype=enabled \
+        -Dgobject=disabled \
+        -Dcairo=disabled \
+        -Dicu=disabled \
+        -Dbenchmark=disabled \
+        -Dtests=disabled \
+        . build
+
+    ninja -C build
+    ninja -C build install
+)
 
 # Point Freetype to the Harfbuzz files.
-export LIBRARY_PATH="$1/usr/lib:$LIBRARY_PATH"
-export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
-export CFLAGS="$CFLAGS -I$PWD/harfbuzz/src"
+export CFLAGS="$CFLAGS -I$1/usr/include/harfbuzz"
+export CFLAGS="$CFLAGS -L$1/usr/lib "
+export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig"
 
-build_freetype "$1" enabled
+# Point Harfbuzz to the Freetype files.
+export CXXFLAGS="$CXXFLAGS -I$1/usr/include/freetype2"
+export CXXFLAGS="$CXXFLAGS -L$1/usr/lib"
 
-# Install the license
+build_freetype -Dharfbuzz=disabled
+build_harfbuzz
+build_freetype -Dharfbuzz=enabled --reconfigure
+
+# Install the license file
 install -Dm755 harfbuzz/COPYING      "$1/usr/share/LICENSES/harfbuzz.license"
 install -Dm755 freetype/docs/FTL.TXT "$1/usr/share/LICENSES/freetype.license"
