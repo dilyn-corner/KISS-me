@@ -1,2 +1,3 @@
-xz make
+gmake make
+xz    make
 zlib-ng
