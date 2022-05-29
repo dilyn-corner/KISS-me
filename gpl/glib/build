@@ -16,7 +16,7 @@ sed -i 's/libmount_dep.found()/false/' meson.build
 
 meson \
     --prefix=/usr \
-    -Ddefault_library=static \
+    -Ddefault_library=both \
     -Dbuildtype=release \
     -Dman=false \
     -Dfam=false \
