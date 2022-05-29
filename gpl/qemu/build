@@ -2,9 +2,6 @@
 
 export DESTDIR="$1"
 
-# Remove bash dependency
-#sed -i 's/bash/sh/g' Makefile
-
 # Disable tests
 sed -i "/^subdir('tests/d" meson.build
 
