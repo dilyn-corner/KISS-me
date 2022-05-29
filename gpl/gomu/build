@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export GOPATH="$PWD/go"
+export GO111MODULE=on
+
+go build \
+    -modcacherw \
+    -trimpath \
+    -o gomu
+
+install -Dm755 gomu "$1/usr/bin/gomu"
+
+# Install the license.
+install -Dm644 LICENSE "$1/usr/share/LICENSES/gomu.license"
