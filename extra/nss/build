@@ -1,9 +1,51 @@
 #!/bin/sh -e
 
-for opt in nspr nss; do
-    make PREFIX=/usr -C "$opt" -f "makefile.$opt" 
-    make PREFIX=/usr -C "$opt" -f "makefile.$opt" DESTDIR="$1" install
-done
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+export NSS_USE_SYSTEM_SQLITE=1
+export NSS_ENABLE_WERROR=0
+export USE_64=1
+export BUILD_OPT=1
+export NSS_DISABLE_GTESTS=1
+export CC="${CC:-cc}"
+export CCC="${CXX:-c++}"
+export CXX="${CXX:-c++}"
+
+# People just don't believe in clang enough, I guess.
+sed -i '/-no-integrated-as/d' nss/lib/freebl/Makefile
+
+gmake -j1 -C nss nss_build_all
+
+install -Dt "$1/usr/lib"                  -m644 dist/Linux*/lib/*.so
+install -Dt "$1/usr/lib"                  -m644 dist/Linux*/lib/*.chk
+install -Dt "$1/usr/include/nss"          -m644 dist/public/nss/*.h
+install -Dt "$1/usr/include/nss"          -m644 dist/Linux*/include/*.h
+install -Dt "$1/usr/include/nss/obsolete" -m644 dist/Linux*/include/obsolete/*.h
+
+# Install the NSPR files. This is a joint package as I'd
+# rather not juggle which version of NSPR works best with NSS.
+install -Dt "$1/usr/include/nspr" -m644 nspr/pr/include/*.h
+install -Dt "$1/usr/include/nspr" -m644 nspr/lib/*/*.h
+
+# Disgusting. Disgusting. Disgusting. Disgusting. Disgusting.
+find nspr/Linux* -name \*.so \
+    -exec install -Dt "$1/usr/lib" {} \;
+
+# This is disgusting and I hate this package with a passion.
+sed nss/pkg/pkg-config/nss.pc.in \
+    -e "s,%libdir%,/usr/lib,g" \
+    -e "s,%prefix%,/usr,g" \
+    -e "s,%exec_prefix%,/usr/bin,g" \
+    -e "s,%includedir%,/usr/include/nss,g" \
+    -e "s,%NSPR_VERSION%,4.32,g" \
+    -e "s,%NSS_VERSION%,3.79,g" |
+install -Dm644 /dev/stdin "$1/usr/lib/pkgconfig/nss.pc"
+
+# This is disgusting and I hate this package with a passion.
+sed nspr/Linux*/config/nspr.pc \
+    -e "s,/usr/local,/usr,g" |
+install -Dm644 /dev/stdin "$1/usr/lib/pkgconfig/nspr.pc"
 
 # Install the license
 install -Dm755 nss/COPYING  "$1/usr/share/LICENSES/nss.license"
