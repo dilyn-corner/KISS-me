@@ -42,25 +42,26 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-# Cairo is installed... elsewhere...
-sed -i 's/cairo.h/cairo\/cairo.h/' \
+# pangocairo is provided by Pango
+sed -i 's|pango/pangocairo|pango-1.0/pango/pango|' \
     plugins/common/wayfire/plugins/common/cairo-util.hpp
-sed -i 's/cairo.h/cairo\/cairo.h/' \
+sed -i 's|pango/pangocairo|pango-1.0/pango/pango|' \
     plugins/decor/deco-button.hpp
-sed -i 's/cairo.h/cairo\/cairo.h/' \
+sed -i 's|pango/pangocairo|pango-1.0/pango/pango|' \
     plugins/decor/deco-subsurface.cpp
+
+# Fix missing include
+sed -i '/pragma once/a #include <pango-1.0\/pango\/pangocairo.h>' \
+    plugins/decor/deco-theme.hpp
 
 sed -i "/subdir('test')/d" \
     subprojects/wf-config/meson.build
 sed -i "s/libevdev'/libevdev', static: true/" \
     subprojects/wf-config/meson.build
-sed -i "s/libxml-2.0'/libxml-2.0', static: true/" \
-    subprojects/wf-config/meson.build
 
 meson \
     --prefix=/usr \
     --buildtype=release \
-    -Ddefault_library=static \
     -Dpkg_config_path="$PWD/usr/lib/pkgconfig" \
     -Dprint_trace=false \
     -Dxwayland=disabled \
@@ -84,8 +85,7 @@ install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
     meson \
         --prefix=/usr \
         --buildtype=release \
-        -Ddefault_library=static \
-        -Dpkg_config_path="$OLDPWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig" \
+        -Dpkg_config_path="$OLDPWD/usr/lib/pkgconfig:$1/usr/lib/pkgconfig:/usr/lib/pkgconfig" \
         . build
 
     ninja -C build

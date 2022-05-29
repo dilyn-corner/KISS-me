@@ -5,31 +5,42 @@
  
  wayfire = dependency('wayfire')
 -giomm = dependency('giomm-2.4')
- wlroots = dependency('wlroots')
- wfconfig = dependency('wf-config')
- cairo = dependency('cairo')
+ 
+ if get_option('enable_dbus') == true
+     dbus = subproject('dbus')
 
 --- a/pl/src/meson.build
 +++ b/pl/src/meson.build
 @@ -2,10 +2,6 @@
-     dependencies: [wayfire, wlroots, wfconfig, cairo],
+     dependencies: [wayfire],
      install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
  
 -autorotate = shared_module('autorotate-iio', 'autorotate-iio.cpp',
--    dependencies: [wayfire, wlroots, wfconfig, giomm],
+-    dependencies: [wayfire, giomm],
 -    install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
 -
  background_view = shared_module('background-view', 'background-view.cpp',
-     dependencies: [wayfire, wlroots, wfconfig],
+     dependencies: [wayfire],
      install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
 @@ -26,10 +22,6 @@
-     dependencies: [wayfire, wlroots, wfconfig],
+     dependencies: [wayfire],
      install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
  
 -glib_main_loop = shared_module('glib-main-loop', 'glib-main-loop.cpp',
--    dependencies: [wayfire, wlroots, wfconfig, giomm],
+-    dependencies: [wayfire, giomm],
 -    install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
 -
- joinviews = shared_module('join-views', 'join-views.cpp',
-     dependencies: [wayfire, wlroots, wfconfig],
+ hide_cursor = shared_module('hide-cursor', 'hide-cursor.cpp',
+     dependencies: [wayfire],
+     install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
+@@ -50,10 +42,6 @@
+     dependencies: [wayfire],
+     install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
+ 
+-view_shot = shared_module('view-shot', 'view-shot.cpp',
+-    dependencies: [wayfire],
+-    install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
+-
+ water = shared_module('water', 'water.cpp',
+     dependencies: [wayfire],
      install: true, install_dir: join_paths(get_option('libdir'), 'wayfire'))
