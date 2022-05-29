@@ -1,5 +1,4 @@
 #!/bin/sh -e
-#!/bin/sh -e
 
 export GOPATH="$PWD/go"
 export GO111MODULE=on
