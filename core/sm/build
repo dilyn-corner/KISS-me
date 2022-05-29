@@ -10,4 +10,4 @@ install -Dm755 respawn             "$1/usr/bin/respawn"
 # The difference between release 0.1.1 and git is a relicense commit.
 # Bundle the new license.
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/sm.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/sm.license"

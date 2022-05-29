@@ -8,4 +8,4 @@ install -Dm755 "a.out"       "$1/usr/bin/nawk"
 ln      -s     /usr/bin/nawk "$1/usr/bin/awk"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/nawk.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/nawk.license"

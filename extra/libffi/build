@@ -15,4 +15,4 @@ ln -sf libffi.so.8 "$1/usr/lib/libffi.so.7"
 ln -sf libffi.so.7 "$1/usr/lib/libffi.so.6"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/libffi.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/libffi.license"

@@ -37,4 +37,4 @@ install -Dm755 filters/show-ics-details.py \
     "$1/usr/share/aerc/filters/show-ics-details.py"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/aerc.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/aerc.license"

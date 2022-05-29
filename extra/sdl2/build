@@ -14,4 +14,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 INSTALL.txt "$1/usr/share/LICENSES/sdl2.license"
+install -Dm644 INSTALL.txt "$1/usr/share/LICENSES/sdl2.license"

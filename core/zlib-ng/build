@@ -11,4 +11,4 @@ gmake
 gmake DESTDIR="$1" install
 
 # Install the license
-install -Dm755 LICENSE.md "$1/usr/share/LICENSES/zlib.license"
+install -Dm644 LICENSE.md "$1/usr/share/LICENSES/zlib.license"

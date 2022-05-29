@@ -14,4 +14,4 @@ install -Dm644 Iosevka%20Nerd%20Font%20Complete.ttf                        \
     "$1/usr/share/fonts/TTF/Iosevka Nerd Font Complete.ttf"
 
 # Install the license
-install -Dm755 LICENSE.md "$1/usr/share/LICENSES/iosevka-nerd-font.license"
+install -Dm644 LICENSE.md "$1/usr/share/LICENSES/iosevka-nerd-font.license"

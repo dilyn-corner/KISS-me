@@ -13,4 +13,4 @@ make
 make DESTDIR="$1" install
 
 # Install the license
-install -Dm755 LEGAL "$1/usr/share/LICENSES/oksh.license"
+install -Dm644 LEGAL "$1/usr/share/LICENSES/oksh.license"

@@ -78,4 +78,4 @@ rm -r "$1/usr/libexec"
 sed -i "s|libexec|lib/clang|" "$1/usr/bin/scan-build"
 
 # Install the license
-install -Dm755 llvm/LICENSE.TXT "$1/usr/share/LICENSES/llvm.license"
+install -Dm644 llvm/LICENSE.TXT "$1/usr/share/LICENSES/llvm.license"

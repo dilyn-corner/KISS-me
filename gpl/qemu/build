@@ -53,6 +53,6 @@ install -Dm644 OVMF_CODE.fd \
     "$1/usr/lib/x86_64-linux-gnu/efi/OVMF_CODE.fd"
 
 # Install the license
-install -Dm755 COPYING         "$1/usr/share/LICENSES/qemu.license"
-install -Dm755 COPYING.LIB     "$1/usr/share/LICENSES/qemu-lib.license"
-install -Dm755 opensbi.license "$1/usr/share/LICENSES/opensbi.license"
+install -Dm644 COPYING         "$1/usr/share/LICENSES/qemu.license"
+install -Dm644 COPYING.LIB     "$1/usr/share/LICENSES/qemu-lib.license"
+install -Dm644 opensbi.license "$1/usr/share/LICENSES/opensbi.license"

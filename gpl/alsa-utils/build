@@ -15,4 +15,4 @@ make
 make DESTDIR="$1" install
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/alsa-utils.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/alsa-utils.license"

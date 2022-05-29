@@ -48,5 +48,5 @@ sed nspr/Linux*/config/nspr.pc \
 install -Dm644 /dev/stdin "$1/usr/lib/pkgconfig/nspr.pc"
 
 # Install the license
-install -Dm755 nss/COPYING  "$1/usr/share/LICENSES/nss.license"
-install -Dm755 nspr/LICENSE "$1/usr/share/LICENSES/nspr.license"
+install -Dm644 nss/COPYING  "$1/usr/share/LICENSES/nss.license"
+install -Dm644 nspr/LICENSE "$1/usr/share/LICENSES/nspr.license"

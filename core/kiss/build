@@ -16,4 +16,4 @@ rm -f "$1/usr/share/doc/kiss/tidbits.txt" \
       "$1/usr/share/doc/kiss/post.txt"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/kiss.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/kiss.license"

@@ -17,4 +17,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/libva.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/libva.license"

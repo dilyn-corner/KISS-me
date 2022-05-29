@@ -4,4 +4,4 @@ make
 make PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/wayclip.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/wayclip.license"

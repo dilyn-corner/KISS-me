@@ -53,5 +53,5 @@ build_harfbuzz
 build_freetype -Dharfbuzz=enabled --reconfigure
 
 # Install the license file
-install -Dm755 harfbuzz/COPYING      "$1/usr/share/LICENSES/harfbuzz.license"
-install -Dm755 freetype/docs/FTL.TXT "$1/usr/share/LICENSES/freetype.license"
+install -Dm644 harfbuzz/COPYING      "$1/usr/share/LICENSES/harfbuzz.license"
+install -Dm644 freetype/docs/FTL.TXT "$1/usr/share/LICENSES/freetype.license"

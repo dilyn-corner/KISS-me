@@ -8,4 +8,4 @@ cc -o helper contrib/helper.c
 install -Dm755 helper "$1/usr/bin/helper"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/libudev-zero.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/libudev-zero.license"

@@ -70,4 +70,4 @@ find . -type d -a -name testdata |
     done
 
 # Install the license
-install -Dm755 "$GOROOT/LICENSE" "$1/usr/share/LICENSES/go.license"
+install -Dm644 "$GOROOT/LICENSE" "$1/usr/share/LICENSES/go.license"

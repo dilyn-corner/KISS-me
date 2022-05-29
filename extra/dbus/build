@@ -28,4 +28,4 @@ rm -f "$1/usr/bin/dbus-cleanup-sockets"
 install -Dm755 dbus.run "$1/etc/sysmgr/dbus"
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/dbus.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/dbus.license"

@@ -8,4 +8,4 @@ make
 make DESTDIR="$1" PREFIX=/usr install
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/elftoolchain.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/elftoolchain.license"

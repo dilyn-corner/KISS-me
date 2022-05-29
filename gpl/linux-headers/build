@@ -10,4 +10,4 @@ find usr/include -name \*.h -type f | while read -r file; do
 done
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/linux-headers.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/linux-headers.license"

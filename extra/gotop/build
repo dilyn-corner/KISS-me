@@ -11,4 +11,4 @@ go build \
 install -Dm755 gotop "$1/usr/bin/gotop"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/gotop.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/gotop.license"

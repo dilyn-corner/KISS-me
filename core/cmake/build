@@ -42,4 +42,4 @@ rm -rf "$1/usr/doc"
 rm -rf "$1/usr/share/cmake*/Help"
 
 # Install the license
-install -Dm755 Copyright.txt "$1/usr/share/LICENSES/cmake.license"
+install -Dm644 Copyright.txt "$1/usr/share/LICENSES/cmake.license"

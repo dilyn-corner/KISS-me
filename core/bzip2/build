@@ -13,4 +13,4 @@ install -Dm644 bzip2.1         "$1/usr/share/man/man1/bzip2.1"
 install -Dm644 bzlib.h         "$1/usr/include/bzlib.h"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/bzip2.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/bzip2.license"

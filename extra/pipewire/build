@@ -27,4 +27,4 @@ mkdir -p "$1/etc"
 ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf "$1/etc/asoundrc"
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/pipewire.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/pipewire.license"

@@ -58,4 +58,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 docs/license.rst "$1/usr/share/LICENSES/mesa.license"
+install -Dm644 docs/license.rst "$1/usr/share/LICENSES/mesa.license"

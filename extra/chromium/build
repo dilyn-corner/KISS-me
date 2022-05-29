@@ -168,4 +168,4 @@ cp locales/*.pak "$1/usr/lib/chromium/locales/"
 cp -- icudtl.dat *.bin *.pak "$1/usr/lib/chromium/"
 
 # Install the license
-install -Dm755 ../../LICENSE "$1/usr/share/LICENSES/chromium.license"
+install -Dm644 ../../LICENSE "$1/usr/share/LICENSES/chromium.license"

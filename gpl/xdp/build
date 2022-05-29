@@ -35,4 +35,4 @@ gmake PREFIX=/usr
 gmake PREFIX=/usr DESTDIR="$1" install
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/xdg-desktop-portal.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/xdg-desktop-portal.license"

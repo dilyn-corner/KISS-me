@@ -18,4 +18,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 COPYING-MPL-1.1 "$1/usr/share/LICENSES/cairo.license"
+install -Dm644 COPYING-MPL-1.1 "$1/usr/share/LICENSES/cairo.license"

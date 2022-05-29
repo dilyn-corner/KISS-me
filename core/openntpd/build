@@ -15,4 +15,4 @@ make DESTDIR="$1" install
 install -Dm755 ntpd.run "$1/etc/sysmgr/ntpd"
 
 # Install the license
-install -Dm755 COPYING "$1/usr/share/LICENSES/openntpd.license"
+install -Dm644 COPYING "$1/usr/share/LICENSES/openntpd.license"

@@ -93,4 +93,4 @@ install -Dm 644 wayfire.ini "$1/etc/wayfire/wayfire.ini"
 )
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/wayfire.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/wayfire.license"

@@ -8,4 +8,4 @@ gmake PREFIX="$1/usr/bin" install_flat
 chmod gu+s "$1/usr/bin/toybox"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/toybox.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/toybox.license"

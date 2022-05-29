@@ -6,4 +6,4 @@ make PREFIX=/usr DESTDIR="$1" install
 ln -sf samu "$1/usr/bin/ninja"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/samurai.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/samurai.license"

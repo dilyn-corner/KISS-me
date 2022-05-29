@@ -19,4 +19,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/libxkbcommon.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/libxkbcommon.license"

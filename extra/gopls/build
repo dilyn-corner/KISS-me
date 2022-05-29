@@ -13,4 +13,4 @@ go build \
 install -Dm755 gopls "$1/usr/bin/gopls"
 
 # Install the license
-install -Dm755 ../LICENSE "$1/usr/share/LICENSES/gopls.license"
+install -Dm644 ../LICENSE "$1/usr/share/LICENSES/gopls.license"

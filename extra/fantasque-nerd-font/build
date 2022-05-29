@@ -14,4 +14,4 @@ install -Dm644 Fantasque%20Sans%20Mono%20Bold%20Nerd%20Font%20Complete%20Mono.tt
     "$1/usr/share/fonts/TTF/Fantasque Sans Mono Bold Nerd Font Complete Mono.ttf"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/fantasque-nerd-font.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/fantasque-nerd-font.license"

@@ -27,4 +27,4 @@ gmake LIBDIR=/usr/lib BINDIR=/usr/bin DESTDIR="$1" install
 install -Dm755 wpa_supplicant.run "$1/etc/sysmgr/wpa_supplicant"
 
 # Install the license
-install -Dm755 ../COPYING "$1/usr/share/LICENSES/wpa_supplicant.license"
+install -Dm644 ../COPYING "$1/usr/share/LICENSES/wpa_supplicant.license"

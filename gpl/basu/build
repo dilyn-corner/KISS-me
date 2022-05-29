@@ -22,4 +22,4 @@ ninja -C build
 ninja -C build install
 
 # Install the license
-install -Dm755 LICENSE.LGPL2.1 "$1/usr/share/LICENSES/basu.license"
+install -Dm644 LICENSE.LGPL2.1 "$1/usr/share/LICENSES/basu.license"

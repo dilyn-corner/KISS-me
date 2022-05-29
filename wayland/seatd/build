@@ -17,4 +17,4 @@ ninja -C build install
 install -Dm755 seatd.run "$1/etc/sysmgr/seatd"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/seatd.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/seatd.license"

@@ -25,4 +25,4 @@ install -Dm644 bmake.1 "$1/usr/share/man/man1/bmake.1"
 ln -s bmake "$1/usr/bin/make"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/bmake.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/bmake.license"

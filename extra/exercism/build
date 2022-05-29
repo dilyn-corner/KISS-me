@@ -11,4 +11,4 @@ go build \
 install -Dm755 cmd/exercism "$1/usr/bin/exercism"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/exercism.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/exercism.license"

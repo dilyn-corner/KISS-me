@@ -54,4 +54,4 @@ build_zstd "$1"
 build_libzstd "$1"
 
 # Install the license
-install -Dm755 LICENSE "$1/usr/share/LICENSES/zstd.license"
+install -Dm644 LICENSE "$1/usr/share/LICENSES/zstd.license"
