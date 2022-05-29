@@ -2,7 +2,9 @@
 
 ./configure \
     --prefix=/usr \
-    --disable-shared \
+    --with-threads \
+    --with-history \
+    --without-icu \
     --without-debug \
     --without-legacy \
     --without-python
