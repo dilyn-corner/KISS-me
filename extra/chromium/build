@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-# chromium does not play nicely with thin LTO - we do PGO later though.
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
