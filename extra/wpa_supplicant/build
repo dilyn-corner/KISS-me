@@ -1,19 +1,28 @@
 #!/bin/sh -e
 
-for file in libnl/*.c; do
-    "${CC:-cc}" $CFLAGS -fPIC -Ilibnl/include -c -o "${file%%.c}.o" "$file"
-done
+# The wpa_supplicant package is built statically using
+# libnl-tiny which is a minimal version of libnl maintained
+# by OpenWRT.
+mv libnl-tiny* libnl.tar.gz
+tar xf libnl.tar.gz
+mv libnl-tiny* libnl
 
-ar rcs libnl/libnl-tiny.a libnl/*.o
+export CFLAGS="$CFLAGS -D_GNU_SOURCE -I$PWD/libnl/include"
+export LDFLAGS="$LDFLAGS -L$PWD/libnl"
 
-export CFLAGS="$CFLAGS -I$PWD/libnl/include -L$PWD/libnl \
-               -static -D_GNU_SOURCE -DLIBNL1_COMPAT \
-               -Wno-unused-command-line-argument"
+(
+    cd libnl
+
+    # CFLAGS must expand to individual arguments.
+    # shellcheck disable=2086
+    ${CC:-cc} $CFLAGS $CPPFLAGS -c ./*.c
+    ${AR:-ar} rc libnl-tiny.a ./*.o
+)
 
 cd wpa_supplicant
 
-make PREFIX=/usr
-make PREFIX=/usr DESTDIR="$1" install
+gmake LIBDIR=/usr/lib BINDIR=/usr/bin
+gmake LIBDIR=/usr/lib BINDIR=/usr/bin DESTDIR="$1" install
 
 install -Dm755 wpa_supplicant.run "$1/etc/sysmgr/wpa_supplicant"
 

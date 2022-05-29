@@ -1,4 +1,4 @@
 https://w1.fi/releases/wpa_supplicant-2.10.tar.gz
-https://github.com/sabotage-linux/libnl-tiny/archive/4225e93bec5304abee3386213213718367e54a93.tar.gz libnl
-files/makefile wpa_supplicant
+https://git.openwrt.org/?p=project/libnl-tiny.git;a=snapshot;h=8e0555fb39f51a5d6436b4f1370850caa03611ea;sf=tgz
+files/.config wpa_supplicant
 files/wpa_supplicant.run wpa_supplicant
