@@ -9,7 +9,6 @@ meson \
     --prefix=/usr \
     --buildtype=release \
     -Dtee=enabled \
-    -Dglib=disabled \
     -Dtests=disabled \
     -Dgl-backend=glesv2 \
     . build
