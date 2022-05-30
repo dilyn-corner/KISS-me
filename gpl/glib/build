@@ -31,5 +31,28 @@ meson \
 ninja -C build
 ninja -C build install
 
+(
+    cd json-glib
+    export PKG_CONFIG_PATH="$1/usr/lib/pkgconfig"
+    export PATH="$1/usr/bin:$PATH"
+    export CFLAGS="$CFLAGS -I$1/usr/include/glib-2.0"
+    export CFLAGS="$CFLAGS -I$1/usr/lib/glib-2.0/include -pthread"
+    export CFLAGS="$CFLAGS -L$1/usr/lib/"
+
+    export CFLAGS="$CFLAGS -l:libffi.a -l:libz.a -l:libgmodule-2.0.a \
+        -Wno-unused-command-line-argument"
+
+    meson \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        -Dintrospection=disabled \
+        -Dgtk_doc=disabled \
+        -Dtests=false \
+        . build
+
+    ninja -C build
+    ninja -C build install
+)
+
 # Install the license
 install -Dm644 COPYING "$1/usr/share/LICENSES/glib.license"
