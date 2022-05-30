@@ -10,6 +10,9 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 gmake
 gmake PREFIX=/usr DESTDIR="$1" install
 
+mkdir -p "$1/usr/bin"
+ln -sf /usr/lib/ld-musl-x86_64.so.1 "$1/usr/bin/ldd"
+
 # Install BSD compatibility headers.
 cp -f cdefs.h queue.h tree.h \
     "$1/usr/include/sys"
