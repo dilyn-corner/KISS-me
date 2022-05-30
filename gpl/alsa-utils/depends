@@ -1,3 +1,4 @@
 alsa-lib
+gmake         make
 linux-headers make
 ncurses
