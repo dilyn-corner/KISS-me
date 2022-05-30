@@ -4,6 +4,19 @@
 sed -i 's/rm -R/rm -r/g'   configure
 sed -i 's/--in-place/-i/g' configure
 
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libdir=/usr/lib \
+    --sbindir=/usr/bin \
+    --with-mounthelperdir=/usr/bin \
+    --disable-nls \
+    --disable-pam \
+    --disable-shared \
+    --disable-systemd \
+    --disable-sysvinit \
+    --with-config=user
+
 gmake PREFIX=/usr
 gmake PREFIX=/usr DESTDIR="$1" install
 
