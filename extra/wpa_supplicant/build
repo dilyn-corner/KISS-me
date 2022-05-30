@@ -4,7 +4,7 @@
 # libnl-tiny which is a minimal version of libnl maintained
 # by OpenWRT.
 mv libnl-tiny* libnl.tar.gz
-tar xf libnl.tar.gz
+tar xzf libnl.tar.gz
 mv libnl-tiny* libnl
 
 export CFLAGS="$CFLAGS -D_GNU_SOURCE -I$PWD/libnl/include"
