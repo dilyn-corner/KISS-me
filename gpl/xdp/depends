@@ -1,4 +1,4 @@
-glib    make
+glib
 gmake   make
 libffi
 pipewire
