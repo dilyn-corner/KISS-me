@@ -8,7 +8,6 @@ meson \
     -Damdgpu=true \
     -Dradeon=true \
     -Dintel=false \
-    -Dlibkms=false \
     -Dvmwgfx=false \
     -Dnouveau=false \
     . build
