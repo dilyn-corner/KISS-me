@@ -23,7 +23,7 @@
 make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install
 
-cp -r runtime/* "$1/usr/share/vim/vim82"
+cp -r runtime/* "$1/usr/share/vim/vim90"
 
 # Install the license
 install -Dm644 LICENSE "$1/usr/share/LICENSES/vim.license"
