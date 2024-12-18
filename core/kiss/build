@@ -4,16 +4,18 @@ for patch in *.patch; do
     patch -p1 < "$patch"
 done
 
-mkdir -p "$1/usr/bin" \
-         "$1/usr/share/doc/kiss"
+mkdir -p \
+    "$1/usr/bin" \
+    "$1/usr/share/doc/kiss"
 
 cp -f  kiss contrib/*  "$1/usr/bin"
 cp -f  docs/site/*.txt "$1/usr/share/doc/kiss"
 cp -rf docs/site/wiki  "$1/usr/share/doc/kiss"
 
-rm -f "$1/usr/share/doc/kiss/tidbits.txt" \
-      "$1/usr/share/doc/kiss/README.txt"  \
-      "$1/usr/share/doc/kiss/post.txt"
+rm -f \
+    "$1/usr/share/doc/kiss/README.txt" \
+    "$1/usr/share/doc/kiss/post.txt" \
+    "$1/usr/share/doc/kiss/tidbits.txt"
 
 # Install the license
 install -Dm644 LICENSE "$1/usr/share/LICENSES/kiss.license"

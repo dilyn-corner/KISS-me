@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --disable-exec-static-tramp \
+    --disable-docs \
+    --with-pic
+
+# TODO: find out why I have to specify -C $(HOST)
+make -C x86_64-pc-linux-musl
+make -C x86_64-pc-linux-musl DESTDIR="$1" install all
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/libffi.license"

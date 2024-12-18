@@ -12,177 +12,19 @@ The master branch is for:
 
 Other branches are for:
 1) Strangeness
+2) Fun
 
 
-The structure of this repository
+The structure of this branch
 ________________________________________________________________________________
 
-The master branch is very finicky and I would not recommend using it for a usual
-system; use it as a reference for building packages. As an example, many build
-scripts have been modified to make use of meson or cmake when available, leaving
-perhaps a large amount of overhead in the build system. Not to mention the fact
-that it is intended for wyverkiss. Additionally, due to my distaste for GPL,
-much of the core system has changed to include e.g. toybox, nawk, and pax. A lot
-of utilities are gone because of dropping busybox, but I would like to assume
-that I'll be just fine.  We will see. Some current issues:
+This branch is intended to be a daily driver on the bleeding edge. Ouch.
 
-* toybox mdev does NOT work. Use something else, or handle /dev perms manually.
-* python expects gnugrep; endianness must be specified.
+It isn't meant to be useable by everyone and it certainly isn't *for* anyone.
+However, it is the version I use.
 
-Any packages that use a GPL license will end up in the gpl directory, regardless
-of their position in the system hierarchy. Ideally, there will be almost no GPL
-in the core, runtime system.
+The intention is minimalism; a system that does the bare minimum to keep itself
+running and gets out of your way. It's a power user's system.
 
 
-For the curious
-________________________________________________________________________________
-
-Here is a roughly current list of all the licenses each package in this
-repository uses. The real question is how one feels about GPL-compatible (what I
-would think of as semi-GPL) licenses (PSF, MPL).
-
-The list doesn't go into the nuances of several licenses. Big examples are
-things like mesa or llvm - projects which inherit extra licenses because of code
-blobs they borrow. In general, I am semi-fine with this (if not wholly forced to
-accept it).
-
-NOTES:
-    * chromium is built using some bundled libs and programs, the biggest being
-        ffmpeg and x264. This makes chromium de facto GPL.
-    * zfs bundles util-linux for libblkid and libuuid. libblkid is BSD, but
-        libuuid is GPLv2.
-    * some packages include their own makefiles. Please be aware of this before
-        building packages. Currently,
-        {zlib-ng, musl, zfs, zstd, elftoolchain, netbsd-curses, wpa_supplicant}
-    * qemu, basu, dbus, glib, pipewire, xdg-desktop-portal{-wlr} only exist for
-        my job. The system can build and run just fine without them.
-    * the most GNU- and GPL-free system I've been able to achieve on this
-        system: alsa-{lib,utils}, linux, libuuid, and chromium's bundled
-        dependencies.
-
-    +-------------------+---------------+---------------------+---------------+
-    | CORE              | LICENSE       | EXTRA               | LICENSE       |
-    +-------------------+---------------+---------------------+---------------+
-    | b3sum             | Public Domain | aerc                | MIT           |
-    | baseinit          | MIT           | cairo               | MPLv1.1       |
-    | byacc             | Public Domain | chromium            | BSD 3-Clause  |
-    | bzip2             | bzip2         | cozette-font        | MIT           |
-    | cmake             | BSD 3-Clause  | dbus                | Academic      |
-    | curl              | MIT           | dhcpcd              | BSD           |
-    | flex              | Public Domain | elftoolchain        | MIT           |
-    | fossil            | BSD 2-Clause  | exercism            | MIT           |
-    | kiss              | MIT           | expat               | BSD           |
-    | libressl          | MIT           | fantasque-nerd-font | MIT           |
-    | llvm              | ISC           | fontconfig          | MIT           |
-    | m4                | Apache-2.0    | freetype-harfbuzz   | BSD           |
-    | make              | BSD/ISC       | go                  | BSD 3-Clause  |
-    | musl              | BSD 2-Clause  | gopls               | BSD 3-Clause  |
-    | nawk              | MIT           | gotop               | MIT           |
-    | oksh              | MIT           | iana-etc            | Public Domain |
-    | openntpd          | ISC           | iosevka-nerd-font   | OFL           |
-    | otools            | BSD-style     | libdrm              | MIT           |
-    | samurai           | Apache-2.0    | libffi              | MIT           |
-    | sm                | MIT           | libinput            | X11           |
-    | smdev             | MIT           | libpciaccess        | X11           |
-    | toybox            | 0BSD          | libpng              | libpngv2      |
-    | xz                | Public Domain | libudev-zero        | ISC           |
-    | zfs               | CDDL          | libva               | MIT           |
-    | zlib-ng           | zlib          | libwebp             | BSD 3-Clause  |
-    | zstd              | BSD 3-Clause  | libxml2             | MIT           |
-    +-------------------+---------------+ mesa                | MIT           |
-    | WAYLAND           | LICENSE       | meson               | Apache-2.0    |
-    +-------------------+---------------+ netbsd-curses       | BSD 3-Clause  |
-    | foot              | MIT           | nodejs              | MIT           |
-    | grim              | MIT           | nss                 | MPLv2         |
-    | libxkcommon       | MIT           | openssh             | BSD           |
-    | seatd             | MIT           | opus                | BSD 3-Clause  |
-    | slurp             | MIT           | perl                | Artistic      |
-    | wayfire           | MIT           | pipewire            | MIT           |
-    | wayland           | MIT           | pixman              | MIT           |
-    | wayland-protocols | MIT           | pkgconf             | ISC           |
-    | wbg               | MIT           | python              | PSFv2         |
-    | wev               | MIT           | sdl2                | BSD 3-Clause  | 
-    | wayclip           | ISC           | sqlite              | Public Domain |
-    | wlroots           | MIT           | tzdata              | Public Domain |
-    | xdp-wlr           | MIT           | vim                 | Vim           |
-    | xkeyboard-config  | MIT           | wpa_supplicant      | BSD 3-Clause  |
-    +-------------------+---------------+---------------------+---------------+
-    | GPL               | LICENSE       |
-    +-------------------+---------------+
-    | alsa-lib          | GPLv2.1       |
-    | alsa-utils        | GPLv2         |
-    | basu              | LGPLv2.1      |
-    | glib              | GPLv2.1       |
-    | linux-headers     | GPLv2         |
-    | qemu              | GPLv2         |
-    | xdp               | GPLv2.1       |
-    +-------------------+---------------+
----
-
-
-My other stuff
-________________________________________________________________________________
-
-I am the maintainer of a couple other repositories:
-
-KISS-haskell https://github.com/dilyn-corner/KISS-haskell - a KISS-compliant
-repository that contains a bootstrappable ghc.
-
-KISS-kde https://github.com/dilyn-corner/KISS-kde - A KISS-compliant
-repository that brings the wonders of a plasma desktop to KISS.
-
-KISS-static https://github.com/dilyn-corner/KISS-static - A KISS-compliant
-repository that provides a static KISS rootfs.
-
-dotfiles https://github.com/dilyn-corner/dotfiles - Just a simple way to
-maintain my dotfiles and share screenshots. Don't use it, just marvel.
-
-
----
-
-Useful fork-facts
-________________________________________________________________________________
-
-
-This is more-so for me and anyone like me who is both new to Git(hub) and forks.
-
-Keeping up
-________________________________________________________________________________
-
-
-If you want to keep your fork in-line with upstream, there's a very
-straightforward way of doing this! [1] Simply add the upstream
-repository as a remote URL for git to track, and then you will be able to pull
-down any changes upstream makes and merge them into your fork.
-
-git remote add upstream $upstreamURL # Add upstream to your remotes
-git fetch upstream                   # Fetch upstream's changes
-git checkout master                  # Switch to master
-git merge upstream/master            # Merge upstream's master branch
-
-Suppose upstream is _very_ busy while you do your work. They push a lot of
-changes that you wish you had while you're working on your branch. If you
-merge upstream into your branch, you'll have some hairy commit messages they
-won't _super_ appreciate when you make your PR. So you can rebase instead. It's
-very handy.
-
-git checkout -b $newBranch
-> You do work
-> You commit your work
-> They do work
-> They push their work
-> You want their work
-git fetch upstream
-git rebase upstream/master
-
-Rebasing [2] is essentially just a patch of the work you did based off
-the commit you made your fork from, that you can then simply slide into the
-history without making it look wonky (with a bunch of merge commit messages).
-
-This will be edited heavily in the future maybe hopefully probably. [3]
-
-1. https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
-
-2. https://git-scm.com/book/en/v2/Git-Branching-Rebasing
-
-3. https://medium.com/@catalinaturlea/clean-git-history-a-step-by-step-guide-eefc0ad8696d
+PRs welcome, issues appreciated.

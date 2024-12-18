@@ -1,0 +1,22 @@
+From d995c3d31b42d09a568a0a658bcbcd3814164ca9 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Mon, 1 Jan 2024 19:23:04 -0800
+Subject: [PATCH] Add .note.GNU-stack to prevent executable stack
+
+---
+ blake3_cpuid.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/blake3_cpuid.S b/blake3_cpuid.S
+index f6b72ba..436121b 100644
+--- a/blake3_cpuid.S
++++ b/blake3_cpuid.S
+@@ -23,4 +23,5 @@ blake3_xgetbv:
+ .section .init_array,"aw"
+ .align	8
+ .quad	blake3_detect_cpu_features
++.section .note.GNU-stack,"",@progbits
+ #endif
+-- 
+2.45.2
+

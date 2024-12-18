@@ -1,14 +1,62 @@
 #!/bin/sh -e
 
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+# Bundle lib{blk,uu}id
+(
+    cd util-linux
+
+    ./configure \
+        --prefix="$OLDPWD/garbo/usr"\
+        --disable-all-programs \
+        --disable-shared \
+        --enable-libuuid \
+        --enable-libblkid
+
+    make
+    make DESTDIR="" install
+
+    # Install the licenses
+    install -Dm755 libuuid/COPYING  "$1/usr/share/LICENSES/libuuid.license"
+    install -Dm755 libblkid/COPYING "$1/usr/share/LICENSES/libblkid.license"
+)
+
+# Bundle libtirpc
+(
+    cd libtirpc
+
+    ./configure \
+        --prefix="$OLDPWD/garbo/usr" \
+        --sysconfdir="$OLDPWD/garbo/etc" \
+        --disable-shared \
+        --disable-gssapi
+
+    make
+    make DESTDIR="" install
+
+    mv ../garbo/usr/include/tirpc/* ../garbo/usr/include/
+    rmdir ../garbo/usr/include/tirpc
+
+    # Install the license
+    install -Dm755 COPYING "$1/usr/share/LICENSES/libtirpc.license"
+)
+
+# Fixed in 2.3.0
+patch -p1 < remove-duplicate-highbit64-def.patch
+
+CFLAGS="$CFLAGS -I$PWD/garbo/usr/include -L$PWD/garbo/usr/lib"
+
 # Use nicer options
 sed -i 's/rm -R/rm -r/g'   configure
 sed -i 's/--in-place/-i/g' configure
 
-./configure \
+MAKE=gmake ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --libdir=/usr/lib \
     --sbindir=/usr/bin \
+    --libexecdir=/usr/lib \
     --with-mounthelperdir=/usr/bin \
     --disable-nls \
     --disable-pam \

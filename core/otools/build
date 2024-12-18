@@ -20,4 +20,4 @@ chmod gu+s "$1/usr/bin/doas"
 install -Dm600 doas.conf "$1/etc/doas.conf"
 
 # Install the license
-install -Dm755 README.md "$1/usr/bin/pax.license"
+install -Dm755 README.md "$1/usr/share/LICENSES/pax.license"

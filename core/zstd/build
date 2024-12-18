@@ -11,19 +11,8 @@ build_zstd() (
     export CFLAGS="$CFLAGS -static -pthread"
     export LDFLAGS="$LDFLAGS -static"
 
-    gmake \
-        CC=clang \
-        zstd-pgo
-
-    gmake \
-        PREFIX=/usr \
-        DESTDIR="$1" \
-        install
-
-    # Symlink for all the things we built in
-    for bin in gzip lzma xz zcat ungz unlzma unxz; do
-        ln -s zstd "$1/usr/bin/$bin"
-    done
+    gmake CC=clang zstd-pgo
+    gmake PREFIX=/usr DESTDIR="$1" install
 )
 
 build_libzstd() (
@@ -37,21 +26,17 @@ build_libzstd() (
                            -Wno-unused-command-line-argument \
                            -Wno-ignored-optimization-argument"
 
-    gmake \
-        PREFIX=/usr \
-        libzstd.a \
-        libzstd.pc
-
-    gmake \
-        PREFIX=/usr \
-        DESTDIR="$1" \
-        install-pc \
-        install-static \
-        install-includes
+    gmake PREFIX=/usr lib-mt
+    gmake PREFIX=/usr DESTDIR="$1" install
 )
 
 build_zstd "$1"
 build_libzstd "$1"
+
+# Symlink for all the things we built in
+for bin in gzip lzma xz zcat ungz unlzma unxz; do
+    ln -s zstd "$1/usr/bin/$bin"
+done
 
 # Install the license
 install -Dm644 LICENSE "$1/usr/share/LICENSES/zstd.license"

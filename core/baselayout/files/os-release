@@ -1,8 +1,8 @@
-NAME="KISS Linux"
-PRETTY_NAME="KISS Linux"
-ID=kiss
+NAME="Klam Linux"
+PRETTY_NAME="Klam Linux"
+ID=klam
 BUILD_ID=rolling
-HOME_URL="https://k1sslinux.org"
-DOCUMENTATION_URL="https://k1sslinux.org"
-SUPPORT_URL="https://github.com/kiss-community"
-BUG_REPORT_URL="https://github.com/kiss-community"
+HOME_URL="https://dilyn.cc"
+DOCUMENTATION_URL="https://dilyn.cc"
+SUPPORT_URL="https://github.com/dilyn-corner"
+BUG_REPORT_URL="https://github.com/dilyn-corner"

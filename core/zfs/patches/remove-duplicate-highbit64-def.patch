@@ -1,0 +1,38 @@
+From cf6e8b218d4e4d62d066ce7c2c3cab72dbd93bd8 Mon Sep 17 00:00:00 2001
+From: Rob Norris <rob.norris@klarasystems.com>
+Date: Sat, 10 Aug 2024 07:31:41 +1000
+Subject: [PATCH] zstream: remove duplicate highbit64 definition
+
+When building a static build (--disable-shared), zstream fails to link
+because of the duplicate highbit64() in libzpool/kernel.c. Since they're
+identical, and the libzpool one is visible to zstream, we remove
+zstream's copy and just use the common one.
+
+Sponsored-by: https://despairlabs.com/sponsor/
+Reviewed-by: Brian Behlendorf <behlendorf1@llnl.gov>
+Signed-off-by: Rob Norris <robn@despairlabs.com>
+Closes #16426
+---
+ cmd/zstream/zstream_redup.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/cmd/zstream/zstream_redup.c b/cmd/zstream/zstream_redup.c
+index 6866639fe465..dccd325d4cfa 100644
+--- a/cmd/zstream/zstream_redup.c
++++ b/cmd/zstream/zstream_redup.c
+@@ -56,15 +56,6 @@ typedef struct redup_table {
+ 	int		numhashbits;
+ } redup_table_t;
+ 
+-int
+-highbit64(uint64_t i)
+-{
+-	if (i == 0)
+-		return (0);
+-
+-	return (NBBY * sizeof (uint64_t) - __builtin_clzll(i));
+-}
+-
+ void *
+ safe_calloc(size_t n)
+ {

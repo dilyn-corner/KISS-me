@@ -5,7 +5,8 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
 ./configure \
     --prefix=/usr \
-    --sysconfdir=/etc
+    --sysconfdir=/etc \
+    --disable-tests
 
 make
 make DESTDIR="$1" install

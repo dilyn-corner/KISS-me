@@ -1,5 +1,6 @@
-https://github.com/kisslinux/kiss/archive/755838425ff669264fdfc73dc6af8431ad08b545.tar.gz
+https://codeberg.org/kiss-community/kiss/archive/6.2.0.tar.gz
 https://github.com/kisslinux/website/archive/f0525d4e00c5e07138ac2ceb53936d0b221608e7.tar.gz docs
-patches/fossil.patch
-patches/pax.patch
-patches/tweaks.patch
+files/no-perl.patch docs/site/wiki/kernel
+patches/01-fossil-support.patch
+patches/02-pax-is-tar.patch
+patches/03-tweaks.patch

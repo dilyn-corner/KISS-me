@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+gmake
+gmake DESTDIR="$1" install
+
+ln -sf hummingbird "$1/usr/bin/init"
+
+install -Dm755 dist/kiss/*           "$1/usr/lib/hummingbird"
+install -Dm755 usr/lib/hummingbird/* "$1/usr/lib/hummingbird"
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/hummingbird.license"

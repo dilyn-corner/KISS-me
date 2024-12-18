@@ -1,25 +1,33 @@
 #!/bin/sh -e
 
-sed -i 's/\(curl_LDADD =\)/\1 -all-static/' src/Makefile.in
+# Upstream broke static linking. It is still supported via LDFLAGS but this
+# disables output of the shared library. This sed call adds -all-static to the
+# curl commands' compilation (keeping libraries in tact).
+# See: https://github.com/curl/curl/issues/7475
+sed 's/\(curl_LDADD =\)/\1 -all-static/' src/Makefile.in > _
+mv -f _ src/Makefile.in
+
+patch -p1 < fix-http-dec-flag.patch
 
 ./configure \
+    ac_cv_path_PERL=true \
     --prefix=/usr \
     --enable-ipv6 \
     --enable-optimize \
     --enable-unix-sockets \
-    --enable-hidden-symbols \
+    --enable-symbol-hiding \
     --disable-ares \
     --disable-ldap \
-    --disable-debug \
+    --disable-docs \
     --disable-manual \
-    --without-icu \
-    --without-libpsl \
-    --without-libidn \
-    --without-libidn2 \
-    --without-librtmp \
-    --with-pic \
+    --disable-debug \
+    --with-ca-fallback \
     --with-openssl \
-    --with-ca-fallback
+    --with-pic \
+    --without-librtmp \
+    --without-libpsl \
+    --without-libidn2 \
+    --without-brotli
 
 make
 make DESTDIR="$1" install

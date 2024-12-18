@@ -1,0 +1,4 @@
+https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tar.xz
+patches/libressl.patch
+patches/pyc-hash.patch
+patches/python3-always-pip.patch

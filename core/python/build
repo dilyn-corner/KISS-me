@@ -1,0 +1,55 @@
+#!/bin/sh -e
+
+CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
+CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
+
+# Remove util-linux dependency among other things.
+cat >> Modules/Setup <<EOF
+*disabled*
+_uuid nis ossaudiodev
+EOF
+
+# Reported 20-27% performance improvements.
+# See: "PythonNoSemanticInterpositionSpeedup"
+export CFLAGS="$CFLAGS -fno-semantic-interposition -Wno-error"
+export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
+
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+# python expects ggrep during configure to determine endianness.
+ax_cv_c_float_words_bigendian=no \
+./configure \
+    --prefix=/usr \
+    --with-system-expat \
+    --with-system-ffi \
+    --with-ensurepip=yes \
+    --without-doc-strings
+
+make EXTRA_CFLAGS="$CFLAGS -DTHREAD_STACK_SIZE=0x100000"
+make DESTDIR="$1" install
+
+ln -sf python3 "$1/usr/bin/python"
+ln -sf pip3    "$1/usr/bin/pip"
+
+# Make static library writable.
+chmod u+w "$1/usr/lib/libpython"*
+
+# Install the license
+install -Dm644 LICENSE "$1/usr/share/LICENSES/python.license"
+
+# Let's make some kind of effort to reduce the overall
+# size of Python by removing a bunch of rarely used and
+# otherwise useless components.
+#
+# This can't be done via ./configure as the build system
+# doesn't give you this much control over the process.
+{
+    cd "$1/usr/lib/python"*
+    rm -rf test ./*/test ./*/tests
+    rm -rf pydoc* idlelib turtle* config-* ensurepip
+
+    cd "$1/usr/bin"
+    rm -f pydoc* idle*
+}

@@ -1,3 +1,2 @@
-https://github.com/llvm/llvm-project/archive/llvmorg-14.0.6.tar.gz
-files/c99
-files/profdata.prof
+https://github.com/llvm/llvm-project/archive/llvmorg-19.1.6.tar.gz
+patches/musl-stack-size.patch

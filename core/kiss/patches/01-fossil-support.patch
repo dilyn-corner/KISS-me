@@ -1,0 +1,58 @@
+--- a/kiss	2024-12-16 09:59:04.000000000 +0000
++++ b/kiss	2024-12-17 03:02:50.081075520 +0000
+@@ -386,7 +386,7 @@
+     set -- "$1" "$2" "${3%"${3##*[!/]}"}" "$4"
+ 
+     # Git repository.
+-    if null "${2##git+*}"; then
++    if null "${2##fossil+*}" || null "${2##git+*}"; then
+         _res=$2
+         _des=$src_dir/$1/${3:+"$3/"}${2##*/}
+         _des=${_des%[@#]*}/
+@@ -490,6 +490,24 @@
+     mv "$_tmp_file" "$download_dest"
+ }
+ 
++pkg_source_fossil() {
++    com=${2##*[@#]}
++    com=${com#"${2%[#@]*}"}
++
++    log "$repo_name" "Checking out ${com:-trunk}"
++
++    [ -d .fslckout ] || {
++        fossil open -f "${1%[#@]*}" "${com:-trunk}"
++    }
++
++    # Only fetch latest changes if not <url>[#]<sha|tag>.
++    case $1 in *"#$com") ;; *)
++        fossil pull default "$com" || fossil pull
++    esac
++
++    fossil pull "${com:-trunk}"
++}
++
+ pkg_source_git() {
+     com=${2##*[@#]}
+     com=${com#"${2%[#@]*}"}
+@@ -1776,8 +1794,8 @@
+         # env:  PWD is path to repository
+         run_hook pre-update "$#" "$user"
+ 
+-        case $repo_type in git)
+-            pkg_update_git "$@"
++        case $repo_type in
++	    fossil|git) "pkg_update_${repo_type}" "$@" ;;
+         esac
+ 
+         # arg1: post-update
+@@ -1791,6 +1809,10 @@
+     }
+ }
+ 
++pkg_update_fossil() {
++    "$@" fossil pull && "$@" fossil update
++}
++
+ pkg_update_git() {
+     # Display whether or not signature verification is enabled.
+     case $(git config --get merge.verifySignatures) in true)

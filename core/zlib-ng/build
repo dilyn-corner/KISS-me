@@ -4,8 +4,7 @@ sed -i 's/bash/sh/' configure
 
 ./configure \
     --prefix=/usr \
-    --zlib-compat \
-    --native
+    --zlib-compat
 
 gmake
 gmake DESTDIR="$1" install

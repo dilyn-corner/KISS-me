@@ -8,14 +8,16 @@ CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 sed -i 's/SANITIZER_COMMON TRUE/SANITIZER_COMMON FALSE/' \
     compiler-rt/cmake/config-ix.cmake
 
-    #-DLLVM_PROFDATA_FILE=profdata.prof \
-    #-DLLVM_ENABLE_LTO=FULL \
+patch -p1 < musl-stack-size.patch
+
 cmake -B build \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DCMAKE_BUILD_TYPE=Release \
-    -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;libunwind;libcxxabi;libcxx;lld" \
+    -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld" \
+    -DLLVM_ENABLE_RUNTIMES="libunwind;libcxxabi;libcxx" \
     -DLLVM_HOST_TRIPLE="$(clang -dumpmachine)" \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU" \
     -DLLVM_INCLUDE_BENCHMARKS=OFF \
@@ -24,7 +26,6 @@ cmake -B build \
     -DLLVM_INCLUDE_DOCS=OFF \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_LINK_LLVM_DYLIB=ON \
-    -DLLVM_ENABLE_TERMINFO=OFF \
     -DLLVM_ENABLE_LIBXML2=OFF \
     -DLLVM_ENABLE_LIBEDIT=OFF \
     -DLLVM_ENABLE_LIBCXX=ON \
@@ -34,6 +35,7 @@ cmake -B build \
     -DLLVM_ENABLE_LLD=ON \
     -DLLVM_ENABLE_EH=ON \
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
+    -DLLVM_USE_STATIC_ZSTD=ON \
     -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
     -DCLANG_DEFAULT_RTLIB=compiler-rt \
     -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON \
@@ -59,24 +61,41 @@ ninja -C build install
 # libc++abi header files
 install -Dm644 libcxxabi/include/*.h "$1/usr/include"
 
+# TODO: determine why these files end up in /usr/lib/<TRIPLET>
+# Move libc++ et al to the expected directory
+mv -f "$1/usr/lib/x86_64-pc-linux-musl/"*            "$1/usr/lib"
+mv -f "$1/usr/include/x86_64-pc-linux-musl/c++/v1/"* "$1/usr/include/c++/v1"
+
+rm -rf "$1/usr/lib/x86_64-pc-linux-musl" \
+       "$1/usr/include/x86_64-pc-linux-musl"
+
 # LLD: Replace GNU binutils
-ln -s ld.lld "$1/usr/bin/ld"
+ln -sf ld.lld "$1/usr/bin/ld"
 
 # Clang: Some legacy programs may require cc/c++/cpp
-ln -s clang     "$1/usr/bin/cc"
-ln -s clang++   "$1/usr/bin/c++"
-ln -s clang-cpp "$1/usr/bin/cpp"
-
-# Clang: POSIX compliance
-install -Dm755 c99 "$1/usr/bin/c99"
+ln -sf clang     "$1/usr/bin/cc"
+ln -sf clang++   "$1/usr/bin/c++"
+ln -sf clang-cpp "$1/usr/bin/cpp"
 
 # Clang: Override libexec, the path is hardcoded, unfortunately.
-mv -f "$1/usr/libexec/ccc-analyzer" "$1/usr/lib/clang"
-mv -f "$1/usr/libexec/c++-analyzer" "$1/usr/lib/clang"
+mv -f "$1/usr/libexec/ccc-analyzer" \
+      "$1/usr/libexec/c++-analyzer" \
+      "$1/usr/lib/clang"
 
-rm -r "$1/usr/libexec"
+rm -rf "$1/usr/libexec"
 
 sed -i "s|libexec|lib/clang|" "$1/usr/bin/scan-build"
 
-# Install the license
-install -Dm644 llvm/LICENSE.TXT "$1/usr/share/LICENSES/llvm.license"
+# Clang: POSIX compliance
+cat > "$1/usr/bin/c99" << EOF
+#!/bin/sh
+exec cc -std=c99 "\$@"
+EOF
+
+chmod +x "$1/usr/bin/c99"
+
+# Install the licenses
+for pkg in clang clang-tools-extra compiler-rt \
+           libcxx libcxxabi libunwind lld llvm; do
+    install -Dm644 "${pkg}/LICENSE.TXT" "$1/usr/share/licenses/${pkg}.license"
+done

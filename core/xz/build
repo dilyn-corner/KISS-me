@@ -22,3 +22,6 @@ make DESTDIR="$1" install
 
 # Delete empty directory
 rmdir "$1/usr/bin"
+
+# Install the license
+install -Dm644 COPYING "$1/usr/share/LICENSES/xz.license"

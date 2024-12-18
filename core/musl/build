@@ -3,15 +3,23 @@
 CFLAGS=$(printf   %s "$CFLAGS"   | sed 's/-flto=thin//')
 CXXFLAGS=$(printf %s "$CXXFLAGS" | sed 's/-flto=thin//')
 
+# Uncomment if using valgrind or similar.
+# :>nostrip
+
 ./configure \
     --prefix=/usr \
     --syslibdir=/usr/lib
+# Uncomment if using valgrind or similar.
+#   --enable-debug
 
 gmake
-gmake PREFIX=/usr DESTDIR="$1" install
+gmake DESTDIR="$1" install
 
 mkdir -p "$1/usr/bin"
-ln -sf /usr/lib/ld-musl-x86_64.so.1 "$1/usr/bin/ldd"
+ln -sf  /usr/lib/ld-musl-x86_64.so.1 "$1/usr/bin/ldd"
+
+# Fix incorrect symlink to libc.so.
+ln -sf libc.so "$1/usr/lib/ld-musl-x86_64.so.1"
 
 # Install BSD compatibility headers.
 cp -f cdefs.h queue.h tree.h \

@@ -2,9 +2,7 @@
 
 cd bmake
 
-sed -i 's/build) op_test/build) /' boot-strap
-sed -i '/	op_test/d'         boot-strap
-sed -i 's/-nostdinc//'             mk/sys/Linux.mk
+patch -p1 < ../separate-tests.patch
 
 export CFLAGS="$CFLAGS -static"
 export LDFLAGS="$LDFLAGS -static"

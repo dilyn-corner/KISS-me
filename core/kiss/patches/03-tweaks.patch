@@ -1,0 +1,30 @@
+--- a/contrib/kiss-orphans	2024-12-16 09:59:04.000000000 +0000
++++ b/contrib/kiss-orphans	2024-12-17 03:06:13.058606950 +0000
+@@ -20,8 +20,8 @@
+         sed s,.\*/depends:,,
+
+         # Exclude packages which are not really orphans.
+-        printf '%s\n' baseinit baselayout busybox bzip2 e2fsprogs gcc \
+-                      git grub kiss make musl
++        printf '%s\n' b3sum baseinit baselayout certs curl hummingbird kiss llvm make \
++                      musl nawk loksh openntpd otools sm smdev toybox ugrep zfs zstd
+     } |
+
+     # Remove duplicates.
+--- a/contrib/kiss-outdated	2024-12-16 09:59:04.000000000 +0000
++++ b/contrib/kiss-outdated	2024-12-17 05:51:50.544095607 +0000
+@@ -195,6 +195,14 @@
+             remote=lux-brightness-ventto
+         ;;
+
++        make)
++            remote=bmake
++	;;
++
++        m4)
++            remote=om4
++	;;
++
+         man-pages)
+             # TODO: Report to repology.org.
+             # man-pages       -> manpages
