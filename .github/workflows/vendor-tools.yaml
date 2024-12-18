@@ -1,0 +1,41 @@
+name: Vendor cowsql, raft for incus
+
+on:
+  push:
+    branches: [ "klam" ]
+    paths: [ "containers/incus/version" ]
+  workflow_dispatch:
+
+jobs:
+  vendor-cowsql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prep
+        run: |
+          sudo apt update
+          sudo apt install -y automake autoconf libtool
+
+          git clone --depth 1 https://github.com/cowsql/cowsql
+          cd cowsql
+          cver="$(git rev-parse --short HEAD)-$(date "+%Y-%m-%d")"
+          echo "cowsqlVer=$cver" >> $GITHUB_ENV
+          autoreconf -sfi
+
+          cd -
+
+          git clone --depth 1 https://github.com/cowsql/raft
+          cd raft
+          rver="$(git rev-parse --short HEAD)-$(date "+%Y-%m-%d")"
+          echo "rsqlVer=$rver" >> $GITHUB_ENV
+
+          autoreconf -sfi
+      - name: Upload cowsql
+        uses: actions/upload-artifact@v4
+        with:
+          name: cowsql-${{ env.cowsqlVer }}
+          path: cowsql/
+      - name: Upload raft
+        uses: actions/upload-artifact@v4
+        with:
+          name: rsql-${{ env.rsqlVer }}
+          path: raft/
